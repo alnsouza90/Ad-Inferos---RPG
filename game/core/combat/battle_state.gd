@@ -457,3 +457,27 @@ func to_dict() -> Dictionary:
 		"encounter_type": String(encounter_type), "light": light,
 		"rng": rng.get_counters(),
 	}
+
+
+## Independent copy of the whole battle for previews (combat §15): same
+## combatants, intents, counters and RNG position. Shares only the read-only
+## catalog. Never shares Combatant objects with the original.
+func clone() -> BattleState:
+	var copy := BattleState.new(catalog)
+	var skip: Array[String] = ["catalog", "constants", "condition_defs", "party", "enemies", "intents", "engine", "rng", "emit"]
+	for prop: Dictionary in get_property_list():
+		var prop_name: String = prop["name"]
+		if int(prop["usage"]) & PROPERTY_USAGE_SCRIPT_VARIABLE == 0 or skip.has(prop_name):
+			continue
+		var value: Variant = get(prop_name)
+		if value is Array or value is Dictionary:
+			value = value.duplicate(true)
+		copy.set(prop_name, value)
+	for c: Combatant in party:
+		copy.party.append(c.clone())
+	for c: Combatant in enemies:
+		copy.enemies.append(c.clone())
+	for intent: Intent in intents:
+		copy.intents.append(intent.clone())
+	copy.rng = RngStreams.from_dict(rng.to_dict())
+	return copy
