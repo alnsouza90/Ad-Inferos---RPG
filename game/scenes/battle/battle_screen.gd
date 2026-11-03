@@ -426,7 +426,9 @@ func _refresh_top() -> void:
 
 func _refresh_views() -> void:
 	var targetable: Array[StringName] = selection.targetable_ids()
-	var pending: Array[StringName] = selection.pending_ids() if selection.pending != null else [] as Array[StringName]
+	var pending: Array[StringName] = []
+	if selection.pending != null:
+		pending = selection.pending_ids()
 	var previews: Dictionary = {}
 	for entry: PreviewEntry in selection.preview:
 		previews[entry.target_id] = texts.preview_line(entry)

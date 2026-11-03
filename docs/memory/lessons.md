@@ -5,6 +5,7 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 ## Godot e GDScript
 
 - O Godot tem um enum global `Side`; uma variável `var side: Side` numa classe sua dá erro confuso de tipo. Por isso o lado do combatente se chama `Team`.
+- O operador ternário perde o tipo da lista: `var x: Array[StringName] = a if c else [] as Array[StringName]` dá "Trying to assign an array of type Array" na execução. Use `if` com atribuição.
 - Nomes de constantes repetidos na mesma classe só aparecem como "Could not parse global class": rode `godot --headless --path game --check-only -s res://arquivo.gd` para ver o erro real.
 - `ResourceSaver` gera ids internos novos a cada gravação: o importador só regrava `.tres` cujo conteúdo mudou (`ResourceSnapshot`), para não sujar o git.
 - Referência circular entre `RefCounted` vaza memória: o motor de condições guarda o `BattleState` por `weakref`.
