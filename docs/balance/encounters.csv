@@ -1,0 +1,5 @@
+id,circle,pool,slot_1,slot_2,slot_3,slot_4,type
+m0_easy_01,m0,easy,enemy_mud_devil,enemy_gadfly,,,common
+m0_easy_02,m0,easy,enemy_infernal_scarab,enemy_shade_of_desire,enemy_gadfly,,common
+m0_hard_01,m0,hard,enemy_mud_devil,enemy_infernal_scarab,enemy_wandering_breath,enemy_gadfly,common
+m0_hard_02,m0,hard,enemy_infernal_scarab,enemy_mud_devil,enemy_swarm_mother,enemy_shade_of_desire,common

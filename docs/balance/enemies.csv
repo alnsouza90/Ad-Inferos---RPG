@@ -1,0 +1,8 @@
+id,name_pt,family,circles,nature,role,size,max_hp,armor,immune,leaves_remains,remains_rounds,actions,art_id
+enemy_mud_devil,Diabo de Lodo,a,2|3|4|5,corporeal,brute,1,30,1,,,,mud_devil_slam|mud_devil_crush,enemy_mud_devil
+enemy_infernal_scarab,Escaravelho Infernal,a,2|3|4|5,corporeal,guard,1,26,2,,,,scarab_carapace|scarab_bite,enemy_infernal_scarab
+enemy_gadfly,Moscardo,a,2|3|4|5,corporeal,ranged,1,16,0,,,,gadfly_sting,enemy_gadfly
+enemy_shade_of_desire,Sombra do Desejo,a,2|3|4|5,spiritual,corruptor,1,20,0,,,,shade_whisper|shade_touch,enemy_shade_of_desire
+enemy_wandering_breath,Sopro Errante,a,2|3|4|5,spiritual,manipulator,1,18,0,stun,,,breath_gust|breath_lament,enemy_wandering_breath
+enemy_swarm_mother,Mãe-Enxame,a,2|3|4|5,corporeal,summoner,1,28,1,,,,swarm_mother_brood|swarm_mother_sting,enemy_swarm_mother
+enemy_swarmling,Enxame,a,2|3|4|5,corporeal,brute,1,8,0,,,,swarmling_bite,enemy_swarmling

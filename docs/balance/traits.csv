@@ -1,0 +1,13 @@
+id,owner,name_pt,trigger,hook,params,desc_pt
+trait_duel,saint_george,Duelo,on_damage_dealt,duel_auto_mark,first_hit_marks=1,O primeiro inimigo atingido por Jorge em cada combate entra em Duelo.
+trait_clausura,saint_benedict,Clausura,passive,clausura,adjacent_desolation_mult=0.8;adjacent_move_immune=1,Aliados adjacentes a Bento não podem ser deslocados e recebem 20% menos desolação.
+trait_little_way,saint_therese,Pequeno Caminho,on_ability_used,little_way_counter,basic_actions=3,"A cada 3 habilidades básicas usadas, a próxima cura de Teresinha custa 0 de Fervor."
+trait_charity,saint_nicholas,Caridade,passive,provision_mult_as_actor,mult=2,Provisões aplicadas por Nicolau num aliado têm efeito dobrado.
+trait_hermit,saint_anthony_abbot,Ermitão,passive,desolation_damage_scaling,per=25;bonus=0.10;cap=0.40,+10% de dano a cada 25 de desolação que Antão carrega (máximo +40%).
+trait_banner,saint_joan,Estandarte,passive,banner_aura,slot=1;mult=1.10,"Enquanto Joana está na posição 1, os aliados causam 10% a mais de dano."
+trait_dark_night_guide,saint_john_cross,Noite Escura,passive,party_faith_check_bonus,value=0.20,"Enquanto João está na equipe, os aliados têm +20% de chance de Consolação no teste de Fé."
+trait_bilocation,saint_pio,Bilocação,on_round_start,free_swap_once,per_round=1,"Uma vez por rodada, Pio troca de lugar com um aliado adjacente sem gastar ação."
+trait_impossible_causes,saint_rita,Causas Impossíveis,passive,low_hp_effect_mult,threshold=0.25;mult=2,Curas e Amparo de Rita valem o dobro num aliado abaixo de 25% de vida.
+trait_finder,saint_anthony_padua,Achados,passive,first_provision_free,per_battle=1,"Em cada combate, a primeira provisão usada pela equipe não é consumida."
+trait_survivor,saint_sebastian,Sobrevivente,on_fallen,survive_first_fall,hp=1;per_battle=1,"Na primeira queda de cada combate, Sebastião se levanta com 1 de vida."
+trait_blessed_souls,saint_gertrude,Almas Benditas,on_round_start,round_start_cleanse,stacks=1,"No início de cada rodada, remove 1 pilha de condição negativa do aliado com mais pilhas."

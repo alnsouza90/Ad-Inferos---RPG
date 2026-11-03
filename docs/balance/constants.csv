@@ -1,0 +1,72 @@
+key,value,description
+fervor_per_round,3,Fervor ganho pela equipe no início de cada rodada
+fervor_cap,6,Fervor máximo acumulado
+fervor_bonus_cap_per_round,2,"Fervor extra máximo por rodada, além da base"
+provisions_per_turn,1,Provisões por turno da equipe
+vulnerable_mult,1.25,Dano contra o tipo vulnerável
+resistant_mult,0.75,Dano contra o tipo resistente
+strength_mult,1.25,Multiplicador da ficha Força
+ward_mult,0.5,Multiplicador da ficha Amparo
+min_damage,1,Dano mínimo após armadura
+effect_queue_limit,64,Limite de efeitos por comando
+fallen_revive_window,2,Rodadas para levantar um Caído
+duel_damage_mult,1.25,Dano de Jorge contra o alvo em Duelo
+duel_counter_damage,3,Contra-ataque do Duelo (Golpe)
+corruption_desolation_per_stack,3,Desolação por pilha de Corrupção no tick
+affinity_carmel_desolation_mult,0.85,Afinidade Carmelo
+affinity_franciscan_first_round_fervor,1,Afinidade Franciscanos
+affinity_monastic_mult,1.1,Afinidade Pais do Monaquismo (Exorcismo)
+affinity_soldier_mult,1.1,Afinidade Soldados de Cristo (Golpe)
+desolation_max,200,Desolação máxima (Prostração)
+faith_check_threshold,100,Limiar do teste de Fé
+faith_check_base,0.1,Chance base de Consolação
+faith_check_per_point,0.04,Chance por ponto de Fé
+faith_check_cap,0.6,Chance máxima de Consolação
+faith_chance_display_threshold,75,Desolação a partir da qual a chance é exibida
+consolation_reset_value,50,Desolação após Consolação
+consolation_output_mult,1.15,Dano e cura na Consolação
+consolation_desolation_mult,0.5,Ganho de desolação na Consolação
+dark_night_exit_threshold,50,Desolação abaixo da qual a Noite Escura termina (Purificação)
+prostration_reset_value,150,Desolação após Prostração
+purification_xp_bonus,0.25,Experiência extra após Purificação
+desolation_battle_end_common,12,Fim de combate comum
+desolation_battle_end_elite,20,Fim de combate de elite
+desolation_battle_end_boss,35,Fim de combate de chefe
+desolation_ally_fallen,15,Aliado caído
+desolation_emergency_retreat,25,Retirada de emergência
+desolation_vigil,40,Vigília no Pouso (redução)
+holy_water_desolation,15,Água Benta (redução)
+chapel_desolation_per_week,15,Capela por semana (redução)
+garden_desolation_per_week,50,Jardim por semana (redução)
+light_start,100,Lume inicial
+light_resume,75,Lume ao retomar de Pouso consagrado
+light_per_node,5,Lume perdido por nó
+candle_light,25,Lume da Vela
+light_high_threshold,75,Início da faixa alta de Lume
+light_low_threshold,24,Fim da faixa baixa de Lume
+light_high_desolation_mult,0.8,Desolação com Lume alto
+light_low_desolation_mult,1.3,Desolação com Lume baixo
+light_low_enemy_damage_mult,1.1,Dano inimigo com Lume baixo
+light_low_alms_mult,1.5,Esmolas com Lume baixo
+light_high_ambush_mult,0.5,Emboscada com Lume alto
+ambush_chance,0.25,Chance de emboscada no Pouso
+node_weight_elite,40,Peso de elite no nó variável
+node_weight_relic,35,Peso de relíquia no nó variável
+node_weight_battle,25,Peso de combate no nó variável
+relic_node_guarded_chance,0.3,Nó de relíquia guardado
+map_generation_retries,50,Tentativas de geração do mapa
+gate_slots_l1,8,"Espaços de provisão, Portão 1"
+gate_slots_l2,10,"Espaços de provisão, Portão 2"
+gate_slots_l3,12,"Espaços de provisão, Portão 3"
+bread_heal,5,Cura do Pão em combate
+share_heal_pct,0.3,Partilha no Pouso
+prayer_fervor_cap,2,Fervor inicial máximo vindo de Orações
+virtue_start,2,Valor inicial de cada virtude
+virtue_max,5,Valor máximo de cada virtude
+suffrages_per_milestone,8,Sufrágios por marco do Purgatório
+xp_battle,10,Experiência por combate comum
+xp_elite,20,Experiência por elite
+xp_boss,40,Experiência por chefe
+xp_reserve_share,0.5,Fração da experiência para a reserva
+xp_thresholds,0|40|100|180|280,Experiência acumulada por nível
+fallen_minor_injury_hp,1,Vida ao terminar o combate caído

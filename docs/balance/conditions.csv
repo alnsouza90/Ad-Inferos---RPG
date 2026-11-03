@@ -1,0 +1,11 @@
+id,kind,polarity,max_stacks,stacking,decay,tick,consume_on,resisted_by_will,hook,icon,display_priority,name_pt,desc_pt
+stun,token,negative,1,none,none,none,on_action_attempt,false,stun_cancel,res://assets/ui/icons/cond_stun.png,1,Atordoamento,"Perde a próxima ação. Depois, fica imune por 1 rodada."
+bleed,duration,negative,5,add,minus_one_after_tick,owner_turn_start,none,true,bleed_tick,res://assets/ui/icons/cond_bleed.png,3,Sangramento,Sofre dano igual às pilhas no início do turno.
+corruption,duration,negative,5,add,minus_one_after_tick,owner_turn_start,none,true,corruption_tick,res://assets/ui/icons/cond_corruption.png,2,Corrupção,Ganha 3 de desolação por pilha no início do turno.
+ward,token,positive,3,add,none,none,on_hit_received,false,ward_halve,res://assets/ui/icons/cond_ward.png,5,Amparo,O próximo dano recebido cai pela metade.
+strength,token,positive,3,add,none,none,on_damaging_action,false,strength_boost,res://assets/ui/icons/cond_strength.png,6,Força,A próxima ação causa 25% a mais de dano.
+taunt,token,positive,1,refresh,expire_round_end,none,none,false,taunt_redirect,res://assets/ui/icons/cond_taunt.png,4,Provocação,Inimigos de alvo único precisam mirar este santo.
+duel,permanent,negative,1,refresh,none,none,none,false,duel_mark,res://assets/ui/icons/cond_duel.png,2,Duelo,Em duelo com São Jorge: recebe mais dano dele e sofre contra-ataque.
+freeze,duration,negative,3,add,none,round_end,none,false,freeze_counter,res://assets/ui/icons/cond_freeze.png,2,Congelamento,"Cresce a cada rodada parado. Com 3, perde a próxima ação."
+fury,permanent,positive,5,add,none,none,none,false,fury_counter,res://assets/ui/icons/cond_fury.png,3,Fúria,+10% de dano por pilha.
+torpor,duration,negative,3,add,none,round_end,none,false,torpor_counter,res://assets/ui/icons/cond_torpor.png,3,Torpor,"Cresce a cada rodada sem milagre. Com 3, a equipe perde 1 de Fervor."

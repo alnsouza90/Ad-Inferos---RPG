@@ -1,0 +1,29 @@
+facility,level,unlock,cost,effect_key,value,desc_pt
+chapel,1,start,0,,,1 vaga de oração
+chapel,2,,1500,,,2 vagas
+chapel,3,,2500,,,3 vagas
+infirmary,1,start,0,,,1 leito
+infirmary,2,,1500,,,2 leitos
+infirmary,3,,2500,,,3 leitos
+pantry,1,start,0,,,Provisões básicas
+pantry,2,,1500,,,Preços −15%
+pantry,3,,2500,,,Preços −30%
+gate,1,start,0,,,8 espaços; revela 1 camada
+gate,2,,1500,,,10 espaços; 2 camadas
+gate,3,,2500,,,12 espaços; trecho inteiro
+retreat_house,1,prologue,0,,,Aplica melhorias
+retreat_house,2,,1500,,,Troca de Carisma −50%
+retreat_house,3,,2500,,,Troca de Carisma grátis
+forge,1,prologue,0,,,Equipamento até nível 2
+forge,2,,1500,,,Até nível 3
+forge,3,,2500,,,Melhorias −20%
+library,1,circle:3,0,,,Resistências
+library,2,,1500,,,Conteúdo dos nós
+library,3,,2500,,,Fases dos chefes
+reliquary,1,circle:4,0,,,Relíquias raras
+reliquary,2,,1500,,,—
+reliquary,3,,2500,,,Fundir sacramentais
+garden,1,circle:5,0,,,1 vaga
+garden,2,,1500,,,2 vagas
+garden,3,,2500,,,3 vagas
+carmel,1,circle:3,1500,,,Desbloqueia João da Cruz e as Moradas

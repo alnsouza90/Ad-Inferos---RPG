@@ -1,0 +1,26 @@
+id,name_pt,category,relic_class,origin,to_confirm,rarity,source,modifier,params,desc_pt
+relic_benedict_medal,Medalha de São Bento,sacramental,sacramental,tradition,,common,relic_node,condition_received_reduction,condition=corruption;value=1,−1 pilha de Corrupção recebida.
+relic_wooden_crucifix,Crucifixo de madeira,sacramental,sacramental,tradition,,common,relic_node,stat_add,stat=faith;value=1,+1 de Fé.
+relic_tau_cross,Cruz em tau,sacramental,sacramental,tradition,,common,relic_node,stat_mult,stat=max_hp;value=1.05,+5% de Vigor.
+relic_candlemas_candle,Vela da Candelária,sacramental,sacramental,tradition,,common,relic_node,light_per_node,value=4,"O Lume cai 4 por nó, em vez de 5."
+relic_blessed_salt,Sal bento,sacramental,sacramental,tradition,,common,relic_node,damage_type_mult,type=exorcism;value=1.10,Exorcismo +10%.
+relic_saint_anthony_bread,Pão de Santo Antônio,sacramental,sacramental,tradition,,common,relic_node,share_heal_mult,value=1.5,A Partilha no Pouso cura 50% a mais.
+relic_george_cloth,Pano tocado no túmulo de São Jorge em Lida,saint,3,tradition,y,rare,relic_node,damage_type_mult,type=strike;value=1.10,Golpe +10%.
+relic_montecassino_habit,Fragmento de hábito de Montecassino,saint,2,tradition,,rare,relic_node,trait_extension,trait=trait_clausura;add=stun_immunity,Clausura também protege contra Atordoamento.
+relic_therese_petal,Pétala tocada em relíquia de Santa Teresinha,saint,3,tradition,,rare,relic_node,heal_dealt_mult,value=1.15,Curas +15%.
+relic_nicholas_manna,"Frasco do maná do túmulo de São Nicolau, em Bari",saint,3,tradition,y,rare,relic_node,provision_effect_mult,value=1.25,Provisões usadas pelo portador valem 25% a mais.
+relic_anthony_abbot_bell,Sino de Santo Antão,saint,devotional,tradition,,rare,relic_node,desolation_gain_mult,value=0.90,Desolação recebida −10%.
+relic_joan_ring,Anel atribuído a Santa Joana d'Arc,saint,2,tradition,y,rare,relic_node,battle_start_condition,condition=strength;stacks=1,Começa o combate com 1 Força.
+relic_john_cross_habit,Fragmento de hábito de São João da Cruz,saint,2,tradition,,rare,relic_node,purification_heal,value=0.20,Purificação também cura 20% da vida.
+relic_pio_mitten,Meia-luva de São Padre Pio,saint,2,tradition,,rare,relic_node,ability_cost_mult,ability=pio_stigmata;param=self_damage;value=0.75,Estigmas custa 25% menos vida.
+relic_rita_rose,Rosa benta no dia de Santa Rita,saint,sacramental,tradition,,rare,relic_node,ability_param,ability=rita_rose_in_winter;param=hp_fraction;value=0.6,Rosa no Inverno levanta com 60% da vida.
+relic_anthony_lily,"Lírio tocado no túmulo de Santo Antônio, em Pádua",saint,3,tradition,,rare,relic_node,stun_duration_bonus,value=1;target=common,Atordoamento aplicado dura 1 turno a mais em inimigos comuns.
+relic_sebastian_arrow,Ponta de flecha venerada,saint,3,tradition,y,rare,relic_node,battle_start_condition,condition=ward;stacks=1,Começa o combate com 1 Proteção.
+relic_helfta_veil,Véu tocado em Helfta,saint,3,tradition,,rare,relic_node,turn_start_cleanse,value=1,Remove 1 condição negativa do portador no início de cada turno.
+relic_augustine_confessions,"Confissões tocadas no túmulo de Santo Agostinho, em Pavia",guardian,3,tradition,,rare,relic_node,purification_xp_mult,value=1.25,+25% de experiência após a Purificação.
+relic_thomas_cincture,Cíngulo de Santo Tomás,guardian,2,tradition,y,rare,relic_node,stat_add,stat=will;value=1,+1 de Vontade.
+relic_ignatius_cassock,Fragmento de batina de Santo Inácio,guardian,2,tradition,,rare,relic_node,faith_check_bonus,value=0.05,+5% de chance de Consolação.
+relic_assisi_cord,Cordão franciscano tocado em Assis,guardian,3,tradition,,rare,relic_node,heal_received_mult,value=1.10,Cura recebida +10%.
+relic_cosmas_damian_box,Caixa de remédios tocada em relíquias de Cosme e Damião,guardian,3,tradition,,rare,relic_node,injury_heal_bonus,weeks=1,Ferimentos curam 1 semana mais rápido.
+relic_all_souls_candle,Vela de Finados,purgatory,sacramental,tradition,,unique,milestone:5,chapel_suffrages_add,value=1,+1 Sufrágio por semana quando o portador está na Capela.
+relic_cluny_cross,Pequena cruz de Cluny,purgatory,3,tradition,y,unique,milestone:9,prevent_prostration,per=expedition;value=1,"Uma vez por expedição, impede uma Prostração."
