@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_m008i"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_hj4ls"]
+
+[sub_resource type="Resource" id="Resource_mp7b6"]
+script = ExtResource("1_m008i")
+type = &"apply_condition"
+condition_id = &"taunt"
+stacks = 1
+
+[sub_resource type="Resource" id="Resource_hdoyc"]
+script = ExtResource("1_m008i")
+order = 2
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 3
+
+[sub_resource type="Resource" id="Resource_scd62"]
+script = ExtResource("1_m008i")
+order = 3
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 1
+target_override = &"all_allies"
+params = {
+"exclude_self": 1.0
+}
+
+[resource]
+script = ExtResource("2_hj4ls")
+id = &"sebastian_arrow_wall"
+owner = &"saint_sebastian"
+name_pt = "Muralha de Flechas"
+kind = &"miracle"
+cost = 3
+use_slots = Array[int]([1, 2])
+targeting = &"self"
+origin = &"tradition"
+desc_pt = "Provocação e 3 Amparo em Sebastião; 1 Amparo nos aliados."
+effects = Array[ExtResource("1_m008i")]([SubResource("Resource_mp7b6"), SubResource("Resource_hdoyc"), SubResource("Resource_scd62")])

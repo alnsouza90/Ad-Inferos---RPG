@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/encounter_def.gd" id="1_t8raw"]
+
+[resource]
+script = ExtResource("1_t8raw")
+id = &"m0_easy_02"
+circle = -1
+pool = &"easy"
+slots = Array[StringName]([&"enemy_infernal_scarab", &"enemy_shade_of_desire", &"enemy_gadfly"])
+type = &"common"

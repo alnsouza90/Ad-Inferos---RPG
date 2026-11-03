@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ProvisionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_7vurm"]
+[ext_resource type="Script" path="res://data/defs/provision_def.gd" id="2_i1wt3"]
+
+[sub_resource type="Resource" id="Resource_8fcyo"]
+script = ExtResource("1_7vurm")
+type = &"heal"
+amount = 5.0
+params = {
+"const": "bread_heal"
+}
+
+[resource]
+script = ExtResource("2_i1wt3")
+id = &"bread"
+name_pt = "Pão"
+price = 15
+usable_in_battle = true
+targeting = &"ally"
+effects = Array[ExtResource("1_7vurm")]([SubResource("Resource_8fcyo")])

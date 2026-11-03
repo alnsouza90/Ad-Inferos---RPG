@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_bcxfo"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_x8g25"]
+
+[sub_resource type="Resource" id="Resource_frihi"]
+script = ExtResource("1_bcxfo")
+type = &"damage"
+amount = 5.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_x8g25")
+id = &"rita_thorn"
+owner = &"saint_rita"
+name_pt = "Espinho"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3])
+origin = &"hagiography"
+desc_pt = "A ferida do espinho na fronte: exorcismo."
+effects = Array[ExtResource("1_bcxfo")]([SubResource("Resource_frihi")])

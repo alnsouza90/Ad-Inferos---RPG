@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_jlsr2"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_o2fjn"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_jglfv"]
+
+[sub_resource type="Resource" id="Resource_nqjxq"]
+script = ExtResource("1_jlsr2")
+id = &"camp_nicholas_bread"
+owner = &"saint_nicholas"
+name_pt = "Pão Partilhado"
+desc_pt = "O descanso neste Pouso não consome o Pão."
+effect = &"refund_bread"
+params = {
+"value": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_xf7t0"]
+script = ExtResource("3_jglfv")
+id = &"trait_charity"
+owner = &"saint_nicholas"
+name_pt = "Caridade"
+desc_pt = "Provisões aplicadas por Nicolau num aliado têm efeito dobrado."
+trigger = &"passive"
+hook = &"provision_mult_as_actor"
+params = {
+"mult": 2.0
+}
+
+[resource]
+script = ExtResource("2_o2fjn")
+id = &"saint_nicholas"
+name_pt = "São Nicolau de Mira"
+roles = Array[StringName]([&"intercessor", &"protector"])
+preferred_slots = Array[int]([2])
+max_hp = 28
+armor = 1
+faith = 6
+will = 2
+hp_per_level = 3
+faith_per_level = 1
+abilities = Array[StringName]([&"nicholas_crozier", &"nicholas_grain", &"nicholas_rebuke", &"nicholas_calm_storm", &"nicholas_secret_dowry", &"nicholas_three_innocents"])
+default_equipped = Array[StringName]([&"nicholas_crozier", &"nicholas_grain", &"nicholas_rebuke", &"nicholas_secret_dowry"])
+miracle = &"nicholas_three_purses"
+trait_def = SubResource("Resource_xf7t0")
+camp_skill = SubResource("Resource_nqjxq")
+unlock = "week:3"

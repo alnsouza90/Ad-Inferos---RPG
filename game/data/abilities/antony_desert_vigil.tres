@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_k0vxx"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_m77pt"]
+
+[sub_resource type="Resource" id="Resource_pyrfl"]
+script = ExtResource("1_k0vxx")
+type = &"desolation"
+amount = 8.0
+
+[sub_resource type="Resource" id="Resource_re6i5"]
+script = ExtResource("1_k0vxx")
+order = 2
+type = &"apply_condition"
+condition_id = &"strength"
+stacks = 2
+
+[resource]
+script = ExtResource("2_m77pt")
+id = &"antony_desert_vigil"
+owner = &"saint_anthony_abbot"
+name_pt = "Vigília no Deserto"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"self"
+origin = &"hagiography"
+desc_pt = "Aceita a provação: +8 de desolação e 2 Força."
+effects = Array[ExtResource("1_k0vxx")]([SubResource("Resource_pyrfl"), SubResource("Resource_re6i5")])

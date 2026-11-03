@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_n620a"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_3qfla"]
+
+[sub_resource type="Resource" id="Resource_vrccr"]
+script = ExtResource("1_n620a")
+type = &"strip_positive_tokens"
+
+[resource]
+script = ExtResource("2_3qfla")
+id = &"anthony_stolen_psalter"
+owner = &"saint_anthony_padua"
+name_pt = "O Saltério Roubado"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_enemies"
+origin = &"legend"
+desc_pt = "Retira as fichas positivas de todos os inimigos."
+effects = Array[ExtResource("1_n620a")]([SubResource("Resource_vrccr")])

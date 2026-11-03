@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_a6ka1"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_130tq"]
+
+[sub_resource type="Resource" id="Resource_f7y0d"]
+script = ExtResource("1_a6ka1")
+type = &"apply_condition"
+condition_id = &"strength"
+stacks = 1
+
+[resource]
+script = ExtResource("2_130tq")
+id = &"joan_battle_orders"
+owner = &"saint_joan"
+name_pt = "Ordem de Batalha"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"game_fiction"
+desc_pt = "1 Força para todos os aliados."
+effects = Array[ExtResource("1_a6ka1")]([SubResource("Resource_f7y0d")])

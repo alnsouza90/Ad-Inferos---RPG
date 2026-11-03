@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_1llb4"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_to3s8"]
+
+[sub_resource type="Resource" id="Resource_kak07"]
+script = ExtResource("1_1llb4")
+type = &"damage"
+amount = 4.0
+damage_type = &"strike"
+
+[sub_resource type="Resource" id="Resource_310ou"]
+script = ExtResource("1_1llb4")
+order = 2
+type = &"apply_condition"
+condition_id = &"stun"
+stacks = 1
+
+[resource]
+script = ExtResource("2_to3s8")
+id = &"george_shield_bash"
+owner = &"saint_george"
+name_pt = "Golpe de Escudo"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1])
+targeting = &"enemy"
+target_slots = Array[int]([1])
+origin = &"game_fiction"
+desc_pt = "Golpe curto que atordoa."
+effects = Array[ExtResource("1_1llb4")]([SubResource("Resource_kak07"), SubResource("Resource_310ou")])

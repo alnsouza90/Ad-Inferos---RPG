@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_k2ila"]
+
+[resource]
+script = ExtResource("1_k2ila")
+id = &"freeze"
+kind = &"duration"
+polarity = &"negative"
+max_stacks = 3
+stacking = &"add"
+decay = &"none"
+tick = &"round_end"
+consume_on = &"none"
+hook = &"freeze_counter"
+icon = "res://assets/ui/icons/cond_freeze.png"
+display_priority = 2
+name_pt = "Congelamento"
+desc_pt = "Cresce a cada rodada parado. Com 3, perde a próxima ação."

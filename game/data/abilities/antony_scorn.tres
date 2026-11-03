@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_bnnyq"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_t4x61"]
+
+[sub_resource type="Resource" id="Resource_1wajp"]
+script = ExtResource("1_bnnyq")
+type = &"strip_positive_tokens"
+
+[sub_resource type="Resource" id="Resource_6usoo"]
+script = ExtResource("1_bnnyq")
+order = 2
+type = &"damage"
+amount = 4.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_t4x61")
+id = &"antony_scorn"
+owner = &"saint_anthony_abbot"
+name_pt = "Desprezo do Inimigo"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"hagiography"
+desc_pt = "Zomba do demônio: retira as fichas positivas e fere."
+effects = Array[ExtResource("1_bnnyq")]([SubResource("Resource_1wajp"), SubResource("Resource_6usoo")])

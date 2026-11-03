@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_6htut"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_ue0sm"]
+
+[sub_resource type="Resource" id="Resource_xbhxw"]
+script = ExtResource("1_6htut")
+type = &"desolation"
+amount = -8.0
+
+[resource]
+script = ExtResource("2_ue0sm")
+id = &"gertrude_remembrance"
+owner = &"saint_gertrude"
+name_pt = "Lembrança dos Defuntos"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"tradition"
+desc_pt = "−8 de desolação."
+effects = Array[ExtResource("1_6htut")]([SubResource("Resource_xbhxw")])

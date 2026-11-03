@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_3rfno"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_630ar"]
+
+[sub_resource type="Resource" id="Resource_icxkv"]
+script = ExtResource("1_3rfno")
+type = &"damage"
+amount = 4.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_630ar")
+id = &"gertrude_psalmody"
+owner = &"saint_gertrude"
+name_pt = "Salmodia"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"hagiography"
+desc_pt = "O canto do coro: pequeno exorcismo."
+effects = Array[ExtResource("1_3rfno")]([SubResource("Resource_icxkv")])

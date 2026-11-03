@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_x3uvy"]
+
+[resource]
+script = ExtResource("1_x3uvy")
+id = &"fury"
+kind = &"permanent"
+polarity = &"positive"
+max_stacks = 5
+stacking = &"add"
+decay = &"none"
+tick = &"none"
+consume_on = &"none"
+hook = &"fury_counter"
+icon = "res://assets/ui/icons/cond_fury.png"
+display_priority = 3
+name_pt = "Fúria"
+desc_pt = "+10% de dano por pilha."

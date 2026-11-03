@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_crksi"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_hl50i"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_xw641"]
+
+[sub_resource type="Resource" id="Resource_ac0h4"]
+script = ExtResource("1_crksi")
+id = &"camp_rita_roses"
+owner = &"saint_rita"
+name_pt = "Cuidado das Feridas"
+desc_pt = "Remove o ferimento leve de um aliado."
+effect = &"remove_minor_injury"
+params = {
+"value": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_18q4e"]
+script = ExtResource("3_xw641")
+id = &"trait_impossible_causes"
+owner = &"saint_rita"
+name_pt = "Causas Impossíveis"
+desc_pt = "Curas e Amparo de Rita valem o dobro num aliado abaixo de 25% de vida."
+trigger = &"passive"
+hook = &"low_hp_effect_mult"
+params = {
+"mult": 2.0,
+"threshold": 0.25
+}
+
+[resource]
+script = ExtResource("2_hl50i")
+id = &"saint_rita"
+name_pt = "Santa Rita de Cássia"
+roles = Array[StringName]([&"healer", &"protector"])
+preferred_slots = Array[int]([2])
+max_hp = 26
+armor = 1
+faith = 7
+will = 2
+hp_per_level = 3
+faith_per_level = 1
+abilities = Array[StringName]([&"rita_thorn", &"rita_balm", &"rita_patience", &"rita_peacemaker", &"rita_last_hope", &"rita_bees"])
+default_equipped = Array[StringName]([&"rita_thorn", &"rita_balm", &"rita_peacemaker", &"rita_last_hope"])
+miracle = &"rita_rose_in_winter"
+trait_def = SubResource("Resource_18q4e")
+camp_skill = SubResource("Resource_ac0h4")
+unlock = "circle:5"

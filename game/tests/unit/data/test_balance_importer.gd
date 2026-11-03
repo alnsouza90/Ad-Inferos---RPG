@@ -92,8 +92,12 @@ func test_duplicate_id_is_rejected() -> void:
 
 
 func test_saint_without_any_slot_free_basic_is_rejected() -> void:
-	_assert_error(BalanceFixture.replaced("abilities", "t_strike,saint_t,Golpe,basic,0,1|2|3", "t_strike,saint_t,Golpe,basic,0,1|2"), "missing_any_slot_basic")
-	_assert_error(BalanceFixture.replaced("abilities", "t_guard,saint_t,Guarda,basic,0,1|2|3", "t_guard,saint_t,Guarda,basic,0,1|2"), "missing_any_slot_basic")
+	# The fixture has two free any-slot basics (t_strike, t_guard): one alone still satisfies the rule.
+	var one_left := BalanceFixture.replaced("abilities", "t_strike,saint_t,Golpe,basic,0,1|2|3", "t_strike,saint_t,Golpe,basic,0,1|2")
+	assert_eq(_import(one_left).errors, [] as Array[String])
+	var none_left: Dictionary = one_left.duplicate()
+	none_left["abilities"] = String(none_left["abilities"]).replace("t_guard,saint_t,Guarda,basic,0,1|2|3", "t_guard,saint_t,Guarda,basic,0,1|2")
+	_assert_error(none_left, "missing_any_slot_basic")
 
 
 # --- other rules of data-schemas §2 -----------------------------------------

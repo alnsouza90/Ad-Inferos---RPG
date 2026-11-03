@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_1y8c1"]
+
+[resource]
+script = ExtResource("1_1y8c1")
+id = &"duel"
+kind = &"permanent"
+polarity = &"negative"
+stacking = &"refresh"
+decay = &"none"
+tick = &"none"
+consume_on = &"none"
+hook = &"duel_mark"
+icon = "res://assets/ui/icons/cond_duel.png"
+display_priority = 2
+name_pt = "Duelo"
+desc_pt = "Em duelo com São Jorge: recebe mais dano dele e sofre contra-ataque."

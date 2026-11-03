@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_lkpct"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_fup8p"]
+
+[sub_resource type="Resource" id="Resource_n3io5"]
+script = ExtResource("1_lkpct")
+type = &"heal"
+amount = 5.0
+
+[resource]
+script = ExtResource("2_fup8p")
+id = &"nicholas_grain"
+owner = &"saint_nicholas"
+name_pt = "Trigo dos Navios"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"tradition"
+desc_pt = "Cura um aliado. Lembra o trigo que Nicolau obteve para Mira na fome."
+effects = Array[ExtResource("1_lkpct")]([SubResource("Resource_n3io5")])

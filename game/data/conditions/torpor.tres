@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_vw6yd"]
+
+[resource]
+script = ExtResource("1_vw6yd")
+id = &"torpor"
+kind = &"duration"
+polarity = &"negative"
+max_stacks = 3
+stacking = &"add"
+decay = &"none"
+tick = &"round_end"
+consume_on = &"none"
+hook = &"torpor_counter"
+icon = "res://assets/ui/icons/cond_torpor.png"
+display_priority = 3
+name_pt = "Torpor"
+desc_pt = "Cresce a cada rodada sem milagre. Com 3, a equipe perde 1 de Fervor."

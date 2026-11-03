@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_ykp6b"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_2ur6h"]
+
+[sub_resource type="Resource" id="Resource_5rjrx"]
+script = ExtResource("1_ykp6b")
+type = &"apply_condition"
+condition_id = &"strength"
+stacks = 1
+
+[sub_resource type="Resource" id="Resource_npnlx"]
+script = ExtResource("1_ykp6b")
+order = 2
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 1
+
+[resource]
+script = ExtResource("2_2ur6h")
+id = &"nicholas_three_purses"
+owner = &"saint_nicholas"
+name_pt = "As Três Bolsas"
+kind = &"miracle"
+cost = 3
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"tradition"
+desc_pt = "1 Força e 1 Amparo para todos os aliados."
+effects = Array[ExtResource("1_ykp6b")]([SubResource("Resource_5rjrx"), SubResource("Resource_npnlx")])

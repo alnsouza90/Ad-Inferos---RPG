@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_kqqkd"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_m7mj6"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_5ldvk"]
+
+[sub_resource type="Resource" id="Resource_tagby"]
+script = ExtResource("1_kqqkd")
+id = &"camp_antony_baskets"
+owner = &"saint_anthony_abbot"
+name_pt = "Trabalho Manual"
+desc_pt = "+30 Esmolas garantidas (Antão trançava cestos no deserto)."
+effect = &"alms_bonus"
+params = {
+"value": 30.0
+}
+
+[sub_resource type="Resource" id="Resource_ler3c"]
+script = ExtResource("3_5ldvk")
+id = &"trait_hermit"
+owner = &"saint_anthony_abbot"
+name_pt = "Ermitão"
+desc_pt = "+10% de dano a cada 25 de desolação que Antão carrega (máximo +40%)."
+trigger = &"passive"
+hook = &"desolation_damage_scaling"
+params = {
+"bonus": 0.1,
+"cap": 0.4,
+"per": 25.0
+}
+
+[resource]
+script = ExtResource("2_m7mj6")
+id = &"saint_anthony_abbot"
+name_pt = "Santo Antão"
+roles = Array[StringName]([&"exorcist", &"fighter"])
+preferred_slots = Array[int]([1, 2])
+max_hp = 30
+armor = 1
+faith = 7
+will = 2
+hp_per_level = 4
+faith_per_level = 1
+abilities = Array[StringName]([&"antony_sign_of_cross", &"antony_tau_staff", &"antony_desert_vigil", &"antony_scorn", &"antony_beasts", &"antony_endurance"])
+default_equipped = Array[StringName]([&"antony_sign_of_cross", &"antony_tau_staff", &"antony_desert_vigil", &"antony_beasts"])
+miracle = &"antony_tomb_combat"
+trait_def = SubResource("Resource_ler3c")
+camp_skill = SubResource("Resource_tagby")
+affinities = Array[StringName]([&"monastics"])
+unlock = "circle:2"

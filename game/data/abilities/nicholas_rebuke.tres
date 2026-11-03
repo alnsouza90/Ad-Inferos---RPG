@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_2a0v8"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_jt5rs"]
+
+[sub_resource type="Resource" id="Resource_kkajn"]
+script = ExtResource("1_2a0v8")
+type = &"damage"
+amount = 5.0
+damage_type = &"exorcism"
+
+[sub_resource type="Resource" id="Resource_52xmj"]
+script = ExtResource("1_2a0v8")
+order = 2
+type = &"remove_condition"
+condition_id = &"strength"
+stacks = 3
+
+[resource]
+script = ExtResource("2_jt5rs")
+id = &"nicholas_rebuke"
+owner = &"saint_nicholas"
+name_pt = "Repreensão de Niceia"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2])
+origin = &"legend"
+desc_pt = "Exorcismo que retira a Força do alvo."
+effects = Array[ExtResource("1_2a0v8")]([SubResource("Resource_kkajn"), SubResource("Resource_52xmj")])

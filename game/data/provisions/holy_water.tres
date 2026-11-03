@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ProvisionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_baha1"]
+[ext_resource type="Script" path="res://data/defs/provision_def.gd" id="2_vl7w4"]
+
+[sub_resource type="Resource" id="Resource_k0o04"]
+script = ExtResource("1_baha1")
+type = &"remove_condition"
+condition_id = &"corruption"
+stacks = 5
+
+[sub_resource type="Resource" id="Resource_gs0mc"]
+script = ExtResource("1_baha1")
+order = 2
+type = &"desolation"
+amount = 15.0
+params = {
+"const": "holy_water_desolation"
+}
+
+[resource]
+script = ExtResource("2_vl7w4")
+id = &"holy_water"
+name_pt = "Água Benta"
+price = 30
+usable_in_battle = true
+targeting = &"ally"
+effects = Array[ExtResource("1_baha1")]([SubResource("Resource_k0o04"), SubResource("Resource_gs0mc")])

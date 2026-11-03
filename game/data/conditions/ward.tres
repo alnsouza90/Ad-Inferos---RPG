@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_q0vvs"]
+
+[resource]
+script = ExtResource("1_q0vvs")
+id = &"ward"
+kind = &"token"
+polarity = &"positive"
+max_stacks = 3
+stacking = &"add"
+decay = &"none"
+tick = &"none"
+consume_on = &"on_hit_received"
+hook = &"ward_halve"
+icon = "res://assets/ui/icons/cond_ward.png"
+display_priority = 5
+name_pt = "Amparo"
+desc_pt = "O próximo dano recebido cai pela metade."

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_d0qdy"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_s7hfb"]
+
+[sub_resource type="Resource" id="Resource_t8kbk"]
+script = ExtResource("1_d0qdy")
+type = &"heal"
+amount = 3.0
+
+[sub_resource type="Resource" id="Resource_8gvcs"]
+script = ExtResource("1_d0qdy")
+order = 2
+type = &"desolation"
+amount = -5.0
+
+[resource]
+script = ExtResource("2_s7hfb")
+id = &"therese_offering"
+owner = &"saint_therese"
+name_pt = "Oferecimento"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([2, 3])
+targeting = &"all_allies"
+origin = &"game_fiction"
+desc_pt = "Cura leve e alívio para todos."
+effects = Array[ExtResource("1_d0qdy")]([SubResource("Resource_t8kbk"), SubResource("Resource_8gvcs")])

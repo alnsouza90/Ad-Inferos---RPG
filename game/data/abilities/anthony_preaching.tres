@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_nwo0n"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_5cyoi"]
+
+[sub_resource type="Resource" id="Resource_f1ymb"]
+script = ExtResource("1_nwo0n")
+type = &"damage"
+amount = 5.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_5cyoi")
+id = &"anthony_preaching"
+owner = &"saint_anthony_padua"
+name_pt = "Pregação"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"hagiography"
+desc_pt = "Exorcismo a qualquer distância."
+effects = Array[ExtResource("1_nwo0n")]([SubResource("Resource_f1ymb")])

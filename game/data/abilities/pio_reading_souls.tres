@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_5osp5"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_hta7n"]
+
+[sub_resource type="Resource" id="Resource_unvb8"]
+script = ExtResource("1_5osp5")
+type = &"strip_positive_tokens"
+
+[sub_resource type="Resource" id="Resource_ym3rr"]
+script = ExtResource("1_5osp5")
+order = 2
+type = &"damage"
+amount = 3.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_hta7n")
+id = &"pio_reading_souls"
+owner = &"saint_pio"
+name_pt = "Leitura das Almas"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"hagiography"
+desc_pt = "Vê através do disfarce: retira as fichas positivas e fere."
+effects = Array[ExtResource("1_5osp5")]([SubResource("Resource_unvb8"), SubResource("Resource_ym3rr")])

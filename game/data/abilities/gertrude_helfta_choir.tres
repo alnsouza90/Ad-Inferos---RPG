@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_yu3fs"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_6qkn1"]
+
+[sub_resource type="Resource" id="Resource_oocp3"]
+script = ExtResource("1_yu3fs")
+type = &"remove_condition"
+stacks = 1
+polarity = &"negative"
+
+[sub_resource type="Resource" id="Resource_s1oet"]
+script = ExtResource("1_yu3fs")
+order = 2
+type = &"heal"
+amount = 4.0
+
+[resource]
+script = ExtResource("2_6qkn1")
+id = &"gertrude_helfta_choir"
+owner = &"saint_gertrude"
+name_pt = "Coro de Helfta"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"hagiography"
+desc_pt = "Remove 1 pilha negativa e cura 4 em todos."
+effects = Array[ExtResource("1_yu3fs")]([SubResource("Resource_oocp3"), SubResource("Resource_s1oet")])

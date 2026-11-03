@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_rh4g8"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_val5x"]
+
+[sub_resource type="Resource" id="Resource_daipc"]
+script = ExtResource("1_rh4g8")
+type = &"heal"
+amount = 6.0
+
+[resource]
+script = ExtResource("2_val5x")
+id = &"therese_little_flower"
+owner = &"saint_therese"
+name_pt = "Pequena Flor"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([2, 3])
+targeting = &"all_allies"
+origin = &"game_fiction"
+desc_pt = "Cura em área."
+effects = Array[ExtResource("1_rh4g8")]([SubResource("Resource_daipc")])

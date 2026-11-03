@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ProvisionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_pt3cp"]
+[ext_resource type="Script" path="res://data/defs/provision_def.gd" id="2_pv3fn"]
+
+[sub_resource type="Resource" id="Resource_n6nxx"]
+script = ExtResource("1_pt3cp")
+type = &"reveal_or_cancel_ambush"
+
+[resource]
+script = ExtResource("2_pv3fn")
+id = &"incense"
+name_pt = "Incenso"
+price = 35
+targeting = &"none"
+effects = Array[ExtResource("1_pt3cp")]([SubResource("Resource_n6nxx")])
