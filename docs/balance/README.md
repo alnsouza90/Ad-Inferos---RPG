@@ -17,6 +17,7 @@ Todos os números do jogo moram aqui. Formato e campos em `docs/data-schemas.md`
 | `economy.csv`, `facilities.csv` | Custos, recompensas, tempos litúrgicos, instalações | Completo para a v1 |
 | `relics.csv` | 25 relíquias aprovadas | Completo; `to_confirm=y` exige pesquisa antes do Martirológio |
 | `feasts.csv` | Semana da festa de cada santo | A preencher após a pesquisa |
+| `ui_text.csv` | Textos da interface (botões, avisos, motivos de recusa) | Tela de combate do M0 (T15); revisão de Alan |
 
 ## Kits: proposta para validar no simulador
 

@@ -13,3 +13,4 @@ Uma página por decisão técnica relevante. Novas decisões recebem o próximo 
 | 0007 | [Abordagem de animação definida pelo piloto de arte](0007-animacao-definida-pelo-piloto.md) | Decidida (animação no motor; revisar no piloto) |
 | 0008 | [Auréola como elemento do motor](0008-aureola-no-motor.md) | Aceita |
 | 0009 | [Código em inglês, jogo em português](0009-idiomas.md) | Aceita |
+| 0010 | [Textos da interface em `ui_text.csv`](0010-textos-da-interface.md) | Aceita |

@@ -41,6 +41,12 @@ static func battle(encounter_id: String, seed: int, provisions: Array[StringName
 	return BattleState.create(catalog(), m0_party(), foes, provisions, enc.type, seed)
 
 
+## The screens' data bundle (GameData) built from the CSVs, not game/data.
+static func game_data() -> GameData:
+	var imp := importer()
+	return GameData.create(catalog(), _keys(imp.saints), _keys(imp.encounters), imp.ui_text)
+
+
 static func _keys(d: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
 	for key: String in d:

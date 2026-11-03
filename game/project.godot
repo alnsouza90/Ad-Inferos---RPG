@@ -13,6 +13,7 @@ config_version=5
 config/name="Ad Inferos: A Companhia dos Santos"
 config/description="RPG tático por turnos: uma companhia de santos segue o Peregrino pelos nove círculos do Inferno."
 config/version="0.0.1"
+run/main_scene="res://scenes/battle/battle_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]

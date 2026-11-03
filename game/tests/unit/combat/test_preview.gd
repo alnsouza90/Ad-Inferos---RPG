@@ -62,6 +62,16 @@ func test_preview_shows_kill_heal_and_move() -> void:
 	assert_eq(s.provisions, [&"bread"] as Array[StringName], "a prévia não gasta a provisão")
 
 
+func test_preview_shows_desolation_change() -> void:
+	s.party_at(1).desolation = 30
+	s.catalog.ability(&"guard_self").effects = [CombatFixture.effect(&"desolation", -10)] as Array[EffectDef]
+	var entries: Array[PreviewEntry] = c.preview(BattleCommand.use_ability(&"saint_a", &"guard_self"))
+	assert_eq(entries.size(), 1)
+	assert_eq(entries[0].target_id, &"saint_a")
+	assert_eq(entries[0].desolation, -10)
+	assert_eq(s.party_at(1).desolation, 30, "a prévia não muda a desolação")
+
+
 func test_preview_of_invalid_command_is_empty() -> void:
 	assert_eq(c.preview(BattleCommand.use_ability(&"saint_b", &"front_only", [1] as Array[int])), [] as Array[PreviewEntry])
 

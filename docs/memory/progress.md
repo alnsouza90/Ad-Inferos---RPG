@@ -5,9 +5,10 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 ## Onde estamos
 
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
-- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16).
-- **Próxima:** T15 · Tela de combate com arte provisória.
-- **Depois:** T16 (auréola no motor), T17 (arena e APK Android).
+- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026).
+- **Jogo no navegador:** https://alnsouza90.github.io/Ad-Inferos---RPG/ (publicado a cada merge na `main`).
+- **Próxima:** T16 · Auréola no motor.
+- **Depois:** T17 (arena e APK Android).
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
 
 ## Como trabalhamos
@@ -21,6 +22,7 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 ## Ambiente
 
 - **CI do GitHub** (`.github/workflows/tests.yml`): baixa o Godot 4.7.2 oficial, analisa os scripts, roda o GUT, falha se algum teste for ignorado e confere se `game/data` está em dia com os CSVs.
+- **Sessão 2 (03/11/2026):** a compilação do Godot foi negada pelas permissões do ambiente; a T15 foi verificada pelo CI e pelo analisador `gdtoolkit` (só sintaxe). Os `.gd.uid` dos scripts novos não foram gerados (o editor cria ao abrir).
 - **Sessões na nuvem:** não há Godot pré-instalado e downloads do GitHub são bloqueados. A saída usada foi compilar o Godot 4.7.2 do código-fonte (tag `4.7.2-stable`, `scons platform=linuxbsd target=editor x11=no wayland=no vulkan=no opengl3=no alsa=no pulseaudio=no dbus=no speechd=no fontconfig=no udev=no sdl=no accesskit=no`), cerca de 25 min em segundo plano. Sem isso, os testes rodam pelo CI ao enviar o código.
 - **Comandos:** `CLAUDE.md` §5.
 

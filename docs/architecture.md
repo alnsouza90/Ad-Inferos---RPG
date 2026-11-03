@@ -158,6 +158,7 @@ Resumo (detalhes em `docs/specs/save-load.md`):
 ## 8. Apresentação
 
 - Cada santo e inimigo em tela é uma cena `CombatantView` que recebe um ID e se atualiza a partir dos eventos.
+- Tela de combate (T15): `scenes/battle/battle_screen.gd` monta a tela e anima os eventos; `BattleSelection` guarda o fluxo de toques (santo → ação → alvo → prévia → confirmar) sem nenhum `Node`, consultando só `validate()` e `preview()` do controlador; `BattleTexts` formata os textos a partir de `ui_text.csv` (ADR-0010). `scenes/common/game_data.gd` carrega `game/data` para as telas.
 - A auréola é um nó `HaloView` com um único shader; o estado espiritual muda parâmetros (ver `docs/art/asset-pipeline.md`).
 - A abordagem de animação (só poses ou rig híbrido) será definida pelo piloto de arte. A `CombatantView` expõe uma interface única (`play_idle`, `play_action(pose_id)`, `play_hit`, `play_fall`) para que a escolha não afete o resto do código.
 

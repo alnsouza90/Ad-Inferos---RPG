@@ -41,6 +41,7 @@ static func valid_tables() -> Dictionary:
 			+ "enemy_e,Demônio,a,2|3,corporeal,brute,1,30,1,stun,,,e_hit|e_brood,enemy_e\n",
 		"encounters": "id,circle,pool,slot_1,slot_2,slot_3,slot_4,type\nenc_1,m0,easy,enemy_e,enemy_e,,,common\n",
 		"provisions": "id,name_pt,price,usable_in_battle,targeting,effect_ids\nbread,Pão,15,y,ally,bread\n",
+		"ui_text": "id,text_pt\nend_turn,Encerrar turno\nround,Rodada {round}\n",
 		"saints": "id,name_pt,roles,preferred_slots,max_hp,armor,faith,will,hp_per_level,faith_per_level,abilities,default_equipped,miracle,trait,camp_skill,affinities,unlock,m0\n"
 			+ "saint_t,Santo Teste,fighter|protector,1|2,32,2,4,1,4,1,t_strike|t_bash|t_guard|t_pray|t_charge|t_rally,t_strike|t_bash|t_guard|t_charge,t_miracle,trait_t,camp_t,soldiers,start,y\n",
 	}
