@@ -32,6 +32,10 @@ const MOVE_TIME: float = 0.3
 const SMALL_TIME: float = 0.2
 const ABILITY_SLOTS: int = 4
 const DEFAULT_ENCOUNTER: StringName = &"m0_easy_01"
+## Saint art lives at <dir>/<saint id>_art.tres; a saint without it stays a
+## rectangle (T16 brings only São Jorge, D-203).
+const ART_DIR: String = "res://scenes/battle/combatants"
+const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
 @export var encounter_id: StringName = DEFAULT_ENCOUNTER
@@ -74,6 +78,7 @@ var _result_label: Label
 var _info_id: StringName = &""
 var _last_actor: StringName = &""
 var _ui_built: bool = false
+var _halo_settings: HaloSettings
 
 
 ## Tests and the arena hand in the data and a fresh controller; otherwise
@@ -370,9 +375,12 @@ func _animate(ev: BattleEvent) -> float:
 			if view != null and change != 0:
 				var key: StringName = &"preview_desolation_up" if change > 0 else &"preview_desolation_down"
 				view.float_text(texts.t(key, {"amount": absi(change)}), COLOR_SPIRIT)
+				view.set_desolation(int(d["new"]))
 			return _scaled(SMALL_TIME, factor)
 		&"state_changed":
 			var view: CombatantView = view_of(d["target"])
+			if view != null:
+				view.set_spirit_state(StringName(str(d["new"])))
 			if view != null and d["new"] != Desolation.NORMAL:
 				view.float_text(texts.t(StringName("spirit_%s" % d["new"])), COLOR_SPIRIT)
 			return _scaled(SMALL_TIME, factor)
@@ -627,13 +635,25 @@ func _ensure_view(c: Combatant, width: float) -> CombatantView:
 	if _views.has(c.id):
 		return _views[c.id]
 	var view := CombatantView.new()
-	view.setup(c.id, c.is_saint(), width)
+	var art: CombatantArt = _art_for(c)
+	view.setup(c.id, c.is_saint(), width, art, _halo_settings if art != null else null)
 	view.speed = SPEEDS[speed_index]
 	view.tapped.connect(tap)
 	_field.add_child(view)
 	_views[c.id] = view
 	_show(view, c)
 	return view
+
+
+func _art_for(c: Combatant) -> CombatantArt:
+	if not c.is_saint():
+		return null
+	var path: String = "%s/%s_art.tres" % [ART_DIR, c.def_id]
+	if not ResourceLoader.exists(path):
+		return null
+	if _halo_settings == null:
+		_halo_settings = load(HALO_SETTINGS_PATH)
+	return load(path) as CombatantArt
 
 
 func _place(view: CombatantView, x: float, animated: bool) -> void:

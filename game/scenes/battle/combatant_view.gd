@@ -28,6 +28,10 @@ const ACTION_TIME: float = 0.3
 const HIT_TIME: float = 0.25
 const FALL_TIME: float = 0.45
 const FLOAT_TIME: float = 0.8
+## Saint figure on screen (2:3, like the body textures of asset-pipeline §4).
+const FIGURE_SIZE := Vector2(200, 300)
+const COLOR_OUTLINE := Color(0, 0, 0, 0.9)
+const SHADER_PATH: String = "res://shaders/halo.gdshader"
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -48,9 +52,21 @@ var _conditions: Label
 var _preview: Label
 var _down: bool = false
 var _dimmed: bool = false
+## Art of the saint (null: the T15 placeholder rectangle).
+var _art: CombatantArt
+var _halo_settings: HaloSettings
+var _figure: TextureRect
+var _figure_material: ShaderMaterial
+var _halo: HaloView
+var _spirit_state: StringName = Desolation.NORMAL
+var _spirit_desolation: int = 0
 
 
-func setup(p_id: StringName, p_is_saint: bool, width: float) -> void:
+## `art` and `halo_settings` are optional: without them the combatant is a
+## coloured rectangle with its name (T15).
+func setup(p_id: StringName, p_is_saint: bool, width: float, art: CombatantArt = null, halo_settings: HaloSettings = null) -> void:
+	_art = art if halo_settings != null else null
+	_halo_settings = halo_settings
 	combatant_id = p_id
 	is_saint = p_is_saint
 	name = String(p_id)
@@ -68,10 +84,20 @@ func setup(p_id: StringName, p_is_saint: bool, width: float) -> void:
 	_style.set_border_width_all(6)
 	_body.add_theme_stylebox_override("panel", _style)
 	add_child(_body)
+	if _art != null:
+		_build_figure(width)
 	_slot = _label(Vector2(0, 8), Vector2(width, 30), 20, _body)
-	_name = _label(Vector2(8, 40), Vector2(width - 16, 90), 28, _body)
-	_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status = _label(Vector2(0, 140), Vector2(width, 40), 22, _body)
+	if _art != null:
+		# The figure fills the panel: name and state go at its feet, outlined.
+		_name = _label(Vector2(0, BODY_HEIGHT - 44), Vector2(width, 40), 24, _body)
+		_status = _label(Vector2(0, BODY_HEIGHT - 80), Vector2(width, 36), 22, _body)
+		for label: Label in [_slot, _name, _status]:
+			label.add_theme_color_override("font_outline_color", COLOR_OUTLINE)
+			label.add_theme_constant_override("outline_size", 6)
+	else:
+		_name = _label(Vector2(8, 40), Vector2(width - 16, 90), 28, _body)
+		_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_status = _label(Vector2(0, 140), Vector2(width, 40), 22, _body)
 	var below: float = INTENT_HEIGHT + BODY_HEIGHT + 8.0
 	_hp_bar = ProgressBar.new()
 	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -104,6 +130,42 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 	_down = not c.is_standing()
 	_dimmed = c.is_saint() and c.has_acted and c.is_standing()
 	_apply_style()
+	if _art != null and (c.spirit_state != _spirit_state or c.desolation != _spirit_desolation or _figure.texture == null):
+		_spirit_state = c.spirit_state
+		_spirit_desolation = c.desolation
+		_apply_spirit(false)
+
+
+## Live update while events play (desolation_changed): the halo follows.
+func set_desolation(value: int) -> void:
+	if _art == null or value == _spirit_desolation:
+		return
+	_spirit_desolation = value
+	_apply_spirit(true)
+
+
+## Live update while events play (state_changed): body image and halo.
+func set_spirit_state(state_id: StringName) -> void:
+	if _art == null or state_id == _spirit_state:
+		return
+	_spirit_state = state_id
+	_apply_spirit(true)
+
+
+func has_art() -> bool:
+	return _art != null
+
+
+func figure_texture() -> Texture2D:
+	return _figure.texture if _figure != null else null
+
+
+func halo() -> HaloView:
+	return _halo
+
+
+func figure_saturation() -> float:
+	return float(_figure_material.get_shader_parameter("saturation")) if _figure_material != null else 1.0
 
 
 func set_hp(hp: int) -> void:
@@ -162,7 +224,7 @@ func play_hit() -> float:
 	return t
 
 
-## Slow tilt and fade to grey.
+## Slow tilt and fade to grey; the halo goes out (ADR-0007).
 func play_fall() -> float:
 	_down = true
 	_apply_style()
@@ -208,6 +270,44 @@ func _apply_style() -> void:
 	_style.bg_color = base.darkened(0.45) if _dimmed else base
 	_style.border_color = MARK_COLORS[mark]
 	_body.modulate = Color(1, 1, 1, 0.75) if _down else Color.WHITE
+	if _art != null:
+		# The figure replaces the coloured block; the border still marks it.
+		_style.bg_color = Color(0, 0, 0, 0.25)
+		_figure.self_modulate = Color(0.55, 0.55, 0.55) if (_dimmed or _down) else Color.WHITE
+		_halo.visible = not _down
+
+
+func _build_figure(width: float) -> void:
+	_figure_material = ShaderMaterial.new()
+	_figure_material.shader = load(SHADER_PATH)
+	_figure = TextureRect.new()
+	_figure.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_figure.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_figure.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_figure.material = _figure_material
+	_figure.size = FIGURE_SIZE
+	# Feet on the bottom of the panel; the head rises above it.
+	_figure.position = Vector2((width - FIGURE_SIZE.x) * 0.5, BODY_HEIGHT - FIGURE_SIZE.y)
+	_halo = HaloView.new()
+	_halo.setup(_halo_settings, _art.halo_diameter * FIGURE_SIZE.x)
+	# Added first, so the halo is drawn behind the figure.
+	_body.add_child(_halo)
+	_body.add_child(_figure)
+
+
+## Body image, halo position and look for the current spiritual state
+## (asset-pipeline §6). `animated` glides the halo when speed allows.
+func _apply_spirit(animated: bool) -> void:
+	_figure.texture = _art.body_for(_spirit_state)
+	var head: Vector2 = _figure.position + _art.head_for(_spirit_state) * FIGURE_SIZE
+	_halo.position = head - _halo.size * 0.5
+	var look: HaloLook = HaloLook.of(_halo_settings, _spirit_state, _spirit_desolation)
+	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
+	_halo.apply(look, duration)
+	if duration > 0.0 and is_inside_tree():
+		create_tween().tween_property(_figure_material, "shader_parameter/saturation", look.saturation, duration)
+	else:
+		_figure_material.set_shader_parameter("saturation", look.saturation)
 
 
 func _label(pos: Vector2, label_size: Vector2, font_size: int, parent: Node = null) -> Label:

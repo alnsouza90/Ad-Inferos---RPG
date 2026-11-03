@@ -30,12 +30,14 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-112 · 03/11/2026 · Alan** — Vigília no Pouso passa de −40 para −20 de desolação. *`constants.csv`, specs de desolação e expedição.*
 - **D-113 · 03/11/2026 · Alan** — Metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" ficam para recalibrar no M1.
 - **D-114 · 03/11/2026 · Alan** — Textos da tela de combate (`docs/balance/ui_text.csv`) revisados e aprovados sem mudanças; T15 aprovada. *PR #17.*
+- **D-115 · 03/11/2026 · Alan** — T16 aprovada (auréola no motor com a arte piloto de São Jorge). *PR #18.*
 
 ## Arte
 
 - **D-201 · 03/11/2026 · Alan** — Poses de ataque, golpe recebido e queda não serão geradas: animação feita no motor a partir de uma imagem por estado; plano B é recorte com `Skeleton2D`. *ADR-0007.*
 
 - **D-202 · 03/11/2026 · Alan** — Teresinha: a imagem com muitas pétalas é a Consolação; a com poucas pétalas é o estado padrão. *`art_source/characters/saints/saint_therese/`.*
+- **D-203 · 03/11/2026 · Alan** — Depois de jogar a T15 no navegador (toque e leitura OK), Alan manteve o plano original: a T16 traz só São Jorge e a auréola; o resto da arte recebida (Bento, Teresinha, inimigos, cenário) entra depois. O seletor de encontro fica para a T17. *`progress.md`.*
 
 ## Técnicas (do agente)
 
@@ -49,4 +51,6 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-309 · 03/11/2026 · agente** — Textos da interface em `docs/balance/ui_text.csv`, importados para `game/data/ui_text.tres`; chave ausente aparece como `[chave]`. *ADR-0010, T15.*
 - **D-310 · 03/11/2026 · agente** — Tela de combate montada em código sobre um palco de 1920×1080 centralizado; o fluxo de toques fica em `BattleSelection` (sem `Node`), que só usa `validate()` e `preview()`. A prévia passou a informar a desolação (`PreviewEntry.desolation`). *T15, `scenes/battle/`.*
 - **D-311 · 03/11/2026 · agente** — Versão Web sem threads publicada no GitHub Pages a cada merge na `main` (o Pages não envia COOP/COEP). *`.github/workflows/pages.yml`, `game/export_presets.cfg`.*
+- **D-312 · 03/11/2026 · agente** — Arte tratada por `tools/art/process_art.py` (Python e Pillow, ferramenta de desenvolvimento). *ADR-0011.*
+- **D-313 · 03/11/2026 · agente** — Arte de cada santo num recurso `CombatantArt` (`scenes/battle/combatants/<id>_art.tres`) com uma imagem por estado e o ponto da cabeça; valores visuais da auréola em `scenes/battle/halo_settings.tres` (apresentação, fora de `docs/balance`). Texturas com importação padrão (sem perda) até a T17. *T16.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*

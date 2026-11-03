@@ -5,10 +5,9 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 ## Onde estamos
 
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
-- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026).
+- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026); T16 · auréola no motor com a arte piloto de São Jorge (PR #18, aprovado por Alan em 03/11/2026).
 - **Jogo no navegador:** https://alnsouza90.github.io/Ad-Inferos---RPG/ (publicado a cada merge na `main`).
-- **Próxima:** T16 · Auréola no motor.
-- **Depois:** T17 (arena e APK Android).
+- **Próxima:** T17 · Arena de teste (seletor de encontro e semente) e APK Android. Alan vai conferir a T16 no celular (Jorge ampliado, faixa clara na Consolação).
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
 
 ## Como trabalhamos
@@ -49,5 +48,5 @@ Registradas também no backlog de cada tarefa.
   - `characters/saints/saint_george/`: corpo padrão (`_body_idle_v01`, **só 343×512**: pedir versão maior a Alan antes da arte final), corpo em Noite Escura e em Consolação (848×1264, usados como pose própria do estado), retrato (896×1200).
   - `vfx/halo/`: disco da auréola e raios (1024×1024).
   - A imagem de Consolação tem um brilho claro atrás da cabeça; conferir no motor se ele briga com a auréola (a Direção de Arte pede imagens sem auréola).
-  - Ainda falta processar (remover fundo, recortar, redimensionar, `game/assets/`): fica para a T16.
+  - Corpo nos três estados e auréola processados na T16 (`game/assets/`, `tools/art/process_art.py`); o retrato ainda não.
 - **Arte do piloto em combate recebida (03/11/2026)**, originais em `art_source/`: os 7 inimigos da Família A (`characters/enemies/`), Bento e Teresinha em padrão, Noite Escura e Consolação, cenário do Círculo 2 trecho 1 (fundo e frente) e redemoinhos do Vendaval (`vfx/hazards/`). Pendências em `open-questions.md`.
