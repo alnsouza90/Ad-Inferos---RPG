@@ -5,6 +5,9 @@ extends RefCounted
 
 const DESOLATION_ALLY_FALLEN: int = 15
 const REVIVE_WINDOW: int = 2
+const FERVOR_PER_ROUND: int = 3
+const FERVOR_CAP: int = 6
+const FERVOR_BONUS_CAP: int = 2
 
 
 static func constants() -> ConstantsDef:
@@ -13,6 +16,9 @@ static func constants() -> ConstantsDef:
 		"fallen_revive_window": float(REVIVE_WINDOW),
 		"desolation_ally_fallen": float(DESOLATION_ALLY_FALLEN),
 		"desolation_max": 200.0,
+		"fervor_per_round": float(FERVOR_PER_ROUND),
+		"fervor_cap": float(FERVOR_CAP),
+		"fervor_bonus_cap_per_round": float(FERVOR_BONUS_CAP),
 	}
 	return c
 
