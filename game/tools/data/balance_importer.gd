@@ -25,8 +25,8 @@ const ROLES: Array[String] = ["protector", "healer", "fighter", "exorcist", "int
 const AFFINITIES: Array[String] = ["carmel", "franciscans", "monastics", "soldiers"]
 const ABILITY_KINDS: Array[String] = ["basic", "fervor", "miracle"]
 const ABILITY_TARGETING: Array[String] = ["self", "ally", "ally_fallen", "all_allies", "enemy", "enemy_group", "all_enemies", "chosen_enemy_slots"]
-const ALLY_TARGETING: Array[String] = ["ally", "ally_fallen"]
-const ENEMY_TARGETING: Array[String] = ["enemy", "enemy_group", "chosen_enemy_slots"]
+const ABILITY_ALLY_TARGETING: Array[String] = ["ally", "ally_fallen"]
+const ABILITY_ENEMY_TARGETING: Array[String] = ["enemy", "enemy_group", "chosen_enemy_slots"]
 const ORIGINS: Array[String] = ["scripture", "catechism", "tradition", "hagiography", "legend", "apocrypha", "dante", "demonology", "game_fiction"]
 const EFFECT_TYPES: Array[String] = ["damage", "heal", "revive", "apply_condition", "remove_condition", "strip_positive_tokens", "move", "gain_fervor", "desolation", "summon", "self_damage", "light", "reveal_or_cancel_ambush"]
 const DAMAGE_TYPES: Array[String] = ["strike", "exorcism", "untyped"]
@@ -44,7 +44,7 @@ const CONSUME_ON: Array[String] = ["none", "on_hit_received", "on_damaging_actio
 const FAMILIES: Array[String] = ["a", "b", "c", "elite", "boss"]
 const NATURES: Array[String] = ["corporeal", "spiritual"]
 const ENEMY_ROLES: Array[String] = ["brute", "guard", "ranged", "corruptor", "manipulator", "summoner"]
-const ENEMY_TARGETING: Array[String] = ["single", "all_party", "self", "ally_enemy", "all_enemies"]
+const ACTION_TARGETING: Array[String] = ["single", "all_party", "self", "ally_enemy", "all_enemies"]
 const TARGET_RULES: Array[String] = ["front_most", "back_most", "lowest_hp", "lowest_hp_pct", "highest_desolation", "random"]
 const ACTION_CONDITIONS_WITH_PARAM: Array[String] = ["self_hp_below", "ally_hp_below", "allies_alive_below", "round_at_least", "every_n_rounds", "party_has_condition"]
 const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
@@ -312,8 +312,8 @@ func _build_abilities() -> void:
 				_err("out_of_range", t.file_name, line, "chosen_enemy_slots(n) com n fora de 1..%d" % MAX_ENEMY_SLOTS)
 		else:
 			d.targeting = _enum(t, line, "targeting", row, ABILITY_TARGETING)
-		var needs_slots: bool = ALLY_TARGETING.has(String(d.targeting)) or ENEMY_TARGETING.has(String(d.targeting))
-		var max_slot: int = MAX_ENEMY_SLOTS if ENEMY_TARGETING.has(String(d.targeting)) else SAINT_SLOTS.size()
+		var needs_slots: bool = ABILITY_ALLY_TARGETING.has(String(d.targeting)) or ABILITY_ENEMY_TARGETING.has(String(d.targeting))
+		var max_slot: int = MAX_ENEMY_SLOTS if ABILITY_ENEMY_TARGETING.has(String(d.targeting)) else SAINT_SLOTS.size()
 		d.target_slots = _int_list(t, line, "target_slots", row, 1, max_slot, needs_slots)
 		d.allow_self = _flag(t, line, "allow_self", row)
 		d.once_per_battle = _flag(t, line, "once_per_battle", row)
@@ -350,7 +350,7 @@ func _build_enemy_actions() -> void:
 		d.id = StringName(row["id"])
 		d.priority = _int(t, line, "priority", row, 1, 99)
 		d.use_slots = _int_list(t, line, "use_slots", row, 1, MAX_ENEMY_SLOTS, true)
-		d.targeting = _enum(t, line, "targeting", row, ENEMY_TARGETING)
+		d.targeting = _enum(t, line, "targeting", row, ACTION_TARGETING)
 		d.target_slots = _int_list(t, line, "target_slots", row, 1, SAINT_SLOTS.size(), d.targeting == &"single")
 		d.target_rule = _enum(t, line, "target_rule", row, TARGET_RULES)
 		d.conditions.assign(_action_conditions(t, line, row))
