@@ -22,26 +22,6 @@ func _entries(ctrl: BattleController, cmd: BattleCommand) -> Array:
 	return list
 
 
-func _candidates(ctrl: BattleController) -> Array[BattleCommand]:
-	var cmds: Array[BattleCommand] = []
-	var slot_sets: Array = [[], [1], [2], [3], [4], [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
-	for saint: Combatant in ctrl.state.party:
-		var abilities: Array[StringName] = saint.equipped.duplicate()
-		for ability_id: StringName in abilities:
-			for slots: Array in slot_sets:
-				cmds.append(BattleCommand.use_ability(saint.id, ability_id, Array(slots, TYPE_INT, "", null)))
-		for slots: Array in slot_sets:
-			cmds.append(BattleCommand.use_miracle(saint.id, Array(slots, TYPE_INT, "", null)))
-		cmds.append(BattleCommand.swap_slots(saint.id, -1))
-		cmds.append(BattleCommand.swap_slots(saint.id, 1))
-		cmds.append(BattleCommand.pass_turn(saint.id))
-		for provision: StringName in [&"bread", &"holy_water", &"bandages"]:
-			for slot: int in [1, 2, 3]:
-				cmds.append(BattleCommand.use_provision(provision, slot, saint.id))
-	cmds.append(BattleCommand.end_party_turn())
-	return cmds.filter(func(cmd: BattleCommand) -> bool: return ctrl.validate(cmd) == &"")
-
-
 func test_preview_equals_execution_for_1000_random_valid_commands() -> void:
 	var picker := RngStream.new(SEED, &"test_picker")
 	var encounters: Array[String] = RealData.m0_encounter_ids()
@@ -53,7 +33,7 @@ func test_preview_equals_execution_for_1000_random_valid_commands() -> void:
 		ctrl.start()
 		battles += 1
 		while not ctrl.is_over() and done < COMMANDS and ctrl.state.round_number < 30:
-			var options: Array[BattleCommand] = _candidates(ctrl)
+			var options: Array[BattleCommand] = CommandCandidates.all_valid(ctrl)
 			var cmd: BattleCommand = options[picker.pick_index(options.size())]
 			var snapshot: String = JSON.stringify(ctrl.state.to_dict(), "", true)
 			var predicted: Array = []
