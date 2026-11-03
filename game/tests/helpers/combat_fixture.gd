@@ -28,6 +28,10 @@ static func constants() -> ConstantsDef:
 		"effect_queue_limit": 64.0,
 		"duel_damage_mult": 1.25,
 		"duel_counter_damage": 3.0,
+		"affinity_carmel_desolation_mult": 0.85,
+		"affinity_franciscan_first_round_fervor": 1.0,
+		"affinity_monastic_mult": 1.1,
+		"affinity_soldier_mult": 1.1,
 		"corruption_desolation_per_stack": 3.0,
 		"faith_check_threshold": 100.0,
 		"faith_check_base": 0.1,
@@ -117,6 +121,14 @@ static func effect(type: StringName, amount: float = 0.0, damage_type: StringNam
 	e.stacks = stacks
 	e.params = params
 	return e
+
+
+static func trait_def(hook: StringName, params: Dictionary = {}) -> TraitDef:
+	var t := TraitDef.new()
+	t.id = StringName("trait_" + String(hook))
+	t.hook = hook
+	t.params = params
+	return t
 
 
 static func ability(id: StringName, kind: StringName, cost: int, use_slots: Array[int], targeting: StringName, target_slots: Array[int] = [], allow_self: bool = false, once_per_battle: bool = false, target_count: int = 0) -> AbilityDef:

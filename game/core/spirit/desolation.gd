@@ -39,6 +39,7 @@ static func change(saint: Combatant, amount: int, source: StringName, ctx: Desol
 static func gain_multiplier(saint: Combatant, ctx: DesolationContext) -> float:
 	var mult: float = light_multiplier(ctx)
 	mult *= ctx.affinity_mult
+	mult *= ctx.trait_mult
 	mult *= ctx.relic_mult
 	mult *= ctx.season_mult
 	if saint.spirit_state == CONSOLATION:

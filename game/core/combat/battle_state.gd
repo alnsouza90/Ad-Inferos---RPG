@@ -26,6 +26,8 @@ var provisions_used_this_turn: int = 0
 ## True during ENEMY_TURN and HAZARD (affects expire_round_end, conditions §3.3).
 var in_enemy_phase: bool = false
 var engine: ConditionEngine
+## Affinities with at least two members in the party (combat §12), set at SETUP.
+var active_affinities: Array[StringName] = []
 ## Random streams of this battle; only the Faith check and AI ties use them.
 var rng: RngStreams
 ## Expedition Light during this battle, or -1 for the arena (desolation §2).
@@ -154,12 +156,13 @@ func swap_party(actor: Combatant, direction: int) -> String:
 
 ## Forced movement of a saint: positive `delta` pushes back, negative pulls
 ## forward. Spends no action. Returns how many slots it actually moved.
-func move_party(c: Combatant, delta: int) -> int:
+func move_party(c: Combatant, delta: int, protected: Array[Combatant] = []) -> int:
 	var moved := 0
 	var step: int = signi(delta)
 	for i: int in absi(delta):
 		var from_slot: int = party_slot_of(c)
-		if party_at(from_slot + step) == null:
+		var other: Combatant = party_at(from_slot + step)
+		if other == null or protected.has(other):
 			break
 		_swap_party_slots(from_slot, from_slot + step)
 		moved += 1
@@ -288,17 +291,60 @@ func kill(c: Combatant) -> void:
 ## Every desolation change in battle goes through the desolation rules
 ## (multipliers, Faith check, Purification, Prostration).
 func add_desolation(c: Combatant, amount: int, source: StringName = &"") -> void:
-	Desolation.change(c, amount, source, desolation_context())
+	Desolation.change(c, amount, source, desolation_context(c))
 
 
-func desolation_context() -> DesolationContext:
+func desolation_context(saint: Combatant = null) -> DesolationContext:
 	var ctx := DesolationContext.new()
 	ctx.constants = constants
 	ctx.rng = rng.faith()
 	ctx.light = light
 	ctx.battle = self
 	ctx.emit = emit
+	if saint != null:
+		if has_affinity_bonus(saint, &"carmel"):
+			ctx.affinity_mult = constants.get_float(&"affinity_carmel_desolation_mult")
+		var benedict: Combatant = clausura_holder()
+		if benedict != null and is_clausura_protected(saint):
+			ctx.trait_mult = benedict.trait_param("adjacent_desolation_mult", 1.0)
 	return ctx
+
+
+# --- affinities and traits (combat §12 and §13) ---------------------------------------
+
+## SETUP: an affinity is active with at least two members in the party,
+## Fallen ones included.
+func compute_affinities() -> void:
+	active_affinities.clear()
+	var counts: Dictionary = {}
+	for c: Combatant in party:
+		for affinity: StringName in c.affinities:
+			counts[affinity] = int(counts.get(affinity, 0)) + 1
+	for affinity: StringName in counts:
+		if int(counts[affinity]) >= 2:
+			active_affinities.append(affinity)
+
+
+## Affinity bonuses apply only to the affinity's members (decision of 03/11/2026).
+func has_affinity_bonus(c: Combatant, affinity: StringName) -> bool:
+	return c != null and c.is_saint() and active_affinities.has(affinity) and c.affinities.has(affinity)
+
+
+## The standing saint whose trait is Clausura, if any (it only works while
+## that saint stands; decision of 03/11/2026).
+func clausura_holder() -> Combatant:
+	for c: Combatant in party:
+		if c.is_standing() and c.trait_hook() == &"clausura":
+			return c
+	return null
+
+
+## Allies adjacent to the Clausura holder (not the holder itself).
+func is_clausura_protected(c: Combatant) -> bool:
+	var holder: Combatant = clausura_holder()
+	if holder == null or c == holder or not c.is_saint():
+		return false
+	return absi(party_slot_of(c) - party_slot_of(holder)) == 1
 
 
 ## ROUND_END step 9: count Fallen saints and expire remains.

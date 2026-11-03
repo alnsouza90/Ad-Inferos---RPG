@@ -17,7 +17,21 @@ func apply(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:
 	ctx.emit.call(&"damage_dealt", {"source": ctx.actor.id if ctx.actor != null else &"", "target": target.id, "amount": lost, "type": effect.damage_type, "warded": result["ward"], "strength": strength, "hp": target.hp})
 	if not target.is_standing():
 		ctx.emit.call(&"fell" if target.is_saint() else &"enemy_died", {"target": target.id})
+	_maybe_duel_auto_mark(ctx, target)
 	_maybe_duel_counter(ctx, effect, target)
+
+
+## Trait Duel (traits.csv duel_auto_mark): the first enemy the saint hits in
+## each battle enters Duel with them.
+func _maybe_duel_auto_mark(ctx: EffectContext, target: Combatant) -> void:
+	var actor: Combatant = ctx.actor
+	if actor == null or not actor.is_saint() or actor.trait_hook() != &"duel_auto_mark":
+		return
+	if target.is_saint() or actor.trait_counters.get("duel_marked", false):
+		return
+	actor.trait_counters["duel_marked"] = true
+	if target.is_standing():
+		ctx.state.engine.apply(target, &"duel", 1, actor)
 
 
 func _maybe_duel_counter(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:

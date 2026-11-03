@@ -57,7 +57,8 @@ func _init(p_state: BattleState) -> void:
 func start() -> Array[BattleEvent]:
 	assert(phase == Phase.SETUP, "start() called twice")
 	fervor.reset()
-	_emit(EV_BATTLE_STARTED)
+	state.compute_affinities()
+	_emit(EV_BATTLE_STARTED, {"affinities": state.active_affinities.duplicate()})
 	_begin_round()
 	return _flush()
 
@@ -164,6 +165,9 @@ func _begin_round() -> void:
 		saint.has_acted = false
 	var gained: int = fervor.start_round()
 	_emit(EV_FERVOR_GAINED, {"amount": gained, "total": fervor.amount, "bonus": false})
+	if state.round_number == 1 and state.active_affinities.has(&"franciscans"):
+		var extra: int = fervor.gain_bonus(state.constants.get_int(&"affinity_franciscan_first_round_fervor"))
+		_emit(EV_FERVOR_GAINED, {"amount": extra, "total": fervor.amount, "bonus": true, "source": &"franciscans"})
 	_choose_intents()
 	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size(), "intents": _intent_dicts()})
 	_apply_round_start_conditions()
@@ -263,7 +267,7 @@ func _check_ability(cmd: BattleCommand, actor: Combatant, ability: AbilityDef) -
 		return CommandResult.NOT_EQUIPPED
 	if not ability.use_slots.has(state.party_slot_of(actor)):
 		return CommandResult.WRONG_SLOT
-	if not fervor.can_afford(ability.cost):
+	if not fervor.can_afford(effective_cost(actor, ability)):
 		return CommandResult.NOT_ENOUGH_FERVOR
 	if actor.is_dark_night() and ability.cost > 0:
 		return CommandResult.DARK_NIGHT
@@ -356,17 +360,56 @@ func _run_ability(cmd: BattleCommand) -> StringName:
 	var targets: Array[Combatant] = _resolve_targets(actor, ability, cmd.target_slots)
 	if targets.is_empty():
 		return CommandResult.INVALID_TARGET
-	fervor.spend(ability.cost)
+	var cost: int = effective_cost(actor, ability)
+	var little_way_used: bool = cost < ability.cost
+	fervor.spend(cost)
 	actor.has_acted = true
+	_update_little_way(actor, ability, little_way_used)
 	if ability.once_per_battle:
 		actor.used_once.append(ability.id)
 	var target_ids: Array[String] = []
 	for t: Combatant in targets:
 		target_ids.append(String(t.id))
-	_emit(EV_ABILITY_USED, {"actor": actor.id, "ability": ability.id, "kind": ability.kind, "cost": ability.cost, "targets": target_ids, "fervor": fervor.amount})
+	_emit(EV_ABILITY_USED, {"actor": actor.id, "ability": ability.id, "kind": ability.kind, "cost": cost, "targets": target_ids, "fervor": fervor.amount})
 	_resolve_ability_effects(actor, ability, targets)
 	_check_outcome()
 	return &""
+
+
+## Fervor an ability costs this time. Trait Little Way (traits.csv
+## little_way_counter): after N basic abilities, the saint's next heal or
+## revive that would cost Fervor is free. Miracles are excluded and a heal that
+## already costs 0 keeps the bonus (decisions of 03/11/2026).
+func effective_cost(actor: Combatant, ability: AbilityDef) -> int:
+	if _little_way_ready(actor) and _is_little_way_heal(ability):
+		return 0
+	return ability.cost
+
+
+func _little_way_ready(actor: Combatant) -> bool:
+	if actor.trait_hook() != &"little_way_counter":
+		return false
+	return int(actor.trait_counters.get("little_way", 0)) >= int(actor.trait_param("basic_actions", 0.0))
+
+
+func _is_little_way_heal(ability: AbilityDef) -> bool:
+	if ability.kind == &"miracle" or ability.cost <= 0:
+		return false
+	return ability.effects.any(func(e: EffectDef) -> bool: return e.type == &"heal" or e.type == &"revive")
+
+
+func _update_little_way(actor: Combatant, ability: AbilityDef, used: bool) -> void:
+	if actor.trait_hook() != &"little_way_counter":
+		return
+	if used:
+		actor.trait_counters["little_way"] = 0
+		_emit(&"little_way_used", {"actor": actor.id, "ability": ability.id})
+		return
+	if ability.kind == &"basic":
+		var count: int = int(actor.trait_counters.get("little_way", 0)) + 1
+		actor.trait_counters["little_way"] = count
+		if count == int(actor.trait_param("basic_actions", 0.0)):
+			_emit(&"little_way_ready", {"actor": actor.id})
 
 
 func _run_swap(cmd: BattleCommand) -> StringName:
