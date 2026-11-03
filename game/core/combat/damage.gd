@@ -23,7 +23,7 @@ static func compute(state: BattleState, attacker: Combatant, target: Combatant, 
 	value *= category_multiplier(effect, target)
 	if strength_active:
 		value *= constants.get_float(&"strength_mult")
-	value *= duel_multiplier(attacker, target)
+	value *= duel_multiplier(constants, attacker, target)
 	value *= fury_multiplier(attacker)
 	value *= affinity_multiplier(attacker, effect.damage_type)
 	value *= relic_multiplier(attacker, effect.damage_type)
@@ -57,8 +57,10 @@ static func category_multiplier(effect: EffectDef, target: Combatant) -> float:
 	return float(effect.params[String(target.category)])
 
 
-## Duel with Saint George (conditions §5): T10.
-static func duel_multiplier(_attacker: Combatant, _target: Combatant) -> float:
+## Duel (conditions §5): the saint who declared it deals more to that target.
+static func duel_multiplier(constants: ConstantsDef, attacker: Combatant, target: Combatant) -> float:
+	if attacker != null and target.has_condition(&"duel") and target.condition_sources.get(&"duel") == attacker.id:
+		return constants.get_float(&"duel_damage_mult")
 	return 1.0
 
 
