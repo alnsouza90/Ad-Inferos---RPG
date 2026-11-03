@@ -26,6 +26,12 @@ var provisions_used_this_turn: int = 0
 ## True during ENEMY_TURN and HAZARD (affects expire_round_end, conditions §3.3).
 var in_enemy_phase: bool = false
 var engine: ConditionEngine
+## Random streams of this battle; only the Faith check and AI ties use them.
+var rng: RngStreams
+## Expedition Light during this battle, or -1 for the arena (desolation §2).
+var light: int = -1
+## Callable(type, data) for desolation events; set by the controller.
+var emit: Callable = func(_type: StringName, _data: Dictionary) -> void: pass
 var party: Array[Combatant] = []
 var enemies: Array[Combatant] = []
 var round_number: int = 0
@@ -39,10 +45,12 @@ func _init(p_catalog: BattleCatalog) -> void:
 	constants = p_catalog.constants
 	condition_defs = p_catalog.conditions
 	engine = ConditionEngine.new(self)
+	rng = RngStreams.new(0)
 
 
-static func create(p_catalog: BattleCatalog, saints: Array[SaintDef], enemy_defs: Array[EnemyDef], p_provisions: Array[StringName] = [], p_encounter_type: StringName = &"common") -> BattleState:
+static func create(p_catalog: BattleCatalog, saints: Array[SaintDef], enemy_defs: Array[EnemyDef], p_provisions: Array[StringName] = [], p_encounter_type: StringName = &"common", seed: int = 0) -> BattleState:
 	var state := BattleState.new(p_catalog)
+	state.rng = RngStreams.new(seed)
 	state.provisions = p_provisions.duplicate()
 	state.encounter_type = p_encounter_type
 	for saint: SaintDef in saints:
@@ -247,7 +255,7 @@ func fall(c: Combatant, cause: StringName) -> void:
 		var amount: int = constants.get_int(&"desolation_ally_fallen")
 		for ally: Combatant in party:
 			if ally != c and ally.is_standing():
-				add_desolation(ally, amount)
+				add_desolation(ally, amount, &"ally_fallen")
 
 
 ## Prostration in battle (desolation §5): Fallen with no way to be raised.
@@ -268,10 +276,20 @@ func kill(c: Combatant) -> void:
 		enemies.erase(c)
 
 
-## Raw desolation change, clamped to the scale. Multipliers and faith checks
-## come with the desolation system (T08).
-func add_desolation(c: Combatant, amount: int) -> void:
-	c.desolation = clampi(c.desolation + amount, 0, constants.get_int(&"desolation_max"))
+## Every desolation change in battle goes through the desolation rules
+## (multipliers, Faith check, Purification, Prostration).
+func add_desolation(c: Combatant, amount: int, source: StringName = &"") -> void:
+	Desolation.change(c, amount, source, desolation_context())
+
+
+func desolation_context() -> DesolationContext:
+	var ctx := DesolationContext.new()
+	ctx.constants = constants
+	ctx.rng = rng.faith()
+	ctx.light = light
+	ctx.battle = self
+	ctx.emit = emit
+	return ctx
 
 
 ## ROUND_END step 9: count Fallen saints and expire remains.
@@ -381,5 +399,6 @@ func to_dict() -> Dictionary:
 	return {
 		"round": round_number, "party": party_list, "enemies": enemy_list, "intents": intent_list,
 		"provisions": provision_list, "provisions_used_this_turn": provisions_used_this_turn,
-		"encounter_type": String(encounter_type),
+		"encounter_type": String(encounter_type), "light": light,
+		"rng": rng.get_counters(),
 	}

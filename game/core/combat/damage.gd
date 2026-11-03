@@ -27,6 +27,7 @@ static func compute(state: BattleState, attacker: Combatant, target: Combatant, 
 	value *= fury_multiplier(attacker)
 	value *= affinity_multiplier(attacker, effect.damage_type)
 	value *= relic_multiplier(attacker, effect.damage_type)
+	value *= consolation_multiplier(constants, attacker)
 	var warded: bool = target.has_condition(&"ward")
 	if warded:
 		value *= constants.get_float(&"ward_mult")
@@ -71,6 +72,13 @@ static func fury_multiplier(_attacker: Combatant) -> float:
 
 ## Affinities (combat §12): T10.
 static func affinity_multiplier(_attacker: Combatant, _damage_type: StringName) -> float:
+	return 1.0
+
+
+## Consolation (desolation §4.1): damage and healing dealt are increased.
+static func consolation_multiplier(constants: ConstantsDef, actor: Combatant) -> float:
+	if actor != null and actor.spirit_state == &"consolation":
+		return constants.get_float(&"consolation_output_mult")
 	return 1.0
 
 

@@ -46,6 +46,10 @@ var equipped: Array[StringName] = []
 var miracle: StringName = &""
 ## &"normal", &"consolation" or &"dark_night" (desolation §1).
 var spirit_state: StringName = &"normal"
+## Purification happened this expedition: +experience (desolation §4.3).
+var purified: bool = false
+## Injury to apply when the battle ends (e.g. &"major" from Prostration).
+var pending_injury: StringName = &""
 ## Abilities marked once_per_battle already used.
 var used_once: Array[StringName] = []
 
@@ -135,6 +139,7 @@ func to_dict() -> Dictionary:
 		"id": String(id), "def_id": String(def_id), "team": team, "state": state,
 		"hp": hp, "max_hp": max_hp, "desolation": desolation, "spirit_state": String(spirit_state),
 		"conditions": conds, "has_acted": has_acted, "fallen_rounds": fallen_rounds,
-		"revivable": revivable, "stun_immune_until": stun_immune_until, "remains_left": remains_left, "used_once": used,
+		"revivable": revivable, "stun_immune_until": stun_immune_until,
+		"purified": purified, "pending_injury": String(pending_injury), "remains_left": remains_left, "used_once": used,
 		"trait_counters": trait_counters.duplicate(true),
 	}

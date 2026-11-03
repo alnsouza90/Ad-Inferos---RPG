@@ -118,9 +118,7 @@ func tick_owner_turn_start(c: Combatant) -> void:
 					emit.call(&"fell" if c.is_saint() else &"enemy_died", {"target": c.id})
 			CORRUPTION_HOOK:
 				if c.is_saint():
-					var before: int = c.desolation
-					state.add_desolation(c, stacks * state.constants.get_int(&"corruption_desolation_per_stack"))
-					emit.call(&"desolation_changed", {"target": c.id, "old": before, "new": c.desolation, "source": condition_id})
+					state.add_desolation(c, stacks * state.constants.get_int(&"corruption_desolation_per_stack"), condition_id)
 		if def.decay == &"minus_one_after_tick":
 			_decrement(c, condition_id)
 		if not c.is_standing():
