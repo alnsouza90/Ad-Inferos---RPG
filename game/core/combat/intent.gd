@@ -36,3 +36,11 @@ static func idle(p_enemy_id: StringName, p_kind: StringName) -> Intent:
 
 func to_dict() -> Dictionary:
 	return {"enemy": String(enemy_id), "action": String(action_id), "kind": String(kind), "slot": target_slot, "ally": String(target_enemy_id), "preview": preview_value}
+
+
+func clone() -> Intent:
+	var copy := Intent.new()
+	for prop: Dictionary in get_property_list():
+		if int(prop["usage"]) & PROPERTY_USAGE_SCRIPT_VARIABLE != 0:
+			copy.set(prop["name"], get(prop["name"]))
+	return copy

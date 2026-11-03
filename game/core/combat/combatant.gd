@@ -159,3 +159,17 @@ func to_dict() -> Dictionary:
 		"purified": purified, "pending_injury": String(pending_injury), "remains_left": remains_left, "used_once": used,
 		"trait_counters": trait_counters.duplicate(true),
 	}
+
+
+## Independent copy for previews (combat §15). Definitions (Resources) are
+## shared because they are immutable; everything else is duplicated.
+func clone() -> Combatant:
+	var copy := Combatant.new()
+	for prop: Dictionary in get_property_list():
+		if int(prop["usage"]) & PROPERTY_USAGE_SCRIPT_VARIABLE == 0:
+			continue
+		var value: Variant = get(prop["name"])
+		if value is Array or value is Dictionary:
+			value = value.duplicate(true)
+		copy.set(prop["name"], value)
+	return copy

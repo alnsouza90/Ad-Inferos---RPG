@@ -150,6 +150,39 @@ func validate(cmd: BattleCommand) -> StringName:
 	return CommandResult.UNKNOWN_COMMAND
 
 
+## combat §15: runs `cmd` on a copy of the battle and returns what it would
+## do to each affected combatant. The real battle is never changed. An
+## invalid command previews as an empty list (validate() gives the reason).
+func preview(cmd: BattleCommand) -> Array[PreviewEntry]:
+	var copy: BattleController = clone()
+	var before: Dictionary = _intent_kinds(copy.state)
+	var result: CommandResult = copy.execute(cmd)
+	if not result.ok:
+		return [] as Array[PreviewEntry]
+	var cancelled: Array[StringName] = []
+	var after: Dictionary = _intent_kinds(copy.state)
+	for enemy_id: StringName in before:
+		if before[enemy_id] == Intent.KIND_ACTION and after.get(enemy_id, Intent.KIND_ACTION) != Intent.KIND_ACTION:
+			cancelled.append(enemy_id)
+	return PreviewEntry.from_events(result.events, cancelled)
+
+
+## Independent copy of the battle and the controller (Fervor, phase).
+func clone() -> BattleController:
+	var copy := BattleController.new(state.clone())
+	copy.phase = phase
+	copy.fervor.amount = fervor.amount
+	copy.fervor.bonus_gained_this_round = fervor.bonus_gained_this_round
+	return copy
+
+
+func _intent_kinds(s: BattleState) -> Dictionary:
+	var kinds: Dictionary = {}
+	for intent: Intent in s.intents:
+		kinds[intent.enemy_id] = intent.kind
+	return kinds
+
+
 func is_over() -> bool:
 	return phase == Phase.VICTORY or phase == Phase.DEFEAT or phase == Phase.RETREAT
 
