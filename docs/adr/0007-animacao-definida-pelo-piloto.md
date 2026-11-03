@@ -1,6 +1,6 @@
 # ADR-0007 · Abordagem de animação definida pelo piloto de arte
 
-**Situação:** Pendente do piloto
+**Situação:** Decidida por Alan em 03/11/2026 (primeira abordagem); revisar depois do teste no piloto
 
 ## Contexto
 
@@ -17,3 +17,13 @@ A `CombatantView` expõe uma interface única (`play_idle`, `play_action`, `play
 ## Consequências
 
 - Atualizar este ADR com o resultado do piloto.
+
+## Decisão de 03/11/2026
+
+As poses de ataque, golpe recebido e queda não saíram satisfatórias na geração por IA. Alan aprovou **animar no motor a partir de uma única imagem por estado** (padrão, Noite Escura, Consolação):
+
+- **Ataque:** avanço rápido na direção do alvo, inclinação e retorno; rastro ou faísca no golpe.
+- **Golpe recebido:** clarão vermelho breve, tremor e pequeno recuo.
+- **Queda:** tombar devagar, escurecer e dessaturar; a auréola se apaga.
+
+Plano B, se ficar amador no piloto: recortar a imagem em partes e animar com `Skeleton2D`. A interface `CombatantView` não muda em nenhum dos casos.

@@ -42,4 +42,9 @@ Registradas também no backlog de cada tarefa.
 - Arte só entra a partir da T16 e do piloto de São Jorge. A T15 usa retângulos.
 - Originais ficam com Alan (Google Drive); ele envia pelo chat só o que a tarefa precisa; o agente processa conforme `docs/art/asset-pipeline.md`.
 - Atenção à cota de 1 GB do Git LFS gratuito: só versões de jogo no repositório.
-- Poses de ataque, golpe recebido e queda: Alan não conseguiu gerá-las de forma satisfatória (03/11/2026). Alternativa em discussão: animar no motor a partir de uma única imagem (ADR-0007).
+- Poses de ataque, golpe recebido e queda: não geradas; **animação feita no motor** a partir de uma imagem por estado (ADR-0007, aprovado por Alan em 03/11/2026).
+- **Piloto de São Jorge recebido (03/11/2026)**, originais em `art_source/`:
+  - `characters/saints/saint_george/`: corpo padrão (`_body_idle_v01`, **só 343×512**: pedir versão maior a Alan antes da arte final), corpo em Noite Escura e em Consolação (848×1264, usados como pose própria do estado), retrato (896×1200).
+  - `vfx/halo/`: disco da auréola e raios (1024×1024).
+  - A imagem de Consolação tem um brilho claro atrás da cabeça; conferir no motor se ele briga com a auréola (a Direção de Arte pede imagens sem auréola).
+  - Ainda falta processar (remover fundo, recortar, redimensionar, `game/assets/`): fica para a T16.
