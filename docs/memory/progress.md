@@ -48,3 +48,4 @@ Registradas também no backlog de cada tarefa.
   - `vfx/halo/`: disco da auréola e raios (1024×1024).
   - A imagem de Consolação tem um brilho claro atrás da cabeça; conferir no motor se ele briga com a auréola (a Direção de Arte pede imagens sem auréola).
   - Ainda falta processar (remover fundo, recortar, redimensionar, `game/assets/`): fica para a T16.
+- **Arte do piloto em combate recebida (03/11/2026)**, originais em `art_source/`: os 7 inimigos da Família A (`characters/enemies/`), Bento e Teresinha em padrão, Noite Escura e Consolação, cenário do Círculo 2 trecho 1 (fundo e frente) e redemoinhos do Vendaval (`vfx/hazards/`). Pendências em `open-questions.md`.
