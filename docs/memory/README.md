@@ -17,7 +17,7 @@ As fontes de verdade continuam as de `CLAUDE.md` §3 (specs, CSVs, ADRs, backlog
 
 ## Protocolo do agente
 
-1. **Início da sessão:** os arquivos desta pasta chegam pelo gancho; leia-os antes de qualquer trabalho. Se o gancho falhar, leia-os à mão.
+1. **Início da sessão:** o gancho mostra o `progress.md` e manda ler o resto. Leia **por inteiro**, com a ferramenta de leitura, `README.md`, `decisions.md`, `owner.md`, `lessons.md` e `open-questions.md` antes de qualquer trabalho. O gancho não despeja tudo porque saídas grandes chegam cortadas ao agente.
 2. **Decisão de Alan, ou técnica relevante:** registre em `decisions.md` **antes** de encerrar a resposta em que ela foi aplicada, com data, quem decidiu, o que foi decidido e onde está aplicada. Decisão revista ganha uma nova entrada que cita a anterior.
 3. **Fim de tarefa:** atualize `progress.md`, a caixa no backlog e, se houver, `open-questions.md`.
 4. **Conversa longa:** quando passar de mais ou menos dois terços do contexto, registre o resumo da sessão em `sessions.md` e proponha a Alan continuar numa sessão nova.
