@@ -4,20 +4,20 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_ohlxt"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_ap2dx"]
 
-[sub_resource type="Resource" id="Resource_61jhf"]
+[sub_resource type="Resource" id="Resource_yc7ni"]
 script = ExtResource("2_ohlxt")
 type = &"damage"
-amount = 4.0
+amount = 5.0
 damage_type = &"strike"
 
-[sub_resource type="Resource" id="Resource_b41bf"]
+[sub_resource type="Resource" id="Resource_ohlxt"]
 script = ExtResource("2_ohlxt")
 order = 2
 type = &"apply_condition"
 condition_id = &"bleed"
-stacks = 1
+stacks = 2
 
-[sub_resource type="Resource" id="Resource_jy3ie"]
+[sub_resource type="Resource" id="Resource_ap2dx"]
 script = ExtResource("1_yc7ni")
 id = &"gadfly_sting"
 use_slots = Array[int]([2, 3, 4])
@@ -29,7 +29,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_ohlxt")]([SubResource("Resource_61jhf"), SubResource("Resource_b41bf")])
+effects = Array[ExtResource("2_ohlxt")]([SubResource("Resource_yc7ni"), SubResource("Resource_ohlxt")])
 
 [resource]
 script = ExtResource("3_ap2dx")
@@ -39,6 +39,6 @@ family = &"a"
 circles = Array[int]([2, 3, 4, 5])
 nature = &"corporeal"
 role = &"ranged"
-max_hp = 16
-actions = Array[ExtResource("1_yc7ni")]([SubResource("Resource_jy3ie")])
+max_hp = 19
+actions = Array[ExtResource("1_yc7ni")]([SubResource("Resource_ap2dx")])
 art_id = "enemy_gadfly"

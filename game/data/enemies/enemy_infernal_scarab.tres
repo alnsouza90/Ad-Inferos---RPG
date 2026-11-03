@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_0f0g4"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_asn7n"]
 
-[sub_resource type="Resource" id="Resource_rfa2p"]
+[sub_resource type="Resource" id="Resource_x78bs"]
 script = ExtResource("2_0f0g4")
 type = &"apply_condition"
 condition_id = &"ward"
 stacks = 1
 
-[sub_resource type="Resource" id="Resource_ir4n1"]
+[sub_resource type="Resource" id="Resource_0f0g4"]
 script = ExtResource("1_x78bs")
 id = &"scarab_carapace"
 use_slots = Array[int]([1, 2])
@@ -22,15 +22,15 @@ conditions = Array[Dictionary]([{
 }])
 cooldown = 2
 intent_icon = &"defend"
-effects = Array[ExtResource("2_0f0g4")]([SubResource("Resource_rfa2p")])
+effects = Array[ExtResource("2_0f0g4")]([SubResource("Resource_x78bs")])
 
-[sub_resource type="Resource" id="Resource_ehbnh"]
+[sub_resource type="Resource" id="Resource_asn7n"]
 script = ExtResource("2_0f0g4")
 type = &"damage"
-amount = 4.0
+amount = 5.0
 damage_type = &"strike"
 
-[sub_resource type="Resource" id="Resource_pxdv1"]
+[sub_resource type="Resource" id="Resource_rfa2p"]
 script = ExtResource("1_x78bs")
 id = &"scarab_bite"
 priority = 2
@@ -43,7 +43,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_0f0g4")]([SubResource("Resource_ehbnh")])
+effects = Array[ExtResource("2_0f0g4")]([SubResource("Resource_asn7n")])
 
 [resource]
 script = ExtResource("3_asn7n")
@@ -53,7 +53,7 @@ family = &"a"
 circles = Array[int]([2, 3, 4, 5])
 nature = &"corporeal"
 role = &"guard"
-max_hp = 26
+max_hp = 31
 armor = 2
-actions = Array[ExtResource("1_x78bs")]([SubResource("Resource_ir4n1"), SubResource("Resource_pxdv1")])
+actions = Array[ExtResource("1_x78bs")]([SubResource("Resource_0f0g4"), SubResource("Resource_rfa2p")])
 art_id = "enemy_infernal_scarab"

@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_d340i"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_wxrm6"]
 
-[sub_resource type="Resource" id="Resource_2u0ur"]
+[sub_resource type="Resource" id="Resource_omu00"]
 script = ExtResource("2_d340i")
 type = &"summon"
 summon_id = &"enemy_swarmling"
 max_alive = 2
 
-[sub_resource type="Resource" id="Resource_5l0xi"]
+[sub_resource type="Resource" id="Resource_d340i"]
 script = ExtResource("1_omu00")
 id = &"swarm_mother_brood"
 use_slots = Array[int]([3, 4])
@@ -24,15 +24,15 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"summon"
-effects = Array[ExtResource("2_d340i")]([SubResource("Resource_2u0ur")])
+effects = Array[ExtResource("2_d340i")]([SubResource("Resource_omu00")])
 
-[sub_resource type="Resource" id="Resource_a6kkl"]
+[sub_resource type="Resource" id="Resource_wxrm6"]
 script = ExtResource("2_d340i")
 type = &"damage"
-amount = 3.0
+amount = 4.0
 damage_type = &"strike"
 
-[sub_resource type="Resource" id="Resource_7saux"]
+[sub_resource type="Resource" id="Resource_2u0ur"]
 script = ExtResource("1_omu00")
 id = &"swarm_mother_sting"
 priority = 2
@@ -45,7 +45,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_d340i")]([SubResource("Resource_a6kkl")])
+effects = Array[ExtResource("2_d340i")]([SubResource("Resource_wxrm6")])
 
 [resource]
 script = ExtResource("3_wxrm6")
@@ -55,7 +55,7 @@ family = &"a"
 circles = Array[int]([2, 3, 4, 5])
 nature = &"corporeal"
 role = &"summoner"
-max_hp = 28
+max_hp = 34
 armor = 1
-actions = Array[ExtResource("1_omu00")]([SubResource("Resource_5l0xi"), SubResource("Resource_7saux")])
+actions = Array[ExtResource("1_omu00")]([SubResource("Resource_d340i"), SubResource("Resource_2u0ur")])
 art_id = "enemy_swarm_mother"

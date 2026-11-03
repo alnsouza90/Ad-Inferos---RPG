@@ -24,7 +24,7 @@ values = {
 "desolation_battle_end_elite": 20.0,
 "desolation_emergency_retreat": 25.0,
 "desolation_max": 200.0,
-"desolation_vigil": 40.0,
+"desolation_vigil": 20.0,
 "duel_counter_damage": 3.0,
 "duel_damage_mult": 1.25,
 "effect_queue_limit": 64.0,

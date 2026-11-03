@@ -46,7 +46,7 @@ As fontes em combate são **adicionais** às de fim de combate. A calibragem do 
 
 | Fonte | Valor [constante] |
 | --- | --- |
-| Vigília no Pouso | −[desolation_vigil] (40) |
+| Vigília no Pouso | −[desolation_vigil] (20; era 40 até 03/11/2026) |
 | Água Benta | −[holy_water_desolation] (15) e remove Corrupção |
 | Habilidades (Teresinha, Bento, João da Cruz...) | Definido em `abilities.csv` |
 | Capela, por semana | −[chapel_desolation_per_week] (15) |
