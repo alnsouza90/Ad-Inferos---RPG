@@ -7,6 +7,9 @@ extends RefCounted
 var target_id: StringName
 var damage: int = 0
 var heal: int = 0
+## Net desolation change (saints only); the Faith check result is not
+## previewed (D-307), but the gain that would trigger it is.
+var desolation: int = 0
 ## condition_id -> stacks applied / removed by the command.
 var applied: Dictionary = {}
 var removed: Dictionary = {}
@@ -18,7 +21,7 @@ var intent_cancelled: bool = false
 
 func to_dict() -> Dictionary:
 	return {
-		"target": String(target_id), "damage": damage, "heal": heal,
+		"target": String(target_id), "damage": damage, "heal": heal, "desolation": desolation,
 		"applied": _plain(applied), "removed": _plain(removed),
 		"moved_from": moved_from, "moved_to": moved_to,
 		"falls": falls, "intent_cancelled": intent_cancelled,
@@ -69,6 +72,8 @@ static func from_events(events: Array[BattleEvent], cancelled: Array[StringName]
 				if e.moved_from == 0:
 					e.moved_from = int(d["from"])
 				e.moved_to = int(d["to"])
+			&"desolation_changed":
+				(entry.call(d["target"]) as PreviewEntry).desolation += int(d["new"]) - int(d["old"])
 			&"fell", &"enemy_died":
 				(entry.call(d["target"]) as PreviewEntry).falls = true
 	for enemy_id: StringName in cancelled:

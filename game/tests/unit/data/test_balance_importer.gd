@@ -179,3 +179,20 @@ func test_unknown_summon_is_rejected() -> void:
 
 func test_ability_not_in_owner_kit_is_rejected() -> void:
 	_assert_error(BalanceFixture.appended("abilities", "t_extra,saint_t,Extra,basic,0,1,enemy,1,,,game_fiction,,Extra."), "orphan")
+
+
+# --- interface texts (T15) --------------------------------------------------
+
+func test_ui_text_is_parsed_and_formatted() -> void:
+	var ui: UiTextDef = _import(BalanceFixture.valid_tables()).ui_text
+	assert_eq(ui.text(&"end_turn"), "Encerrar turno")
+	assert_eq(ui.text(&"round", {"round": 3}), "Rodada 3")
+	assert_eq(ui.text(&"nope"), "[nope]", "texto ausente aparece entre colchetes")
+
+
+func test_ui_text_with_duplicate_id_is_rejected() -> void:
+	_assert_error(BalanceFixture.appended("ui_text", "end_turn,Outra vez"), "duplicate_id")
+
+
+func test_ui_text_without_text_is_rejected() -> void:
+	_assert_error(BalanceFixture.appended("ui_text", "empty_one,"), "missing_value")

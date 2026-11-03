@@ -194,6 +194,19 @@ Campos de `docs/specs/enemy-ai.md` §2. As condições ficam em `conditions` no 
 
 `saint_id`, `real_date` (dia/mês), `week` (1–20), `note`. A preencher após a pesquisa do Martirológio.
 
+### 3.14 `ui_text.csv` → `game/data/ui_text.tres` (`UiTextDef`)
+
+Textos da interface (botões, avisos, motivos de recusa, rótulos de estado). ADR-0010.
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | texto | Chave estável usada pelas telas (`end_turn`, `reason_wrong_slot`...) |
+| `text_pt` | texto | Texto exibido; pode ter campos entre chaves (`Rodada {round}`), preenchidos pela tela |
+
+- Motivos de recusa: `reason_<código>` para cada código de `CommandResult`.
+- Intenções: `intent_<intent_icon>`; estados espirituais: `spirit_<estado>`.
+- O teste `test_every_screen_text_exists_in_the_data` falha se a tela pedir uma chave que não existe.
+
 ## 4. Modificadores de relíquia (versão 1)
 
 | `modifier` | `params` | Efeito |

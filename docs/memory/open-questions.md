@@ -14,3 +14,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Consolação de São Bento veio com auréola desenhada (a Direção de Arte pede sem); conferir no motor ou pedir versão sem | T16 / Alan | 03/11/2026 |
 | ~~Confirmar qual imagem de Teresinha é o padrão e qual é a Consolação~~ Confirmado por Alan em 03/11/2026: muitas pétalas = Consolação; poucas = padrão | Alan | 03/11/2026 |
 | Cenário do Círculo 2 veio sem a camada do meio (só fundo e frente); os redemoinhos (`vfx_hazard_gale`) podem servir de camada animada | T16 | 03/11/2026 |
+| Revisar os textos da tela de combate em `docs/balance/ui_text.csv` (botões, avisos, motivos de recusa) | Alan | 03/11/2026 |
+| Salvar a preferência de velocidade das animações em `settings.json` (screens §3) | `SaveService` (M1) | 03/11/2026 |
+| Ícones de intenção e de condição: hoje são palavras (`Ataque 6 na posição 1`) | Piloto de arte | 03/11/2026 |

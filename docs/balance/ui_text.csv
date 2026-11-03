@@ -1,0 +1,81 @@
+id,text_pt
+round,Rodada {round}
+fervor,Fervor {amount}/{max}
+pause,Pausa
+resume,Continuar
+retreat,Recuar do combate
+speed_normal,Velocidade 1x
+speed_fast,Velocidade 2x
+speed_instant,Velocidade: instantânea
+miracle,Milagre
+swap,Trocar
+pass,Passar
+provisions,Provisões
+end_turn,Encerrar turno
+cost_badge,{cost} Fervor
+confirm,Confirmar
+cancel,Cancelar
+confirm_end_turn,Ainda há santo sem agir. Encerrar o turno?
+hint_select_saint,Toque num santo para escolher quem age.
+hint_choose_action,Escolha a ação de {saint}.
+hint_choose_target,Toque num alvo aceso.
+hint_confirm,Toque de novo para confirmar.
+hint_enemy_turn,Turno inimigo.
+hp,Vida {hp}/{max}
+desolation,Desolação {value}
+acted,Já agiu
+slot,Posição {slot}
+conditions_more,+{count}
+condition_stacks,{name} {stacks}
+no_conditions,Sem condições.
+state_fallen,Caído
+state_out,Fora de combate
+state_remains,Restos
+state_dead,Derrotado
+spirit_consolation,Consolação
+spirit_dark_night,Noite Escura
+intent_attack,Ataque
+intent_corrupt,Corrupção
+intent_displace,Deslocamento
+intent_defend,Defesa
+intent_summon,Invocação
+intent_special,Especial
+intent_stunned,Atordoado: perde a vez
+intent_wait,Aguarda
+intent_value,{icon} {value}
+intent_slot,na posição {slot}
+intent_details,Intenção: {intent}
+preview_damage,-{amount} vida
+preview_heal,+{amount} vida
+preview_desolation_up,+{amount} desolação
+preview_desolation_down,-{amount} desolação
+preview_applied,+{stacks} {name}
+preview_removed,-{stacks} {name}
+polarity_negative,condição negativa
+polarity_positive,condição positiva
+preview_moved,vai para a posição {slot}
+preview_falls,cai
+preview_cancelled,intenção cancelada
+preview_nothing,Sem efeito visível.
+reason_not_party_turn,Não é o turno da equipe
+reason_unknown_command,Indisponível
+reason_unknown_actor,Indisponível
+reason_unknown_ability,Indisponível
+reason_not_standing,Caído
+reason_stunned,Atordoado
+reason_already_acted,Já agiu
+reason_not_equipped,Não equipada
+reason_wrong_slot,Posição errada
+reason_not_enough_fervor,Fervor insuficiente
+reason_dark_night,Noite Escura
+reason_invalid_target,Sem alvo válido
+reason_already_used,Já usado neste combate
+reason_no_provision,Sem provisão
+reason_not_usable_in_battle,Não se usa em combate
+reason_provision_limit,Limite de provisões no turno
+reason_retreat_not_allowed,Não há retirada contra chefe
+reason_no_slot,Sem posição para trocar
+result_victory,Vitória
+result_defeat,Derrota
+result_retreat,Retirada
+play_again,Jogar de novo

@@ -1,0 +1,68 @@
+name: Jogo no navegador
+
+# Publica a versão Web no GitHub Pages a cada merge na main (D-006), para
+# testar no navegador do celular. Sem threads: o Pages não envia os
+# cabeçalhos COOP/COEP que o Godot com threads exige.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  build:
+    name: Exportar para Web
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Baixar Godot e modelos de exportação
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          curl -sSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q templates.tpz
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mv templates/web_nothreads_release.zip templates/web_nothreads_debug.zip "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable/"
+          rm -rf templates templates.tpz
+
+      - name: Importar recursos
+        run: godot --headless --path game --import || true
+
+      - name: Exportar
+        run: |
+          mkdir -p builds/web
+          godot --headless --path game --export-release "Web" ../builds/web/index.html
+          test -f builds/web/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: builds/web
+
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

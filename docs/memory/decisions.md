@@ -45,4 +45,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-305** — Recarga de N rodadas: a ação inimiga fica indisponível nas N rodadas seguintes ao uso. *T09.*
 - **D-306** — Contra-ataque do Duelo passa pela fórmula de dano normal e não gasta a Força de Jorge. *T07.*
 - **D-307** — A pré-visualização executa numa cópia completa do combate e não mostra o resultado do teste de Fé. *T11.*
+- **D-309 · 03/11/2026 · agente** — Textos da interface em `docs/balance/ui_text.csv`, importados para `game/data/ui_text.tres`; chave ausente aparece como `[chave]`. *ADR-0010, T15.*
+- **D-310 · 03/11/2026 · agente** — Tela de combate montada em código sobre um palco de 1920×1080 centralizado; o fluxo de toques fica em `BattleSelection` (sem `Node`), que só usa `validate()` e `preview()`. A prévia passou a informar a desolação (`PreviewEntry.desolation`). *T15, `scenes/battle/`.*
+- **D-311 · 03/11/2026 · agente** — Versão Web sem threads publicada no GitHub Pages a cada merge na `main` (o Pages não envia COOP/COEP). *`.github/workflows/pages.yml`, `game/export_presets.cfg`.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*

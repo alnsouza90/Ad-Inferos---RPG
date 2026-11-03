@@ -18,6 +18,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"enemies": ["id", "name_pt", "family", "circles", "nature", "role", "size", "max_hp", "armor", "immune", "leaves_remains", "remains_rounds", "actions", "art_id"],
 	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type"],
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
+	"ui_text": ["id", "text_pt"],
 	"saints": ["id", "name_pt", "roles", "preferred_slots", "max_hp", "armor", "faith", "will", "hp_per_level", "faith_per_level", "abilities", "default_equipped", "miracle", "trait", "camp_skill", "affinities", "unlock", "m0"],
 }
 
@@ -74,6 +75,7 @@ var enemies: Dictionary = {}
 var encounters: Dictionary = {}
 var provisions: Dictionary = {}
 var saints: Dictionary = {}
+var ui_text: UiTextDef
 
 ## owner_id -> Array[EffectDef] sorted by order
 var _effects_by_owner: Dictionary = {}
@@ -109,6 +111,7 @@ func import_tables(texts: Dictionary) -> bool:
 	_build_encounters()
 	_build_provisions()
 	_build_saints()
+	_build_ui_text()
 	_validate_effect_owners()
 	return errors.is_empty()
 
@@ -625,6 +628,18 @@ func _validate_effect_owners() -> void:
 		if abilities.has(owner_id) or enemy_actions.has(owner_id) or _provision_effect_owners.has(owner_id):
 			continue
 		_err("unknown_id", "effects.csv", 0, "owner_id '%s' não é habilidade, ação inimiga nem provisão" % owner_id)
+
+
+func _build_ui_text() -> void:
+	ui_text = UiTextDef.new()
+	var t: CsvTable = _tables["ui_text"]
+	for i: int in t.rows.size():
+		var row: Dictionary = t.rows[i]
+		var line: int = t.line_numbers[i]
+		if not _check_id(t, line, row["id"], ui_text.texts):
+			continue
+		_require_text(t, line, "text_pt", row)
+		ui_text.texts[String(row["id"])] = String(row["text_pt"])
 
 
 # --- parsing helpers ------------------------------------------------------
