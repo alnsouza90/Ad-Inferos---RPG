@@ -1,0 +1,45 @@
+# Andamento e continuidade
+
+Documento de passagem entre sessões do agente. **Leia depois do `CLAUDE.md`, no início de toda sessão nova.** Atualize ao fim de cada tarefa.
+
+## Onde estamos
+
+- **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
+- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`).
+- **Próxima:** T15 · Tela de combate com arte provisória.
+- **Depois:** T16 (auréola no motor), T17 (arena e APK Android).
+- **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
+
+## Como trabalhamos
+
+- **Alan** é o responsável: aprova design, números e cada PR. Não é técnico. Falar sempre em português, em linguagem simples, e pedir decisões de forma clara.
+- **Uma tarefa = um PR.** Antes de programar, plano curto; pergunta só quando a spec é ambígua (`CLAUDE.md` §9). Ao terminar: resumo do que mudou, testes e o que falta de Alan.
+- **Depois de abrir o PR:** acompanhar o PR (CI e comentários) até o merge. Merge só depois do "aprovado" de Alan.
+- **Depois do merge:** recriar a branch de trabalho a partir da `main` atualizada.
+- **Números de balanceamento:** só nos CSVs, só com aprovação de Alan; rodar importador, testes e simulador.
+
+## Ambiente
+
+- **CI do GitHub** (`.github/workflows/tests.yml`): baixa o Godot 4.7.2 oficial, analisa os scripts, roda o GUT, falha se algum teste for ignorado e confere se `game/data` está em dia com os CSVs.
+- **Sessões na nuvem:** não há Godot pré-instalado e downloads do GitHub são bloqueados. A saída usada foi compilar o Godot 4.7.2 do código-fonte (tag `4.7.2-stable`, `scons platform=linuxbsd target=editor x11=no wayland=no vulkan=no opengl3=no alsa=no pulseaudio=no dbus=no speechd=no fontconfig=no udev=no sdl=no accesskit=no`), cerca de 25 min em segundo plano. Sem isso, os testes rodam pelo CI ao enviar o código.
+- **Comandos:** `CLAUDE.md` §5.
+
+## Decisões de regra tomadas com Alan (resumo)
+
+Registradas também no backlog de cada tarefa.
+
+| Tarefa | Decisão |
+| --- | --- |
+| T03 | Janela de levantar: o resto da rodada da queda e a rodada seguinte |
+| T04 | Só o Fervor extra que entra conta para o limite de +2 |
+| T05 | `chosen_enemy_slots(n)` aceita menos posições se houver menos inimigos; provisão só em santo de pé; Atordoado só pode passar a vez |
+| T07 | Santo Atordoado gasta o atordoamento ao passar e fica imune até o fim da rodada seguinte |
+| T10 | Bônus de afinidade só para membros; Clausura só contra inimigos e ambiente, com Bento de pé; Pequeno Caminho não vale para o milagre e não é gasto por cura de custo 0 |
+| T14 | Família A +20% de vida e dano; Sangramento do Moscardo 2; Corrupção da Sombra 3; Toque da Sombra 10 e Lamento 8 de desolação; Vigília −20 |
+
+## Arte
+
+- Arte só entra a partir da T16 e do piloto de São Jorge. A T15 usa retângulos.
+- Originais ficam com Alan (Google Drive); ele envia pelo chat só o que a tarefa precisa; o agente processa conforme `docs/art/asset-pipeline.md`.
+- Atenção à cota de 1 GB do Git LFS gratuito: só versões de jogo no repositório.
+- Poses de ataque, golpe recebido e queda: Alan não conseguiu gerá-las de forma satisfatória (03/11/2026). Alternativa em discussão: animar no motor a partir de uma única imagem (ADR-0007).
