@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_splop"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_himwd"]
+
+[sub_resource type="Resource" id="Resource_fynha"]
+script = ExtResource("1_splop")
+type = &"damage"
+amount = 6.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_himwd")
+id = &"benedict_crux_sacra"
+owner = &"saint_benedict"
+name_pt = "Crux Sacra"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2])
+targeting = &"enemy_group"
+target_slots = Array[int]([1, 2])
+origin = &"tradition"
+desc_pt = "Exorcismo contra a linha de frente."
+effects = Array[ExtResource("1_splop")]([SubResource("Resource_fynha")])

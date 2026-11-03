@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_6d8no"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_wbntr"]
+
+[sub_resource type="Resource" id="Resource_sd8wr"]
+script = ExtResource("1_6d8no")
+type = &"heal"
+amount = 12.0
+
+[resource]
+script = ExtResource("2_wbntr")
+id = &"rita_last_hope"
+owner = &"saint_rita"
+name_pt = "Última Esperança"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"game_fiction"
+desc_pt = "Cura forte num aliado."
+effects = Array[ExtResource("1_6d8no")]([SubResource("Resource_sd8wr")])

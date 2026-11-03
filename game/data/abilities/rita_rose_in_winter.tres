@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_v5dec"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_lnfmk"]
+
+[sub_resource type="Resource" id="Resource_cgsjv"]
+script = ExtResource("1_v5dec")
+type = &"revive"
+params = {
+"heal_if_alive": 1.0,
+"hp_fraction": 0.4
+}
+
+[resource]
+script = ExtResource("2_lnfmk")
+id = &"rita_rose_in_winter"
+owner = &"saint_rita"
+name_pt = "Rosa no Inverno"
+kind = &"miracle"
+cost = 3
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"legend"
+desc_pt = "Levanta um aliado Caído com 40% da vida; num aliado de pé, cura 40% da vida."
+effects = Array[ExtResource("1_v5dec")]([SubResource("Resource_cgsjv")])

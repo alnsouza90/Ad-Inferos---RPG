@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_e4lp4"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_3xn4d"]
+
+[sub_resource type="Resource" id="Resource_qtyba"]
+script = ExtResource("1_e4lp4")
+type = &"damage"
+amount = 9.0
+damage_type = &"strike"
+
+[sub_resource type="Resource" id="Resource_8ipn6"]
+script = ExtResource("1_e4lp4")
+order = 2
+type = &"apply_condition"
+condition_id = &"taunt"
+stacks = 1
+target_override = &"self"
+
+[resource]
+script = ExtResource("2_3xn4d")
+id = &"sebastian_before_emperor"
+owner = &"saint_sebastian"
+name_pt = "Diante do Imperador"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2])
+origin = &"tradition"
+desc_pt = "Golpe forte e Provocação."
+effects = Array[ExtResource("1_e4lp4")]([SubResource("Resource_qtyba"), SubResource("Resource_8ipn6")])

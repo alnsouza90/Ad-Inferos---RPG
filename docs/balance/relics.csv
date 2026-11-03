@@ -15,7 +15,7 @@ relic_john_cross_habit,Fragmento de hábito de São João da Cruz,saint,2,tradit
 relic_pio_mitten,Meia-luva de São Padre Pio,saint,2,tradition,,rare,relic_node,ability_cost_mult,ability=pio_stigmata;param=self_damage;value=0.75,Estigmas custa 25% menos vida.
 relic_rita_rose,Rosa benta no dia de Santa Rita,saint,sacramental,tradition,,rare,relic_node,ability_param,ability=rita_rose_in_winter;param=hp_fraction;value=0.6,Rosa no Inverno levanta com 60% da vida.
 relic_anthony_lily,"Lírio tocado no túmulo de Santo Antônio, em Pádua",saint,3,tradition,,rare,relic_node,stun_duration_bonus,value=1;target=common,Atordoamento aplicado dura 1 turno a mais em inimigos comuns.
-relic_sebastian_arrow,Ponta de flecha venerada,saint,3,tradition,y,rare,relic_node,battle_start_condition,condition=ward;stacks=1,Começa o combate com 1 Proteção.
+relic_sebastian_arrow,Ponta de flecha venerada,saint,3,tradition,y,rare,relic_node,battle_start_condition,condition=ward;stacks=1,Começa o combate com 1 Amparo.
 relic_helfta_veil,Véu tocado em Helfta,saint,3,tradition,,rare,relic_node,turn_start_cleanse,value=1,Remove 1 condição negativa do portador no início de cada turno.
 relic_augustine_confessions,"Confissões tocadas no túmulo de Santo Agostinho, em Pavia",guardian,3,tradition,,rare,relic_node,purification_xp_mult,value=1.25,+25% de experiência após a Purificação.
 relic_thomas_cincture,Cíngulo de Santo Tomás,guardian,2,tradition,y,rare,relic_node,stat_add,stat=will;value=1,+1 de Vontade.

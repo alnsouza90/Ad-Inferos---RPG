@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_bkvhl"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_ay53k"]
+
+[sub_resource type="Resource" id="Resource_i0p54"]
+script = ExtResource("1_bkvhl")
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 2
+
+[sub_resource type="Resource" id="Resource_0yo3b"]
+script = ExtResource("1_bkvhl")
+order = 2
+type = &"desolation"
+amount = -10.0
+
+[resource]
+script = ExtResource("2_ay53k")
+id = &"antony_endurance"
+owner = &"saint_anthony_abbot"
+name_pt = "Perseverança"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"self"
+origin = &"hagiography"
+desc_pt = "2 Amparo e −10 de desolação."
+effects = Array[ExtResource("1_bkvhl")]([SubResource("Resource_i0p54"), SubResource("Resource_0yo3b")])

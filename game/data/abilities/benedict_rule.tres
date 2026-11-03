@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_1q44f"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_48qr1"]
+
+[sub_resource type="Resource" id="Resource_8176e"]
+script = ExtResource("1_1q44f")
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 1
+
+[resource]
+script = ExtResource("2_48qr1")
+id = &"benedict_rule"
+owner = &"saint_benedict"
+name_pt = "A Regra"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2])
+targeting = &"all_allies"
+origin = &"hagiography"
+desc_pt = "A Regra ordena a companhia: 1 Amparo para todos."
+effects = Array[ExtResource("1_1q44f")]([SubResource("Resource_8176e")])

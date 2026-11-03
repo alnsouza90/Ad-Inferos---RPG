@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_n5lxi"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_g0sdf"]
+
+[sub_resource type="Resource" id="Resource_ybrhh"]
+script = ExtResource("1_n5lxi")
+type = &"damage"
+amount = 8.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_g0sdf")
+id = &"anthony_hammer"
+owner = &"saint_anthony_padua"
+name_pt = "Martelo dos Hereges"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"tradition"
+desc_pt = "Exorcismo forte."
+effects = Array[ExtResource("1_n5lxi")]([SubResource("Resource_ybrhh")])

@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_udmqs"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_egxn2"]
+
+[sub_resource type="Resource" id="Resource_2gdel"]
+script = ExtResource("1_udmqs")
+type = &"apply_condition"
+condition_id = &"duel"
+stacks = 1
+
+[sub_resource type="Resource" id="Resource_oxhic"]
+script = ExtResource("1_udmqs")
+order = 2
+type = &"apply_condition"
+condition_id = &"strength"
+stacks = 1
+target_override = &"self"
+
+[resource]
+script = ExtResource("2_egxn2")
+id = &"george_formal_challenge"
+owner = &"saint_george"
+name_pt = "Desafio Formal"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"legend"
+desc_pt = "Desafia um inimigo para o Duelo e ganha 1 Força."
+effects = Array[ExtResource("1_udmqs")]([SubResource("Resource_2gdel"), SubResource("Resource_oxhic")])

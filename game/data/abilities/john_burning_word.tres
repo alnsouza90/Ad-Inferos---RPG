@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_mv1vh"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_wofa4"]
+
+[sub_resource type="Resource" id="Resource_4i5xr"]
+script = ExtResource("1_mv1vh")
+type = &"damage"
+amount = 4.0
+damage_type = &"exorcism"
+
+[resource]
+script = ExtResource("2_wofa4")
+id = &"john_burning_word"
+owner = &"saint_john_cross"
+name_pt = "Palavra Ardente"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([1, 2, 3, 4])
+origin = &"game_fiction"
+desc_pt = "Pequeno exorcismo a qualquer distância."
+effects = Array[ExtResource("1_mv1vh")]([SubResource("Resource_4i5xr")])

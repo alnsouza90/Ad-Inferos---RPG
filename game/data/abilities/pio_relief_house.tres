@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_d3usa"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_bykxn"]
+
+[sub_resource type="Resource" id="Resource_d7v1x"]
+script = ExtResource("1_d3usa")
+type = &"heal"
+amount = 6.0
+
+[resource]
+script = ExtResource("2_bykxn")
+id = &"pio_relief_house"
+owner = &"saint_pio"
+name_pt = "Casa Alívio do Sofrimento"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"hagiography"
+desc_pt = "Cura 6 em todos."
+effects = Array[ExtResource("1_d3usa")]([SubResource("Resource_d7v1x")])

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_xtqjb"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_k55at"]
+
+[sub_resource type="Resource" id="Resource_873hp"]
+script = ExtResource("1_xtqjb")
+type = &"heal"
+amount = 12.0
+
+[sub_resource type="Resource" id="Resource_hx5d5"]
+script = ExtResource("1_xtqjb")
+order = 2
+type = &"remove_condition"
+condition_id = &"bleed"
+stacks = 5
+
+[resource]
+script = ExtResource("2_k55at")
+id = &"sebastian_irene_care"
+owner = &"saint_sebastian"
+name_pt = "Os Cuidados de Irene"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"self"
+origin = &"tradition"
+desc_pt = "Cura 12 e remove o Sangramento."
+effects = Array[ExtResource("1_xtqjb")]([SubResource("Resource_873hp"), SubResource("Resource_hx5d5")])

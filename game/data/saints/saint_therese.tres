@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_d6k6m"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_68g5f"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_4seqc"]
+
+[sub_resource type="Resource" id="Resource_leyd0"]
+script = ExtResource("1_d6k6m")
+id = &"camp_therese_sacrifices"
+owner = &"saint_therese"
+name_pt = "Pequenos Sacrifícios"
+desc_pt = "Cura 15% da vida máxima de toda a equipe."
+effect = &"heal_party_pct"
+params = {
+"value": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_av4no"]
+script = ExtResource("3_4seqc")
+id = &"trait_little_way"
+owner = &"saint_therese"
+name_pt = "Pequeno Caminho"
+desc_pt = "A cada 3 habilidades básicas usadas, a próxima cura de Teresinha custa 0 de Fervor."
+trigger = &"on_ability_used"
+hook = &"little_way_counter"
+params = {
+"basic_actions": 3.0
+}
+
+[resource]
+script = ExtResource("2_68g5f")
+id = &"saint_therese"
+name_pt = "Santa Teresinha"
+roles = Array[StringName]([&"healer"])
+preferred_slots = Array[int]([3, 2])
+max_hp = 22
+faith = 7
+will = 1
+hp_per_level = 3
+faith_per_level = 1
+abilities = Array[StringName]([&"therese_ardent_prayer", &"therese_petal", &"therese_trust", &"therese_offering", &"therese_abandonment", &"therese_little_flower"])
+default_equipped = Array[StringName]([&"therese_ardent_prayer", &"therese_petal", &"therese_trust", &"therese_abandonment"])
+miracle = &"therese_shower_of_roses"
+trait_def = SubResource("Resource_av4no")
+camp_skill = SubResource("Resource_leyd0")
+affinities = Array[StringName]([&"carmel"])
+unlock = "start"
+m0 = true

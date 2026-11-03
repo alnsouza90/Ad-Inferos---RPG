@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_sa3oe"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_caqoc"]
+
+[sub_resource type="Resource" id="Resource_h1f1n"]
+script = ExtResource("1_sa3oe")
+type = &"gain_fervor"
+amount = 1.0
+
+[resource]
+script = ExtResource("2_caqoc")
+id = &"anthony_find_lost"
+owner = &"saint_anthony_padua"
+name_pt = "Achar o Perdido"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"self"
+once_per_battle = true
+origin = &"tradition"
+desc_pt = "+1 de Fervor para a equipe. Uma vez por combate."
+effects = Array[ExtResource("1_sa3oe")]([SubResource("Resource_h1f1n")])

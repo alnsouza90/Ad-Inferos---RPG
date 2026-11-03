@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_bha6x"]
+
+[resource]
+script = ExtResource("1_bha6x")
+id = &"stun"
+kind = &"token"
+polarity = &"negative"
+stacking = &"none"
+decay = &"none"
+tick = &"none"
+consume_on = &"on_action_attempt"
+hook = &"stun_cancel"
+icon = "res://assets/ui/icons/cond_stun.png"
+display_priority = 1
+name_pt = "Atordoamento"
+desc_pt = "Perde a próxima ação. Depois, fica imune por 1 rodada."

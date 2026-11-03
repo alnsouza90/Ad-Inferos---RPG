@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_8srku"]
+
+[resource]
+script = ExtResource("1_8srku")
+id = &"strength"
+kind = &"token"
+polarity = &"positive"
+max_stacks = 3
+stacking = &"add"
+decay = &"none"
+tick = &"none"
+consume_on = &"on_damaging_action"
+hook = &"strength_boost"
+icon = "res://assets/ui/icons/cond_strength.png"
+display_priority = 6
+name_pt = "Força"
+desc_pt = "A próxima ação causa 25% a mais de dano."

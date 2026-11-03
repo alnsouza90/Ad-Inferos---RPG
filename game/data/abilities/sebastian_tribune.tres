@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_d1a2l"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_qt50s"]
+
+[sub_resource type="Resource" id="Resource_62xx6"]
+script = ExtResource("1_d1a2l")
+type = &"apply_condition"
+condition_id = &"taunt"
+stacks = 1
+
+[sub_resource type="Resource" id="Resource_6oiog"]
+script = ExtResource("1_d1a2l")
+order = 2
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 1
+
+[resource]
+script = ExtResource("2_qt50s")
+id = &"sebastian_tribune"
+owner = &"saint_sebastian"
+name_pt = "Tribuno da Guarda"
+kind = &"basic"
+cost = 1
+use_slots = Array[int]([1, 2])
+targeting = &"self"
+origin = &"tradition"
+desc_pt = "Provocação e 1 Amparo: os inimigos miram Sebastião."
+effects = Array[ExtResource("1_d1a2l")]([SubResource("Resource_62xx6"), SubResource("Resource_6oiog")])

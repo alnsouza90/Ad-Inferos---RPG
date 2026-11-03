@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_y7tjg"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_jsvp0"]
+
+[sub_resource type="Resource" id="Resource_pl866"]
+script = ExtResource("1_y7tjg")
+type = &"damage"
+amount = 8.0
+damage_type = &"exorcism"
+
+[sub_resource type="Resource" id="Resource_di6ag"]
+script = ExtResource("1_y7tjg")
+order = 2
+type = &"heal"
+amount = 8.0
+target_override = &"self"
+
+[resource]
+script = ExtResource("2_jsvp0")
+id = &"antony_tomb_combat"
+owner = &"saint_anthony_abbot"
+name_pt = "Combate no Sepulcro"
+kind = &"miracle"
+cost = 3
+use_slots = Array[int]([1, 2])
+targeting = &"all_enemies"
+origin = &"hagiography"
+desc_pt = "Exorcismo em todos os inimigos; Antão recupera 8 de vida."
+effects = Array[ExtResource("1_y7tjg")]([SubResource("Resource_pl866"), SubResource("Resource_di6ag")])

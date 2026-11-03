@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_2iqnb"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_hspny"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_r0nn4"]
+
+[sub_resource type="Resource" id="Resource_w8eid"]
+script = ExtResource("1_2iqnb")
+id = &"camp_sebastian_watch"
+owner = &"saint_sebastian"
+name_pt = "Sentinela"
+desc_pt = "A equipe começa o próximo combate com 1 Amparo."
+effect = &"next_battle_condition"
+params = {
+"condition": "ward",
+"stacks": 1.0,
+"target": "party"
+}
+
+[sub_resource type="Resource" id="Resource_c0ge0"]
+script = ExtResource("3_r0nn4")
+id = &"trait_survivor"
+owner = &"saint_sebastian"
+name_pt = "Sobrevivente"
+desc_pt = "Na primeira queda de cada combate, Sebastião se levanta com 1 de vida."
+trigger = &"on_fallen"
+hook = &"survive_first_fall"
+params = {
+"hp": 1.0,
+"per_battle": 1.0
+}
+
+[resource]
+script = ExtResource("2_hspny")
+id = &"saint_sebastian"
+name_pt = "São Sebastião"
+roles = Array[StringName]([&"protector"])
+preferred_slots = Array[int]([1])
+max_hp = 34
+armor = 3
+faith = 5
+will = 1
+hp_per_level = 5
+faith_per_level = 1
+abilities = Array[StringName]([&"sebastian_gladius", &"sebastian_guard_shield", &"sebastian_tribune", &"sebastian_encourage", &"sebastian_irene_care", &"sebastian_before_emperor"])
+default_equipped = Array[StringName]([&"sebastian_gladius", &"sebastian_guard_shield", &"sebastian_tribune", &"sebastian_irene_care"])
+miracle = &"sebastian_arrow_wall"
+trait_def = SubResource("Resource_c0ge0")
+camp_skill = SubResource("Resource_w8eid")
+affinities = Array[StringName]([&"soldiers"])
+unlock = "circle:7"

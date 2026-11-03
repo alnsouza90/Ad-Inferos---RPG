@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_fouto"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_i1m32"]
+
+[sub_resource type="Resource" id="Resource_tlq0x"]
+script = ExtResource("1_fouto")
+type = &"damage"
+amount = 5.0
+damage_type = &"strike"
+
+[resource]
+script = ExtResource("2_i1m32")
+id = &"george_javelin"
+owner = &"saint_george"
+name_pt = "Arremesso"
+kind = &"basic"
+use_slots = Array[int]([2, 3])
+targeting = &"enemy"
+target_slots = Array[int]([2, 3, 4])
+origin = &"game_fiction"
+desc_pt = "Lança arremessada contra a retaguarda."
+effects = Array[ExtResource("1_fouto")]([SubResource("Resource_tlq0x")])

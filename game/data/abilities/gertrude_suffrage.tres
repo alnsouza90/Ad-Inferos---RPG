@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_0ink8"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_0bkwl"]
+
+[sub_resource type="Resource" id="Resource_vopdg"]
+script = ExtResource("1_0ink8")
+type = &"heal"
+amount = 6.0
+params = {
+"per_milestone": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_xcqmg"]
+script = ExtResource("1_0ink8")
+order = 2
+type = &"remove_condition"
+stacks = 10
+polarity = &"negative"
+
+[resource]
+script = ExtResource("2_0bkwl")
+id = &"gertrude_suffrage"
+owner = &"saint_gertrude"
+name_pt = "Sufrágio"
+kind = &"miracle"
+cost = 3
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"tradition"
+desc_pt = "Cura 6 (+1 por marco do Purgatório) e remove todas as condições negativas."
+effects = Array[ExtResource("1_0ink8")]([SubResource("Resource_vopdg"), SubResource("Resource_xcqmg")])

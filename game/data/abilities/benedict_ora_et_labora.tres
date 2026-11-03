@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_7t7gj"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_yv8r0"]
+
+[sub_resource type="Resource" id="Resource_rs2x8"]
+script = ExtResource("1_7t7gj")
+type = &"desolation"
+amount = -10.0
+
+[sub_resource type="Resource" id="Resource_7sljm"]
+script = ExtResource("1_7t7gj")
+order = 2
+type = &"remove_condition"
+condition_id = &"corruption"
+stacks = 1
+
+[resource]
+script = ExtResource("2_yv8r0")
+id = &"benedict_ora_et_labora"
+owner = &"saint_benedict"
+name_pt = "Ora et Labora"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"tradition"
+desc_pt = "−10 de desolação e −1 de Corrupção num aliado."
+effects = Array[ExtResource("1_7t7gj")]([SubResource("Resource_rs2x8"), SubResource("Resource_7sljm")])

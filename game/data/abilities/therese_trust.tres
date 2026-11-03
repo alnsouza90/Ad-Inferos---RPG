@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_5fnhu"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_10t1c"]
+
+[sub_resource type="Resource" id="Resource_p08yg"]
+script = ExtResource("1_5fnhu")
+type = &"desolation"
+amount = -12.0
+
+[resource]
+script = ExtResource("2_10t1c")
+id = &"therese_trust"
+owner = &"saint_therese"
+name_pt = "Confiança"
+kind = &"basic"
+use_slots = Array[int]([2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"game_fiction"
+desc_pt = "−12 de desolação num aliado."
+effects = Array[ExtResource("1_5fnhu")]([SubResource("Resource_p08yg")])

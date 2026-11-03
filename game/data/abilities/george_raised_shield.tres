@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_3qnuh"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_8d0rn"]
+
+[sub_resource type="Resource" id="Resource_1po75"]
+script = ExtResource("1_3qnuh")
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 1
+
+[resource]
+script = ExtResource("2_8d0rn")
+id = &"george_raised_shield"
+owner = &"saint_george"
+name_pt = "Escudo Erguido"
+kind = &"basic"
+use_slots = Array[int]([1, 2, 3])
+targeting = &"ally"
+target_slots = Array[int]([1, 2, 3])
+allow_self = true
+origin = &"game_fiction"
+desc_pt = "Dá 1 Amparo a um aliado."
+effects = Array[ExtResource("1_3qnuh")]([SubResource("Resource_1po75")])

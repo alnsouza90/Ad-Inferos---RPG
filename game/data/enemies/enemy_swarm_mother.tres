@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/enemy_action_def.gd" id="1_omu00"]
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_d340i"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_wxrm6"]
+
+[sub_resource type="Resource" id="Resource_2u0ur"]
+script = ExtResource("2_d340i")
+type = &"summon"
+summon_id = &"enemy_swarmling"
+max_alive = 2
+
+[sub_resource type="Resource" id="Resource_5l0xi"]
+script = ExtResource("1_omu00")
+id = &"swarm_mother_brood"
+use_slots = Array[int]([3, 4])
+targeting = &"self"
+target_rule = &"front_most"
+conditions = Array[Dictionary]([{
+"name": "every_n_rounds",
+"param": 2
+}, {
+"name": "free_enemy_slot",
+"param": null
+}])
+intent_icon = &"summon"
+effects = Array[ExtResource("2_d340i")]([SubResource("Resource_2u0ur")])
+
+[sub_resource type="Resource" id="Resource_a6kkl"]
+script = ExtResource("2_d340i")
+type = &"damage"
+amount = 3.0
+damage_type = &"strike"
+
+[sub_resource type="Resource" id="Resource_7saux"]
+script = ExtResource("1_omu00")
+id = &"swarm_mother_sting"
+priority = 2
+use_slots = Array[int]([2, 3, 4])
+target_slots = Array[int]([2, 3])
+targeting = &"single"
+target_rule = &"random"
+conditions = Array[Dictionary]([{
+"name": "always",
+"param": null
+}])
+intent_icon = &"attack"
+effects = Array[ExtResource("2_d340i")]([SubResource("Resource_a6kkl")])
+
+[resource]
+script = ExtResource("3_wxrm6")
+id = &"enemy_swarm_mother"
+name_pt = "Mãe-Enxame"
+family = &"a"
+circles = Array[int]([2, 3, 4, 5])
+nature = &"corporeal"
+role = &"summoner"
+max_hp = 28
+armor = 1
+actions = Array[ExtResource("1_omu00")]([SubResource("Resource_5l0xi"), SubResource("Resource_7saux")])
+art_id = "enemy_swarm_mother"

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_mhga8"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_18453"]
+
+[sub_resource type="Resource" id="Resource_qqlg8"]
+script = ExtResource("1_mhga8")
+type = &"heal"
+amount = 4.0
+
+[sub_resource type="Resource" id="Resource_dkt3s"]
+script = ExtResource("1_mhga8")
+order = 2
+type = &"desolation"
+amount = -10.0
+
+[resource]
+script = ExtResource("2_18453")
+id = &"joan_road_to_reims"
+owner = &"saint_joan"
+name_pt = "Rumo a Reims"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([1, 2, 3])
+targeting = &"all_allies"
+origin = &"hagiography"
+desc_pt = "Cura 4 e −10 de desolação em todos."
+effects = Array[ExtResource("1_mhga8")]([SubResource("Resource_qqlg8"), SubResource("Resource_dkt3s")])

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_g3878"]
+[ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_8cip0"]
+
+[sub_resource type="Resource" id="Resource_vhio8"]
+script = ExtResource("1_g3878")
+type = &"revive"
+params = {
+"hp_fraction": 0.3
+}
+
+[resource]
+script = ExtResource("2_8cip0")
+id = &"therese_abandonment"
+owner = &"saint_therese"
+name_pt = "Abandono"
+kind = &"fervor"
+cost = 2
+use_slots = Array[int]([2, 3])
+targeting = &"ally_fallen"
+target_slots = Array[int]([1, 2, 3])
+origin = &"game_fiction"
+desc_pt = "Levanta um aliado Caído com 30% da vida."
+effects = Array[ExtResource("1_g3878")]([SubResource("Resource_vhio8")])

@@ -49,6 +49,9 @@ godot --headless --path game -s res://tools/sim/run_sim.gd -- --encounters=m0 --
 
 # importar os CSVs de balanceamento para Resources
 godot --headless --path game -s res://tools/data/import_balance.gd
+
+# conferir se game/data está em dia com os CSVs, sem gravar (usado pelo CI)
+godot --headless --path game -s res://tools/data/import_balance.gd -- --check
 ```
 
 Se algum comando não existir ainda, a tarefa atual provavelmente é criá-lo; confira o backlog.

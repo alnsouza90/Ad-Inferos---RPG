@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="SaintDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/camp_skill_def.gd" id="1_8hxmc"]
+[ext_resource type="Script" path="res://data/defs/saint_def.gd" id="2_3rmm1"]
+[ext_resource type="Script" path="res://data/defs/trait_def.gd" id="3_m8c3s"]
+
+[sub_resource type="Resource" id="Resource_xgj4v"]
+script = ExtResource("1_8hxmc")
+id = &"camp_gertrude_office"
+owner = &"saint_gertrude"
+name_pt = "Ofício dos Defuntos"
+desc_pt = "+1 Sufrágio ao fim da expedição."
+effect = &"suffrage_bonus"
+params = {
+"value": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_eisp7"]
+script = ExtResource("3_m8c3s")
+id = &"trait_blessed_souls"
+owner = &"saint_gertrude"
+name_pt = "Almas Benditas"
+desc_pt = "No início de cada rodada, remove 1 pilha de condição negativa do aliado com mais pilhas."
+trigger = &"on_round_start"
+hook = &"round_start_cleanse"
+params = {
+"stacks": 1.0
+}
+
+[resource]
+script = ExtResource("2_3rmm1")
+id = &"saint_gertrude"
+name_pt = "Santa Gertrudes"
+roles = Array[StringName]([&"healer", &"intercessor"])
+preferred_slots = Array[int]([3])
+max_hp = 22
+faith = 8
+will = 2
+hp_per_level = 3
+faith_per_level = 1
+abilities = Array[StringName]([&"gertrude_psalmody", &"gertrude_cleanse", &"gertrude_herald", &"gertrude_remembrance", &"gertrude_helfta_choir", &"gertrude_souls_prayer"])
+default_equipped = Array[StringName]([&"gertrude_psalmody", &"gertrude_cleanse", &"gertrude_herald", &"gertrude_helfta_choir"])
+miracle = &"gertrude_suffrage"
+trait_def = SubResource("Resource_eisp7")
+camp_skill = SubResource("Resource_xgj4v")
+affinities = Array[StringName]([&"monastics"])
+unlock = "milestone:3"

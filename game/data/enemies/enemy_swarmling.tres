@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/enemy_action_def.gd" id="1_27giy"]
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_63wvt"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_rbrkk"]
+
+[sub_resource type="Resource" id="Resource_k77cs"]
+script = ExtResource("2_63wvt")
+type = &"damage"
+amount = 3.0
+damage_type = &"strike"
+
+[sub_resource type="Resource" id="Resource_ogpux"]
+script = ExtResource("1_27giy")
+id = &"swarmling_bite"
+use_slots = Array[int]([1, 2, 3, 4])
+target_slots = Array[int]([1, 2])
+targeting = &"single"
+target_rule = &"front_most"
+conditions = Array[Dictionary]([{
+"name": "always",
+"param": null
+}])
+intent_icon = &"attack"
+effects = Array[ExtResource("2_63wvt")]([SubResource("Resource_k77cs")])
+
+[resource]
+script = ExtResource("3_rbrkk")
+id = &"enemy_swarmling"
+name_pt = "Enxame"
+family = &"a"
+circles = Array[int]([2, 3, 4, 5])
+nature = &"corporeal"
+role = &"brute"
+max_hp = 8
+actions = Array[ExtResource("1_27giy")]([SubResource("Resource_ogpux")])
+art_id = "enemy_swarmling"
