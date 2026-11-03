@@ -78,12 +78,13 @@ Regra de dependência: `scenes → core`, nunca `core → scenes`. `core` não c
 
 ## 8. Como trabalhar em cada tarefa
 
+0. No início da sessão, leia também `docs/progress.md` (onde estamos, como trabalhamos com Alan, ambiente).
 1. Leia a tarefa no backlog (`docs/backlog/`) e as seções da especificação que ela cita.
 2. Se a tarefa for maior que algumas horas ou mexer em mais de um sistema, apresente um plano curto antes de codar.
 3. Escreva os testes junto com o código. Uma tarefa só está pronta com testes passando.
 4. Mexa apenas nos arquivos do escopo da tarefa.
 5. Ao terminar, entregue: o que mudou, como testar, o comando de teste usado e o resultado, e qualquer ambiguidade encontrada.
-6. Atualize a caixa da tarefa no backlog.
+6. Atualize a caixa da tarefa no backlog e o `docs/progress.md`.
 
 ## 9. Pare e pergunte quando
 
