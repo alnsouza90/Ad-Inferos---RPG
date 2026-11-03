@@ -29,6 +29,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-111 · 03/11/2026 · Alan** — Balanceamento da T14: Família A com +20% de vida e dano; Sangramento do Moscardo 2; Corrupção da Sombra 3; desolação do Toque da Sombra 10 e do Lamento 8. *CSVs, `docs/balance/sim-reports/2026-11-03-m0-t14.md`.*
 - **D-112 · 03/11/2026 · Alan** — Vigília no Pouso passa de −40 para −20 de desolação. *`constants.csv`, specs de desolação e expedição.*
 - **D-113 · 03/11/2026 · Alan** — Metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" ficam para recalibrar no M1.
+- **D-114 · 03/11/2026 · Alan** — Textos da tela de combate (`docs/balance/ui_text.csv`) revisados e aprovados sem mudanças; T15 aprovada. *PR #17.*
 
 ## Arte
 
