@@ -27,3 +27,4 @@ __pycache__/
 # Saídas temporárias de ferramentas
 tools/out/
 game/tests/out/
+game/tools/out/

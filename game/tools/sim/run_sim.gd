@@ -26,6 +26,9 @@ func _init() -> void:
 	var report := SimReport.build(sim)
 	var out_dir: String = "res://tools/out"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out_dir))
+	# Keeps Godot from importing the CSV reports as translations.
+	var ignore := FileAccess.open(out_dir.path_join(".gdignore"), FileAccess.WRITE)
+	ignore.close()
 	var stamp: String = Time.get_datetime_string_from_system().replace(":", "").replace("T", "_")
 	var path: String = out_dir.path_join("sim_%s.csv" % stamp)
 	var file := FileAccess.open(path, FileAccess.WRITE)
