@@ -26,35 +26,46 @@ static func constants() -> ConstantsDef:
 		"ward_mult": 0.5,
 		"min_damage": 1.0,
 		"effect_queue_limit": 64.0,
+		"duel_damage_mult": 1.25,
+		"duel_counter_damage": 3.0,
+		"corruption_desolation_per_stack": 3.0,
 	}
 	return c
 
 
-static func condition(id: StringName, polarity: StringName, kind: StringName = &"token", max_stacks: int = 3, priority: int = 5) -> ConditionDef:
+static func condition(id: StringName, polarity: StringName, kind: StringName = &"token", max_stacks: int = 3, priority: int = 5, stacking: StringName = &"add", hook: StringName = &"", tick: StringName = &"none", decay: StringName = &"none", resisted_by_will: bool = false) -> ConditionDef:
 	var d := ConditionDef.new()
 	d.id = id
 	d.polarity = polarity
 	d.kind = kind
 	d.max_stacks = max_stacks
 	d.display_priority = priority
+	d.stacking = stacking
+	d.hook = hook
+	d.tick = tick
+	d.decay = decay
+	d.resisted_by_will = resisted_by_will
 	return d
 
 
+## Mirrors docs/balance/conditions.csv for the conditions combat tests use.
 static func conditions() -> Dictionary:
 	return {
-		&"stun": condition(&"stun", &"negative", &"token", 1, 1),
-		&"bleed": condition(&"bleed", &"negative", &"duration", 5, 3),
-		&"corruption": condition(&"corruption", &"negative", &"duration", 5, 2),
-		&"ward": condition(&"ward", &"positive", &"token", 3, 5),
-		&"strength": condition(&"strength", &"positive", &"token", 3, 6),
-		&"duel": condition(&"duel", &"negative", &"permanent", 1, 2),
+		&"stun": condition(&"stun", &"negative", &"token", 1, 1, &"none", &"stun_cancel"),
+		&"bleed": condition(&"bleed", &"negative", &"duration", 5, 3, &"add", &"bleed_tick", &"owner_turn_start", &"minus_one_after_tick", true),
+		&"corruption": condition(&"corruption", &"negative", &"duration", 5, 2, &"add", &"corruption_tick", &"owner_turn_start", &"minus_one_after_tick", true),
+		&"ward": condition(&"ward", &"positive", &"token", 3, 5, &"add", &"ward_halve"),
+		&"strength": condition(&"strength", &"positive", &"token", 3, 6, &"add", &"strength_boost"),
+		&"taunt": condition(&"taunt", &"positive", &"token", 1, 4, &"refresh", &"taunt_redirect", &"none", &"expire_round_end"),
+		&"duel": condition(&"duel", &"negative", &"permanent", 1, 2, &"refresh", &"duel_mark"),
 	}
 
 
-static func saint(id: StringName, max_hp: int = 30) -> SaintDef:
+static func saint(id: StringName, max_hp: int = 30, will: int = 0) -> SaintDef:
 	var d := SaintDef.new()
 	d.id = id
 	d.max_hp = max_hp
+	d.will = will
 	return d
 
 

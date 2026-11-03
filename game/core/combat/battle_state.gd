@@ -23,6 +23,9 @@ var provisions: Array[StringName] = []
 ## &"common", &"elite" or &"boss" (retreat is not allowed against bosses).
 var encounter_type: StringName = &"common"
 var provisions_used_this_turn: int = 0
+## True during ENEMY_TURN and HAZARD (affects expire_round_end, conditions §3.3).
+var in_enemy_phase: bool = false
+var engine: ConditionEngine
 var party: Array[Combatant] = []
 var enemies: Array[Combatant] = []
 var round_number: int = 0
@@ -35,6 +38,7 @@ func _init(p_catalog: BattleCatalog) -> void:
 	catalog = p_catalog
 	constants = p_catalog.constants
 	condition_defs = p_catalog.conditions
+	engine = ConditionEngine.new(self)
 
 
 static func create(p_catalog: BattleCatalog, saints: Array[SaintDef], enemy_defs: Array[EnemyDef], p_provisions: Array[StringName] = [], p_encounter_type: StringName = &"common") -> BattleState:
@@ -238,6 +242,7 @@ func fall(c: Combatant, cause: StringName) -> void:
 	c.fallen_rounds = 0
 	c.revivable = cause != CAUSE_PROSTRATION
 	_remove_positive_conditions(c)
+	engine.on_saint_fallen(c)
 	if cause != CAUSE_PROSTRATION:
 		var amount: int = constants.get_int(&"desolation_ally_fallen")
 		for ally: Combatant in party:
@@ -344,7 +349,7 @@ func _remove_positive_conditions(c: Combatant) -> void:
 	for condition_id: StringName in c.conditions.keys():
 		var def: ConditionDef = condition_defs.get(condition_id)
 		if def != null and def.polarity == &"positive":
-			c.conditions.erase(condition_id)
+			engine.remove_all(c, condition_id)
 
 
 # --- outcome ----------------------------------------------------------------------

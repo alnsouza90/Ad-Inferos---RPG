@@ -47,6 +47,7 @@ var _batch: Array[BattleEvent] = []
 func _init(p_state: BattleState) -> void:
 	state = p_state
 	fervor = FervorPool.new(p_state.constants)
+	state.engine.emit = _emit
 
 
 ## Starts round 1 with Fervor 0 and runs until the party can act.
@@ -66,6 +67,9 @@ func end_party_turn() -> Array[BattleEvent]:
 	command_log.append(BattleCommand.end_party_turn().to_dict())
 	_emit(EV_PARTY_TURN_ENDED)
 	for saint: Combatant in state.party:
+		# A stunned saint who did not pass still loses this action.
+		if not saint.has_acted and saint.is_standing():
+			state.engine.consume_stun(saint)
 		saint.has_acted = true
 	if _run_enemy_turn() and _run_hazard() and _end_round():
 		_begin_round()
@@ -147,6 +151,7 @@ func is_over() -> bool:
 
 func _begin_round() -> void:
 	phase = Phase.ROUND_START
+	state.in_enemy_phase = false
 	state.round_number += 1
 	_emit(EV_ROUND_STARTED, {"round": state.round_number})
 	for saint: Combatant in state.party:
@@ -170,6 +175,7 @@ func _begin_round() -> void:
 ## Returns false when the battle ended during the step.
 func _run_enemy_turn() -> bool:
 	phase = Phase.ENEMY_TURN
+	state.in_enemy_phase = true
 	_emit(EV_ENEMY_TURN_STARTED)
 	# Snapshot in slot order: enemies summoned this turn act from the next round.
 	for enemy: Combatant in state.enemies.duplicate():
@@ -219,6 +225,7 @@ func _check_outcome() -> bool:
 func _finish(final_phase: Phase, result: StringName) -> void:
 	phase = final_phase
 	fervor.reset()
+	state.engine.clear_all()
 	_emit(EV_BATTLE_ENDED, {"result": result, "round": state.round_number})
 
 
@@ -386,6 +393,7 @@ func _run_pass(cmd: BattleCommand) -> StringName:
 		return reason
 	actor.has_acted = true
 	_emit(EV_PASSED, {"actor": actor.id})
+	state.engine.consume_stun(actor)
 	return &""
 
 
@@ -493,18 +501,22 @@ func _apply_round_start_conditions() -> void:
 	pass
 
 
-## conditions §3.2, `owner_turn_start` for saints (T07).
+## conditions §3.2, `owner_turn_start` for saints (bleed, corruption...).
 func _apply_party_turn_start_conditions() -> void:
-	pass
+	for saint: Combatant in state.party.duplicate():
+		state.engine.tick_owner_turn_start(saint)
 
 
-## conditions §3.2, `owner_turn_start` for one enemy (T07).
-func _apply_enemy_turn_start_conditions(_enemy: Combatant) -> void:
-	pass
+## conditions §3.2, `owner_turn_start` for one enemy, right before it acts.
+func _apply_enemy_turn_start_conditions(enemy: Combatant) -> void:
+	state.engine.tick_owner_turn_start(enemy)
 
 
-## enemy-ai §4 (T09). Returns true if the enemy did something.
-func _execute_intent(_enemy: Combatant) -> bool:
+## enemy-ai §4 (T09). A stunned enemy loses its intent (conditions §4).
+## Returns true if the enemy did something.
+func _execute_intent(enemy: Combatant) -> bool:
+	if state.engine.consume_stun(enemy):
+		return false
 	return false
 
 
@@ -513,9 +525,9 @@ func _apply_hazard() -> void:
 	pass
 
 
-## conditions §3.3, step 8 (T07).
+## conditions §3.3, step 8: expire_round_end conditions leave.
 func _decay_conditions() -> void:
-	pass
+	state.engine.end_round()
 
 
 # --- events ------------------------------------------------------------------------

@@ -24,6 +24,14 @@ var category: StringName = &""
 var desolation: int = 0
 ## condition_id -> stacks
 var conditions: Dictionary = {}
+## condition_id -> id of whoever applied it (needed for Duel).
+var condition_sources: Dictionary = {}
+## condition_id -> round at whose end it expires (decay expire_round_end).
+var condition_expiry: Dictionary = {}
+## Cannot be stunned again while round_number <= this value.
+var stun_immune_until: int = 0
+## Enemies: conditions they are immune to (data).
+var immune: Array[StringName] = []
 var has_acted: bool = false
 var state: State = State.STANDING
 ## Rounds counted since falling (combat §8); counting starts at that ROUND_END.
@@ -77,6 +85,7 @@ func _setup_enemy(def: EnemyDef, instance_id: StringName) -> void:
 	size = def.size
 	nature = def.nature
 	category = def.family if def.family == &"elite" or def.family == &"boss" else &"common"
+	immune = def.immune.duplicate()
 	leaves_remains = def.leaves_remains
 	remains_rounds = def.remains_rounds
 
@@ -126,6 +135,6 @@ func to_dict() -> Dictionary:
 		"id": String(id), "def_id": String(def_id), "team": team, "state": state,
 		"hp": hp, "max_hp": max_hp, "desolation": desolation, "spirit_state": String(spirit_state),
 		"conditions": conds, "has_acted": has_acted, "fallen_rounds": fallen_rounds,
-		"revivable": revivable, "remains_left": remains_left, "used_once": used,
+		"revivable": revivable, "stun_immune_until": stun_immune_until, "remains_left": remains_left, "used_once": used,
 		"trait_counters": trait_counters.duplicate(true),
 	}

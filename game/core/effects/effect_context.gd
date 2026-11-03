@@ -13,6 +13,10 @@ var targets: Array[Combatant] = []
 var queue: EffectQueue
 var emit: Callable
 
+## False for reactions such as the Duel counter-attack, which are not the
+## saint's own action and must not spend their Strength.
+var allow_strength: bool = true
+
 var _strength_checked: bool = false
 var _strength_active: bool = false
 
@@ -22,7 +26,7 @@ var _strength_active: bool = false
 func use_strength() -> bool:
 	if not _strength_checked:
 		_strength_checked = true
-		if actor != null and actor.has_condition(&"strength"):
+		if allow_strength and actor != null and actor.has_condition(&"strength"):
 			state.remove_condition_stacks(actor, &"strength", 1)
 			_strength_active = true
 			emit.call(&"condition_consumed", {"target": actor.id, "condition": &"strength"})
