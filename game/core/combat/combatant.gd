@@ -31,6 +31,13 @@ var leaves_remains: bool = false
 var remains_rounds: int = 0
 var remains_left: int = 0
 var trait_counters: Dictionary = {}
+## Saints only: the 4 equipped abilities and the signature miracle.
+var equipped: Array[StringName] = []
+var miracle: StringName = &""
+## &"normal", &"consolation" or &"dark_night" (desolation §1).
+var spirit_state: StringName = &"normal"
+## Abilities marked once_per_battle already used.
+var used_once: Array[StringName] = []
 
 
 static func from_saint(def: SaintDef) -> Combatant:
@@ -54,6 +61,8 @@ func _setup_saint(def: SaintDef) -> void:
 	armor = def.armor
 	faith = def.faith
 	will = def.will
+	equipped = def.default_equipped.duplicate()
+	miracle = def.miracle
 
 
 func _setup_enemy(def: EnemyDef, instance_id: StringName) -> void:
@@ -96,3 +105,24 @@ func stacks(condition_id: StringName) -> int:
 
 func has_condition(condition_id: StringName) -> bool:
 	return stacks(condition_id) > 0
+
+
+func is_dark_night() -> bool:
+	return spirit_state == &"dark_night"
+
+
+## Plain snapshot of the mutable state (determinism and save tests).
+func to_dict() -> Dictionary:
+	var conds: Dictionary = {}
+	for key: StringName in conditions:
+		conds[String(key)] = conditions[key]
+	var used: Array[String] = []
+	for ability_id: StringName in used_once:
+		used.append(String(ability_id))
+	return {
+		"id": String(id), "def_id": String(def_id), "team": team, "state": state,
+		"hp": hp, "max_hp": max_hp, "desolation": desolation, "spirit_state": String(spirit_state),
+		"conditions": conds, "has_acted": has_acted, "fallen_rounds": fallen_rounds,
+		"revivable": revivable, "remains_left": remains_left, "used_once": used,
+		"trait_counters": trait_counters.duplicate(true),
+	}

@@ -12,9 +12,15 @@ const CAUSE_HP: StringName = &"hp"
 const CAUSE_PROSTRATION: StringName = &"prostration"
 const STUN: StringName = &"stun"
 
+var catalog: BattleCatalog
 var constants: ConstantsDef
 ## condition_id -> ConditionDef
 var condition_defs: Dictionary = {}
+## Expedition provisions carried into battle, one entry per unit.
+var provisions: Array[StringName] = []
+## &"common", &"elite" or &"boss" (retreat is not allowed against bosses).
+var encounter_type: StringName = &"common"
+var provisions_used_this_turn: int = 0
 var party: Array[Combatant] = []
 var enemies: Array[Combatant] = []
 var round_number: int = 0
@@ -23,13 +29,16 @@ var intents: Array[Intent] = []
 var _enemy_serial: int = 0
 
 
-func _init(p_constants: ConstantsDef, p_condition_defs: Dictionary) -> void:
-	constants = p_constants
-	condition_defs = p_condition_defs
+func _init(p_catalog: BattleCatalog) -> void:
+	catalog = p_catalog
+	constants = p_catalog.constants
+	condition_defs = p_catalog.conditions
 
 
-static func create(p_constants: ConstantsDef, p_condition_defs: Dictionary, saints: Array[SaintDef], enemy_defs: Array[EnemyDef]) -> BattleState:
-	var state := BattleState.new(p_constants, p_condition_defs)
+static func create(p_catalog: BattleCatalog, saints: Array[SaintDef], enemy_defs: Array[EnemyDef], p_provisions: Array[StringName] = [], p_encounter_type: StringName = &"common") -> BattleState:
+	var state := BattleState.new(p_catalog)
+	state.provisions = p_provisions.duplicate()
+	state.encounter_type = p_encounter_type
 	for saint: SaintDef in saints:
 		state.party.append(Combatant.from_saint(saint))
 	for enemy: EnemyDef in enemy_defs:
@@ -283,3 +292,24 @@ func is_defeat() -> bool:
 ## Victory: no enemy fighting (remains do not count).
 func is_victory() -> bool:
 	return not enemies.any(func(c: Combatant) -> bool: return c.is_alive_enemy())
+
+
+## Plain snapshot of the whole battle state (determinism tests, save-load).
+func to_dict() -> Dictionary:
+	var party_list: Array = []
+	for c: Combatant in party:
+		party_list.append(c.to_dict())
+	var enemy_list: Array = []
+	for c: Combatant in enemies:
+		enemy_list.append(c.to_dict())
+	var intent_list: Array = []
+	for intent: Intent in intents:
+		intent_list.append({"enemy": String(intent.enemy_id), "action": String(intent.action_id), "slot": intent.target_slot})
+	var provision_list: Array[String] = []
+	for p: StringName in provisions:
+		provision_list.append(String(p))
+	return {
+		"round": round_number, "party": party_list, "enemies": enemy_list, "intents": intent_list,
+		"provisions": provision_list, "provisions_used_this_turn": provisions_used_this_turn,
+		"encounter_type": String(encounter_type),
+	}
