@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && echo '=== MEMÓRIA DO PROJETO · OBRIGATÓRIO antes de qualquer trabalho: use a ferramenta Read para ler POR INTEIRO docs/memory/README.md, decisions.md, owner.md, lessons.md e open-questions.md. Abaixo, só o estado atual. ===' && echo && cat docs/memory/progress.md"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,11 +1,11 @@
 # Andamento e continuidade
 
-Documento de passagem entre sessões do agente. **Leia depois do `CLAUDE.md`, no início de toda sessão nova.** Atualize ao fim de cada tarefa.
+Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atualize ao fim de cada tarefa.
 
 ## Onde estamos
 
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
-- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`).
+- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16).
 - **Próxima:** T15 · Tela de combate com arte provisória.
 - **Depois:** T16 (auréola no motor), T17 (arena e APK Android).
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
@@ -42,4 +42,10 @@ Registradas também no backlog de cada tarefa.
 - Arte só entra a partir da T16 e do piloto de São Jorge. A T15 usa retângulos.
 - Originais ficam com Alan (Google Drive); ele envia pelo chat só o que a tarefa precisa; o agente processa conforme `docs/art/asset-pipeline.md`.
 - Atenção à cota de 1 GB do Git LFS gratuito: só versões de jogo no repositório.
-- Poses de ataque, golpe recebido e queda: Alan não conseguiu gerá-las de forma satisfatória (03/11/2026). Alternativa em discussão: animar no motor a partir de uma única imagem (ADR-0007).
+- Poses de ataque, golpe recebido e queda: não geradas; **animação feita no motor** a partir de uma imagem por estado (ADR-0007, aprovado por Alan em 03/11/2026).
+- **Piloto de São Jorge recebido (03/11/2026)**, originais em `art_source/`:
+  - `characters/saints/saint_george/`: corpo padrão (`_body_idle_v01`, **só 343×512**: pedir versão maior a Alan antes da arte final), corpo em Noite Escura e em Consolação (848×1264, usados como pose própria do estado), retrato (896×1200).
+  - `vfx/halo/`: disco da auréola e raios (1024×1024).
+  - A imagem de Consolação tem um brilho claro atrás da cabeça; conferir no motor se ele briga com a auréola (a Direção de Arte pede imagens sem auréola).
+  - Ainda falta processar (remover fundo, recortar, redimensionar, `game/assets/`): fica para a T16.
+- **Arte do piloto em combate recebida (03/11/2026)**, originais em `art_source/`: os 7 inimigos da Família A (`characters/enemies/`), Bento e Teresinha em padrão, Noite Escura e Consolação, cenário do Círculo 2 trecho 1 (fundo e frente) e redemoinhos do Vendaval (`vfx/hazards/`). Pendências em `open-questions.md`.
