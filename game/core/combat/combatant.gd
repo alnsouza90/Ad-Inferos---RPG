@@ -41,6 +41,9 @@ var leaves_remains: bool = false
 var remains_rounds: int = 0
 var remains_left: int = 0
 var trait_counters: Dictionary = {}
+## Saints only: passive trait (traits.csv) and affinity ids (combat §12).
+var trait_def: TraitDef
+var affinities: Array[StringName] = []
 ## Saints only: the 4 equipped abilities and the signature miracle.
 var equipped: Array[StringName] = []
 var miracle: StringName = &""
@@ -79,6 +82,8 @@ func _setup_saint(def: SaintDef) -> void:
 	will = def.will
 	equipped = def.default_equipped.duplicate()
 	miracle = def.miracle
+	trait_def = def.trait_def
+	affinities = def.affinities.duplicate()
 
 
 func _setup_enemy(def: EnemyDef, instance_id: StringName) -> void:
@@ -123,6 +128,15 @@ func stacks(condition_id: StringName) -> int:
 
 func has_condition(condition_id: StringName) -> bool:
 	return stacks(condition_id) > 0
+
+
+## The behaviour name of the saint's trait (traits.csv `hook`), or &"".
+func trait_hook() -> StringName:
+	return trait_def.hook if trait_def != null else &""
+
+
+func trait_param(key: String, default: float) -> float:
+	return float(trait_def.params.get(key, default)) if trait_def != null else default
 
 
 func is_dark_night() -> bool:

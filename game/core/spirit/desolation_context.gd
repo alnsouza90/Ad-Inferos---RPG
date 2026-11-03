@@ -11,6 +11,8 @@ var rng: RngStream
 ## Current Light, or -1 outside expeditions.
 var light: int = -1
 var affinity_mult: float = 1.0
+## Traits such as Clausura (allies next to Benedict take less desolation).
+var trait_mult: float = 1.0
 var relic_mult: float = 1.0
 var season_mult: float = 1.0
 var faith_bonus: float = 0.0

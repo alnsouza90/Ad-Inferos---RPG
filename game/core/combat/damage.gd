@@ -25,7 +25,7 @@ static func compute(state: BattleState, attacker: Combatant, target: Combatant, 
 		value *= constants.get_float(&"strength_mult")
 	value *= duel_multiplier(constants, attacker, target)
 	value *= fury_multiplier(attacker)
-	value *= affinity_multiplier(attacker, effect.damage_type)
+	value *= affinity_multiplier(state, attacker, effect.damage_type)
 	value *= relic_multiplier(attacker, effect.damage_type)
 	value *= consolation_multiplier(constants, attacker)
 	var warded: bool = target.has_condition(&"ward")
@@ -70,8 +70,12 @@ static func fury_multiplier(_attacker: Combatant) -> float:
 	return 1.0
 
 
-## Affinities (combat §12): T10.
-static func affinity_multiplier(_attacker: Combatant, _damage_type: StringName) -> float:
+## Affinities (combat §12), only for the affinity's members.
+static func affinity_multiplier(state: BattleState, attacker: Combatant, damage_type: StringName) -> float:
+	if damage_type == &"strike" and state.has_affinity_bonus(attacker, &"soldiers"):
+		return state.constants.get_float(&"affinity_soldier_mult")
+	if damage_type == &"exorcism" and state.has_affinity_bonus(attacker, &"monastics"):
+		return state.constants.get_float(&"affinity_monastic_mult")
 	return 1.0
 
 
