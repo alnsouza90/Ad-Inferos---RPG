@@ -1,8 +1,29 @@
-# Sistema
+# Godot
+game/.godot/
+game/.import/
+*.translation
+export_presets.cfg.bak
+
+# Builds
+builds/
+*.apk
+*.aab
+
+# Chaves de assinatura Android: NUNCA versionar
+*.keystore
+*.jks
+
+# Sistema operacional e editores
 .DS_Store
 Thumbs.db
-
-# Editores
 .vscode/
 .idea/
-*.swp
+
+# Python (ferramentas)
+__pycache__/
+*.pyc
+.venv/
+
+# Saídas temporárias de ferramentas
+tools/out/
+game/tests/out/
