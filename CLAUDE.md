@@ -29,6 +29,7 @@ Se a especificação e o GDD divergirem, **a especificação vale** e você apon
 ## 4. Ambiente
 
 - **Engine:** Godot 4.7.x estável (série estável mais recente em nov/2026). Confirme a versão instalada com `godot --version` e atualize esta linha se for diferente. Nunca use sintaxe ou APIs do Godot 3.
+- **`godot --version` registrado (03/11/2026):** `4.7.2.stable.official.ed1daf0bf` (CI do GitHub, `.github/workflows/tests.yml`).
 - **Linguagem:** GDScript **com tipagem estática obrigatória** (`var hp: int`, `func f(x: int) -> void`). Sem C#.
 - **Renderizador:** Compatibility (OpenGL ES 3), para cobrir Android de entrada.
 - **Testes:** GUT (Godot Unit Test) em `game/addons/gut/`. Ver `docs/testing.md`.
