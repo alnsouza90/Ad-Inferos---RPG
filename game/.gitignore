@@ -1,0 +1,11 @@
+# Godot 4
+.godot/
+/android/
+export_presets.cfg
+*.translation
+
+# Saídas locais
+/build/
+/exports/
+*.apk
+*.aab
