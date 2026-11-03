@@ -20,23 +20,34 @@ static func constants() -> ConstantsDef:
 		"fervor_cap": float(FERVOR_CAP),
 		"fervor_bonus_cap_per_round": float(FERVOR_BONUS_CAP),
 		"provisions_per_turn": 1.0,
+		"vulnerable_mult": 1.25,
+		"resistant_mult": 0.75,
+		"strength_mult": 1.25,
+		"ward_mult": 0.5,
+		"min_damage": 1.0,
+		"effect_queue_limit": 64.0,
 	}
 	return c
 
 
-static func condition(id: StringName, polarity: StringName) -> ConditionDef:
+static func condition(id: StringName, polarity: StringName, kind: StringName = &"token", max_stacks: int = 3, priority: int = 5) -> ConditionDef:
 	var d := ConditionDef.new()
 	d.id = id
 	d.polarity = polarity
+	d.kind = kind
+	d.max_stacks = max_stacks
+	d.display_priority = priority
 	return d
 
 
 static func conditions() -> Dictionary:
 	return {
-		&"stun": condition(&"stun", &"negative"),
-		&"bleed": condition(&"bleed", &"negative"),
-		&"ward": condition(&"ward", &"positive"),
-		&"strength": condition(&"strength", &"positive"),
+		&"stun": condition(&"stun", &"negative", &"token", 1, 1),
+		&"bleed": condition(&"bleed", &"negative", &"duration", 5, 3),
+		&"corruption": condition(&"corruption", &"negative", &"duration", 5, 2),
+		&"ward": condition(&"ward", &"positive", &"token", 3, 5),
+		&"strength": condition(&"strength", &"positive", &"token", 3, 6),
+		&"duel": condition(&"duel", &"negative", &"permanent", 1, 2),
 	}
 
 
@@ -47,12 +58,26 @@ static func saint(id: StringName, max_hp: int = 30) -> SaintDef:
 	return d
 
 
-static func enemy(id: StringName, max_hp: int = 20, size: int = 1) -> EnemyDef:
+static func enemy(id: StringName, max_hp: int = 20, size: int = 1, nature: StringName = &"corporeal", armor: int = 0, family: StringName = &"a") -> EnemyDef:
 	var d := EnemyDef.new()
 	d.id = id
 	d.max_hp = max_hp
 	d.size = size
+	d.nature = nature
+	d.armor = armor
+	d.family = family
 	return d
+
+
+static func effect(type: StringName, amount: float = 0.0, damage_type: StringName = &"", condition_id: StringName = &"", stacks: int = 0, params: Dictionary = {}) -> EffectDef:
+	var e := EffectDef.new()
+	e.type = type
+	e.amount = amount
+	e.damage_type = damage_type
+	e.condition_id = condition_id
+	e.stacks = stacks
+	e.params = params
+	return e
 
 
 static func ability(id: StringName, kind: StringName, cost: int, use_slots: Array[int], targeting: StringName, target_slots: Array[int] = [], allow_self: bool = false, once_per_battle: bool = false, target_count: int = 0) -> AbilityDef:

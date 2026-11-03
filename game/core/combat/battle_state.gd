@@ -11,6 +11,8 @@ extends RefCounted
 const CAUSE_HP: StringName = &"hp"
 const CAUSE_PROSTRATION: StringName = &"prostration"
 const STUN: StringName = &"stun"
+## Formation size (combat §2.1): a structural rule, not a balance number.
+const MAX_ENEMY_SLOTS: int = 4
 
 var catalog: BattleCatalog
 var constants: ConstantsDef
@@ -160,6 +162,14 @@ func move_enemy(c: Combatant, delta: int) -> int:
 	return moved
 
 
+## Swaps two saints' slots without spending anyone's action (e.g. Fuga de Toledo).
+func swap_party_members(a: Combatant, b: Combatant) -> void:
+	var slot_a: int = party_slot_of(a)
+	var slot_b: int = party_slot_of(b)
+	if slot_a > 0 and slot_b > 0 and slot_a != slot_b:
+		_swap_party_slots(slot_a, slot_b)
+
+
 func _swap_party_slots(slot_a: int, slot_b: int) -> void:
 	var a: Combatant = party[slot_a - 1]
 	party[slot_a - 1] = party[slot_b - 1]
@@ -273,6 +283,61 @@ func end_round_falls() -> void:
 			if c.remains_left <= 0:
 				c.state = Combatant.State.DEAD
 				enemies.erase(c)
+
+
+# --- condition stacks (minimal; the full engine with Will, immunity and
+# stacking modes is conditions.md, T07) ---------------------------------------------
+
+## Adds stacks up to max_stacks. Returns the stacks actually added.
+func add_condition_stacks(c: Combatant, condition_id: StringName, amount: int) -> int:
+	var def: ConditionDef = condition_defs.get(condition_id)
+	var max_stacks: int = def.max_stacks if def != null else amount
+	var before: int = c.stacks(condition_id)
+	var after: int = mini(before + amount, max_stacks)
+	if after > before:
+		c.conditions[condition_id] = after
+	return after - before
+
+
+## Removes up to `amount` stacks of one condition. Returns stacks removed.
+func remove_condition_stacks(c: Combatant, condition_id: StringName, amount: int) -> int:
+	var before: int = c.stacks(condition_id)
+	var removed: int = mini(amount, before)
+	if before - removed <= 0:
+		c.conditions.erase(condition_id)
+	else:
+		c.conditions[condition_id] = before - removed
+	return removed
+
+
+## Removes up to `amount` stacks among conditions of a polarity, highest
+## display priority first (lower number first). Returns stacks removed.
+func remove_stacks_by_polarity(c: Combatant, polarity: StringName, amount: int) -> int:
+	var ids: Array[StringName] = []
+	for condition_id: StringName in c.conditions:
+		var def: ConditionDef = condition_defs.get(condition_id)
+		if def != null and def.polarity == polarity:
+			ids.append(condition_id)
+	ids.sort_custom(func(a: StringName, b: StringName) -> bool:
+		return (condition_defs[a] as ConditionDef).display_priority < (condition_defs[b] as ConditionDef).display_priority)
+	var removed := 0
+	for condition_id: StringName in ids:
+		if removed >= amount:
+			break
+		removed += remove_condition_stacks(c, condition_id, amount - removed)
+	return removed
+
+
+## Removes every positive token condition (Ward, Strength, Taunt...). Returns
+## the condition ids removed.
+func strip_positive_tokens(c: Combatant) -> Array[StringName]:
+	var removed: Array[StringName] = []
+	for condition_id: StringName in c.conditions.keys():
+		var def: ConditionDef = condition_defs.get(condition_id)
+		if def != null and def.polarity == &"positive" and def.kind == &"token":
+			c.conditions.erase(condition_id)
+			removed.append(condition_id)
+	return removed
 
 
 func _remove_positive_conditions(c: Combatant) -> void:

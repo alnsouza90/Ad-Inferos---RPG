@@ -38,6 +38,8 @@ var history: Array[BattleEvent] = []
 ## Accepted commands, in order (BattleCommand.to_dict()). Replaying them on the
 ## same starting state rebuilds the battle exactly (ADR-0005).
 var command_log: Array[Dictionary] = []
+## Engine errors recorded during the battle (e.g. effect queue overflow).
+var errors: Array[String] = []
 
 var _batch: Array[BattleEvent] = []
 
@@ -445,14 +447,40 @@ func _run_retreat() -> StringName:
 
 # --- hooks filled by later tasks --------------------------------------------------
 
-## Effect queue and damage formula (combat §7 and §9, T06).
-func _resolve_ability_effects(_actor: Combatant, _ability: AbilityDef, _targets: Array[Combatant]) -> void:
-	pass
+## Queues the ability's effects in data order and resolves them (combat §7).
+func _resolve_ability_effects(actor: Combatant, ability: AbilityDef, targets: Array[Combatant]) -> void:
+	_resolve_effects(actor, ability.id, ability.effects, targets)
 
 
-## Provision effects go through the same effect queue (T06).
-func _resolve_provision_effects(_actor: Combatant, _def: ProvisionDef, _target: Combatant) -> void:
-	pass
+## Provisions use the same effect queue, applied by `actor` on `target`.
+func _resolve_provision_effects(actor: Combatant, def: ProvisionDef, target: Combatant) -> void:
+	_resolve_effects(actor, def.id, def.effects, [target] as Array[Combatant])
+
+
+## Runs a list of effects for one action through a fresh queue. Exposed so
+## enemy actions (T09) and tests can use the same path.
+func resolve_effects(actor: Combatant, source_id: StringName, effects: Array[EffectDef], targets: Array[Combatant]) -> void:
+	_resolve_effects(actor, source_id, effects, targets)
+
+
+func _resolve_effects(actor: Combatant, source_id: StringName, effects: Array[EffectDef], targets: Array[Combatant]) -> void:
+	var ctx := new_effect_context(actor, source_id, targets)
+	for effect: EffectDef in effects:
+		ctx.queue.enqueue(ctx, effect)
+	ctx.queue.process()
+	errors.append_array(ctx.queue.errors)
+
+
+func new_effect_context(actor: Combatant, source_id: StringName, targets: Array[Combatant]) -> EffectContext:
+	var ctx := EffectContext.new()
+	ctx.state = state
+	ctx.fervor = fervor
+	ctx.actor = actor
+	ctx.source_id = source_id
+	ctx.targets = targets
+	ctx.queue = EffectQueue.new(state.constants.get_int(&"effect_queue_limit"))
+	ctx.emit = _emit
+	return ctx
 
 
 ## enemy-ai §3 (T09).

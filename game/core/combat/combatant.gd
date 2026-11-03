@@ -19,6 +19,8 @@ var faith: int
 var will: int
 var size: int = 1
 var nature: StringName = &""
+## Enemies: &"common", &"elite" or &"boss" (for multiplier_vs). Saints: &"".
+var category: StringName = &""
 var desolation: int = 0
 ## condition_id -> stacks
 var conditions: Dictionary = {}
@@ -74,6 +76,7 @@ func _setup_enemy(def: EnemyDef, instance_id: StringName) -> void:
 	armor = def.armor
 	size = def.size
 	nature = def.nature
+	category = def.family if def.family == &"elite" or def.family == &"boss" else &"common"
 	leaves_remains = def.leaves_remains
 	remains_rounds = def.remains_rounds
 
