@@ -318,7 +318,7 @@ func test_use_ability_command_applies_its_effects_in_order() -> void:
 	var types: Array[StringName] = []
 	for e: BattleEvent in result.events:
 		types.append(e.type)
-	assert_eq(types, [BattleController.EV_ABILITY_USED, &"damage_dealt", &"condition_applied"] as Array[StringName])
+	assert_eq(types, [BattleController.EV_ABILITY_USED, &"damage_dealt", &"condition_applied", BattleController.EV_INTENTS_UPDATED] as Array[StringName])
 	assert_eq(s.enemy_at(1).hp, 26)
 	assert_true(s.enemy_at(1).has_condition(&"stun"))
 

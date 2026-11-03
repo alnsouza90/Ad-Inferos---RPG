@@ -50,6 +50,8 @@ var spirit_state: StringName = &"normal"
 var purified: bool = false
 ## Injury to apply when the battle ends (e.g. &"major" from Prostration).
 var pending_injury: StringName = &""
+## Enemies: action_id -> first round in which the action may be used again.
+var cooldowns: Dictionary = {}
 ## Abilities marked once_per_battle already used.
 var used_once: Array[StringName] = []
 
