@@ -26,6 +26,8 @@ const EV_CONDITIONS_DECAYED: StringName = &"conditions_decayed"
 const EV_FALLS_COUNTED: StringName = &"falls_counted"
 const EV_BATTLE_ENDED: StringName = &"battle_ended"
 const EV_ABILITY_USED: StringName = &"ability_used"
+const EV_INTENTS_UPDATED: StringName = &"intents_updated"
+const EV_NO_TARGET: StringName = &"no_target"
 const EV_SWAPPED: StringName = &"swapped"
 const EV_PASSED: StringName = &"passed"
 const EV_PROVISION_USED: StringName = &"provision_used"
@@ -103,6 +105,9 @@ func execute(cmd: BattleCommand) -> CommandResult:
 	if reason != &"":
 		return CommandResult.rejected(reason)
 	command_log.append(cmd.to_dict())
+	if phase == Phase.PARTY_TURN:
+		EnemyBrain.refresh_intents(state)
+		_emit(EV_INTENTS_UPDATED, {"intents": _intent_dicts()})
 	return CommandResult.accepted(_flush())
 
 
@@ -160,7 +165,7 @@ func _begin_round() -> void:
 	var gained: int = fervor.start_round()
 	_emit(EV_FERVOR_GAINED, {"amount": gained, "total": fervor.amount, "bonus": false})
 	_choose_intents()
-	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size()})
+	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size(), "intents": _intent_dicts()})
 	_apply_round_start_conditions()
 	_emit(EV_ROUND_START_CONDITIONS)
 	if _check_outcome():
@@ -492,9 +497,16 @@ func new_effect_context(actor: Combatant, source_id: StringName, targets: Array[
 	return ctx
 
 
-## enemy-ai §3 (T09).
+## enemy-ai §3.
 func _choose_intents() -> void:
-	state.intents.clear()
+	EnemyBrain.choose_intents(state)
+
+
+func _intent_dicts() -> Array:
+	var list: Array = []
+	for intent: Intent in state.intents:
+		list.append(intent.to_dict())
+	return list
 
 
 ## conditions §3.2, moment "start of round" (T07).
@@ -513,12 +525,24 @@ func _apply_enemy_turn_start_conditions(enemy: Combatant) -> void:
 	state.engine.tick_owner_turn_start(enemy)
 
 
-## enemy-ai §4 (T09). A stunned enemy loses its intent (conditions §4).
-## Returns true if the enemy did something.
+## enemy-ai §4. A stunned enemy loses its intent (conditions §4). Returns
+## true if the enemy did something.
 func _execute_intent(enemy: Combatant) -> bool:
 	if state.engine.consume_stun(enemy):
 		return false
-	return false
+	var intent: Intent = state.intent_of(enemy)
+	if intent == null or intent.kind != Intent.KIND_ACTION:
+		return false
+	var action: EnemyActionDef = EnemyBrain.action_of(state, enemy, intent.action_id)
+	if action == null:
+		return false
+	var targets: Array[Combatant] = EnemyBrain.execution_targets(state, enemy, action, intent)
+	if targets.is_empty():
+		_emit(EV_NO_TARGET, {"enemy": enemy.id, "action": action.id})
+		return false
+	resolve_effects(enemy, action.id, action.effects, targets)
+	EnemyBrain.start_cooldown(state, enemy, action)
+	return true
 
 
 ## expedition §10 (from M2); the M0 arena has no hazard.

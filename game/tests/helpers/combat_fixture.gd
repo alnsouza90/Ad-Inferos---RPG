@@ -93,6 +93,21 @@ static func enemy(id: StringName, max_hp: int = 20, size: int = 1, nature: Strin
 	return d
 
 
+static func action(id: StringName, priority: int, effects: Array[EffectDef], targeting: StringName = &"single", target_slots: Array[int] = [1, 2, 3], use_slots: Array[int] = [1, 2, 3, 4], rule: StringName = &"front_most", conditions: Array[Dictionary] = [{"name": "always", "param": null}], cooldown: int = 0) -> EnemyActionDef:
+	var a := EnemyActionDef.new()
+	a.id = id
+	a.priority = priority
+	a.effects = effects
+	a.targeting = targeting
+	a.target_slots = target_slots
+	a.use_slots = use_slots
+	a.target_rule = rule
+	a.conditions = conditions
+	a.cooldown = cooldown
+	a.intent_icon = &"attack"
+	return a
+
+
 static func effect(type: StringName, amount: float = 0.0, damage_type: StringName = &"", condition_id: StringName = &"", stacks: int = 0, params: Dictionary = {}) -> EffectDef:
 	var e := EffectDef.new()
 	e.type = type

@@ -56,6 +56,8 @@ static func create(p_catalog: BattleCatalog, saints: Array[SaintDef], enemy_defs
 	for saint: SaintDef in saints:
 		state.party.append(Combatant.from_saint(saint))
 	for enemy: EnemyDef in enemy_defs:
+		if not p_catalog.enemies.has(enemy.id):
+			p_catalog.enemies[enemy.id] = enemy
 		state.add_enemy(enemy)
 	return state
 
@@ -108,6 +110,13 @@ func occupied_enemy_slots() -> int:
 	for c: Combatant in enemies:
 		total += c.size
 	return total
+
+
+func intent_of(enemy: Combatant) -> Intent:
+	for intent: Intent in intents:
+		if intent.enemy_id == enemy.id:
+			return intent
+	return null
 
 
 func find(combatant_id: StringName) -> Combatant:
@@ -392,7 +401,7 @@ func to_dict() -> Dictionary:
 		enemy_list.append(c.to_dict())
 	var intent_list: Array = []
 	for intent: Intent in intents:
-		intent_list.append({"enemy": String(intent.enemy_id), "action": String(intent.action_id), "slot": intent.target_slot})
+		intent_list.append(intent.to_dict())
 	var provision_list: Array[String] = []
 	for p: StringName in provisions:
 		provision_list.append(String(p))
