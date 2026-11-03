@@ -227,10 +227,11 @@ func test_heal_does_not_exceed_max_hp() -> void:
 	assert_eq(a.hp, a.max_hp)
 
 
-func test_desolation_is_clamped_to_scale() -> void:
+func test_desolation_never_goes_below_zero_and_200_means_prostration() -> void:
 	var s := CombatFixture.battle()
 	var a: Combatant = s.party_at(1)
-	s.add_desolation(a, 500)
-	assert_eq(a.desolation, 200)
 	s.add_desolation(a, -999)
 	assert_eq(a.desolation, 0)
+	s.add_desolation(a, 500)
+	assert_eq(a.desolation, 150, "Prostração (desolation §5)")
+	assert_true(a.is_fallen())

@@ -29,6 +29,19 @@ static func constants() -> ConstantsDef:
 		"duel_damage_mult": 1.25,
 		"duel_counter_damage": 3.0,
 		"corruption_desolation_per_stack": 3.0,
+		"faith_check_threshold": 100.0,
+		"faith_check_base": 0.1,
+		"faith_check_per_point": 0.04,
+		"faith_check_cap": 0.6,
+		"consolation_reset_value": 50.0,
+		"consolation_output_mult": 1.15,
+		"consolation_desolation_mult": 0.5,
+		"dark_night_exit_threshold": 50.0,
+		"prostration_reset_value": 150.0,
+		"light_high_threshold": 75.0,
+		"light_low_threshold": 24.0,
+		"light_high_desolation_mult": 0.8,
+		"light_low_desolation_mult": 1.3,
 	}
 	return c
 

@@ -48,6 +48,7 @@ func _init(p_state: BattleState) -> void:
 	state = p_state
 	fervor = FervorPool.new(p_state.constants)
 	state.engine.emit = _emit
+	state.emit = _emit
 
 
 ## Starts round 1 with Fervor 0 and runs until the party can act.
