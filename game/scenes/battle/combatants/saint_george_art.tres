@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CombatantArt" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/combatant_art.gd" id="1_art"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_idle.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_dark_night.png" id="3_dark"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_consolation.png" id="4_cons"]
+
+[resource]
+script = ExtResource("1_art")
+body_normal = ExtResource("2_idle")
+body_dark_night = ExtResource("3_dark")
+body_consolation = ExtResource("4_cons")
+head_normal = Vector2(0.501, 0.222)
+head_dark_night = Vector2(0.547, 0.219)
+head_consolation = Vector2(0.505, 0.219)
+halo_diameter = 0.27

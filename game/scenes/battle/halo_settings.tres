@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="HaloSettings" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/halo_settings.gd" id="1_halo"]
+[ext_resource type="Texture2D" path="res://assets/vfx/halo/vfx_halo_disk.png" id="2_disk"]
+[ext_resource type="Texture2D" path="res://assets/vfx/halo/vfx_halo_rays.png" id="3_rays"]
+
+[resource]
+script = ExtResource("1_halo")
+disk = ExtResource("2_disk")
+rays = ExtResource("3_rays")

@@ -118,6 +118,19 @@ func test_play_again_starts_a_fresh_battle() -> void:
 	assert_eq(screen.battle_seed, 2)
 
 
+## T16 acceptance: São Jorge's pilot art on screen, halo following desolation.
+func test_george_has_art_and_his_halo_follows_desolation() -> void:
+	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
+	var view: CombatantView = screen.view_of(&"saint_george")
+	assert_true(view.has_art(), "Jorge aparece com a arte do piloto")
+	assert_not_null(view.figure_texture())
+	assert_false(screen.view_of(&"saint_benedict").has_art(), "os outros continuam retângulos (D-203)")
+	var full: float = view.halo().brightness()
+	screen.ctrl.state.find(&"saint_george").desolation = 99
+	screen.tap(&"saint_george")
+	assert_lt(view.halo().brightness(), full, "a auréola perde brilho com a desolação")
+
+
 ## Every key the screen asks for exists in docs/balance/ui_text.csv.
 func test_every_screen_text_exists_in_the_data() -> void:
 	var keys: Array[String] = [

@@ -17,3 +17,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Revisar os textos da tela de combate em `docs/balance/ui_text.csv`~~ Revisados e aprovados por Alan em 03/11/2026 (D-114) | Alan | 03/11/2026 |
 | Salvar a preferência de velocidade das animações em `settings.json` (screens §3) | `SaveService` (M1) | 03/11/2026 |
 | Ícones de intenção e de condição: hoje são palavras (`Ataque 6 na posição 1`) | Piloto de arte | 03/11/2026 |
+| Consolação de São Jorge: o brilho atrás da cabeça saiu quase todo no recorte, mas sobra uma faixa clara colada ao rosto; Alan julga no jogo se precisa de versão sem brilho | Alan | 03/11/2026 |
+| Compressão VRAM (ETC2/ASTC) das texturas de personagem: hoje importação padrão sem perda | T17 | 03/11/2026 |

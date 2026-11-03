@@ -66,7 +66,9 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 - Texturas 2D: compressão **VRAM Compressed** (ETC2/ASTC) para personagens e fundos; **Lossless** para ícones e interface.
 - Mipmaps desligados (jogo 2D sem zoom grande).
 - Filtro linear; sem repetição.
-- Cada santo e inimigo tem uma cena `CombatantView` própria em `scenes/battle/combatants/` que define o ponto da cabeça (`HaloAnchor`) e o pivô.
+- Cada santo com arte tem um `CombatantArt` em `scenes/battle/combatants/<id>_art.tres`: uma imagem de corpo por estado espiritual e o ponto da cabeça (`head_*`, frações da imagem) onde a auréola se prende. A `CombatantView` é montada em código e lê esse recurso (T16). Sem o recurso, o personagem continua um retângulo com nome.
+- Tratamento automático: `python3 tools/art/process_art.py` (ADR-0011).
+- No piloto (T16) as texturas usam a importação padrão do Godot (sem perda); a compressão VRAM fica para a T17, com o APK.
 
 ## 6. Auréola no motor (ADR-0008)
 
@@ -80,6 +82,7 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | `rays_visible` | não | não | não | sim (rotação lenta) |
 | Rosto | padrão | padrão | `face_dark_night` | `face_consolation` |
 
+- No piloto, o rosto por estado vem da imagem de corpo inteiro do estado (`saint_george_body_dark_night`, `..._consolation`), não de um rosto separado.
 - A auréola mostra **só o estado espiritual**; o Fervor fica na barra da equipe (Direção de Arte v1.1 prevalece sobre a tabela antiga da seção 12).
 - Valores do shader ficam num Resource de apresentação (`scenes/battle/halo_settings.tres`), não em `docs/balance/`, porque não afetam regras.
 
