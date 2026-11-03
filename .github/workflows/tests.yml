@@ -28,5 +28,28 @@ jobs:
       - name: Importar recursos
         run: godot --headless --path game --import || true
 
+      - name: Verificar scripts (erros de sintaxe e tipo)
+        run: |
+          status=0
+          for f in $(cd game && find . -name '*.gd' -not -path './addons/*' | sed 's|^\./||'); do
+            out=$(godot --headless --path game --check-only -s "res://$f" 2>&1) || true
+            if echo "$out" | grep -qE "SCRIPT ERROR|Parse Error"; then
+              echo "::error file=game/$f::Erro ao analisar o script"
+              echo "$out" | grep -E "SCRIPT ERROR|Parse Error|at: " | head -20
+              status=1
+            fi
+          done
+          exit $status
+
       - name: Rodar testes
-        run: godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit
+        run: |
+          set -o pipefail
+          godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit 2>&1 | tee gut.log
+          # O GUT ignora em silêncio scripts de teste com erro; isso precisa falhar.
+          if grep -qE "Ignoring script|Parse Error|SCRIPT ERROR" gut.log; then
+            echo "::error::Algum script de teste foi ignorado ou tem erro"
+            exit 1
+          fi
+
+      - name: Conferir dados gerados
+        run: godot --headless --path game -s res://tools/data/import_balance.gd -- --check
