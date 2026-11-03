@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_lotn0"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_1viod"]
 
-[sub_resource type="Resource" id="Resource_qnbcw"]
+[sub_resource type="Resource" id="Resource_wrqs6"]
 script = ExtResource("2_lotn0")
 type = &"move"
 move_kind = &"push"
 n = 1
 
-[sub_resource type="Resource" id="Resource_l0v7f"]
+[sub_resource type="Resource" id="Resource_lotn0"]
 script = ExtResource("1_wrqs6")
 id = &"breath_gust"
 use_slots = Array[int]([2, 3, 4])
@@ -22,14 +22,14 @@ conditions = Array[Dictionary]([{
 "param": 2
 }])
 intent_icon = &"displace"
-effects = Array[ExtResource("2_lotn0")]([SubResource("Resource_qnbcw")])
+effects = Array[ExtResource("2_lotn0")]([SubResource("Resource_wrqs6")])
 
-[sub_resource type="Resource" id="Resource_2xh2s"]
+[sub_resource type="Resource" id="Resource_1viod"]
 script = ExtResource("2_lotn0")
 type = &"desolation"
-amount = 5.0
+amount = 8.0
 
-[sub_resource type="Resource" id="Resource_0jisg"]
+[sub_resource type="Resource" id="Resource_qnbcw"]
 script = ExtResource("1_wrqs6")
 id = &"breath_lament"
 priority = 2
@@ -41,7 +41,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"corrupt"
-effects = Array[ExtResource("2_lotn0")]([SubResource("Resource_2xh2s")])
+effects = Array[ExtResource("2_lotn0")]([SubResource("Resource_1viod")])
 
 [resource]
 script = ExtResource("3_1viod")
@@ -51,7 +51,7 @@ family = &"a"
 circles = Array[int]([2, 3, 4, 5])
 nature = &"spiritual"
 role = &"manipulator"
-max_hp = 18
+max_hp = 22
 immune = Array[StringName]([&"stun"])
-actions = Array[ExtResource("1_wrqs6")]([SubResource("Resource_l0v7f"), SubResource("Resource_0jisg")])
+actions = Array[ExtResource("1_wrqs6")]([SubResource("Resource_lotn0"), SubResource("Resource_qnbcw")])
 art_id = "enemy_wandering_breath"

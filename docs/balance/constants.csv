@@ -34,7 +34,7 @@ desolation_battle_end_elite,20,Fim de combate de elite
 desolation_battle_end_boss,35,Fim de combate de chefe
 desolation_ally_fallen,15,Aliado caído
 desolation_emergency_retreat,25,Retirada de emergência
-desolation_vigil,40,Vigília no Pouso (redução)
+desolation_vigil,20,Vigília no Pouso (redução)
 holy_water_desolation,15,Água Benta (redução)
 chapel_desolation_per_week,15,Capela por semana (redução)
 garden_desolation_per_week,50,Jardim por semana (redução)

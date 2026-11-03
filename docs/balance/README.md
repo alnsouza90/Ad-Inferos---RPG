@@ -36,6 +36,8 @@ Contas de referência usadas na proposta:
 4. A condição `ward` se chama **Amparo**.
 5. Gertrudes entra na afinidade Pais do Monaquismo.
 
+6. Balanceamento da T14: inimigos da Família A com +20% de vida e dano; Sangramento do Moscardo 2; Corrupção da Sombra 3; desolação do Toque da Sombra 10 e do Lamento 8; Vigília no Pouso −20 (era −40). Relatório em `sim-reports/2026-11-03-m0-t14.md`.
+
 ## Pontos a confirmar
 
 - Nomes das habilidades passam pelo guia de roteiro (`docs/narrative/writing-guide.md`) antes de irem para a tela.

@@ -89,7 +89,7 @@ Ao chegar ao `node_camp`:
 
 | Atividade | Efeito |
 | --- | --- |
-| Vigília | −40 de desolação no próprio santo |
+| Vigília | −[desolation_vigil] (20) de desolação no próprio santo |
 | Partilha | Cura [share_heal_pct] (30%) da vida máxima de um aliado |
 | Oração | +1 de Fervor inicial no próximo combate (somando as Orações, no máximo +2) |
 | Atividade própria | Definida em `saints.csv` (`camp_skill`) |

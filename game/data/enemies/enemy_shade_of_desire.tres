@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_xlvf7"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_5p4at"]
 
-[sub_resource type="Resource" id="Resource_gl7g5"]
+[sub_resource type="Resource" id="Resource_gudb8"]
 script = ExtResource("2_xlvf7")
 type = &"apply_condition"
 condition_id = &"corruption"
-stacks = 2
+stacks = 3
 
-[sub_resource type="Resource" id="Resource_oxcjx"]
+[sub_resource type="Resource" id="Resource_xlvf7"]
 script = ExtResource("1_gudb8")
 id = &"shade_whisper"
 use_slots = Array[int]([2, 3, 4])
@@ -23,21 +23,21 @@ conditions = Array[Dictionary]([{
 }])
 cooldown = 1
 intent_icon = &"corrupt"
-effects = Array[ExtResource("2_xlvf7")]([SubResource("Resource_gl7g5")])
+effects = Array[ExtResource("2_xlvf7")]([SubResource("Resource_gudb8")])
 
-[sub_resource type="Resource" id="Resource_gsrpp"]
+[sub_resource type="Resource" id="Resource_5p4at"]
 script = ExtResource("2_xlvf7")
 type = &"damage"
-amount = 3.0
+amount = 4.0
 damage_type = &"exorcism"
 
-[sub_resource type="Resource" id="Resource_03unn"]
+[sub_resource type="Resource" id="Resource_gl7g5"]
 script = ExtResource("2_xlvf7")
 order = 2
 type = &"desolation"
-amount = 6.0
+amount = 10.0
 
-[sub_resource type="Resource" id="Resource_n5u85"]
+[sub_resource type="Resource" id="Resource_oxcjx"]
 script = ExtResource("1_gudb8")
 id = &"shade_touch"
 priority = 2
@@ -50,7 +50,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_xlvf7")]([SubResource("Resource_gsrpp"), SubResource("Resource_03unn")])
+effects = Array[ExtResource("2_xlvf7")]([SubResource("Resource_5p4at"), SubResource("Resource_gl7g5")])
 
 [resource]
 script = ExtResource("3_5p4at")
@@ -60,6 +60,6 @@ family = &"a"
 circles = Array[int]([2, 3, 4, 5])
 nature = &"spiritual"
 role = &"corruptor"
-max_hp = 20
-actions = Array[ExtResource("1_gudb8")]([SubResource("Resource_oxcjx"), SubResource("Resource_n5u85")])
+max_hp = 24
+actions = Array[ExtResource("1_gudb8")]([SubResource("Resource_xlvf7"), SubResource("Resource_oxcjx")])
 art_id = "enemy_shade_of_desire"
