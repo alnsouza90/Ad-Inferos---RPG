@@ -34,6 +34,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 
 - **D-201 · 03/11/2026 · Alan** — Poses de ataque, golpe recebido e queda não serão geradas: animação feita no motor a partir de uma imagem por estado; plano B é recorte com `Skeleton2D`. *ADR-0007.*
 
+- **D-202 · 03/11/2026 · Alan** — Teresinha: a imagem com muitas pétalas é a Consolação; a com poucas pétalas é o estado padrão. *`art_source/characters/saints/saint_therese/`.*
+
 ## Técnicas (do agente)
 
 - **D-301** — Godot 4.7.2 + GUT 9.7.1; CI no GitHub baixa o Godot oficial, analisa cada script, falha se o GUT ignorar um teste e confere `game/data` com os CSVs.
