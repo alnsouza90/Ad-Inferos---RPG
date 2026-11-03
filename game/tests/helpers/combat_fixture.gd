@@ -19,6 +19,7 @@ static func constants() -> ConstantsDef:
 		"fervor_per_round": float(FERVOR_PER_ROUND),
 		"fervor_cap": float(FERVOR_CAP),
 		"fervor_bonus_cap_per_round": float(FERVOR_BONUS_CAP),
+		"provisions_per_turn": 1.0,
 	}
 	return c
 
@@ -54,9 +55,72 @@ static func enemy(id: StringName, max_hp: int = 20, size: int = 1) -> EnemyDef:
 	return d
 
 
+static func ability(id: StringName, kind: StringName, cost: int, use_slots: Array[int], targeting: StringName, target_slots: Array[int] = [], allow_self: bool = false, once_per_battle: bool = false, target_count: int = 0) -> AbilityDef:
+	var d := AbilityDef.new()
+	d.id = id
+	d.kind = kind
+	d.cost = cost
+	d.use_slots = use_slots
+	d.targeting = targeting
+	d.target_slots = target_slots
+	d.allow_self = allow_self
+	d.once_per_battle = once_per_battle
+	d.target_count = target_count
+	return d
+
+
+## One ability of each targeting rule, all usable from any slot unless noted.
+static func abilities() -> Dictionary:
+	var any: Array[int] = [1, 2, 3]
+	var list: Array[AbilityDef] = [
+		ability(&"strike", &"basic", 0, any, &"enemy", [1, 2] as Array[int]),
+		ability(&"front_only", &"basic", 0, [1] as Array[int], &"enemy", [1] as Array[int]),
+		ability(&"costly", &"basic", 1, any, &"enemy", [1, 2, 3, 4] as Array[int]),
+		ability(&"heal_other", &"basic", 0, any, &"ally", any),
+		ability(&"heal_any", &"basic", 0, any, &"ally", any, true),
+		ability(&"raise", &"fervor", 2, any, &"ally_fallen", any),
+		ability(&"guard_self", &"basic", 0, any, &"self"),
+		ability(&"rally", &"fervor", 2, any, &"all_allies"),
+		ability(&"sweep", &"fervor", 2, any, &"enemy_group", [1, 2] as Array[int]),
+		ability(&"once", &"basic", 0, any, &"self", [] as Array[int], false, true),
+		ability(&"miracle_all", &"miracle", 3, any, &"all_enemies"),
+		ability(&"miracle_two", &"miracle", 3, any, &"chosen_enemy_slots", [1, 2, 3, 4] as Array[int], false, false, 2),
+	]
+	var result: Dictionary = {}
+	for a: AbilityDef in list:
+		result[a.id] = a
+	return result
+
+
+static func provisions() -> Dictionary:
+	var bread := ProvisionDef.new()
+	bread.id = &"bread"
+	bread.usable_in_battle = true
+	bread.targeting = &"ally"
+	var candle := ProvisionDef.new()
+	candle.id = &"candle"
+	candle.targeting = &"none"
+	return {&"bread": bread, &"candle": candle}
+
+
+static func catalog() -> BattleCatalog:
+	return BattleCatalog.create(constants(), conditions(), abilities(), provisions())
+
+
+## A saint with every fixture ability equipped (equipped size is not limited
+## here: the 4-ability rule belongs to loadouts, not to the battle).
+static func kit_saint(id: StringName, miracle_id: StringName = &"miracle_all") -> SaintDef:
+	var d := saint(id)
+	for ability_id: StringName in abilities():
+		if not String(ability_id).begins_with("miracle"):
+			d.default_equipped.append(ability_id)
+	d.miracle = miracle_id
+	return d
+
+
 ## Three saints (a, b, c in slots 1, 2, 3) against the given enemies.
-static func battle(enemy_defs: Array[EnemyDef] = []) -> BattleState:
-	var saints: Array[SaintDef] = [saint(&"saint_a"), saint(&"saint_b"), saint(&"saint_c")]
+static func battle(enemy_defs: Array[EnemyDef] = [], p_provisions: Array[StringName] = [], encounter_type: StringName = &"common") -> BattleState:
+	var saints: Array[SaintDef] = [kit_saint(&"saint_a"), kit_saint(&"saint_b"), kit_saint(&"saint_c", &"miracle_two")]
 	if enemy_defs.is_empty():
 		enemy_defs = [enemy(&"enemy_1"), enemy(&"enemy_2"), enemy(&"enemy_3"), enemy(&"enemy_4")]
-	return BattleState.create(constants(), conditions(), saints, enemy_defs)
+	return BattleState.create(catalog(), saints, enemy_defs, p_provisions, encounter_type)
