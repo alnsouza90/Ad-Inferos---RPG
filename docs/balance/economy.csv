@@ -1,0 +1,45 @@
+key,value,description
+reward_battle,70,Esmolas por combate comum
+reward_elite,160,Esmolas por elite
+reward_relic_node,40,Esmolas no nó de relíquia
+reward_boss,300,Esmolas por chefe
+reward_circle_first_clear,200,Conclusão do círculo (primeira vez)
+tier_mult_c0_3,1.0,Multiplicador Círculos 0–3
+tier_mult_c4_6,2.2,Multiplicador Círculos 4–6
+tier_mult_c7_9,3.6,Multiplicador Círculos 7–9
+revisit_returns,1.0|0.75|0.5|0.25,Retorno das revisitas no mesmo tempo litúrgico
+escalation_reward_per_level,0.25,Recompensa extra por nível de Escalada
+escalation_hp_mult,1.15,Escalada 1: vida dos inimigos
+escalation_light_per_node,10,Escalada 2: Lume por nó
+emergency_retreat_alms_loss,0.5,Esmolas não garantidas perdidas na retirada de emergência
+price_bread,15,Pão
+price_candle,20,Vela
+price_holy_water,30,Água Benta
+price_bandages,25,Ataduras
+price_incense,35,Incenso
+facility_l2_cost,1500,Instalação nível 2
+facility_l3_cost,2500,Instalação nível 3
+carmel_cost,1500,Carmelo
+equipment_l2_cost,300,Equipamento nível 2
+equipment_l3_cost,800,Equipamento nível 3
+instrument_bonus_per_level,0.1,Instrumento: dano e cura
+habit_bonus_per_level,0.08,Hábito: vida máxima
+infirmary_bed_cost,300,Leito da Enfermaria por semana
+charism_swap_cost,150,Troca de Carisma
+chapel_suffrages,3,Sufrágios por santo na Capela
+injury_minor_penalty,0.1,Ferimento leve
+injury_major_penalty,0.2,Ferimento grave
+injury_minor_weeks,1,Cura natural leve
+injury_major_weeks,3,Cura natural grave
+injury_major_weeks_bed,1,Grave com leito
+season_advent_provision_mult,0.8,Advento: preço das provisões
+season_advent_battle_desolation,-10,Advento: desolação no início do combate (a confirmar)
+season_christmas_injury_heal_mult,2,Natal: cura de ferimentos
+season_lent_desolation_mult,1.25,Quaresma: desolação
+season_lent_suffrages_mult,1.5,Quaresma: Sufrágios
+season_lent_exorcism_mult,1.1,Quaresma: Exorcismo
+season_easter_first_round_fervor,1,Páscoa: Fervor na primeira rodada
+all_saints_xp_mult,1.25,Semana 18
+all_souls_suffrages_mult,2,Semana 19
+feast_xp_mult,1.5,Festa do santo: experiência
+feast_battle_desolation,-10,Festa do santo: desolação no início do combate

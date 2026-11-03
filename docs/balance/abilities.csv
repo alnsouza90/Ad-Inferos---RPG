@@ -1,0 +1,85 @@
+id,owner,name_pt,kind,cost,use_slots,targeting,target_slots,allow_self,once_per_battle,origin,upgrade,desc_pt
+george_spear_thrust,saint_george,Estocada,basic,0,1|2,enemy,1|2,,,game_fiction,,Golpe de lança na linha de frente.
+george_shield_bash,saint_george,Golpe de Escudo,basic,1,1,enemy,1,,,game_fiction,,Golpe curto que atordoa.
+george_raised_shield,saint_george,Escudo Erguido,basic,0,1|2|3,ally,1|2|3,y,,game_fiction,,Dá 1 Amparo a um aliado.
+george_javelin,saint_george,Arremesso,basic,0,2|3,enemy,2|3|4,,,game_fiction,,Lança arremessada contra a retaguarda.
+george_formal_challenge,saint_george,Desafio Formal,fervor,2,1|2,enemy,1|2|3|4,,,legend,,Desafia um inimigo para o Duelo e ganha 1 Força.
+george_knight_charge,saint_george,Investida do Cavaleiro,fervor,2,1,enemy,1|2,,,game_fiction,,Investida pesada contra a frente inimiga.
+george_dragon_lance,saint_george,Lança do Dragão,miracle,3,1|2,enemy,1|2|3,,,legend,,A lança que venceu o dragão: dano dobrado contra elites e chefes.
+benedict_cross_medal,saint_benedict,Cruz de São Bento,basic,0,1|2|3,enemy,1|2|3,,,tradition,,Exorcismo com a cruz.
+benedict_ora_et_labora,saint_benedict,Ora et Labora,basic,0,1|2|3,ally,1|2|3,y,,tradition,,−10 de desolação e −1 de Corrupção num aliado.
+benedict_rule,saint_benedict,A Regra,basic,1,1|2,all_allies,,,,hagiography,,A Regra ordena a companhia: 1 Amparo para todos.
+benedict_staff,saint_benedict,Báculo,basic,0,1,enemy,1,,,game_fiction,,Golpe de báculo.
+benedict_crux_sacra,saint_benedict,Crux Sacra,fervor,2,1|2,enemy_group,1|2,,,tradition,,Exorcismo contra a linha de frente.
+benedict_broken_cup,saint_benedict,O Cálice Partido,fervor,2,1|2|3,enemy,1|2|3|4,,,hagiography,,O cálice envenenado se parte: retira as fichas positivas e fere.
+benedict_vade_retro,saint_benedict,Vade Retro,miracle,3,1|2,enemy,1|2,,,tradition,,Empurra 2 posições e atordoa.
+therese_ardent_prayer,saint_therese,Oração Ardente,basic,0,1|2|3,enemy,1|2|3|4,,,game_fiction,,Pequeno exorcismo a qualquer distância.
+therese_petal,saint_therese,Pétala de Rosa,basic,0,2|3,ally,1|2|3,y,,game_fiction,,Cura um aliado.
+therese_trust,saint_therese,Confiança,basic,0,2|3,ally,1|2|3,y,,game_fiction,,−12 de desolação num aliado.
+therese_offering,saint_therese,Oferecimento,basic,1,2|3,all_allies,,,,game_fiction,,Cura leve e alívio para todos.
+therese_abandonment,saint_therese,Abandono,fervor,2,2|3,ally_fallen,1|2|3,,,game_fiction,,Levanta um aliado Caído com 30% da vida.
+therese_little_flower,saint_therese,Pequena Flor,fervor,2,2|3,all_allies,,,,game_fiction,,Cura em área.
+therese_shower_of_roses,saint_therese,Chuva de Rosas,miracle,3,1|2|3,all_allies,,,,tradition,,Cura todos e alivia a desolação.
+nicholas_crozier,saint_nicholas,Báculo de Mira,basic,0,1|2|3,enemy,1|2,,,game_fiction,,Golpe com o báculo de bispo.
+nicholas_grain,saint_nicholas,Trigo dos Navios,basic,0,1|2|3,ally,1|2|3,y,,tradition,,Cura um aliado. Lembra o trigo que Nicolau obteve para Mira na fome.
+nicholas_rebuke,saint_nicholas,Repreensão de Niceia,basic,1,1|2,enemy,1|2,,,legend,,Exorcismo que retira a Força do alvo.
+nicholas_calm_storm,saint_nicholas,Acalmar a Tempestade,basic,1,1|2|3,all_allies,,,,tradition,,Patrono dos marinheiros: remove 1 Sangramento e 1 Corrupção de todos.
+nicholas_secret_dowry,saint_nicholas,Dote Secreto,fervor,2,1|2|3,ally,1|2|3,,,tradition,,Dá 2 Força a um aliado.
+nicholas_three_innocents,saint_nicholas,Os Três Inocentes,fervor,2,1|2|3,ally,1|2|3,y,,tradition,,Dá 2 Amparo e livra do Atordoamento.
+nicholas_three_purses,saint_nicholas,As Três Bolsas,miracle,3,1|2|3,all_allies,,,,tradition,,1 Força e 1 Amparo para todos os aliados.
+antony_sign_of_cross,saint_anthony_abbot,Sinal da Cruz,basic,0,1|2|3,enemy,1|2|3,,,hagiography,,Os demônios fogem do sinal da cruz.
+antony_tau_staff,saint_anthony_abbot,Cajado em Tau,basic,0,1|2,enemy,1|2,,,tradition,,Golpe com o cajado do eremita.
+antony_desert_vigil,saint_anthony_abbot,Vigília no Deserto,basic,0,1|2|3,self,,,,hagiography,,Aceita a provação: +8 de desolação e 2 Força.
+antony_scorn,saint_anthony_abbot,Desprezo do Inimigo,basic,1,1|2|3,enemy,1|2|3|4,,,hagiography,,Zomba do demônio: retira as fichas positivas e fere.
+antony_beasts,saint_anthony_abbot,As Feras do Sepulcro,fervor,2,1|2,enemy_group,1|2,,,hagiography,,Enfrenta os demônios em forma de fera.
+antony_endurance,saint_anthony_abbot,Perseverança,fervor,2,1|2|3,self,,,,hagiography,,2 Amparo e −10 de desolação.
+antony_tomb_combat,saint_anthony_abbot,Combate no Sepulcro,miracle,3,1|2,all_enemies,,,,hagiography,,Exorcismo em todos os inimigos; Antão recupera 8 de vida.
+joan_fierbois_sword,saint_joan,Espada de Fierbois,basic,0,1|2,enemy,1|2,,,hagiography,,Golpe com a espada achada em Fierbois.
+joan_banner_pole,saint_joan,Haste do Estandarte,basic,0,1|2|3,enemy,1|2,,,hagiography,,Joana preferia o estandarte à espada.
+joan_advance,saint_joan,Avançar,basic,1,2|3,enemy,1|2,,,game_fiction,,Avança uma posição e golpeia.
+joan_arrow_tourelles,saint_joan,A Flecha de Les Tourelles,basic,1,1|2,self,,,,hagiography,,"Ferida, volta à luta: cura 6 e ganha 1 Força."
+joan_battle_orders,saint_joan,Ordem de Batalha,fervor,2,1|2|3,all_allies,,,,game_fiction,,1 Força para todos os aliados.
+joan_road_to_reims,saint_joan,Rumo a Reims,fervor,2,1|2|3,all_allies,,,,hagiography,,Cura 4 e −10 de desolação em todos.
+joan_orleans,saint_joan,Libertação de Orléans,miracle,3,1|2,all_enemies,,,,hagiography,,Golpe em todos os inimigos.
+john_burning_word,saint_john_cross,Palavra Ardente,basic,0,1|2|3,enemy,1|2|3|4,,,game_fiction,,Pequeno exorcismo a qualquer distância.
+john_nada,saint_john_cross,"Nada, nada, nada",basic,0,1|2|3,ally,1|2|3,y,,hagiography,,O caminho do desapego: −10 de desolação.
+john_toledo_escape,saint_john_cross,Fuga de Toledo,basic,1,2|3,ally,1|2|3,,,hagiography,,Troca de lugar com um aliado e dá 1 Amparo a ele; o aliado não gasta ação.
+john_spiritual_canticle,saint_john_cross,Cântico Espiritual,basic,1,2|3,all_allies,,,,hagiography,,−6 de desolação em todos.
+john_dark_night_guide,saint_john_cross,Na Noite Escura,fervor,2,1|2|3,ally,1|2|3,,,hagiography,,−25 de desolação num aliado; −40 se ele estiver em Noite Escura.
+john_ascent,saint_john_cross,Subida do Monte Carmelo,fervor,2,1|2|3,ally,1|2|3,y,,hagiography,,"1 Força, 1 Amparo e −10 de desolação."
+john_living_flame,saint_john_cross,Chama Viva de Amor,miracle,3,1|2|3,all_allies,,,,hagiography,,−20 de desolação em todos e exorcismo em todos os inimigos.
+pio_rosary,saint_pio,O Terço,basic,0,1|2|3,enemy,1|2|3,,,tradition,,"""O terço é a arma"": exorcismo."
+pio_blessing,saint_pio,Bênção do Frade,basic,0,1|2|3,ally,1|2|3,y,,game_fiction,,Cura um aliado.
+pio_confession,saint_pio,Confessionário,basic,1,1|2|3,ally,1|2|3,y,,hagiography,,Remove toda a Corrupção e −6 de desolação.
+pio_reading_souls,saint_pio,Leitura das Almas,basic,1,1|2|3,enemy,1|2|3|4,,,hagiography,,Vê através do disfarce: retira as fichas positivas e fere.
+pio_relief_house,saint_pio,Casa Alívio do Sofrimento,fervor,2,1|2|3,all_allies,,,,hagiography,,Cura 6 em todos.
+pio_spiritual_combat,saint_pio,Combate Espiritual,fervor,2,1|2|3,enemy,1|2|3,,,hagiography,,As lutas noturnas contra o demônio: exorcismo forte.
+pio_stigmata,saint_pio,Estigmas,miracle,3,1|2|3,all_enemies,,,,hagiography,,Custa 15% da vida de Pio: exorcismo em todos os inimigos e cura 6 em todos os aliados.
+rita_thorn,saint_rita,Espinho,basic,0,1|2|3,enemy,1|2|3,,,hagiography,,A ferida do espinho na fronte: exorcismo.
+rita_balm,saint_rita,Bálsamo,basic,0,1|2|3,ally,1|2|3,y,,game_fiction,,Cura um aliado.
+rita_patience,saint_rita,Paciência,basic,0,1|2|3,ally,1|2|3,y,,hagiography,,Dá 1 Amparo a um aliado.
+rita_peacemaker,saint_rita,Pacificadora,basic,1,2|3,enemy,1|2|3,,,hagiography,,Apazigua o inimigo: fere e atordoa.
+rita_last_hope,saint_rita,Última Esperança,fervor,2,1|2|3,ally,1|2|3,y,,game_fiction,,Cura forte num aliado.
+rita_bees,saint_rita,As Abelhas de Cássia,fervor,2,1|2|3,all_enemies,,,,legend,,Abelhas brancas picam todos os inimigos.
+rita_rose_in_winter,saint_rita,Rosa no Inverno,miracle,3,1|2|3,ally,1|2|3,y,,legend,,"Levanta um aliado Caído com 40% da vida; num aliado de pé, cura 40% da vida."
+anthony_preaching,saint_anthony_padua,Pregação,basic,0,1|2|3,enemy,1|2|3|4,,,hagiography,,Exorcismo a qualquer distância.
+anthony_bread_poor,saint_anthony_padua,Pão dos Pobres,basic,0,1|2|3,ally,1|2|3,y,,tradition,,Cura 4 e −4 de desolação.
+anthony_hammer,saint_anthony_padua,Martelo dos Hereges,basic,1,1|2|3,enemy,1|2|3|4,,,tradition,,Exorcismo forte.
+anthony_find_lost,saint_anthony_padua,Achar o Perdido,basic,0,1|2|3,self,,,y,tradition,,+1 de Fervor para a equipe. Uma vez por combate.
+anthony_conversion,saint_anthony_padua,Conversão,fervor,2,1|2|3,enemy,1|2|3|4,,,hagiography,,Fere e atordoa.
+anthony_stolen_psalter,saint_anthony_padua,O Saltério Roubado,fervor,2,1|2|3,all_enemies,,,,legend,,Retira as fichas positivas de todos os inimigos.
+anthony_fish_sermon,saint_anthony_padua,Sermão aos Peixes,miracle,3,1|2|3,chosen_enemy_slots(2),1|2|3|4,,,legend,,Atordoa e fere os inimigos de duas posições escolhidas.
+sebastian_gladius,saint_sebastian,Gládio,basic,0,1|2,enemy,1|2,,,tradition,,Golpe do soldado da guarda.
+sebastian_guard_shield,saint_sebastian,Escudo da Guarda,basic,0,1|2|3,self,,,,game_fiction,,Ganha 1 Amparo.
+sebastian_tribune,saint_sebastian,Tribuno da Guarda,basic,1,1|2,self,,,,tradition,,Provocação e 1 Amparo: os inimigos miram Sebastião.
+sebastian_encourage,saint_sebastian,Encorajar os Presos,basic,0,1|2|3,ally,1|2|3,,,tradition,,Como encorajou os cristãos presos: −8 de desolação.
+sebastian_irene_care,saint_sebastian,Os Cuidados de Irene,fervor,2,1|2|3,self,,,,tradition,,Cura 12 e remove o Sangramento.
+sebastian_before_emperor,saint_sebastian,Diante do Imperador,fervor,2,1,enemy,1|2,,,tradition,,Golpe forte e Provocação.
+sebastian_arrow_wall,saint_sebastian,Muralha de Flechas,miracle,3,1|2,self,,,,tradition,,Provocação e 3 Amparo em Sebastião; 1 Amparo nos aliados.
+gertrude_psalmody,saint_gertrude,Salmodia,basic,0,1|2|3,enemy,1|2|3|4,,,hagiography,,O canto do coro: pequeno exorcismo.
+gertrude_cleanse,saint_gertrude,Purificar,basic,0,2|3,ally,1|2|3,y,,game_fiction,,Remove 2 pilhas de condições negativas.
+gertrude_herald,saint_gertrude,O Arauto,basic,1,2|3,ally,1|2|3,y,,hagiography,,Remove todas as condições negativas e cura 3.
+gertrude_remembrance,saint_gertrude,Lembrança dos Defuntos,basic,0,1|2|3,ally,1|2|3,y,,tradition,,−8 de desolação.
+gertrude_helfta_choir,saint_gertrude,Coro de Helfta,fervor,2,1|2|3,all_allies,,,,hagiography,,Remove 1 pilha negativa e cura 4 em todos.
+gertrude_souls_prayer,saint_gertrude,Oração pelas Almas,fervor,2,1|2|3,all_allies,,,,tradition,,−12 de desolação em todos.
+gertrude_suffrage,saint_gertrude,Sufrágio,miracle,3,1|2|3,all_allies,,,,tradition,,Cura 6 (+1 por marco do Purgatório) e remove todas as condições negativas.

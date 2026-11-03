@@ -1,0 +1,13 @@
+id,owner,name_pt,effect,params,desc_pt
+camp_george_watch,saint_george,Guarda,ambush_mult,value=0.5,Chance de emboscada pela metade neste Pouso.
+camp_benedict_lectio,saint_benedict,Lectio Divina,desolation_party,value=-15,−15 de desolação em toda a equipe.
+camp_therese_sacrifices,saint_therese,Pequenos Sacrifícios,heal_party_pct,value=0.15,Cura 15% da vida máxima de toda a equipe.
+camp_nicholas_bread,saint_nicholas,Pão Partilhado,refund_bread,value=1,O descanso neste Pouso não consome o Pão.
+camp_antony_baskets,saint_anthony_abbot,Trabalho Manual,alms_bonus,value=30,+30 Esmolas garantidas (Antão trançava cestos no deserto).
+camp_joan_council,saint_joan,Conselho de Guerra,next_battle_condition,condition=strength;stacks=1;target=party,A equipe começa o próximo combate com 1 Força.
+camp_john_direction,saint_john_cross,Direção Espiritual,ally_desolation,value=-35,−35 de desolação num aliado.
+camp_pio_relief,saint_pio,Alívio do Sofrimento,heal_ally_pct,value=0.5,Cura 50% da vida máxima de um aliado.
+camp_rita_roses,saint_rita,Cuidado das Feridas,remove_minor_injury,value=1,Remove o ferimento leve de um aliado.
+camp_anthony_finder,saint_anthony_padua,Achados,reveal_next_layer,value=1,Revela o conteúdo da próxima camada do mapa.
+camp_sebastian_watch,saint_sebastian,Sentinela,next_battle_condition,condition=ward;stacks=1;target=party,A equipe começa o próximo combate com 1 Amparo.
+camp_gertrude_office,saint_gertrude,Ofício dos Defuntos,suffrage_bonus,value=1,+1 Sufrágio ao fim da expedição.

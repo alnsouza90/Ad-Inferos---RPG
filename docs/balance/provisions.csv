@@ -1,0 +1,6 @@
+id,name_pt,price,usable_in_battle,targeting,effect_ids
+bread,Pão,15,y,ally,bread
+candle,Vela,20,,none,candle
+holy_water,Água Benta,30,y,ally,holy_water
+bandages,Ataduras,25,y,ally,bandages
+incense,Incenso,35,,none,incense

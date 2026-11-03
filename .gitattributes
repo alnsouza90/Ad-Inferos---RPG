@@ -1,0 +1,24 @@
+# Texto normalizado
+* text=auto eol=lf
+*.gd text eol=lf
+*.tres text eol=lf
+*.tscn text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.json text eol=lf
+
+# Binários de arte e áudio via Git LFS
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.kra filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.otf filter=lfs diff=lfs merge=lfs -text
+
+# Addons de terceiros (GUT) ficam fora do LFS, como vieram do fornecedor
+game/addons/** !filter !diff !merge
