@@ -36,6 +36,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-201 · 03/11/2026 · Alan** — Poses de ataque, golpe recebido e queda não serão geradas: animação feita no motor a partir de uma imagem por estado; plano B é recorte com `Skeleton2D`. *ADR-0007.*
 
 - **D-202 · 03/11/2026 · Alan** — Teresinha: a imagem com muitas pétalas é a Consolação; a com poucas pétalas é o estado padrão. *`art_source/characters/saints/saint_therese/`.*
+- **D-203 · 03/11/2026 · Alan** — Depois de jogar a T15 no navegador (toque e leitura OK), Alan manteve o plano original: a T16 traz só São Jorge e a auréola; o resto da arte recebida (Bento, Teresinha, inimigos, cenário) entra depois. O seletor de encontro fica para a T17. *`progress.md`.*
 
 ## Técnicas (do agente)
 

@@ -7,7 +7,7 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
 - **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026).
 - **Jogo no navegador:** https://alnsouza90.github.io/Ad-Inferos---RPG/ (publicado a cada merge na `main`).
-- **Próxima:** T16 · Auréola no motor.
+- **Próxima:** T16 · Auréola no motor, só com São Jorge (D-203). Alan testou a T15 no celular: toque e textos OK.
 - **Depois:** T17 (arena e APK Android).
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
 
