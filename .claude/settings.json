@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && echo '=== MEMÓRIA DO PROJETO (docs/memory) · carregada automaticamente; siga o protocolo de docs/memory/README.md ===' && for f in README progress decisions owner open-questions lessons sessions; do echo; echo \"----- docs/memory/$f.md -----\"; cat \"docs/memory/$f.md\"; done"
+          }
+        ]
+      }
+    ]
+  }
+}

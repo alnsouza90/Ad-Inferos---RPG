@@ -1,11 +1,11 @@
 # Andamento e continuidade
 
-Documento de passagem entre sessões do agente. **Leia depois do `CLAUDE.md`, no início de toda sessão nova.** Atualize ao fim de cada tarefa.
+Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atualize ao fim de cada tarefa.
 
 ## Onde estamos
 
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
-- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`).
+- **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16).
 - **Próxima:** T15 · Tela de combate com arte provisória.
 - **Depois:** T16 (auréola no motor), T17 (arena e APK Android).
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
