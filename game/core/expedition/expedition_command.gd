@@ -10,6 +10,8 @@ const BATTLE: StringName = &"Battle"
 const COMPLETE_NODE: StringName = &"CompleteNode"
 ## Uses a provision at a bifurcation (expedition §2.3 item 8, §5).
 const USE_PROVISION: StringName = &"UseProvisionField"
+## Chooses an option of the event in progress; the option id travels in node_id.
+const CHOOSE_OPTION: StringName = &"ChooseOption"
 
 var type: StringName = &""
 var node_id: StringName = &""
@@ -41,6 +43,13 @@ static func use_provision(p_provision: StringName, p_target: StringName = &"") -
 	return cmd
 
 
+static func choose_option(p_option: StringName) -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = CHOOSE_OPTION
+	cmd.node_id = p_option
+	return cmd
+
+
 static func complete_node() -> ExpeditionCommand:
 	var cmd := ExpeditionCommand.new()
 	cmd.type = COMPLETE_NODE
@@ -49,7 +58,7 @@ static func complete_node() -> ExpeditionCommand:
 
 func to_dict() -> Dictionary:
 	var d: Dictionary = {"type": String(type)}
-	if type == CHOOSE_PATH:
+	if type == CHOOSE_PATH or type == CHOOSE_OPTION:
 		d["node"] = String(node_id)
 	elif type == BATTLE:
 		d["command"] = battle_command.to_dict()

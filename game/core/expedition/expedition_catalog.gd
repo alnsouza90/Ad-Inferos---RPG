@@ -14,6 +14,8 @@ var encounters: Dictionary = {}
 var reserves: Dictionary = {}
 ## kit_id (StringName) -> StartingKitDef (M1: no village to buy from, D-123).
 var starting_kits: Dictionary = {}
+## event_id (StringName) -> EventDef
+var events: Dictionary = {}
 
 
 static func create(p_battle_catalog: BattleCatalog, p_economy: ConstantsDef, p_saints: Dictionary, p_encounters: Dictionary, p_reserves: Dictionary) -> ExpeditionCatalog:
@@ -32,6 +34,18 @@ func kit_provisions(kit_id: StringName) -> Array[StringName]:
 	var kit: StartingKitDef = starting_kits.get(kit_id)
 	if kit != null:
 		result = kit.provisions.duplicate()
+	return result
+
+
+## Events of a type and circle, sorted by id (stable draws).
+func events_for(type: StringName, circle: int) -> Array[EventDef]:
+	var result: Array[EventDef] = []
+	var ids: Array = events.keys()
+	ids.sort()
+	for id: Variant in ids:
+		var e: EventDef = events[id]
+		if e.type == type and e.circle == circle:
+			result.append(e)
 	return result
 
 

@@ -18,6 +18,7 @@ const FOLDERS: Dictionary = {
 	"provisions": "provisions",
 	"map_templates": "map_templates",
 	"starting_kits": "starting_kits",
+	"events": "events",
 }
 
 var errors: Array[String] = []
@@ -36,7 +37,22 @@ static func read_tables(source_dir: String) -> Dictionary:
 		var path: String = source_dir.path_join(table_name + ".csv")
 		if FileAccess.file_exists(path):
 			texts[table_name] = FileAccess.get_file_as_string(path)
+	var events: Dictionary = {}
+	_read_event_files(source_dir.path_join("../narrative/events").simplify_path(), "", events)
+	texts["_events"] = events
 	return texts
+
+
+## Event files (docs/narrative/events/<circle>/*.yaml), keyed by relative path.
+static func _read_event_files(dir_path: String, relative: String, out: Dictionary) -> void:
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return
+	for sub: String in dir.get_directories():
+		_read_event_files(dir_path.path_join(sub), relative.path_join(sub), out)
+	for file: String in dir.get_files():
+		if file.ends_with(".yaml"):
+			out[relative.path_join(file).trim_prefix("/")] = FileAccess.get_file_as_string(dir_path.path_join(file))
 
 
 ## Imports from `source_dir`. With `check_only`, nothing is written and every

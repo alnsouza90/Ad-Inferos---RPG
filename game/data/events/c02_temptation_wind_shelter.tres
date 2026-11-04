@@ -1,0 +1,92 @@
+[gd_resource type="Resource" script_class="EventDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/event_def.gd" id="1_evt"]
+
+[resource]
+script = ExtResource("1_evt")
+id = &"c02_temptation_wind_shelter"
+type = &"temptation"
+circle = 2
+title_pt = "O abrigo do vento"
+origin = &"game_fiction"
+pages = [{
+"speaker": "narrator",
+"text_pt": "O vento do segundo círculo não cessa. Entre as rajadas, a companhia avista uma tenda clara, quieta, como se a tempestade não a tocasse."
+}, {
+"speaker": "demon_tempter",
+"text_pt": "Por que lutar contra o vento? Entrai. Aqui há calor, perfume e silêncio. Ninguém vos cobrará o caminho por uma noite."
+}, {
+"speaker": "narrator",
+"text_pt": "O Peregrino sente o cansaço pesar nos ombros. Os santos aguardam a sua decisão."
+}]
+options = [{
+"id": "refuse",
+"text_pt": "Recusar e seguir contra o vento",
+"safe": true,
+"requires": [],
+"chance": {},
+"outcomes": [{
+"type": "light",
+"id": "",
+"target": "",
+"amount": -5.0
+}],
+"on_success": [],
+"on_failure": []
+}, {
+"id": "watchful_shelter",
+"text_pt": "Abrigar-se à entrada, sem baixar a guarda",
+"safe": false,
+"requires": [],
+"chance": {
+"base": 0.5,
+"modifiers": [{
+"if": "saint_in_party",
+"id": "saint_benedict",
+"add": 0.2,
+"consume": false
+}, {
+"if": "provision",
+"id": "holy_water",
+"add": 0.2,
+"consume": true
+}]
+},
+"outcomes": [],
+"on_success": [{
+"type": "desolation",
+"id": "",
+"target": "party",
+"amount": -15.0
+}],
+"on_failure": [{
+"type": "virtue",
+"id": "virtue_hope",
+"target": "",
+"amount": -1.0
+}, {
+"type": "desolation",
+"id": "",
+"target": "party",
+"amount": 15.0
+}]
+}, {
+"id": "pray_through",
+"text_pt": "Rezar e atravessar a tempestade",
+"safe": false,
+"requires": [{
+"type": "virtue_at_least",
+"id": "virtue_faith",
+"value": 3.0
+}],
+"chance": {},
+"outcomes": [{
+"type": "desolation",
+"id": "",
+"target": "party",
+"amount": -10.0
+}],
+"on_success": [],
+"on_failure": []
+}]
+requirements = []

@@ -1,0 +1,40 @@
+# RASCUNHO do agente (D-122): Alan corrige e aprova antes do merge.
+# Tema escolhido por Alan (T23): "O abrigo do vento". O vento incessante vem
+# do Círculo 2 de Dante (Inferno, canto V); a tenda e a voz são criação do jogo.
+# Números (Lume, desolação, chance) são proposta para aprovação.
+id: c02_temptation_wind_shelter
+type: temptation
+circle: 2
+title_pt: "O abrigo do vento"
+origin: game_fiction
+pages:
+  - speaker: narrator
+    text_pt: "O vento do segundo círculo não cessa. Entre as rajadas, a companhia avista uma tenda clara, quieta, como se a tempestade não a tocasse."
+  - speaker: demon_tempter
+    text_pt: "Por que lutar contra o vento? Entrai. Aqui há calor, perfume e silêncio. Ninguém vos cobrará o caminho por uma noite."
+  - speaker: narrator
+    text_pt: "O Peregrino sente o cansaço pesar nos ombros. Os santos aguardam a sua decisão."
+options:
+  - id: refuse
+    text_pt: "Recusar e seguir contra o vento"
+    safe: true
+    outcomes:
+      - { type: light, amount: -5 }
+  - id: watchful_shelter
+    text_pt: "Abrigar-se à entrada, sem baixar a guarda"
+    chance:
+      base: 0.5
+      modifiers:
+        - { if: saint_in_party, id: saint_benedict, add: 0.2 }
+        - { if: provision, id: holy_water, add: 0.2, consume: true }
+    on_success:
+      - { type: desolation, target: party, amount: -15 }
+    on_failure:
+      - { type: virtue, id: virtue_hope, amount: -1 }
+      - { type: desolation, target: party, amount: 15 }
+  - id: pray_through
+    text_pt: "Rezar e atravessar a tempestade"
+    requires:
+      - { type: virtue_at_least, id: virtue_faith, value: 3 }
+    outcomes:
+      - { type: desolation, target: party, amount: -10 }

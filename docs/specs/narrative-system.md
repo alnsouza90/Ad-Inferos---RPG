@@ -56,6 +56,14 @@ options:
 requirements: []                # requisitos do evento inteiro (opcional)
 ```
 
+Leitura dos arquivos: ADR-0012 (subconjunto de YAML, leitor próprio). Formatos usados nas listas:
+
+- requisito: `{ type: virtue_at_least, id: virtue_faith, value: 3 }`;
+- modificador de chance: `{ if: saint_in_party, id: saint_benedict, add: 0.2 }`, com `consume: true` para gastar a provisão quando o modificador vale;
+- resultado: `{ type: desolation, target: party, amount: 15 }`.
+
+Toda chance precisa de pelo menos um modificador (erro `chance_without_modifier`). O sorteio usa o fluxo `events`, derivado do nó.
+
 ### 3.1 Requisitos de opção (`requires`)
 
 | Requisito | Exemplo |
@@ -71,6 +79,8 @@ Opção bloqueada aparece desabilitada, com o requisito escrito ("Exige Caridade
 ### 3.2 Resultados (`outcomes`)
 
 `virtue`, `desolation` (`target: party` ou um santo), `light`, `alms`, `provisions`, `relic`, `injury`, `suffrages`, `set_flag`, `start_battle` (encontro), `unlock`.
+
+No M1, `relic`, `suffrages` e `unlock` ainda não têm sistema: ficam só registrados no histórico da expedição.
 
 ## 4. Regras por tipo
 

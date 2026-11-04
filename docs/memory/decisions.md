@@ -54,6 +54,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-136 · 04/11/2026 · Alan** — Ataduras só podem ser usadas em combate (o Sangramento acaba com o combate); fora dele aparecem indisponíveis com o motivo. Pão fora do combate só serve para descansar no Pouso. *T22, `FieldProvisions`, `expedition.md` §5.*
 - **D-137 · 04/11/2026 · Alan** — O que o Incenso revela fica conhecido até o fim do trecho. *T22, `ExpeditionState.revealed_nodes`, `expedition.md` §2.2.*
 - **D-138 · 04/11/2026 · Alan** — T22 aprovada (kit de partida, mochila, provisões fora do combate e correção da Água Benta, D-317). *PR #29.*
+- **D-139 · 04/11/2026 · Alan** — Tentação do Círculo 2 no M1: tema "O abrigo do vento" (voz na tempestade oferece abrigo numa tenda). Rascunho do agente em `docs/narrative/events/circle_02/c02_temptation_wind_shelter.yaml`, com números propostos, aguardando correção e aprovação de Alan (D-122). *T23.*
 
 ## Arte
 
@@ -92,4 +93,5 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-315 · 04/11/2026 · agente** — APK de depuração montado no GitHub Actions (SDK Android do próprio runner, chave de depuração descartável gerada a cada build) e publicado em Releases com a tag fixa `teste-android`. *`.github/workflows/android.yml`.*
 - **D-316 · 04/11/2026 · agente** — Expedição: cada combate tem semente própria, derivada da semente do mapa e do ID do nó (um combate nunca depende de quantos sorteios os anteriores fizeram); `economy.csv` passa a ser importado como `game/data/economy.tres`; o estado de cada santo entre combates fica em `SaintStatus` (vida, desolação, estado espiritual, ferimento). *T21, `core/expedition/`.*
 - **D-317 · 04/11/2026 · agente** — Correção: o importador trocava o valor de um efeito pela constante (`const=`) e perdia o sinal da planilha; a Água Benta **aumentava** a desolação em 15 (também em combate, desde o M0). Agora a constante dá o tamanho e a planilha dá o sinal. *T22, `balance_importer.gd`, teste em `test_balance_importer.gd`.*
+- **D-318 · 04/11/2026 · agente** — Eventos em YAML simples lidos por um leitor próprio, sem biblioteca externa (ADR-0012); virtudes e bandeiras ficam no controlador da expedição enquanto não há campanha (M1); o sorteio do evento e da chance usa o fluxo `events` derivado do nó. *T23.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*
