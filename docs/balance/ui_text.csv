@@ -79,3 +79,20 @@ result_victory,Vitória
 result_defeat,Derrota
 result_retreat,Retirada
 play_again,Jogar de novo
+back_to_arena,Voltar à arena
+arena_title,Arena de teste
+arena_choose,Escolha o encontro e a semente.
+arena_encounter,{pool}: {enemies}
+arena_seed,Semente {seed}
+arena_seed_minus,-
+arena_seed_plus,+
+arena_start,Começar
+pool_easy,Fácil
+pool_hard,Difícil
+pool_elite,Elite
+pool_boss,Chefe
+pool_ambush,Emboscada
+dev_title,Teste:
+dev_desolation_up,+{amount} desolação
+dev_desolation_down,-{amount} desolação
+dev_consolation,Consolação

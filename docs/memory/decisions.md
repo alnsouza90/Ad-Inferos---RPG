@@ -33,6 +33,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-115 · 03/11/2026 · Alan** — T16 aprovada (auréola no motor com a arte piloto de São Jorge). *PR #18.*
 - **D-116 · 04/11/2026 · Alan** — Animação de combate estilo Darkest Dungeon fica no plano original: M2, junto com a arte final (trava "abordagem de animação" do roadmap, ADR-0007). *`open-questions.md`.*
 - **D-117 · 04/11/2026 · Alan** — A T17 inclui botões de teste (só na versão de desenvolvimento) para aumentar e diminuir a desolação e para pôr um santo em Consolação, para ver a auréola mudar. *`docs/backlog/m0.md` T17.*
+- **D-118 · 04/11/2026 · Alan** — T17 aprovada (arena, botões de teste, APK). Falta o aceite no celular (instalar e jogar de 2 a 4 min). *PR #20.*
 
 ## Arte
 
@@ -57,4 +58,6 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-311 · 03/11/2026 · agente** — Versão Web sem threads publicada no GitHub Pages a cada merge na `main` (o Pages não envia COOP/COEP). *`.github/workflows/pages.yml`, `game/export_presets.cfg`.*
 - **D-312 · 03/11/2026 · agente** — Arte tratada por `tools/art/process_art.py` (Python e Pillow, ferramenta de desenvolvimento). *ADR-0011.*
 - **D-313 · 03/11/2026 · agente** — Arte de cada santo num recurso `CombatantArt` (`scenes/battle/combatants/<id>_art.tres`) com uma imagem por estado e o ponto da cabeça; valores visuais da auréola em `scenes/battle/halo_settings.tres` (apresentação, fora de `docs/balance`). Texturas com importação padrão (sem perda) até a T17. *T16.*
+- **D-314 · 04/11/2026 · agente** — Botões de teste ligados em builds de depuração ou com a feature `dev_tools` (presets Web e Android da fase de testes); passam pelas regras de desolação, mas não entram no log de comandos. *T17, `BattleController.dev_*`.*
+- **D-315 · 04/11/2026 · agente** — APK de depuração montado no GitHub Actions (SDK Android do próprio runner, chave de depuração descartável gerada a cada build) e publicado em Releases com a tag fixa `teste-android`. *`.github/workflows/android.yml`.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*

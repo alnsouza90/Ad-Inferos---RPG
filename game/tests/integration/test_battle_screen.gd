@@ -135,6 +135,30 @@ func test_george_has_art_and_his_halo_follows_desolation() -> void:
 	assert_lt(view.halo().brightness(), full, "a auréola perde brilho com a desolação")
 
 
+## T17 (D-117): dev buttons drive desolation through the rules and the
+## halo follows.
+func test_dev_buttons_change_desolation_and_give_consolation() -> void:
+	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
+	assert_true(screen.dev_tools_shown(), "botões de teste na versão de desenvolvimento")
+	var george: Combatant = screen.ctrl.state.find(&"saint_george")
+	var view: CombatantView = screen.view_of(&"saint_george")
+	var full: float = view.halo().brightness()
+	# Gains pass through the desolation multipliers (Benedict's Clausura may
+	# lower them): from 70, one press lands in the fading band, below 100.
+	george.desolation = 70
+	screen.press_dev_desolation(BattleScreen.DEV_DESOLATION_STEP)
+	assert_between(george.desolation, 76, 99)
+	assert_eq(george.spirit_state, Desolation.NORMAL)
+	assert_lt(view.halo().brightness(), full, "a auréola perde brilho")
+	var before: int = george.desolation
+	screen.press_dev_desolation(-BattleScreen.DEV_DESOLATION_STEP)
+	assert_eq(george.desolation, before - BattleScreen.DEV_DESOLATION_STEP, "reduções não passam por multiplicador")
+	screen.press_dev_consolation()
+	assert_eq(george.spirit_state, Desolation.CONSOLATION)
+	assert_true(view.halo().rays_shown(), "raios da Consolação")
+	assert_eq(screen.ctrl.command_log, [] as Array[Dictionary], "botões de teste não entram no log")
+
+
 ## Every key the screen asks for exists in docs/balance/ui_text.csv.
 func test_every_screen_text_exists_in_the_data() -> void:
 	var keys: Array[String] = [
@@ -147,6 +171,9 @@ func test_every_screen_text_exists_in_the_data() -> void:
 		"preview_desolation_up", "preview_desolation_down", "preview_applied", "preview_removed",
 		"polarity_negative", "polarity_positive", "preview_moved", "preview_falls", "preview_cancelled",
 		"result_victory", "result_defeat", "result_retreat", "play_again", "reason_no_slot",
+		"back_to_arena", "arena_title", "arena_choose", "arena_encounter", "arena_seed", "arena_seed_minus",
+		"arena_seed_plus", "arena_start", "pool_easy", "pool_hard", "dev_title", "dev_desolation_up",
+		"dev_desolation_down", "dev_consolation",
 	]
 	for icon: String in BalanceImporter.INTENT_ICONS:
 		keys.append("intent_%s" % icon)

@@ -176,6 +176,29 @@ func clone() -> BattleController:
 	return copy
 
 
+# --- dev tools (T17, D-117) ----------------------------------------------------
+# Test helpers for the development build, not player commands: they are not
+# logged, so a battle that used them cannot be replayed from its log.
+
+## Changes a standing saint's desolation through the normal rules (Faith
+## check at the threshold, Purification, Prostration).
+func dev_change_desolation(saint_id: StringName, amount: int) -> Array[BattleEvent]:
+	var saint: Combatant = _saint(saint_id)
+	if phase != Phase.PARTY_TURN or saint == null or not saint.is_standing():
+		return [] as Array[BattleEvent]
+	state.add_desolation(saint, amount, &"dev_tools")
+	_check_outcome()
+	return _flush()
+
+
+func dev_force_consolation(saint_id: StringName) -> Array[BattleEvent]:
+	var saint: Combatant = _saint(saint_id)
+	if phase != Phase.PARTY_TURN or saint == null or not saint.is_standing():
+		return [] as Array[BattleEvent]
+	Desolation.force_consolation(saint, state.desolation_context(saint))
+	return _flush()
+
+
 func _intent_kinds(s: BattleState) -> Dictionary:
 	var kinds: Dictionary = {}
 	for intent: Intent in s.intents:
