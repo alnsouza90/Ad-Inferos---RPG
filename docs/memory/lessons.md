@@ -37,6 +37,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 ## Git e ambiente
 
+- Na nuvem, as imagens do Git LFS chegam como ponteiros (o Pillow diz "cannot identify image file"): rode `git lfs pull --include="art_source/<pasta>/**"` antes de processar arte (T27).
+
 - Na nuvem, `pip install "gdtoolkit==4.*"` dá o `gdparse`, que confere a sintaxe dos scripts sem o Godot (não pega erro de tipo).
 
 - No `.gitignore`, uma regra com barra no meio (`tools/out/`) vale só a partir da raiz; para `game/tools/out/` é preciso escrever o caminho.

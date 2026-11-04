@@ -34,3 +34,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Incenso "revela nós vizinhos" (`expedition.md` §2.2 e §5): com o Portão nível 1, o conteúdo da próxima camada já aparece, então o Incenso só serviria para anular a emboscada. Decidir se ele passa a revelar mais uma camada à frente (mudança de regra)~~ Decidido: revela mais uma camada (D-129) | Alan (T18/T22) | 04/11/2026 |
 | ~~Texto da Tentação do Círculo 2 ("O abrigo do vento")~~ Aprovado por Alan (D-142) | Alan (T23) | 04/11/2026 |
 | Nomes dos falantes dos eventos (`narrator`, `demon_tempter`) na tela: definir onde ficam os nomes exibidos | T28 | 04/11/2026 |
+| Cenário do Círculo 2, trecho 1: os originais têm só 1584×672; ampliados para 2560×1080 ficam pouco nítidos. Pedir versão maior (e a camada `_mid` emendável) para a arte final | Alan (M2) | 04/11/2026 |
+| Caminhada: entradas são retângulos com texto e o andar é só um deslize com balanço; ícones de tipo de nó, desenhos de porta/caverna/escada e animação de andar ficam para o M2 (D-210) | M2 | 04/11/2026 |
