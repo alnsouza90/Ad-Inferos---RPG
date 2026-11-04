@@ -146,6 +146,12 @@ func _link_layers(current: Array[MapNode], next: Array[MapNode]) -> void:
 		current[from_index].links.sort()
 
 
+## The node of the next layer that `index` links to first ("straight ahead");
+## also used by the corridor to draw that entrance as the straight path.
+static func nearest_index(index: int, size: int, other_size: int) -> int:
+	return _nearest(index, size, other_size)
+
+
 static func _nearest(index: int, size: int, other_size: int) -> int:
 	if size <= 1 or other_size <= 1:
 		return 0 if other_size <= 1 else floori(other_size / 2.0)

@@ -69,7 +69,24 @@ JOBS = [
      "characters/saints/saint_george/body/saint_george_body_consolation.png", "body"),
     ("vfx/halo/vfx_halo_disk_v01.jpg", "vfx/halo/vfx_halo_disk.png", "halo_body"),
     ("vfx/halo/vfx_halo_rays_v01.jpg", "vfx/halo/vfx_halo_rays.png", "halo_glow"),
+    # T27: provisional corridor of the walk (Circle 2, leg 1). The front
+    # layer came with a checkerboard painted where it should be transparent.
+    ("environments/circles/circle_02/t1/env_circle_02_t1_back_v01.jpg",
+     "environments/circles/circle_02/t1/env_circle_02_t1_back.png", "env_back"),
+    ("environments/circles/circle_02/t1/env_circle_02_t1_front_v01.jpg",
+     "environments/circles/circle_02/t1/env_circle_02_t1_front.png", "env_front"),
 ]
+
+# asset-pipeline §4: scenery layers are 1080 px tall; the provisional ones
+# keep the 2560 px width of _back (the front parallax just moves further).
+ENV_SIZE = (2560, 1080)
+# Painted checkerboard: near-grey pixels, light enough to be one of its two
+# tones. The black outline of the rocks stops the flood fill.
+CHECKER_MIN_VALUE = 170
+CHECKER_MAX_CHROMA = 14
+CHECKER_LIGHT = 235
+CHECKER_GREY = (190, 215)
+CHECKER_MIN_TONE_PIXELS = 50
 
 
 def background_colour(img: Image.Image) -> tuple[int, int, int]:
@@ -212,9 +229,66 @@ def fit_halo(img: Image.Image) -> Image.Image:
     return square.resize((HALO_SIZE, HALO_SIZE), Image.LANCZOS)
 
 
-def run(check_only: bool) -> int:
-    scale = 0.0 if check_only else pose_scale()
-    for src_rel, dst_rel, kind in JOBS:
+def is_checker(c: tuple[int, int, int]) -> bool:
+    return min(c) >= CHECKER_MIN_VALUE and max(c) - min(c) <= CHECKER_MAX_CHROMA
+
+
+def remove_checkerboard(img: Image.Image) -> Image.Image:
+    """Clears the painted checkerboard: every checker pixel reached from the
+    border, plus enclosed regions big enough and holding both tones."""
+    rgb = img.convert("RGB")
+    w, h = rgb.size
+    px = rgb.load()
+    state = bytearray(w * h)  # 0 unknown, 1 clear, 2 kept
+    queue: deque[tuple[int, int]] = deque()
+    for x in range(w):
+        queue.extend(((x, 0), (x, h - 1)))
+    for y in range(h):
+        queue.extend(((0, y), (w - 1, y)))
+    while queue:
+        x, y = queue.popleft()
+        i = y * w + x
+        if state[i] or not is_checker(px[x, y]):
+            continue
+        state[i] = 1
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h:
+                queue.append((nx, ny))
+    for sy in range(h):
+        for sx in range(w):
+            if state[sy * w + sx] or not is_checker(px[sx, sy]):
+                continue
+            region = []
+            queue.append((sx, sy))
+            state[sy * w + sx] = 2
+            while queue:
+                x, y = queue.popleft()
+                region.append((x, y))
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and not state[ny * w + nx] and is_checker(px[nx, ny]):
+                        state[ny * w + nx] = 2
+                        queue.append((nx, ny))
+            light = sum(1 for x, y in region if min(px[x, y]) > CHECKER_LIGHT)
+            grey = sum(1 for x, y in region if CHECKER_GREY[0] <= max(px[x, y]) <= CHECKER_GREY[1])
+            if len(region) >= HOLE_MIN_PIXELS and min(light, grey) > CHECKER_MIN_TONE_PIXELS:
+                for x, y in region:
+                    state[y * w + x] = 1
+    alpha = Image.new("L", (w, h), 255)
+    ap = alpha.load()
+    for y in range(h):
+        for x in range(w):
+            if state[y * w + x] == 1:
+                ap[x, y] = 0
+    alpha = alpha.filter(ImageFilter.GaussianBlur(0.7))
+    out = rgb.convert("RGBA")
+    out.putalpha(alpha)
+    return out
+
+
+def run(check_only: bool, only: str = "") -> int:
+    jobs = [j for j in JOBS if only in j[0]]
+    scale = 0.0 if check_only or all(j[2].startswith("env") for j in jobs) else pose_scale()
+    for src_rel, dst_rel, kind in jobs:
         src = SRC / src_rel
         if not src.exists() or src.stat().st_size < 1024:
             print(f"falta o original (Git LFS?): {src_rel}")
@@ -223,15 +297,12 @@ def run(check_only: bool) -> int:
         print(f"{src_rel}: {img.size}")
         if check_only:
             continue
-        cut = remove_background(img, flood=kind != "halo_glow")
-        if kind == "body":
-            out = fit_body(cut)
-        elif kind == "pose":
-            out = fit_body(cut, scale)
-        elif kind == "portrait":
-            out = fit_portrait(cut)
+        if kind == "env_back":
+            out = img.convert("RGB").resize(ENV_SIZE, Image.LANCZOS)
+        elif kind == "env_front":
+            out = remove_checkerboard(img).resize(ENV_SIZE, Image.LANCZOS)
         else:
-            out = fit_halo(cut)
+            out = cut_character(img, kind, scale)
         dst = DST / dst_rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         out.save(dst, optimize=True)
@@ -239,5 +310,18 @@ def run(check_only: bool) -> int:
     return 0
 
 
+def cut_character(img: Image.Image, kind: str, scale: float) -> Image.Image:
+    cut = remove_background(img, flood=kind != "halo_glow")
+    if kind == "body":
+        return fit_body(cut)
+    if kind == "pose":
+        return fit_body(cut, scale)
+    if kind == "portrait":
+        return fit_portrait(cut)
+    return fit_halo(cut)
+
+
 if __name__ == "__main__":
-    sys.exit(run("--check" in sys.argv))
+    # --only=<text>: process only the jobs whose source path contains it.
+    only_arg = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--only=")), "")
+    sys.exit(run("--check" in sys.argv, only_arg))
