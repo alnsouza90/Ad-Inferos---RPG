@@ -50,6 +50,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-132 · 04/11/2026 · Alan** — Gerador do trecho: 2 ou 3 nós por camada, meio a meio (`map_three_nodes_chance` 0,5); cada nó liga ao caminho reto e, com 50% de chance, a um vizinho (`map_second_link_chance` 0,5), sem ligações cruzadas; trecho fixo de reserva desenhado pelo agente em `docs/balance/map_templates.csv`. *T20, `expedition.md` §2, `data-schemas.md` §3.15.*
 - **D-133 · 04/11/2026 · Alan** — T20 aprovada (gerador do trecho e trecho de reserva). *PR #27.*
 - **D-134 · 04/11/2026 · Alan** — Entre combates, a equipe começa na ordem em que o combate anterior terminou (como em Darkest Dungeon). *T21, `ExpeditionController`, `expedition.md` §13.*
+- **D-135 · 04/11/2026 · Alan** — T21 aprovada (controlador da expedição, comandos e estado dos santos entre combates). *PR #28.*
 
 ## Arte
 
