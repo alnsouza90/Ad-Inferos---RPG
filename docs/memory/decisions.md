@@ -70,6 +70,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-152 · 04/11/2026 · Alan** — O falante `demon_tempter` aparece como "A voz na tempestade". Ilustração de "O abrigo do vento" aprovada por Alan (tenda iluminada na tempestade, rastros na areia); chegou pelo chat com só 512×286, guardada em `art_source/events/circle_02/` como v01 provisória; falta o arquivo em tamanho cheio. *T28, `ui_text.csv`.*
 - **D-153 · 04/11/2026 · Alan** — Nova ilustração de "O abrigo do vento" (v02, 1376×768: tenda iluminada, relâmpagos, árvores secas, rastros) substitui a v01; é a usada na T28, ampliada para 1920×1080. *`art_source/events/circle_02/`.*
 - **D-154 · 04/11/2026 · Alan** — T28 aprovada (tela do evento narrativo), com os textos novos de `ui_text.csv` revisados. *PR #35.*
+- **D-155 · 04/11/2026 · Alan** — Arte para a T29 recebida: retratos de São Bento e Santa Teresinha (896×1200) e o Pouso do Círculo 2 (`env_circle_02_camp`), este só com 512×217 (reduzido pelo chat); originais em `art_source/`. *T29.*
 
 ## Arte
 
