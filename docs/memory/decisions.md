@@ -48,6 +48,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-130 · 04/11/2026 · Alan** — T18 aprovada (specs da caminhada e simplificações do M1). *PR #25.*
 - **D-131 · 04/11/2026 · Alan** — T19 aprovada (estado da expedição e Lume; +10% de dano inimigo com Lume baixo na fórmula de dano). *PR #26.*
 - **D-132 · 04/11/2026 · Alan** — Gerador do trecho: 2 ou 3 nós por camada, meio a meio (`map_three_nodes_chance` 0,5); cada nó liga ao caminho reto e, com 50% de chance, a um vizinho (`map_second_link_chance` 0,5), sem ligações cruzadas; trecho fixo de reserva desenhado pelo agente em `docs/balance/map_templates.csv`. *T20, `expedition.md` §2, `data-schemas.md` §3.15.*
+- **D-133 · 04/11/2026 · Alan** — T20 aprovada (gerador do trecho e trecho de reserva). *PR #27.*
+- **D-134 · 04/11/2026 · Alan** — Entre combates, a equipe começa na ordem em que o combate anterior terminou (como em Darkest Dungeon). *T21, `ExpeditionController`, `expedition.md` §13.*
 
 ## Arte
 
@@ -84,4 +86,5 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-313 · 03/11/2026 · agente** — Arte de cada santo num recurso `CombatantArt` (`scenes/battle/combatants/<id>_art.tres`) com uma imagem por estado e o ponto da cabeça; valores visuais da auréola em `scenes/battle/halo_settings.tres` (apresentação, fora de `docs/balance`). Texturas com importação padrão (sem perda) até a T17. *T16.*
 - **D-314 · 04/11/2026 · agente** — Botões de teste ligados em builds de depuração ou com a feature `dev_tools` (presets Web e Android da fase de testes); passam pelas regras de desolação, mas não entram no log de comandos. *T17, `BattleController.dev_*`.*
 - **D-315 · 04/11/2026 · agente** — APK de depuração montado no GitHub Actions (SDK Android do próprio runner, chave de depuração descartável gerada a cada build) e publicado em Releases com a tag fixa `teste-android`. *`.github/workflows/android.yml`.*
+- **D-316 · 04/11/2026 · agente** — Expedição: cada combate tem semente própria, derivada da semente do mapa e do ID do nó (um combate nunca depende de quantos sorteios os anteriores fizeram); `economy.csv` passa a ser importado como `game/data/economy.tres`; o estado de cada santo entre combates fica em `SaintStatus` (vida, desolação, estado espiritual, ferimento). *T21, `core/expedition/`.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*

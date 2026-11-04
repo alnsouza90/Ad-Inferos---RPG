@@ -8,6 +8,7 @@ extends RefCounted
 static func valid_tables() -> Dictionary:
 	return {
 		"constants": "key,value,description\nfervor_cap,6,Máximo\nbread_heal,5,Cura do Pão\nxp_thresholds,0|40|100,Níveis\n",
+		"economy": "key,value,description\nreward_battle,70,Esmolas por combate comum\n",
 		"conditions": "id,kind,polarity,max_stacks,stacking,decay,tick,consume_on,resisted_by_will,hook,icon,display_priority,name_pt,desc_pt\n"
 			+ "stun,token,negative,1,none,none,none,on_action_attempt,false,stun_cancel,res://x.png,1,Atordoamento,Perde a ação.\n"
 			+ "ward,token,positive,3,add,none,none,on_hit_received,false,ward_halve,res://y.png,5,Amparo,\"Metade, do dano.\"\n",
