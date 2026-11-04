@@ -31,6 +31,7 @@ game/assets/
   characters/enemies/  elites/  bosses/  guardians/  narrative/
   environments/village/hub/<edificio>/  village/interiors/<instalacao>/
   environments/camp/  environments/circles/circle_02/t1/ ...
+  events/<círculo>/                 event_<id do evento>.png
   vfx/halo/  vfx/miracles/  vfx/impacts/  vfx/particles/  vfx/ground_markers/
   ui/icons/  ui/frames/
   fonts/
@@ -52,6 +53,7 @@ game/assets/
 | Edifício da vila | `village_chapel_ext.png`; fundo `village_hub_background.png` |
 | Ícone | `icon_cond_stun.png`, `icon_intent_attack.png` |
 | Auréola | `vfx_halo_disk.png`, `vfx_halo_rays.png` |
+| Ilustração de evento | `event_c02_temptation_wind_shelter.png` (`event_` + `id` do evento) |
 
 Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `game/assets/` o nome é sempre o final.
 
@@ -69,6 +71,7 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | Rosto por estado (`face_*`) | PNG RGBA 1:1 | 1024 × 1024, reduzido à cabeça do idle (≈ 170 px) | Mesmo ângulo do idle |
 | Tela de passagem (`splash_<id>_miracle`, `_dark_night`, `_consolation`) | PNG RGBA 4:5, meio corpo | 1024 × 1280 | `assets/characters/saints/<id>/splash/` |
 | Rig (`rig_base`, `rig_parts`) | PNG RGBA | Matriz 2048 × 3072 / 2048 × 2048 em `art_source/`; peças na escala do idle | `assets/characters/saints/<id>/rig/` |
+| Ilustração de evento | PNG opaco 16:9 | 1920 × 1080 (recortada para preencher); o terço de baixo fica sob a caixa de texto | `assets/events/<círculo>/` |
 | Ícone | PNG 1:1 | 256 × 256 (exibido a 64–96) | — |
 | Auréola | PNG 1:1 | 512 × 512 | Centro |
 
