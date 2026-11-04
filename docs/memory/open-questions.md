@@ -36,4 +36,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Nomes dos falantes dos eventos (`narrator`, `demon_tempter`) na tela: definir onde ficam os nomes exibidos~~ O agente decide e Alan revisa ao testar (D-151) | T28 | 04/11/2026 |
 | Cenário do Círculo 2, trecho 1: os originais têm só 1584×672; ampliados para 2560×1080 ficam pouco nítidos. Pedir versão maior (e a camada `_mid` emendável) para a arte final | Alan (M2) | 04/11/2026 |
 | Caminhada: entradas são retângulos com texto e o andar é só um deslize com balanço; ícones de tipo de nó, desenhos de porta/caverna/escada e animação de andar ficam para o M2 (D-210) | M2 | 04/11/2026 |
-| Ilustração do evento "O abrigo do vento" (`event_c02_temptation_wind_shelter`, 1920×1080): prompt entregue a Alan em 04/11/2026 | Alan (T28) | 04/11/2026 |
+| Ilustração do evento "O abrigo do vento": imagem aprovada recebida em 04/11/2026, mas só com 512×286 (o chat reduziu); pedir o arquivo original em tamanho cheio (ideal ≥ 1920×1080) | Alan (T28) | 04/11/2026 |
