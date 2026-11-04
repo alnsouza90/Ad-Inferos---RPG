@@ -2,7 +2,12 @@
 
 Versão 1.0 · base: Direção de Arte v1.1 ("Padrões técnicos", "Auréola") · ADR-0007 e ADR-0008
 
-Este documento diz **como** uma imagem gerada vira um asset do jogo. **O que** gerar (estilo, prompts) está em `docs/art/art-direction.md`. Os padrões abaixo são provisórios até o piloto com São Jorge.
+Este documento diz **como** uma imagem gerada vira um asset do jogo. **O que** gerar (estilo, prompts) está em `docs/art/art-direction.md` e nas folhas de produção de Alan:
+
+- `docs/art/prompts-saints.md` — os 12 santos jogáveis: corpo padrão, rostos de Noite Escura e Consolação, retrato, poses de ataque, golpe e queda, pose neutra e folha de peças para o rig.
+- `docs/art/prompts-environments.md` — cenários em camadas para parallax (`_ref`, `_back`, `_mid`, `_front`) de cada trecho e chefe dos 9 círculos, almas, partículas, Pouso, Vigília, chegada, mapa de escolha dos círculos e extras.
+
+Os padrões abaixo são provisórios até o piloto com São Jorge. Onde as folhas de produção forem mais detalhadas (tamanhos, camadas, linha do chão), elas valem; divergências de design ficam em `docs/memory/open-questions.md`.
 
 ## 1. Fluxo
 
@@ -57,7 +62,11 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | Inimigo comum | PNG 2:3 | 1024 × 1536 | Centro da base |
 | Elite / chefe | PNG 2:3, 4:3 ou 1:1 | Até 2048 no lado maior | Centro da base |
 | Retrato | PNG 3:4 | 768 × 1024 | — |
-| Fundo de combate | PNG em camadas | 2560 × 1080 | — |
+| Fundo de combate `_back` | PNG opaco | 2560 × 1080 | Parallax ≈ 20% |
+| Fundo de combate `_mid` | PNG RGBA, bordas emendáveis | 2560 × 1080 | Chão a y ≈ 900 px (83%); parallax 100% |
+| Fundo de combate `_front` | PNG RGBA | 3240 × 1080 | Parallax ≈ 130% |
+| Rosto por estado (`face_*`) | PNG RGBA 1:1 | 1024 × 1024, reduzido à cabeça do idle (≈ 170 px) | Mesmo ângulo do idle |
+| Rig (`rig_base`, `rig_parts`) | PNG RGBA | Matriz 2048 × 3072 / 2048 × 2048 em `art_source/`; peças na escala do idle | `assets/characters/saints/<id>/rig/` |
 | Ícone | PNG 1:1 | 256 × 256 (exibido a 64–96) | — |
 | Auréola | PNG 1:1 | 512 × 512 | Centro |
 
