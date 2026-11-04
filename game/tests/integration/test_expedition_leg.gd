@@ -30,6 +30,8 @@ func _step(ctrl: ExpeditionController) -> void:
 			_ok(ctrl, ExpeditionCommand.complete_node())
 		ExpeditionController.Phase.IN_EVENT:
 			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
+		ExpeditionController.Phase.IN_RELIC:
+			_ok(ctrl, ExpeditionCommand.place_relic())
 		ExpeditionController.Phase.IN_BATTLE:
 			_ok(ctrl, ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 
@@ -51,6 +53,9 @@ func _go_to_battle(ctrl: ExpeditionController) -> void:
 			continue
 		if ctrl.phase == ExpeditionController.Phase.IN_EVENT:
 			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
+			continue
+		if ctrl.phase == ExpeditionController.Phase.IN_RELIC:
+			_ok(ctrl, ExpeditionCommand.place_relic())
 			continue
 		var pick: MapNode = ctrl.entrances()[0]
 		for n: MapNode in ctrl.entrances():
@@ -93,13 +98,17 @@ func test_choosing_a_node_that_is_not_an_entrance_is_rejected() -> void:
 func test_won_battle_gives_alms_and_battle_end_desolation() -> void:
 	var ctrl := _new(3)
 	_go_to_battle(ctrl)
+	var alms_before: int = ctrl.state.alms_unbanked
 	var before: Dictionary = {}
 	for c: Combatant in ctrl.battle.state.party:
 		before[c.id] = c.desolation
 	while ctrl.phase == ExpeditionController.Phase.IN_BATTLE:
 		_ok(ctrl, ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 	assert_eq(ctrl.last_battle.phase, BattleController.Phase.VICTORY)
-	assert_eq(ctrl.state.alms_unbanked, 70, "70 Esmolas, Lume alto sem multiplicador")
+	if ctrl.phase == ExpeditionController.Phase.AT_CAMP:
+		return
+	var relic_alms: int = 40 if ctrl.phase == ExpeditionController.Phase.IN_RELIC else 0
+	assert_eq(ctrl.state.alms_unbanked - alms_before, 70 + relic_alms, "70 Esmolas (mais 40 se era a guarda de uma relíquia)")
 	for id: StringName in ctrl.saints:
 		var status: SaintStatus = ctrl.saints[id]
 		assert_gt(status.desolation, int(before[id]) - 1, "desolação de fim de combate em %s" % id)

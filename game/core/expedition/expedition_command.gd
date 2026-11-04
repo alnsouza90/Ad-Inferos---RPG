@@ -16,6 +16,8 @@ const CHOOSE_OPTION: StringName = &"ChooseOption"
 const REST: StringName = &"Rest"
 ## Leaves the camp: `mode` is MODE_CONTINUE or MODE_RETREAT (planned retreat).
 const LEAVE_CAMP: StringName = &"LeaveCamp"
+## Gives the found relic to a saint (target_id) or keeps it in the pack (empty).
+const PLACE_RELIC: StringName = &"PlaceRelic"
 const MODE_CONTINUE: StringName = &"continue"
 const MODE_RETREAT: StringName = &"retreat"
 
@@ -73,6 +75,13 @@ static func leave_camp(p_mode: StringName) -> ExpeditionCommand:
 	return cmd
 
 
+static func place_relic(p_saint: StringName = &"") -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = PLACE_RELIC
+	cmd.target_id = p_saint
+	return cmd
+
+
 static func complete_node() -> ExpeditionCommand:
 	var cmd := ExpeditionCommand.new()
 	cmd.type = COMPLETE_NODE
@@ -95,6 +104,8 @@ func to_dict() -> Dictionary:
 		d["activities"] = list
 	elif type == LEAVE_CAMP:
 		d["mode"] = String(mode)
+	elif type == PLACE_RELIC:
+		d["target"] = String(target_id)
 	return d
 
 

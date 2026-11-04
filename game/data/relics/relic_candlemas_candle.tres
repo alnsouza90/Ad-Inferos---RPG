@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_candlemas_candle"
+name_pt = "Vela da Candelária"
+category = &"sacramental"
+relic_class = &"sacramental"
+origin = &"tradition"
+to_confirm = false
+rarity = &"common"
+source = "relic_node"
+modifier = &"light_per_node"
+params = {
+"value": 4.0
+}
+desc_pt = "O Lume cai 4 por nó, em vez de 5."

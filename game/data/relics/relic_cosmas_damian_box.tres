@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_cosmas_damian_box"
+name_pt = "Caixa de remédios tocada em relíquias de Cosme e Damião"
+category = &"guardian"
+relic_class = &"3"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"injury_heal_bonus"
+params = {
+"weeks": 1.0
+}
+desc_pt = "Ferimentos curam 1 semana mais rápido."

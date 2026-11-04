@@ -16,6 +16,8 @@ var reserves: Dictionary = {}
 var starting_kits: Dictionary = {}
 ## event_id (StringName) -> EventDef
 var events: Dictionary = {}
+## relic_id (StringName) -> RelicDef
+var relics: Dictionary = {}
 
 
 static func create(p_battle_catalog: BattleCatalog, p_economy: ConstantsDef, p_saints: Dictionary, p_encounters: Dictionary, p_reserves: Dictionary) -> ExpeditionCatalog:
@@ -46,6 +48,22 @@ func events_for(type: StringName, circle: int) -> Array[EventDef]:
 		var e: EventDef = events[id]
 		if e.type == type and e.circle == circle:
 			result.append(e)
+	return result
+
+
+func relic(id: StringName) -> RelicDef:
+	return relics.get(id)
+
+
+## Relics a relic node can give: source relic_node, sacramental, and with a
+## modifier the engine already applies (in the M1, the three of D-124).
+func relic_node_pool() -> Array[StringName]:
+	var result: Array[StringName] = []
+	for id: StringName in relics:
+		var r: RelicDef = relics[id]
+		if r.source == "relic_node" and r.category == &"sacramental" and RelicEffects.IMPLEMENTED.has(r.modifier):
+			result.append(id)
+	result.sort()
 	return result
 
 

@@ -21,6 +21,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
 	"map_templates": ["id", "leg", "layer", "index", "role", "type", "links"],
 	"starting_kits": ["id", "provision_id", "amount"],
+	"relics": ["id", "name_pt", "category", "relic_class", "origin", "to_confirm", "rarity", "source", "modifier", "params", "desc_pt"],
 	"ui_text": ["id", "text_pt"],
 	"saints": ["id", "name_pt", "roles", "preferred_slots", "max_hp", "armor", "faith", "will", "hp_per_level", "faith_per_level", "abilities", "default_equipped", "miracle", "trait", "camp_skill", "affinities", "unlock", "m0"],
 }
@@ -60,6 +61,11 @@ const EVENT_OUTCOMES: Array[String] = ["virtue", "desolation", "light", "alms", 
 const EVENT_REQUIREMENTS: Array[String] = ["virtue_at_least", "saint_in_party", "provision", "alms_at_least", "flag_set"]
 const CHANCE_MODIFIERS: Array[String] = ["saint_in_party", "provision", "relic"]
 const VIRTUES: Array[String] = ["virtue_faith", "virtue_hope", "virtue_charity"]
+const RELIC_CATEGORIES: Array[String] = ["sacramental", "saint", "guardian", "purgatory"]
+const RELIC_CLASSES: Array[String] = ["2", "3", "sacramental", "devotional"]
+const RELIC_RARITIES: Array[String] = ["common", "rare", "unique"]
+## data-schemas §4: a new modifier needs that table and the engine updated.
+const RELIC_MODIFIERS: Array[String] = ["stat_add", "stat_mult", "damage_type_mult", "heal_dealt_mult", "heal_received_mult", "desolation_gain_mult", "condition_received_reduction", "light_per_node", "provision_effect_mult", "battle_start_condition", "share_heal_mult", "ability_param", "ability_cost_mult", "stun_duration_bonus", "trait_extension", "turn_start_cleanse", "purification_heal", "purification_xp_mult", "faith_check_bonus", "injury_heal_bonus", "chapel_suffrages_add", "prevent_prostration"]
 const MAP_ROLES: Array[String] = ["battle", "temptation", "variable", "soul"]
 const MAP_NODE_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_soul", "node_relic"]
 const PROVISION_TARGETING: Array[String] = ["none", "self", "ally", "all_allies"]
@@ -89,6 +95,7 @@ var provisions: Dictionary = {}
 var map_templates: Dictionary = {}
 var starting_kits: Dictionary = {}
 var events: Dictionary = {}
+var relics: Dictionary = {}
 var saints: Dictionary = {}
 var ui_text: UiTextDef
 
@@ -127,6 +134,7 @@ func import_tables(texts: Dictionary) -> bool:
 	_build_provisions()
 	_build_map_templates()
 	_build_starting_kits()
+	_build_relics()
 	_build_saints()
 	_build_ui_text()
 	_build_events(texts.get("_events", {}))
@@ -621,6 +629,33 @@ func _build_starting_kits() -> void:
 			d.provisions.append(StringName(provision_id))
 		if constants.has_key(&"gate_slots_l1") and d.provisions.size() > constants.get_int(&"gate_slots_l1"):
 			_err("out_of_range", t.file_name, line, "o kit '%s' passa de %d provisões (espaços do Portão nível 1)" % [id, constants.get_int(&"gate_slots_l1")])
+
+
+func _build_relics() -> void:
+	var t: CsvTable = _tables["relics"]
+	var source_pattern := RegEx.create_from_string("^(relic_node|milestone:[0-9]+)$")
+	for i: int in t.rows.size():
+		var row: Dictionary = t.rows[i]
+		var line: int = t.line_numbers[i]
+		if not _check_id(t, line, row["id"], relics):
+			continue
+		var d := RelicDef.new()
+		d.id = StringName(row["id"])
+		d.name_pt = row["name_pt"]
+		_require_text(t, line, "name_pt", row)
+		d.category = _enum(t, line, "category", row, RELIC_CATEGORIES)
+		d.relic_class = _enum(t, line, "relic_class", row, RELIC_CLASSES)
+		d.origin = _enum(t, line, "origin", row, ORIGINS)
+		d.to_confirm = _flag(t, line, "to_confirm", row)
+		d.rarity = _enum(t, line, "rarity", row, RELIC_RARITIES)
+		d.source = row["source"]
+		if source_pattern.search(d.source) == null:
+			_err("bad_enum", t.file_name, line, "source '%s' inválido; use relic_node ou milestone:N" % d.source)
+		d.modifier = _enum(t, line, "modifier", row, RELIC_MODIFIERS)
+		d.params = _kv(t, line, "params", row)
+		d.desc_pt = row["desc_pt"]
+		_require_text(t, line, "desc_pt", row)
+		relics[row["id"]] = d
 
 
 func _build_saints() -> void:

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_anthony_abbot_bell"
+name_pt = "Sino de Santo Antão"
+category = &"saint"
+relic_class = &"devotional"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"desolation_gain_mult"
+params = {
+"value": 0.9
+}
+desc_pt = "Desolação recebida −10%."

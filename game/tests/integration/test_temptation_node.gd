@@ -31,6 +31,8 @@ func _go_to_temptation(ctrl: ExpeditionController) -> void:
 				_ok(ctrl, ExpeditionCommand.choose_path(pick.id))
 			ExpeditionController.Phase.IN_NODE:
 				_ok(ctrl, ExpeditionCommand.complete_node())
+			ExpeditionController.Phase.IN_RELIC:
+				_ok(ctrl, ExpeditionCommand.place_relic())
 			ExpeditionController.Phase.IN_BATTLE:
 				_ok(ctrl, ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 			_:

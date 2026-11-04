@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_anthony_lily"
+name_pt = "Lírio tocado no túmulo de Santo Antônio, em Pádua"
+category = &"saint"
+relic_class = &"3"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"stun_duration_bonus"
+params = {
+"value": 1.0,
+"target": "common"
+}
+desc_pt = "Atordoamento aplicado dura 1 turno a mais em inimigos comuns."

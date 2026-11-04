@@ -72,3 +72,4 @@ xp_thresholds,0|40|100|180|280,Experiência acumulada por nível
 fallen_minor_injury_hp,1,Vida ao terminar o combate caído
 map_three_nodes_chance,0.5,Chance de uma camada do mapa ter 3 nós (senão 2)
 map_second_link_chance,0.5,Chance de um nó ligar também ao vizinho do caminho reto
+relic_slots_start,1,Espaços de relíquia de cada santo até o nível 4 (GDD §3)

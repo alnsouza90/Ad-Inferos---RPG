@@ -201,6 +201,7 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Nível do Portão definido pela vila | Portão nível 1 | Backlog do M1 |
 | Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
+| Relíquia encontrada | O jogador escolhe na hora um santo com espaço livre (1 espaço por santo até o nível 4, [relic_slots_start]); o efeito vale já no trecho. Sem espaço, vai para a mochila sem efeito até a vila | D-146 |
 | Encontros do círculo (§3) | Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*` | Backlog do M1 |
 | Ordem da equipe | Cada combate começa na ordem em que o anterior terminou (vale também depois do M1) | D-134 |
 | Saída do Pouso (§6) | Seguir ou retirada planejada encerram o trecho, com as Esmolas garantidas | Backlog do M1 |

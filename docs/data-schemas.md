@@ -185,6 +185,8 @@ Campos de `docs/specs/enemy-ai.md` §2. As condições ficam em `conditions` no 
 | `params` | chave=valor | |
 | `desc_pt` | texto | |
 
+Importado para `game/data/relics/<id>.tres` desde a T25, com `category`, `relic_class`, `rarity`, `origin` e `modifier` conferidos contra as listas desta seção e de §4; `source` aceita `relic_node` ou `milestone:N`.
+
 ### 3.12 `facilities.csv` e `economy.csv`
 
 - `facilities.csv`: `facility`, `level`, `unlock`, `cost`, `effect_key`, `value`, `desc_pt`.

@@ -19,6 +19,7 @@ const FOLDERS: Dictionary = {
 	"map_templates": "map_templates",
 	"starting_kits": "starting_kits",
 	"events": "events",
+	"relics": "relics",
 }
 
 var errors: Array[String] = []
