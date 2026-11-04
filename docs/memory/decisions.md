@@ -36,6 +36,12 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-118 · 04/11/2026 · Alan** — T17 aprovada (arena, botões de teste, APK). Falta o aceite no celular (instalar e jogar de 2 a 4 min). *PR #20.*
 - **D-119 · 04/11/2026 · Alan** — T17 não aprovada no celular: tela de combate deslocada. Corrigir antes de fechar o M0. *`lessons.md`, PR da correção.*
 - **D-120 · 04/11/2026 · Alan** — Correção da tela deslocada aprovada (PR #21); falta o novo teste no Redmi para fechar a T17. *`progress.md`.*
+- **D-121 · 04/11/2026 · Alan** — M1: a tela principal da expedição é o corredor da caminhada; no fim de cada corredor aparecem as entradas da próxima camada com o ícone do tipo de nó; um botão abre o mini-mapa do trecho inteiro. Detalha D-207. *`docs/backlog/m1.md` T18 e T27.*
+- **D-122 · 04/11/2026 · Alan** — Texto da Tentação do M1: o agente faz o rascunho seguindo `writing-guide.md` (origem `game_fiction`); Alan corrige e aprova antes do merge. *T23.*
+- **D-123 · 04/11/2026 · Alan** — Sem vila no M1, a expedição parte com um kit fixo de provisões definido pelo agente, com pelo menos 1 de cada: 2 Pães, 1 Vela, 2 Águas Bentas, 1 Ataduras, 1 Incenso (7 dos 8 espaços). *T22, `m1.md`.*
+- **D-124 · 04/11/2026 · Alan** — M1 sem elites: o nó variável sorteia só entre relíquia (35) e combate (25); relíquias do M1: Vela da Candelária, Cruz em tau e Crucifixo de madeira. *T25.*
+- **D-125 · 04/11/2026 · Alan** — Meta "vitória da heurística em combate difícil" (75–90%) passa a ser medida nos combates difíceis dentro de trechos simulados. Detalha D-113. *T31.*
+- **D-126 · 04/11/2026 · Alan** — Meta de Noite Escura no M1: "Noite Escura por trecho", com o valor aprovado por Alan depois do primeiro relatório; a meta da expedição longa (0,5–1,5) volta no M2. Detalha D-113. *T31.*
 
 ## Arte
 

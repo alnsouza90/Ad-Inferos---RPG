@@ -6,8 +6,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | --- | --- | --- |
 | ~~Corpo padrão de São Jorge em resolução maior~~ Alan enviou a v02 (848×1264) em 04/11/2026 | Alan | 03/11/2026 |
 | Brilho atrás da cabeça na imagem de Consolação de São Jorge: conferir no motor se briga com a auréola | T16 | 03/11/2026 |
-| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113) | M1 | 03/11/2026 |
-| Criar `docs/backlog/m1.md`: proposta feita em 04/11/2026; faltam as respostas de Alan às 5 perguntas do fim do arquivo (caminhada e mini-mapa, texto da Tentação, provisões sem vila, nó variável sem elites, metas D-113) | Alan | 03/11/2026 |
+| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126 | T31 (M1) | 03/11/2026 |
+| ~~Criar `docs/backlog/m1.md`~~ Proposta feita e perguntas respondidas por Alan em 04/11/2026 (D-121 a D-126) | Alan | 03/11/2026 |
 | Datas das festas dos santos (`feasts.csv`) | Pesquisa do Martirológio (Alan) | 03/11/2026 |
 | Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números) | T14+ / M1 | 03/11/2026 |
 | Fundos "xadrez" pintados na imagem (JPG não tem transparência): Diabo de Lodo, Sopro Errante, Sombra, Mãe-Enxame, Moscardo, Enxame e camada da frente do cenário. Ideal: PNG com transparência real ou fundo liso cinza; senão, recorte na T16 | Alan / T16 | 03/11/2026 |
