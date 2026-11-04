@@ -43,6 +43,9 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-125 · 04/11/2026 · Alan** — Meta "vitória da heurística em combate difícil" (75–90%) passa a ser medida nos combates difíceis dentro de trechos simulados. Detalha D-113. *T31.*
 - **D-126 · 04/11/2026 · Alan** — Meta de Noite Escura no M1: "Noite Escura por trecho", com o valor aprovado por Alan depois do primeiro relatório; a meta da expedição longa (0,5–1,5) volta no M2. Detalha D-113. *T31.*
 - **D-127 · 04/11/2026 · Alan** — Backlog do M1 aprovado (PR #24). Próxima tarefa: T18. *`docs/backlog/m1.md`.*
+- **D-128 · 04/11/2026 · Alan** — Mini-mapa da expedição só para consulta; a escolha do caminho é feita nas entradas do corredor. *`expedition.md` §2.3, `screens.md` §4.*
+- **D-129 · 04/11/2026 · Alan** — Incenso passa a revelar mais uma camada além do que o Portão mostra (nos nós ligados às entradas da bifurcação), ou anula a emboscada no Pouso. Substitui "revela os nós vizinhos". *`expedition.md` §2.2 e §5, caso E14.*
+- **D-130 · 04/11/2026 · Alan** — T18 aprovada (specs da caminhada e simplificações do M1). *PR #25.*
 
 ## Arte
 
