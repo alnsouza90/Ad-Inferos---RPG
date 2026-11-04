@@ -19,3 +19,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Ícones de intenção e de condição: hoje são palavras (`Ataque 6 na posição 1`) | Piloto de arte | 03/11/2026 |
 | Consolação de São Jorge: o brilho atrás da cabeça saiu quase todo no recorte, mas sobra uma faixa clara colada ao rosto; Alan julga no jogo se precisa de versão sem brilho | Alan | 03/11/2026 |
 | Compressão VRAM (ETC2/ASTC) das texturas de personagem: hoje importação padrão sem perda | T17 | 03/11/2026 |
+| Animação de combate "como Darkest Dungeon" (santo vai até o inimigo e ataca; defesa com reação): Alan achou a atual simples demais. Planejada na trava "abordagem de animação" do roadmap (arte final do M2, ADR-0007); proposta de antecipar como tarefa do M0/M1 aguardando decisão | Alan | 04/11/2026 |
+| Personagens pequenos na tela do celular (navegador sem tela cheia) | T17 (APK em tela cheia) | 04/11/2026 |
+| Forma de testar a auréola sem depender da sorte (botão de depuração para subir a desolação) | T17 | 04/11/2026 |
