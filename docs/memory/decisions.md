@@ -57,6 +57,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-139 · 04/11/2026 · Alan** — Tentação do Círculo 2 no M1: tema "O abrigo do vento" (voz na tempestade oferece abrigo numa tenda). Rascunho do agente em `docs/narrative/events/circle_02/c02_temptation_wind_shelter.yaml`, com números propostos, aguardando correção e aprovação de Alan (D-122). *T23.*
 - **D-140 · 04/11/2026 · Alan** — Números da Tentação "O abrigo do vento" aprovados: recusar −5 de Lume; chance 50% (+20% Bento, +20% Água Benta gasta); sucesso −15 de desolação; falha −1 de Esperança e +15 de desolação; rezar (Fé 3) −10 de desolação. *T23.*
 - **D-141 · 04/11/2026 · Alan** — A Tentação é o eco da tentação do Peregrino, que vai sempre à frente da companhia: os rastros dele parecem levar à tenda, mas ele nunca está lá; é a voz mentindo. Os santos nunca cedem; o que está em jogo é alcançar o Peregrino, por isso as virtudes mudam. Opções ganham textos de resultado opcionais (`result_pt`, `success_pt`, `failure_pt`). *T23, `narrative-system.md` §3, evento `c02_temptation_wind_shelter`.*
+- **D-142 · 04/11/2026 · Alan** — T23 aprovada, com o texto final de "O abrigo do vento". *PR #30.*
 
 ## Arte
 
