@@ -12,6 +12,8 @@ var saints: Dictionary = {}
 var encounters: Dictionary = {}
 ## leg number (int) -> MapTemplateDef used when the generator gives up.
 var reserves: Dictionary = {}
+## kit_id (StringName) -> StartingKitDef (M1: no village to buy from, D-123).
+var starting_kits: Dictionary = {}
 
 
 static func create(p_battle_catalog: BattleCatalog, p_economy: ConstantsDef, p_saints: Dictionary, p_encounters: Dictionary, p_reserves: Dictionary) -> ExpeditionCatalog:
@@ -23,6 +25,14 @@ static func create(p_battle_catalog: BattleCatalog, p_economy: ConstantsDef, p_s
 	c.encounters = p_encounters
 	c.reserves = p_reserves
 	return c
+
+
+func kit_provisions(kit_id: StringName) -> Array[StringName]:
+	var result: Array[StringName] = []
+	var kit: StartingKitDef = starting_kits.get(kit_id)
+	if kit != null:
+		result = kit.provisions.duplicate()
+	return result
 
 
 func saint(id: StringName) -> SaintDef:

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="StartingKitDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/starting_kit_def.gd" id="1_kit"]
+
+[resource]
+script = ExtResource("1_kit")
+id = &"m1_kit"
+provisions = Array[StringName]([&"bread", &"bread", &"candle", &"holy_water", &"holy_water", &"bandages", &"incense"])

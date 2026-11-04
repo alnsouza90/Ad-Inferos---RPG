@@ -17,6 +17,7 @@ const FOLDERS: Dictionary = {
 	"encounters": "encounters",
 	"provisions": "provisions",
 	"map_templates": "map_templates",
+	"starting_kits": "starting_kits",
 }
 
 var errors: Array[String] = []

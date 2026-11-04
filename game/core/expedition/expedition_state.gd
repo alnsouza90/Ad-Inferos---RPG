@@ -20,6 +20,10 @@ var alms_unbanked: int = 0
 var alms_banked: int = 0
 var party: Array[StringName] = []
 var fallen_once: Array[StringName] = []
+## Gate level (1 in the M1): pack slots and content visibility (§2.2, §5).
+var gate_level: int = 1
+## Nodes whose content Incense revealed; known until the end of the leg (D-137).
+var revealed_nodes: Array[StringName] = []
 
 
 ## New expedition from the gate, with full Light.
@@ -28,9 +32,19 @@ static func create(constants: ConstantsDef, p_circle: StringName, p_map_seed: in
 	state.circle = p_circle
 	state.map_seed = p_map_seed
 	state.party = p_party.duplicate()
-	state.provisions = p_provisions.duplicate()
+	for p: StringName in p_provisions:
+		var added: bool = state.add_provision(p, constants)
+		assert(added, "starting provisions exceed the pack: %s" % [p_provisions])
 	state.light = ExpeditionLight.start_value(constants)
 	return state
+
+
+## One unit per slot (§5). Returns false, changing nothing, when full (E04).
+func add_provision(provision_id: StringName, constants: ConstantsDef) -> bool:
+	if provisions.size() >= FieldProvisions.capacity(gate_level, constants):
+		return false
+	provisions.append(provision_id)
+	return true
 
 
 ## Expedition that starts from a consecrated camp (expedition §1 and §4).
@@ -62,6 +76,7 @@ func to_dict() -> Dictionary:
 		"current_node": String(current_node), "visited": _to_strings(visited), "light": light,
 		"provisions": _to_strings(provisions), "alms_unbanked": alms_unbanked, "alms_banked": alms_banked,
 		"party": _to_strings(party), "fallen_once": _to_strings(fallen_once),
+		"gate_level": gate_level, "revealed_nodes": _to_strings(revealed_nodes),
 	}
 
 
@@ -80,6 +95,8 @@ static func from_dict(data: Dictionary) -> ExpeditionState:
 	state.alms_banked = int(data.get("alms_banked", 0))
 	state.party = _to_names(data.get("party", []))
 	state.fallen_once = _to_names(data.get("fallen_once", []))
+	state.gate_level = int(data.get("gate_level", 1))
+	state.revealed_nodes = _to_names(data.get("revealed_nodes", []))
 	return state
 
 

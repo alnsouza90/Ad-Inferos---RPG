@@ -59,6 +59,9 @@ static func constants() -> ConstantsDef:
 		"node_weight_elite": 40.0,
 		"node_weight_relic": 35.0,
 		"node_weight_battle": 25.0,
+		"gate_slots_l1": 8.0,
+		"gate_slots_l2": 10.0,
+		"gate_slots_l3": 12.0,
 	}
 	return c
 
