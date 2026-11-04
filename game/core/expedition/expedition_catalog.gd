@@ -43,7 +43,7 @@ func kit_provisions(kit_id: StringName) -> Array[StringName]:
 func events_for(type: StringName, circle: int) -> Array[EventDef]:
 	var result: Array[EventDef] = []
 	var ids: Array = events.keys()
-	ids.sort()
+	ids.sort_custom(_by_text)
 	for id: Variant in ids:
 		var e: EventDef = events[id]
 		if e.type == type and e.circle == circle:
@@ -63,7 +63,7 @@ func relic_node_pool() -> Array[StringName]:
 		var r: RelicDef = relics[id]
 		if r.source == "relic_node" and r.category == &"sacramental" and RelicEffects.IMPLEMENTED.has(r.modifier):
 			result.append(id)
-	result.sort()
+	result.sort_custom(_by_text)
 	return result
 
 
@@ -83,5 +83,11 @@ func encounter_pool(circle: int, pool: StringName) -> Array[StringName]:
 		var e: EncounterDef = encounters[id]
 		if e.circle == circle and e.pool == pool:
 			result.append(id)
-	result.sort()
+	result.sort_custom(_by_text)
 	return result
+
+
+## Sort by the text of the id. A plain sort() of StringName does not follow
+## alphabetical order, and draws must not depend on that (T25).
+static func _by_text(a: Variant, b: Variant) -> bool:
+	return str(a) < str(b)

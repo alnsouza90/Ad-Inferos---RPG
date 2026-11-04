@@ -12,6 +12,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 - Referência circular entre `RefCounted` vaza memória: o motor de condições guarda o `BattleState` por `weakref`.
 - CSV dentro de `res://` é importado como tradução: pastas de saída levam `.gdignore`.
 
+- `Array[StringName].sort()` **não** segue a ordem alfabética (compara outra coisa que não o texto). Para ordem estável de IDs, use `sort_custom` comparando `str(a) < str(b)` (T25).
+
 ## GUT e CI
 
 - O GUT **ignora em silêncio** um script de teste com erro de sintaxe e ainda diz "All tests passed". O CI falha se aparecer "Ignoring script", "Parse Error" ou "SCRIPT ERROR".
