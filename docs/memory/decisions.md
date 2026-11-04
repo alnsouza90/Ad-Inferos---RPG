@@ -42,6 +42,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-124 · 04/11/2026 · Alan** — M1 sem elites: o nó variável sorteia só entre relíquia (35) e combate (25); relíquias do M1: Vela da Candelária, Cruz em tau e Crucifixo de madeira. *T25.*
 - **D-125 · 04/11/2026 · Alan** — Meta "vitória da heurística em combate difícil" (75–90%) passa a ser medida nos combates difíceis dentro de trechos simulados. Detalha D-113. *T31.*
 - **D-126 · 04/11/2026 · Alan** — Meta de Noite Escura no M1: "Noite Escura por trecho", com o valor aprovado por Alan depois do primeiro relatório; a meta da expedição longa (0,5–1,5) volta no M2. Detalha D-113. *T31.*
+- **D-127 · 04/11/2026 · Alan** — Backlog do M1 aprovado (PR #24). Próxima tarefa: T18. *`docs/backlog/m1.md`.*
 
 ## Arte
 
