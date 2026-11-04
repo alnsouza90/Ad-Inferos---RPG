@@ -37,3 +37,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Cenário do Círculo 2, trecho 1: os originais têm só 1584×672; ampliados para 2560×1080 ficam pouco nítidos. Pedir versão maior (e a camada `_mid` emendável) para a arte final | Alan (M2) | 04/11/2026 |
 | Caminhada: entradas são retângulos com texto e o andar é só um deslize com balanço; ícones de tipo de nó, desenhos de porta/caverna/escada e animação de andar ficam para o M2 (D-210) | M2 | 04/11/2026 |
 | ~~Ilustração do evento "O abrigo do vento" em tamanho maior~~ v02 recebida com 1376×768 (D-153); se houver versão ≥ 1920×1080, fica mais nítida | Alan (T28) | 04/11/2026 |
+| Tela do evento: fonte própria (com itálico de verdade) e moldura de pergaminho da caixa de texto ficam para a arte de interface (M2) | M2 | 04/11/2026 |
