@@ -68,6 +68,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-150 · 04/11/2026 · Alan** — T27 aprovada (tela da caminhada, bifurcações, mini-mapa e teste pela arena), com os textos novos de `ui_text.csv`. *PR #34.*
 - **D-151 · 04/11/2026 · Alan** — Tela do evento (T28): o agente escolhe onde aparece o nome de quem fala; Alan revisa ao testar. Proposta: nome numa aba sobre o canto esquerdo da caixa de texto; o narrador fica sem nome (texto em itálico). A ilustração do evento vem de Alan (prompt do agente); sem ela, a tela usa o fundo do Círculo 2 escurecido. *T28.*
 - **D-152 · 04/11/2026 · Alan** — O falante `demon_tempter` aparece como "A voz na tempestade". Ilustração de "O abrigo do vento" aprovada por Alan (tenda iluminada na tempestade, rastros na areia); chegou pelo chat com só 512×286, guardada em `art_source/events/circle_02/` como v01 provisória; falta o arquivo em tamanho cheio. *T28, `ui_text.csv`.*
+- **D-153 · 04/11/2026 · Alan** — Nova ilustração de "O abrigo do vento" (v02, 1376×768: tenda iluminada, relâmpagos, árvores secas, rastros) substitui a v01; é a usada na T28, ampliada para 1920×1080. *`art_source/events/circle_02/`.*
 
 ## Arte
 
