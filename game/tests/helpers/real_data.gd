@@ -41,6 +41,17 @@ static func battle(encounter_id: String, seed: int, provisions: Array[StringName
 	return BattleState.create(catalog(), m0_party(), foes, provisions, enc.type, seed)
 
 
+## Everything an expedition needs, from the CSVs (T21).
+static func expedition_catalog() -> ExpeditionCatalog:
+	var imp := importer()
+	return ExpeditionCatalog.create(catalog(), imp.economy, _keys(imp.saints), _keys(imp.encounters), {1: imp.map_templates["leg1_reserve"]})
+
+
+static func m0_party_ids() -> Array[StringName]:
+	var ids: Array[StringName] = [&"saint_george", &"saint_benedict", &"saint_therese"]
+	return ids
+
+
 ## The screens' data bundle (GameData) built from the CSVs, not game/data.
 static func game_data() -> GameData:
 	var imp := importer()

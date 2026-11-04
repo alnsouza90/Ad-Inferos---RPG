@@ -7,6 +7,7 @@ extends RefCounted
 const DATA_ROOT: String = "res://data"
 const CONSTANTS_PATH: String = "res://data/constants.tres"
 const UI_TEXT_PATH: String = "res://data/ui_text.tres"
+const ECONOMY_PATH: String = "res://data/economy.tres"
 ## Generated folders and the importer dictionary that fills each one.
 const FOLDERS: Dictionary = {
 	"saints": "saints",
@@ -48,7 +49,7 @@ func run(source_dir: String, check_only: bool) -> bool:
 	if not importer.import_tables(read_tables(source_dir)):
 		errors.append_array(importer.errors)
 		return false
-	var wanted: Dictionary = {CONSTANTS_PATH: importer.constants, UI_TEXT_PATH: importer.ui_text}
+	var wanted: Dictionary = {CONSTANTS_PATH: importer.constants, ECONOMY_PATH: importer.economy, UI_TEXT_PATH: importer.ui_text}
 	for folder: String in FOLDERS:
 		var defs: Dictionary = importer.get(FOLDERS[folder])
 		for id: String in defs:

@@ -9,6 +9,7 @@ extends RefCounted
 
 const TABLE_COLUMNS: Dictionary = {
 	"constants": ["key", "value", "description"],
+	"economy": ["key", "value", "description"],
 	"conditions": ["id", "kind", "polarity", "max_stacks", "stacking", "decay", "tick", "consume_on", "resisted_by_will", "hook", "icon", "display_priority", "name_pt", "desc_pt"],
 	"traits": ["id", "owner", "name_pt", "trigger", "hook", "params", "desc_pt"],
 	"camp_skills": ["id", "owner", "name_pt", "effect", "params", "desc_pt"],
@@ -69,6 +70,8 @@ const MAX_ENEMY_SLOTS: int = 4
 
 var errors: Array[String] = []
 var constants: ConstantsDef
+## Alms, prices and multipliers from economy.csv (same format as constants).
+var economy: ConstantsDef
 var conditions: Dictionary = {}
 var traits: Dictionary = {}
 var camp_skills: Dictionary = {}
@@ -124,13 +127,17 @@ func import_tables(texts: Dictionary) -> bool:
 # --- tables ---------------------------------------------------------------
 
 func _build_constants() -> void:
-	constants = ConstantsDef.new()
-	var t: CsvTable = _tables["constants"]
+	constants = _key_values(_tables["constants"])
+	economy = _key_values(_tables["economy"])
+
+
+func _key_values(t: CsvTable) -> ConstantsDef:
+	var kv := ConstantsDef.new()
 	for i: int in t.rows.size():
 		var row: Dictionary = t.rows[i]
 		var line: int = t.line_numbers[i]
 		var key: String = row["key"]
-		if not _check_id(t, line, key, constants.values):
+		if not _check_id(t, line, key, kv.values):
 			continue
 		var raw: String = row["value"]
 		if "|" in raw:
@@ -139,12 +146,13 @@ func _build_constants() -> void:
 				if not part.is_valid_float():
 					_err("bad_number", t.file_name, line, "valor '%s' não é número" % raw)
 				list.append(part.to_float())
-			constants.values[key] = list
+			kv.values[key] = list
 		elif raw.is_valid_float():
-			constants.values[key] = raw.to_float()
+			kv.values[key] = raw.to_float()
 		else:
 			_err("bad_number", t.file_name, line, "valor '%s' não é número" % raw)
-		constants.descriptions[key] = row["description"]
+		kv.descriptions[key] = row["description"]
+	return kv
 
 
 func _build_conditions() -> void:

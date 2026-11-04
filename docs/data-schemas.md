@@ -188,7 +188,7 @@ Campos de `docs/specs/enemy-ai.md` §2. As condições ficam em `conditions` no 
 ### 3.12 `facilities.csv` e `economy.csv`
 
 - `facilities.csv`: `facility`, `level`, `unlock`, `cost`, `effect_key`, `value`, `desc_pt`.
-- `economy.csv`: `key`, `value`, `description` (custos, recompensas, multiplicadores).
+- `economy.csv`: `key`, `value`, `description` (custos, recompensas, multiplicadores). Importado como `game/data/economy.tres` (`ConstantsDef`, mesmo formato de `constants.csv`) desde a T21.
 
 ### 3.13 `feasts.csv`
 
