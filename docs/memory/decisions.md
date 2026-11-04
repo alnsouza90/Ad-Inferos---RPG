@@ -53,6 +53,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-135 · 04/11/2026 · Alan** — T21 aprovada (controlador da expedição, comandos e estado dos santos entre combates). *PR #28.*
 - **D-136 · 04/11/2026 · Alan** — Ataduras só podem ser usadas em combate (o Sangramento acaba com o combate); fora dele aparecem indisponíveis com o motivo. Pão fora do combate só serve para descansar no Pouso. *T22, `FieldProvisions`, `expedition.md` §5.*
 - **D-137 · 04/11/2026 · Alan** — O que o Incenso revela fica conhecido até o fim do trecho. *T22, `ExpeditionState.revealed_nodes`, `expedition.md` §2.2.*
+- **D-138 · 04/11/2026 · Alan** — T22 aprovada (kit de partida, mochila, provisões fora do combate e correção da Água Benta, D-317). *PR #29.*
 
 ## Arte
 
