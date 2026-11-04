@@ -49,13 +49,7 @@ static func gain_multiplier(saint: Combatant, ctx: DesolationContext) -> float:
 
 ## Light bands apply only during expeditions (light < 0 means none).
 static func light_multiplier(ctx: DesolationContext) -> float:
-	if ctx.light < 0:
-		return 1.0
-	if ctx.light >= ctx.constants.get_int(&"light_high_threshold"):
-		return ctx.constants.get_float(&"light_high_desolation_mult")
-	if ctx.light <= ctx.constants.get_int(&"light_low_threshold"):
-		return ctx.constants.get_float(&"light_low_desolation_mult")
-	return 1.0
+	return ExpeditionLight.desolation_multiplier(ctx.light, ctx.constants)
 
 
 static func faith_chance(saint: Combatant, ctx: DesolationContext) -> float:

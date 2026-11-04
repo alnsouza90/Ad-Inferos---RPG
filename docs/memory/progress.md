@@ -4,7 +4,7 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 
 ## Onde estamos
 
-- **Marco atual:** M1 · Protótipo de trecho (`docs/backlog/m1.md`, tarefas T18 a T32). Perguntas de design respondidas por Alan em 04/11/2026 (D-121 a D-126); backlog aprovado e com merge (PR #24, D-127). T18 aprovada (PR #25, D-130). Próxima tarefa: T19 (estado da expedição e Lume).
+- **Marco atual:** M1 · Protótipo de trecho (`docs/backlog/m1.md`, tarefas T18 a T32). Perguntas de design respondidas por Alan em 04/11/2026 (D-121 a D-126); backlog aprovado e com merge (PR #24, D-127). T18 aprovada (PR #25, D-130). T19 (estado da expedição e Lume) em PR, aguardando Alan.
 - **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026); T16 · auréola no motor com a arte piloto de São Jorge (PR #18, aprovado por Alan em 03/11/2026).
 - **Jogo no navegador:** https://alnsouza90.github.io/Ad-Inferos---RPG/ (publicado a cada merge na `main`).
 - **Concluído também:** complemento da T16 com a arte nova de Jorge (PR #19, aprovado em 04/11/2026, D-204, D-205).

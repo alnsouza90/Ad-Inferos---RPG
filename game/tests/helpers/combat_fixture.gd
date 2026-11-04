@@ -46,6 +46,13 @@ static func constants() -> ConstantsDef:
 		"light_low_threshold": 24.0,
 		"light_high_desolation_mult": 0.8,
 		"light_low_desolation_mult": 1.3,
+		"light_low_enemy_damage_mult": 1.1,
+		"light_low_alms_mult": 1.5,
+		"light_high_ambush_mult": 0.5,
+		"light_start": 100.0,
+		"light_resume": 75.0,
+		"light_per_node": 5.0,
+		"candle_light": 25.0,
 	}
 	return c
 

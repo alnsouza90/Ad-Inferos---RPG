@@ -27,6 +27,7 @@ static func compute(state: BattleState, attacker: Combatant, target: Combatant, 
 	value *= fury_multiplier(attacker)
 	value *= affinity_multiplier(state, attacker, effect.damage_type)
 	value *= relic_multiplier(attacker, effect.damage_type)
+	value *= light_multiplier(state, attacker)
 	value *= consolation_multiplier(constants, attacker)
 	var warded: bool = target.has_condition(&"ward")
 	if warded:
@@ -84,6 +85,14 @@ static func consolation_multiplier(constants: ConstantsDef, actor: Combatant) ->
 	if actor != null and actor.spirit_state == &"consolation":
 		return constants.get_float(&"consolation_output_mult")
 	return 1.0
+
+
+## Low Light (expedition §4): enemies deal more damage. Saints, the Duel
+## counter-attack and hazards (no attacker) are unaffected.
+static func light_multiplier(state: BattleState, attacker: Combatant) -> float:
+	if attacker == null or attacker.is_saint():
+		return 1.0
+	return ExpeditionLight.enemy_damage_multiplier(state.light, state.constants)
 
 
 ## Relics: after M0.
