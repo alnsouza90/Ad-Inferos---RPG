@@ -28,6 +28,19 @@ Qualquer tela ─► Pausa (Opções, Salvar e sair)
 
 No M0 só existem: **Abertura → Arena de teste → Combate → Resultado**, com um seletor de encontro e semente.
 
+No M1 (protótipo de trecho):
+
+```text
+Abertura → Título ─┬─ Continuar ───► (último ponto salvo)
+                   └─ Novo trecho ─► Caminhada ─┬─ Combate ─► Recompensa ─┐
+                                                ├─ Tentação ──────────────┤
+                                                ├─ Relíquia ──────────────┤
+                                                │     ◄──── volta ao corredor ┘
+                                                └─ Pouso ─► (emboscada?) ─► Resumo do trecho
+```
+
+A arena do M0 continua acessível só na versão de desenvolvimento.
+
 ## 3. Combate (tela principal do jogo)
 
 ```text
@@ -56,11 +69,28 @@ No M0 só existem: **Abertura → Arena de teste → Combate → Resultado**, co
 - Santo que já agiu fica esmaecido. "Encerrar turno" pede confirmação se ainda houver santo sem agir.
 - **Velocidade:** 1×, 2× e instantâneo (preferência salva em `settings.json`).
 
-## 4. Mapa da expedição
+## 4. Caminhada da expedição (corredor) e mini-mapa
 
-- Camadas da esquerda para a direita; ícone do tipo de cada nó sempre visível, conteúdo revelado conforme o Portão.
-- Topo: Lume (barra e número), Esmolas garantidas e não garantidas, provisões.
-- Tocar num nó vizinho mostra o que se sabe dele; segundo toque confirma a ida.
+Regras em `specs/expedition.md` §2.3 (D-207, D-121).
+
+```text
+┌──────────────────────────────────────────────────────────────────────────┐
+│ [Pausa] Lume ▮▮▮▮▮▮▮▮▯▯ 80   Esmolas 70 (+140 não garantidas)  [Mini-mapa]│ ← barra superior
+│                                                                          │
+│   (fundo com parallax)                          ┌────┐                   │
+│                                                 │porta│  ⚔ Combate       │ ← desvio
+│   Teres  Bento  Jorge  ───── andam ─────►       └────┘                   │
+│                                                        ═══► ✦ Tentação   │ ← segue reto
+│                                                                          │
+│ [Provisões]                                         [painel da entrada]  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+- A equipe anda da esquerda para a direita. A velocidade da caminhada segue a preferência de animação (1×, 2×, instantâneo).
+- Na bifurcação, cada entrada mostra o ícone do tipo de nó e o nome do tipo em texto (nunca só o ícone). Tocar mostra no painel o que se sabe do nó; o segundo toque confirma a ida.
+- Barra superior: Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo.
+- **Mini-mapa:** sobreposto ao corredor, camadas da esquerda para a direita, ícone do tipo de todo nó, ligações, caminho já feito e posição atual. Só consulta; fecha com um toque fora ou no botão.
+- Arte do M1: provisória (cenário do Círculo 2, trecho 1, e retângulos para as entradas); Jorge usa a arte que já existe. Arte final e animação de andar no M2 (D-210).
 
 ## 5. Pouso e Vigília
 
