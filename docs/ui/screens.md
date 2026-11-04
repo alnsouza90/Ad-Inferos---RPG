@@ -98,6 +98,7 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121).
 - Retratos dos 3 santos com vida e desolação; para cada um, os botões de atividade.
 - Botões fixos: Descansar (mostra o custo de 1 Pão), Seguir, Retirada planejada.
 - O resultado da emboscada aparece depois de confirmar as atividades.
+- No M1: cartão por santo (retrato, vida, desolação, ferimento) com os botões de atividade; Partilha e atividades próprias de alvo pedem o santo; Descansar, Seguir e Retirada planejada confirmam no segundo toque; o resultado lista o que mudou e a emboscada (D-323).
 
 ## 6. Evento narrativo
 
