@@ -825,6 +825,8 @@ func _event_option(raw: Dictionary, file: String) -> Dictionary:
 		_err("missing_value", file, 0, "opção '%s' sem text_pt" % id)
 	var o: Dictionary = {
 		"id": id, "text_pt": str(raw.get("text_pt", "")), "safe": raw.get("safe", false) == true,
+		"result_pt": str(raw.get("result_pt", "")), "success_pt": str(raw.get("success_pt", "")),
+		"failure_pt": str(raw.get("failure_pt", "")),
 		"requires": _event_requirements(raw.get("requires"), file),
 		"chance": {}, "outcomes": _event_outcomes(raw.get("outcomes"), file),
 		"on_success": _event_outcomes(raw.get("on_success"), file),

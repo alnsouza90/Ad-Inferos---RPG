@@ -29,7 +29,7 @@ func _step(ctrl: ExpeditionController) -> void:
 		ExpeditionController.Phase.IN_NODE:
 			_ok(ctrl, ExpeditionCommand.complete_node())
 		ExpeditionController.Phase.IN_EVENT:
-			_ok(ctrl, ExpeditionCommand.choose_option(&"refuse"))
+			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
 		ExpeditionController.Phase.IN_BATTLE:
 			_ok(ctrl, ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 
@@ -50,7 +50,7 @@ func _go_to_battle(ctrl: ExpeditionController) -> void:
 			_ok(ctrl, ExpeditionCommand.complete_node())
 			continue
 		if ctrl.phase == ExpeditionController.Phase.IN_EVENT:
-			_ok(ctrl, ExpeditionCommand.choose_option(&"refuse"))
+			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
 			continue
 		var pick: MapNode = ctrl.entrances()[0]
 		for n: MapNode in ctrl.entrances():

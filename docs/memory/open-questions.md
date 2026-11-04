@@ -32,5 +32,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Tempo de um combate no APK (meta do M0: 2 a 4 minutos) ainda não medido | Alan | 04/11/2026 |
 | ~~Tela do milagre de São Jorge: em D-210 Alan citou "Jorge atacando com o cavalo", mas a folha `prompts-splash.md` pede Jorge a pé, erguendo a lança, e exclui cavalo e dragão. Confirmar qual vale antes de gerar~~ Vale a folha: a pé, sem cavalo (D-214) | Alan | 04/11/2026 |
 | ~~Incenso "revela nós vizinhos" (`expedition.md` §2.2 e §5): com o Portão nível 1, o conteúdo da próxima camada já aparece, então o Incenso só serviria para anular a emboscada. Decidir se ele passa a revelar mais uma camada à frente (mudança de regra)~~ Decidido: revela mais uma camada (D-129) | Alan (T18/T22) | 04/11/2026 |
-| Texto e números da Tentação do Círculo 2 ("O abrigo do vento"): rascunho do agente aguardando correção e aprovação | Alan (T23) | 04/11/2026 |
+| Texto da Tentação do Círculo 2 ("O abrigo do vento"), revisto como eco do Peregrino (D-141): aguardando a aprovação final; números aprovados (D-140) | Alan (T23) | 04/11/2026 |
 | Nomes dos falantes dos eventos (`narrator`, `demon_tempter`) na tela: definir onde ficam os nomes exibidos | T28 | 04/11/2026 |

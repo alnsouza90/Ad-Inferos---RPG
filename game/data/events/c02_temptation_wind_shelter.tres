@@ -11,18 +11,21 @@ title_pt = "O abrigo do vento"
 origin = &"game_fiction"
 pages = [{
 "speaker": "narrator",
-"text_pt": "O vento do segundo círculo não cessa. Entre as rajadas, a companhia avista uma tenda clara, quieta, como se a tempestade não a tocasse."
+"text_pt": "O vento do segundo círculo não cessa. Na areia revolvida, os rastros do Peregrino parecem desviar do caminho e entrar numa tenda clara, quieta, como se a tempestade não a tocasse."
 }, {
 "speaker": "demon_tempter",
-"text_pt": "Por que lutar contra o vento? Entrai. Aqui há calor, perfume e silêncio. Ninguém vos cobrará o caminho por uma noite."
+"text_pt": "Ele estava cansado de lutar contra o vento. Aqui há calor, perfume e silêncio. Deixai-o descansar. Por que arrancá-lo daqui?"
 }, {
 "speaker": "narrator",
-"text_pt": "O Peregrino sente o cansaço pesar nos ombros. Os santos aguardam a sua decisão."
+"text_pt": "De dentro da tenda, nenhum som. Os santos se entreolham."
 }]
 options = [{
-"id": "refuse",
-"text_pt": "Recusar e seguir contra o vento",
+"id": "follow_tracks",
+"text_pt": "Seguir os rastros pela tempestade",
 "safe": true,
+"result_pt": "A companhia dá as costas à tenda. Mais adiante, sob a areia, os rastros verdadeiros do Peregrino seguem contra o vento.",
+"success_pt": "",
+"failure_pt": "",
 "requires": [],
 "chance": {},
 "outcomes": [{
@@ -34,9 +37,12 @@ options = [{
 "on_success": [],
 "on_failure": []
 }, {
-"id": "watchful_shelter",
-"text_pt": "Abrigar-se à entrada, sem baixar a guarda",
+"id": "enter_tent",
+"text_pt": "Entrar na tenda atrás do Peregrino",
 "safe": false,
+"result_pt": "",
+"success_pt": "A tenda está vazia. Era só a voz, imitando os passos dele. A ilusão se desfaz, e os santos reencontram os rastros verdadeiros.",
+"failure_pt": "A tenda está vazia, mas o perfume pesa e o tempo escorre. Quando os santos saem, o vento já apagou os rastros; lá adiante, o Peregrino caminha mais só.",
 "requires": [],
 "chance": {
 "base": 0.5,
@@ -71,9 +77,12 @@ options = [{
 "amount": 15.0
 }]
 }, {
-"id": "pray_through",
-"text_pt": "Rezar e atravessar a tempestade",
+"id": "pray_for_pilgrim",
+"text_pt": "Rezar pelo Peregrino diante da tenda",
 "safe": false,
+"result_pt": "A oração atravessa a tempestade. A tenda se desfaz em pano e areia, e os rastros verdadeiros reaparecem adiante.",
+"success_pt": "",
+"failure_pt": "",
 "requires": [{
 "type": "virtue_at_least",
 "id": "virtue_faith",

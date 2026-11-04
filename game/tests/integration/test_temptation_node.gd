@@ -42,14 +42,16 @@ func test_temptation_node_opens_the_circle_2_temptation() -> void:
 	var ctrl := _new(cat)
 	_go_to_temptation(ctrl)
 	assert_eq(ctrl.event.id, &"c02_temptation_wind_shelter")
-	assert_eq(ctrl.option_problem(&"refuse"), &"")
+	assert_eq(ctrl.option_problem(&"follow_tracks"), &"")
+	assert_false(str(ctrl.event.option(&"enter_tent")["success_pt"]).is_empty(), "texto do resultado importado")
+	assert_false(str(ctrl.event.option(&"follow_tracks")["result_pt"]).is_empty())
 
 
-func test_refusing_costs_5_light_and_moves_on() -> void:
+func test_following_the_tracks_costs_5_light_and_moves_on() -> void:
 	var ctrl := _new(cat)
 	_go_to_temptation(ctrl)
 	var light: int = ctrl.state.light
-	_ok(ctrl, ExpeditionCommand.choose_option(&"refuse"))
+	_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
 	assert_eq(ctrl.state.light, light - 5)
 	assert_null(ctrl.event)
 	assert_true(ctrl.phase == ExpeditionController.Phase.AT_FORK or ctrl.phase == ExpeditionController.Phase.AT_CAMP)
@@ -58,21 +60,21 @@ func test_refusing_costs_5_light_and_moves_on() -> void:
 func test_N01_praying_needs_faith_3_and_is_refused_with_faith_2() -> void:
 	var ctrl := _new(cat)
 	_go_to_temptation(ctrl)
-	assert_eq(ctrl.option_problem(&"pray_through"), ExpeditionController.REJECT_REQUIREMENT)
-	assert_eq(ctrl.execute(ExpeditionCommand.choose_option(&"pray_through")), ExpeditionController.REJECT_REQUIREMENT)
+	assert_eq(ctrl.option_problem(&"pray_for_pilgrim"), ExpeditionController.REJECT_REQUIREMENT)
+	assert_eq(ctrl.execute(ExpeditionCommand.choose_option(&"pray_for_pilgrim")), ExpeditionController.REJECT_REQUIREMENT)
 	ctrl.virtues.change(Virtues.FAITH, 1, cat.constants)
-	assert_eq(ctrl.option_problem(&"pray_through"), &"")
+	assert_eq(ctrl.option_problem(&"pray_for_pilgrim"), &"")
 
 
-func test_N03_benedict_and_holy_water_raise_the_shelter_chance_to_90() -> void:
+func test_N03_benedict_and_holy_water_raise_the_tent_chance_to_90() -> void:
 	var ctrl := _new(cat)
 	_go_to_temptation(ctrl)
-	assert_almost_eq(ctrl.option_chance(&"watchful_shelter"), 0.9, 0.0001, "0,5 + Bento 0,2 + Água Benta 0,2")
+	assert_almost_eq(ctrl.option_chance(&"enter_tent"), 0.9, 0.0001, "0,5 + Bento 0,2 + Água Benta 0,2")
 	ctrl.state.provisions.clear()
-	assert_almost_eq(ctrl.option_chance(&"watchful_shelter"), 0.7, 0.0001)
+	assert_almost_eq(ctrl.option_chance(&"enter_tent"), 0.7, 0.0001)
 
 
-func test_shelter_consumes_holy_water_and_applies_success_or_failure() -> void:
+func test_entering_the_tent_consumes_holy_water_and_applies_success_or_failure() -> void:
 	for seed: int in 6:
 		var ctrl := _new(cat, seed)
 		_go_to_temptation(ctrl)
@@ -80,7 +82,7 @@ func test_shelter_consumes_holy_water_and_applies_success_or_failure() -> void:
 		var before: Dictionary = {}
 		for id: StringName in ctrl.saints:
 			before[id] = (ctrl.saints[id] as SaintStatus).desolation
-		_ok(ctrl, ExpeditionCommand.choose_option(&"watchful_shelter"))
+		_ok(ctrl, ExpeditionCommand.choose_option(&"enter_tent"))
 		assert_eq(ctrl.state.provisions.count(&"holy_water"), waters - 1, "Água Benta gasta pelo modificador")
 		var resolved: Dictionary = ctrl.history.filter(func(h: Dictionary) -> bool: return h["type"] == ExpeditionController.EV_EVENT_RESOLVED)[0]
 		var success: bool = resolved["data"]["success"]
@@ -96,7 +98,7 @@ func test_shelter_consumes_holy_water_and_applies_success_or_failure() -> void:
 func test_event_choices_are_logged_and_replay_exactly() -> void:
 	var ctrl := _new(cat, 2)
 	_go_to_temptation(ctrl)
-	_ok(ctrl, ExpeditionCommand.choose_option(&"watchful_shelter"))
+	_ok(ctrl, ExpeditionCommand.choose_option(&"enter_tent"))
 	var again := ExpeditionController.replay(cat, ctrl.initial_snapshot(), ctrl.command_log)
 	assert_eq(JSON.stringify(again.snapshot()), JSON.stringify(ctrl.snapshot()))
 

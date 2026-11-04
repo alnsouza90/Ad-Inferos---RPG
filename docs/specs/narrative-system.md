@@ -39,6 +39,7 @@ options:
   - id: refuse
     text_pt: "Recusar e seguir"
     safe: true                  # toda Tentação tem pelo menos uma opção segura
+    result_pt: "..."            # opcional: texto mostrado depois da escolha (D-141)
     outcomes:
       - { type: light, amount: -5 }
   - id: accept
@@ -48,6 +49,8 @@ options:
       modifiers:
         - { if: saint_in_party, id: saint_benedict, add: 0.2 }
         - { if: provision, id: holy_water, add: 0.2, consume: true }
+    success_pt: "..."           # opcionais: textos do sucesso e da falha (D-141)
+    failure_pt: "..."
     on_success:
       - { type: provisions, id: bread, amount: 2 }
     on_failure:
