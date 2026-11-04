@@ -35,6 +35,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-117 · 04/11/2026 · Alan** — A T17 inclui botões de teste (só na versão de desenvolvimento) para aumentar e diminuir a desolação e para pôr um santo em Consolação, para ver a auréola mudar. *`docs/backlog/m0.md` T17.*
 - **D-118 · 04/11/2026 · Alan** — T17 aprovada (arena, botões de teste, APK). Falta o aceite no celular (instalar e jogar de 2 a 4 min). *PR #20.*
 - **D-119 · 04/11/2026 · Alan** — T17 não aprovada no celular: tela de combate deslocada. Corrigir antes de fechar o M0. *`lessons.md`, PR da correção.*
+- **D-120 · 04/11/2026 · Alan** — Correção da tela deslocada aprovada (PR #21); falta o novo teste no Redmi para fechar a T17. *`progress.md`.*
 
 ## Arte
 
