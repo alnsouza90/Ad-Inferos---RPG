@@ -40,6 +40,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 
 - **D-202 · 03/11/2026 · Alan** — Teresinha: a imagem com muitas pétalas é a Consolação; a com poucas pétalas é o estado padrão. *`art_source/characters/saints/saint_therese/`.*
 - **D-203 · 03/11/2026 · Alan** — Depois de jogar a T15 no navegador (toque e leitura OK), Alan manteve o plano original: a T16 traz só São Jorge e a auréola; o resto da arte recebida (Bento, Teresinha, inimigos, cenário) entra depois. O seletor de encontro fica para a T17. *`progress.md`.*
+- **D-204 · 04/11/2026 · Alan** — Alan gerou arte nova de São Jorge (pose normal melhor, pose neutra para recorte, ataque, golpe recebido, queda e retrato) e pediu para testar antes da T17. As poses entram na animação no motor (troca de imagem durante o movimento); a animação completa estilo Darkest Dungeon segue no M2 (D-116). *ADR-0007 (atualização), PR do complemento da T16.*
 
 ## Técnicas (do agente)
 

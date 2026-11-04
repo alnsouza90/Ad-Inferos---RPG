@@ -125,6 +125,10 @@ func test_george_has_art_and_his_halo_follows_desolation() -> void:
 	assert_true(view.has_art(), "Jorge aparece com a arte do piloto")
 	assert_not_null(view.figure_texture())
 	assert_false(screen.view_of(&"saint_benedict").has_art(), "os outros continuam retângulos (D-203)")
+	assert_not_null(screen.portrait_texture(), "o retrato de Jorge aparece na barra de ações")
+	screen.tap(&"saint_benedict")
+	assert_null(screen.portrait_texture(), "Bento ainda não tem retrato")
+	screen.tap(&"saint_george")
 	var full: float = view.halo().brightness()
 	screen.ctrl.state.find(&"saint_george").desolation = 99
 	screen.tap(&"saint_george")
