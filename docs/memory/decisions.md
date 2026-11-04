@@ -46,6 +46,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-128 · 04/11/2026 · Alan** — Mini-mapa da expedição só para consulta; a escolha do caminho é feita nas entradas do corredor. *`expedition.md` §2.3, `screens.md` §4.*
 - **D-129 · 04/11/2026 · Alan** — Incenso passa a revelar mais uma camada além do que o Portão mostra (nos nós ligados às entradas da bifurcação), ou anula a emboscada no Pouso. Substitui "revela os nós vizinhos". *`expedition.md` §2.2 e §5, caso E14.*
 - **D-130 · 04/11/2026 · Alan** — T18 aprovada (specs da caminhada e simplificações do M1). *PR #25.*
+- **D-131 · 04/11/2026 · Alan** — T19 aprovada (estado da expedição e Lume; +10% de dano inimigo com Lume baixo na fórmula de dano). *PR #26.*
 
 ## Arte
 
