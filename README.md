@@ -31,6 +31,28 @@ RPG tático por turnos para Android. Uma companhia de três santos segue um Pere
 3. Clonar este repositório.
 4. Abrir o Claude Code na raiz do repositório e começar pela tarefa `T00` de `docs/backlog/m0.md`.
 
+## Jogar a versão de teste
+
+### No navegador (qualquer aparelho)
+
+Abra https://alnsouza90.github.io/Ad-Inferos---RPG/ com o celular deitado. A página é atualizada a cada mudança aprovada (`.github/workflows/pages.yml`).
+
+### No Android (APK)
+
+1. No celular, abra https://github.com/alnsouza90/Ad-Inferos---RPG/releases/tag/teste-android
+2. Em "Assets", toque em **ad-inferos.apk** para baixar.
+3. Abra o arquivo baixado. Na primeira vez o Android pede para **permitir instalar apps desta fonte** (o navegador ou o gerenciador de arquivos): permita e volte.
+4. Toque em **Instalar**. Se o Play Protect avisar que o app é desconhecido, escolha **Instalar mesmo assim**: é a versão de teste, assinada com uma chave de depuração.
+5. Para atualizar, repita os passos: a nova versão instala por cima da antiga. Se o Android recusar ("conflito de pacote"), desinstale a anterior antes.
+
+O APK é montado pelo GitHub a cada mudança aprovada (`.github/workflows/android.yml`).
+
+### O que tem na versão de teste (M0)
+
+- **Arena:** escolha um dos 4 encontros e a semente (o "número da sorte" que define os desempates e os testes de Fé) e toque em **Começar**.
+- **Combate:** toque no santo, na ação, no alvo para ver a prévia e no alvo de novo para confirmar.
+- **Botões de teste** (só nesta versão): +25 e −25 de desolação e Consolação para o santo escolhido, para ver a auréola mudar.
+
 ## Estado atual
 
-Documentação completa da fase 0. Código ainda não iniciado. Próximo marco: **M0 — protótipo de combate**.
+Marco **M0 — protótipo de combate** em andamento: combate completo com Jorge, Bento e Teresinha contra a Família A, tela de combate, auréola e a arte piloto de São Jorge. Andamento detalhado em `docs/memory/progress.md`.

@@ -45,6 +45,16 @@ func battle(encounter_id: StringName, seed: int, provisions: Array[StringName] =
 	return BattleState.create(catalog, m0_party(), foes, provisions, enc.type, seed)
 
 
+## The M0 arena encounters (circle "m0" in encounters.csv), sorted by id.
+func arena_encounter_ids() -> Array[StringName]:
+	var ids: Array[StringName] = []
+	for id: StringName in encounters:
+		if (encounters[id] as EncounterDef).circle == EncounterDef.ARENA_CIRCLE:
+			ids.append(id)
+	ids.sort_custom(func(a: StringName, b: StringName) -> bool: return String(a) < String(b))
+	return ids
+
+
 func saint_def(id: StringName) -> SaintDef:
 	return saints.get(id)
 

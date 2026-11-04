@@ -31,6 +31,8 @@ const SPEED_INSTANT: int = 2
 const MOVE_TIME: float = 0.3
 const SMALL_TIME: float = 0.2
 const ABILITY_SLOTS: int = 4
+## Desolation step of the dev buttons (a test tool, not a game number).
+const DEV_DESOLATION_STEP: int = 25
 const DEFAULT_ENCOUNTER: StringName = &"m0_easy_01"
 ## Saint art lives at <dir>/<saint id>_art.tres; a saint without it stays a
 ## rectangle (T16 brings only São Jorge, D-203).
@@ -40,6 +42,13 @@ const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
 ## The arena (T17) sets these before adding the screen to the tree.
 @export var encounter_id: StringName = DEFAULT_ENCOUNTER
 @export var battle_seed: int = 1
+## The arena shows "Voltar à arena" on the result and listens to this.
+@export var show_back_button: bool = false
+## Dev tools (D-117): on in debug builds and in exports with the
+## "dev_tools" feature (the test builds of the M0).
+var dev_tools: bool = OS.is_debug_build() or OS.has_feature("dev_tools")
+
+signal back_requested
 
 var data: GameData
 var texts: BattleTexts
@@ -78,6 +87,7 @@ var _result_label: Label
 var _info_id: StringName = &""
 var _last_actor: StringName = &""
 var _ui_built: bool = false
+var _dev_row: HBoxContainer
 var _halo_settings: HaloSettings
 var _portrait: TextureRect
 ## combatant id -> CombatantArt, for the saints that have art.
@@ -238,6 +248,32 @@ func press_play_again() -> void:
 	_views.clear()
 	_result_overlay.visible = false
 	_begin()
+
+
+func press_back() -> void:
+	back_requested.emit()
+
+
+## Dev tools (D-117): change the chosen saint's desolation, or give
+## Consolation, and animate what the rules answer.
+func press_dev_desolation(amount: int) -> void:
+	var actor: Combatant = selection.actor()
+	if not _accepting_input() or actor == null:
+		return
+	selection.clear_choice()
+	_play(ctrl.dev_change_desolation(actor.id, amount))
+
+
+func press_dev_consolation() -> void:
+	var actor: Combatant = selection.actor()
+	if not _accepting_input() or actor == null:
+		return
+	selection.clear_choice()
+	_play(ctrl.dev_force_consolation(actor.id))
+
+
+func dev_tools_shown() -> bool:
+	return _dev_row != null and _dev_row.visible
 
 
 func result_shown() -> bool:
@@ -734,6 +770,8 @@ func _build_ui() -> void:
 	_result_label = _overlay_label(_result_overlay)
 	_result_label.add_theme_font_size_override("font_size", 56)
 	_overlay_button(_result_overlay, texts.t(&"play_again"), press_play_again)
+	var back: Button = _overlay_button(_result_overlay, texts.t(&"back_to_arena"), press_back)
+	back.visible = show_back_button
 	_ui_built = true
 
 
@@ -771,10 +809,36 @@ func _build_action_bar() -> void:
 	_provisions_button = _button(Vector2(80, row_2), Vector2(200, 100), press_provisions)
 	_pass_button = _button(Vector2(300, row_2), Vector2(BUTTON_SIZE.x, 100), press_pass)
 	_end_turn_button = _button(Vector2(1540, row_2), Vector2(300, 100), press_end_turn)
+	_build_dev_row(row_2)
 	_provision_menu = VBoxContainer.new()
 	_provision_menu.position = Vector2(80, 560)
 	_provision_menu.visible = false
 	_stage.add_child(_provision_menu)
+
+
+## Row of test buttons between "Passar" and "Encerrar turno" (D-117).
+func _build_dev_row(row_y: float) -> void:
+	_dev_row = HBoxContainer.new()
+	_dev_row.position = Vector2(560, row_y)
+	_dev_row.add_theme_constant_override("separation", 12)
+	_dev_row.visible = dev_tools
+	_stage.add_child(_dev_row)
+	var title := Label.new()
+	title.text = texts.t(&"dev_title")
+	title.custom_minimum_size = Vector2(90, 100)
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_dev_row.add_child(title)
+	var specs: Array = [
+		[texts.t(&"dev_desolation_up", {"amount": DEV_DESOLATION_STEP}), press_dev_desolation.bind(DEV_DESOLATION_STEP)],
+		[texts.t(&"dev_desolation_down", {"amount": DEV_DESOLATION_STEP}), press_dev_desolation.bind(-DEV_DESOLATION_STEP)],
+		[texts.t(&"dev_consolation"), press_dev_consolation],
+	]
+	for spec: Array in specs:
+		var button := Button.new()
+		button.text = spec[0]
+		button.custom_minimum_size = Vector2(270, 100)
+		button.pressed.connect(spec[1])
+		_dev_row.add_child(button)
 
 
 func _label(pos: Vector2, label_size: Vector2, font_size: int) -> Label:

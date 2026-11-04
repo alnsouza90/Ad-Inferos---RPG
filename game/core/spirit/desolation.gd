@@ -81,6 +81,17 @@ static func faith_check(saint: Combatant, ctx: DesolationContext) -> bool:
 	return success
 
 
+## Dev tools only (T17, D-117): the outcome of a successful Faith check
+## without the roll, so the Consolation look can be checked on screen.
+static func force_consolation(saint: Combatant, ctx: DesolationContext) -> void:
+	if not saint.is_saint() or saint.spirit_state == CONSOLATION:
+		return
+	var before: int = saint.desolation
+	saint.desolation = ctx.constants.get_int(&"consolation_reset_value")
+	ctx.emit.call(&"desolation_changed", {"target": saint.id, "old": before, "new": saint.desolation, "source": &"dev_tools"})
+	_set_state(saint, CONSOLATION, ctx)
+
+
 static func _purify(saint: Combatant, ctx: DesolationContext) -> void:
 	_set_state(saint, NORMAL, ctx)
 	saint.purified = true
