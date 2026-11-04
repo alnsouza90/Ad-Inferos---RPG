@@ -14,6 +14,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - `Array[StringName].sort()` **não** segue a ordem alfabética (compara outra coisa que não o texto). Para ordem estável de IDs, use `sort_custom` comparando `str(a) < str(b)` (T25).
 
+- A verificação de scripts do CI (`--check-only -s arquivo.gd`) **não conhece os nomes dos autoloads**: `EventBus.algo` dá "Identifier not found". Acesse autoloads por caminho (`get_node("/root/EventBus")`) (T26).
+
 ## GUT e CI
 
 - O GUT **ignora em silêncio** um script de teste com erro de sintaxe e ainda diz "All tests passed". O CI falha se aparecer "Ignoring script", "Parse Error" ou "SCRIPT ERROR".

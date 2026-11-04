@@ -9,7 +9,11 @@ var settings: SettingsStore = SettingsStore.new("user://settings.json")
 
 func save_expedition(ctrl: ExpeditionController, campaign_seed: int) -> bool:
 	var ok: bool = store.write(ExpeditionSave.build(ctrl, campaign_seed))
-	EventBus.save_completed.emit(ok)
+	# By path, not by the autoload name: scripts are also checked one by one,
+	# where autoload names are unknown.
+	var bus: Node = get_node_or_null("/root/EventBus")
+	if bus != null:
+		bus.emit_signal("save_completed", ok)
 	return ok
 
 

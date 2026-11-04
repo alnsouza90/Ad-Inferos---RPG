@@ -18,7 +18,7 @@ func start_expedition(p_catalog: ExpeditionCatalog, ctrl: ExpeditionController, 
 ## Loads the saved expedition; returns the SaveStore status.
 func continue_saved(p_catalog: ExpeditionCatalog) -> StringName:
 	catalog = p_catalog
-	var result: Dictionary = SaveService.load_expedition(p_catalog)
+	var result: Dictionary = _service().call("load_expedition", p_catalog)
 	expedition = result["controller"]
 	if expedition != null:
 		campaign_seed = int((result["data"] as Dictionary).get("campaign", {}).get("seed", 0))
@@ -38,9 +38,14 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 
 func save_now() -> void:
 	if expedition != null:
-		SaveService.save_expedition(expedition, campaign_seed)
+		_service().call("save_expedition", expedition, campaign_seed)
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		save_now()
+
+
+## The SaveService autoload, found by path (see save_service.gd).
+func _service() -> Node:
+	return get_node("/root/SaveService")
