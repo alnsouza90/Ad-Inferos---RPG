@@ -75,7 +75,13 @@ JOBS = [
      "environments/circles/circle_02/t1/env_circle_02_t1_back.png", "env_back"),
     ("environments/circles/circle_02/t1/env_circle_02_t1_front_v01.jpg",
      "environments/circles/circle_02/t1/env_circle_02_t1_front.png", "env_front"),
+    # T28: illustration behind the narrative event (screens §6).
+    ("events/circle_02/event_c02_temptation_wind_shelter_v02.jpg",
+     "events/circle_02/event_c02_temptation_wind_shelter.png", "event"),
 ]
+
+# Event illustration: opaque, the size of the stage, cropped to fill it.
+EVENT_SIZE = (1920, 1080)
 
 # asset-pipeline §4: scenery layers are 1080 px tall; the provisional ones
 # keep the 2560 px width of _back (the front parallax just moves further).
@@ -285,9 +291,18 @@ def remove_checkerboard(img: Image.Image) -> Image.Image:
     return out
 
 
+def cover(img: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """Scales to fill `size` and crops the centre (no stretching)."""
+    scale = max(size[0] / img.width, size[1] / img.height)
+    big = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+    left = (big.width - size[0]) // 2
+    top = (big.height - size[1]) // 2
+    return big.crop((left, top, left + size[0], top + size[1]))
+
+
 def run(check_only: bool, only: str = "") -> int:
     jobs = [j for j in JOBS if only in j[0]]
-    scale = 0.0 if check_only or all(j[2].startswith("env") for j in jobs) else pose_scale()
+    scale = 0.0 if check_only or all(j[2].startswith("env") or j[2] == "event" for j in jobs) else pose_scale()
     for src_rel, dst_rel, kind in jobs:
         src = SRC / src_rel
         if not src.exists() or src.stat().st_size < 1024:
@@ -297,7 +312,9 @@ def run(check_only: bool, only: str = "") -> int:
         print(f"{src_rel}: {img.size}")
         if check_only:
             continue
-        if kind == "env_back":
+        if kind == "event":
+            out = cover(img.convert("RGB"), EVENT_SIZE)
+        elif kind == "env_back":
             out = img.convert("RGB").resize(ENV_SIZE, Image.LANCZOS)
         elif kind == "env_front":
             out = remove_checkerboard(img).resize(ENV_SIZE, Image.LANCZOS)

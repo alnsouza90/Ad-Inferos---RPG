@@ -104,6 +104,7 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121).
 - Ilustração do evento ao fundo, caixa de texto no terço inferior, nome do falante.
 - Opções como botões grandes; requisito e chance escritos no botão ("Exige Caridade 3", "Chance 70%: Bento na equipe").
 - Rótulo de origem discreto no canto (ex.: "Inspirado em Dante").
+- Nome de quem fala numa aba sobre o canto esquerdo da caixa; o narrador não tem aba e fala em itálico (D-151). Opções: primeiro toque mostra, segundo confirma; depois aparece o texto do resultado com o que mudou (Lume, virtudes, desolação, Esmolas, provisões).
 
 ## 7. Vila
 

@@ -5,8 +5,8 @@ Resumo curto de cada sessão. A mais recente no topo.
 ## Sessão 4 · 04/11/2026
 
 - Sem Godot no ambiente (compilação do código-fonte negada pelas permissões): testes pelo CI; sintaxe com `gdparse`. Arquivos do Git LFS baixados com `git lfs pull --include=...` antes de processar arte.
-- Feita: T27 · tela da caminhada e das bifurcações (decisões D-148, D-149, D-321).
-- Próximo: T28 (tela do evento narrativo).
+- Feitas: T27 · tela da caminhada e das bifurcações (D-148 a D-150, D-321); T28 · tela do evento narrativo (D-151 a D-153, D-322), com a ilustração de Alan.
+- Próximo: T29 (tela do Pouso).
 
 ## Sessão 3 · 04/11/2026
 

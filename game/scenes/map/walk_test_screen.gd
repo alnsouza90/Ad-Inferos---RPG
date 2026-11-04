@@ -1,10 +1,11 @@
 class_name WalkTestScreen
 extends Control
-## Test of the walk from the arena (dev builds only), while the node, camp
-## and flow screens do not exist (T28 to T30): a new leg of Circle 2 with the
-## M1 kit, walked on the WalkScreen. Entering a node shows a placeholder that
-## finishes it with DevNodeResolver; the camp and the end of the leg show a
-## short note. Everything goes through commands, like the real game.
+## Test of the walk from the arena (dev builds only), while the camp and
+## flow screens do not exist (T29 and T30): a new leg of Circle 2 with the
+## M1 kit, walked on the WalkScreen. A Temptation opens the EventScreen
+## (T28); other nodes show a placeholder that finishes them with
+## DevNodeResolver; the camp and the end of the leg show a short note.
+## Everything goes through commands, like the real game.
 
 ## M1 data ids: the leg is played in Circle 2 with the arena groups and the
 ## fixed kit (expedition §13, D-123).
@@ -19,6 +20,8 @@ var data: GameData
 var catalog: ExpeditionCatalog
 var ctrl: ExpeditionController
 var walk: WalkScreen
+## The Temptation in progress (T28), or null.
+var event_screen: EventScreen
 var leg_seed: int = 1
 var speed_index: int = 0
 ## True in the game: commands go through GameState, which saves after each
@@ -83,8 +86,22 @@ func _on_node_entered(_node_id: StringName) -> void:
 	_show_state()
 
 
+func _on_event_finished() -> void:
+	if event_screen != null:
+		event_screen.queue_free()
+		event_screen = null
+	_show_state()
+
+
 func _show_state() -> void:
 	var t: UiTextDef = data.ui
+	if ctrl.phase == ExpeditionController.Phase.IN_EVENT and event_screen == null:
+		_overlay.visible = false
+		event_screen = EventScreen.new()
+		event_screen.setup(data, ctrl, run_command)
+		event_screen.finished.connect(_on_event_finished)
+		add_child(event_screen)
+		return
 	match ctrl.phase:
 		ExpeditionController.Phase.AT_FORK:
 			_overlay.visible = false
