@@ -8,7 +8,7 @@ extends RefCounted
 ##   AT_FORK → (ChoosePath) → IN_BATTLE | IN_NODE → AT_FORK … → AT_CAMP
 ##   IN_BATTLE → (defeat or emergency retreat) → ENDED
 
-enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED }
+enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT }
 
 const END_DEFEATED: StringName = &"defeated"
 const END_RETREATED: StringName = &"retreated"
@@ -16,6 +16,8 @@ const END_RETREATED: StringName = &"retreated"
 const REJECT_WRONG_PHASE: StringName = &"wrong_phase"
 const REJECT_NOT_AN_ENTRANCE: StringName = &"not_an_entrance"
 const REJECT_UNKNOWN_COMMAND: StringName = &"unknown_command"
+const REJECT_UNKNOWN_OPTION: StringName = &"unknown_option"
+const REJECT_REQUIREMENT: StringName = &"requirement_not_met"
 
 const EV_NODE_ENTERED: StringName = &"node_entered"
 const EV_BATTLE_RESOLVED: StringName = &"battle_resolved"
@@ -23,6 +25,8 @@ const EV_NODE_COMPLETED: StringName = &"node_completed"
 const EV_CAMP_REACHED: StringName = &"camp_reached"
 const EV_EXPEDITION_ENDED: StringName = &"expedition_ended"
 const EV_PROVISION_USED: StringName = &"field_provision_used"
+const EV_EVENT_STARTED: StringName = &"event_started"
+const EV_EVENT_RESOLVED: StringName = &"event_resolved"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -39,6 +43,12 @@ var last_battle: BattleController
 var command_log: Array[Dictionary] = []
 ## {"type": StringName, "data": Dictionary} in order, for the screens.
 var history: Array[Dictionary] = []
+## The Pilgrim's virtues and narrative flags (campaign data; carried here
+## while there is no campaign in the M1).
+var virtues: Virtues
+var flags: Array[StringName] = []
+## The event in progress (IN_EVENT), else null.
+var event: EventDef
 
 var _initial: Dictionary = {}
 
@@ -50,6 +60,7 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 	var c := ExpeditionController.new()
 	c.catalog = p_catalog
 	c.state = ExpeditionState.create(p_catalog.constants, circle, map_seed, party, provisions)
+	c.virtues = Virtues.start(p_catalog.constants)
 	for id: StringName in party:
 		c.saints[id] = SaintStatus.from_def(p_catalog.saint(id))
 	var generator := MapGenerator.new(p_catalog.constants, RngStream.new(map_seed, RngStreams.MAP))
@@ -81,6 +92,9 @@ static func from_snapshot(p_catalog: ExpeditionCatalog, data: Dictionary) -> Exp
 		c.saints[StringName(str(id))] = SaintStatus.from_dict(raw_saints[id])
 	c.phase = int(data.get("phase", Phase.AT_FORK)) as Phase
 	c.ended_reason = StringName(str(data.get("ended_reason", "")))
+	c.virtues = Virtues.from_dict(data.get("virtues", {}))
+	for f: Variant in data.get("flags", []):
+		c.flags.append(StringName(str(f)))
 	c._initial = c.snapshot()
 	return c
 
@@ -93,7 +107,13 @@ func snapshot() -> Dictionary:
 	var saint_dicts: Dictionary = {}
 	for id: StringName in saints:
 		saint_dicts[String(id)] = (saints[id] as SaintStatus).to_dict()
-	return {"expedition": state.to_dict(), "saints": saint_dicts, "phase": int(phase), "ended_reason": String(ended_reason)}
+	var flag_list: Array[String] = []
+	for f: StringName in flags:
+		flag_list.append(String(f))
+	return {
+		"expedition": state.to_dict(), "saints": saint_dicts, "phase": int(phase), "ended_reason": String(ended_reason),
+		"virtues": virtues.to_dict(), "flags": flag_list,
+	}
 
 
 func current_node() -> MapNode:
@@ -128,6 +148,8 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 			return _complete_node(cmd)
 		ExpeditionCommand.USE_PROVISION:
 			return _use_provision(cmd)
+		ExpeditionCommand.CHOOSE_OPTION:
+			return _choose_option(cmd)
 	return REJECT_UNKNOWN_COMMAND
 
 
@@ -169,7 +191,9 @@ func _choose_path(cmd: ExpeditionCommand) -> StringName:
 	state.enter_node(target.id, catalog.constants)
 	_emit(EV_NODE_ENTERED, {"node": target.id, "type": target.type, "light": state.light})
 	if target.is_battle_like():
-		_start_battle(target)
+		_start_battle(target.encounter_id, target.id)
+	elif target.type == MapNode.TYPE_TEMPTATION and _start_event(target):
+		pass
 	else:
 		phase = Phase.IN_NODE
 	return &""
@@ -255,20 +279,141 @@ func _change_desolation(saint_id: StringName, amount: int, source: StringName) -
 		status.add_injury(SaintStatus.INJURY_MAJOR)
 
 
+# --- events (narrative-system §3 and §4.1) ---------------------------------------
+
+## The Temptation of the node: one of the circle's Temptations, drawn from a
+## stream of its own (node seed, `events`). Without any, the node is a plain
+## pass-through.
+func _start_event(n: MapNode) -> bool:
+	var pool: Array[EventDef] = catalog.events_for(&"temptation", circle_number())
+	if pool.is_empty():
+		return false
+	event = pool[_event_rng().pick_index(pool.size())]
+	phase = Phase.IN_EVENT
+	_emit(EV_EVENT_STARTED, {"event": event.id, "node": n.id})
+	return true
+
+
+## Draw 1 picks the event, draw 2 rolls the chance; derived from the node so
+## replays and saves give the same result.
+func _event_rng() -> RngStream:
+	return RngStream.new(battle_seed(StringName(String(state.current_node) + "_event")), RngStreams.EVENTS)
+
+
+func event_context() -> EventContext:
+	var ctx := EventContext.new()
+	ctx.party = state.party.duplicate()
+	ctx.provisions = state.provisions.duplicate()
+	ctx.alms = state.alms_unbanked + state.alms_banked
+	ctx.virtues = virtues
+	ctx.flags = flags.duplicate()
+	return ctx
+
+
+## Reason an option cannot be chosen, or &"" (N01: unmet requirement).
+func option_problem(option_id: StringName) -> StringName:
+	if phase != Phase.IN_EVENT or event == null:
+		return REJECT_WRONG_PHASE
+	var option: Dictionary = event.option(option_id)
+	if option.is_empty():
+		return REJECT_UNKNOWN_OPTION
+	if not EventRules.unmet_requirements(option, event_context()).is_empty():
+		return REJECT_REQUIREMENT
+	return &""
+
+
+## The chance shown on the option's button (1.0 when it has none).
+func option_chance(option_id: StringName) -> float:
+	return EventRules.chance(event.option(option_id), event_context())
+
+
+func _choose_option(cmd: ExpeditionCommand) -> StringName:
+	var problem: StringName = option_problem(cmd.node_id)
+	if problem != &"":
+		return problem
+	command_log.append(cmd.to_dict())
+	var option: Dictionary = event.option(cmd.node_id)
+	var ctx: EventContext = event_context()
+	var outcomes: Array = option.get("outcomes", [])
+	var success := true
+	if EventRules.has_chance(option):
+		var value: float = EventRules.chance(option, ctx)
+		for m: Dictionary in EventRules.applying_modifiers(option, ctx):
+			if m.get("consume", false):
+				state.provisions.erase(StringName(str(m.get("id", ""))))
+		var rng: RngStream = _event_rng()
+		rng.next_u32()
+		success = rng.next_float() < value
+		outcomes = option.get("on_success", []) if success else option.get("on_failure", [])
+	var finished: EventDef = event
+	event = null
+	phase = Phase.IN_NODE
+	var battle_id: StringName = &""
+	for out: Dictionary in outcomes:
+		var started: StringName = _apply_outcome(out)
+		if battle_id == &"":
+			battle_id = started
+	_emit(EV_EVENT_RESOLVED, {"event": finished.id, "option": cmd.node_id, "success": success})
+	if battle_id != &"":
+		_start_battle(battle_id, StringName(String(state.current_node) + "_event_battle"))
+	else:
+		_after_node()
+	return &""
+
+
+## Applies one outcome (narrative-system §3.2). Returns the encounter id of
+## start_battle, else &"". Relic, suffrages and unlock have no system in
+## the M1 and are only recorded in the history.
+func _apply_outcome(out: Dictionary) -> StringName:
+	var id := StringName(str(out.get("id", "")))
+	var amount: int = int(out.get("amount", 0))
+	match str(out.get("type", "")):
+		"light":
+			state.light = clampi(state.light + amount, 0, ExpeditionLight.LIGHT_MAX)
+		"desolation":
+			var target := StringName(str(out.get("target", "party")))
+			for saint_id: StringName in state.party:
+				if target == &"party" or target == saint_id:
+					_change_desolation(saint_id, amount, &"event")
+		"virtue":
+			virtues.change(id, amount, catalog.constants)
+		"alms":
+			state.alms_unbanked = maxi(state.alms_unbanked + amount, 0)
+		"provisions":
+			for i: int in absi(amount):
+				if amount > 0:
+					state.add_provision(id, catalog.constants)
+				else:
+					state.provisions.erase(id)
+		"injury":
+			var target := StringName(str(out.get("target", "party")))
+			for saint_id: StringName in state.party:
+				if target == &"party" or target == saint_id:
+					(saints[saint_id] as SaintStatus).add_injury(id)
+		"set_flag":
+			if not flags.has(id):
+				flags.append(id)
+		"start_battle":
+			return id
+		_:
+			_emit(&"outcome_not_in_m1", out)
+	return &""
+
+
 # --- battle -------------------------------------------------------------------
 
 ## The battle starts with the party as it is: hit points, desolation, state,
 ## formation order (D-134), Light and the provisions carried.
-func _start_battle(n: MapNode) -> void:
-	var enc: EncounterDef = catalog.encounter(n.encounter_id)
-	assert(enc != null, "node %s has no encounter" % n.id)
+func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
+	var enc: EncounterDef = catalog.encounter(encounter_id)
+	assert(enc != null, "no encounter %s" % encounter_id)
 	var saint_defs: Array[SaintDef] = []
 	for id: StringName in state.party:
 		saint_defs.append(catalog.saint(id))
 	var foes: Array[EnemyDef] = []
 	for enemy_id: StringName in enc.slots:
 		foes.append(_enemy_def(enemy_id))
-	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(n.id))
+	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(seed_key))
 	bs.light = state.light
 	for c: Combatant in bs.party:
 		(saints[c.id] as SaintStatus).apply_to(c)

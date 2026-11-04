@@ -28,6 +28,8 @@ func _step(ctrl: ExpeditionController) -> void:
 			_ok(ctrl, ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
 		ExpeditionController.Phase.IN_NODE:
 			_ok(ctrl, ExpeditionCommand.complete_node())
+		ExpeditionController.Phase.IN_EVENT:
+			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
 		ExpeditionController.Phase.IN_BATTLE:
 			_ok(ctrl, ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 
@@ -46,6 +48,9 @@ func _go_to_battle(ctrl: ExpeditionController) -> void:
 			return
 		if ctrl.phase == ExpeditionController.Phase.IN_NODE:
 			_ok(ctrl, ExpeditionCommand.complete_node())
+			continue
+		if ctrl.phase == ExpeditionController.Phase.IN_EVENT:
+			_ok(ctrl, ExpeditionCommand.choose_option(&"follow_tracks"))
 			continue
 		var pick: MapNode = ctrl.entrances()[0]
 		for n: MapNode in ctrl.entrances():
@@ -74,7 +79,7 @@ func test_reaching_the_camp_visits_one_node_per_layer_and_spends_light() -> void
 	assert_eq(ctrl.phase, ExpeditionController.Phase.AT_CAMP)
 	assert_eq(ctrl.state.visited.size(), 3)
 	assert_eq(ctrl.current_layer(), 4)
-	assert_eq(ctrl.state.light, 80)
+	assert_eq(ctrl.state.light, 75, "4 nós (−20) e a recusa da Tentação (−5)")
 
 
 func test_choosing_a_node_that_is_not_an_entrance_is_rejected() -> void:

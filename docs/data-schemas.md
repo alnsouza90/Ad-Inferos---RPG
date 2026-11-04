@@ -263,3 +263,13 @@ Provisões com que a expedição parte enquanto não há vila (M1, D-123). Uma l
 | `amount` | inteiro ≥ 1 | Quantidade |
 
 Validação: provisão inexistente dá `unknown_id`; kit com mais itens que [gate_slots_l1] dá `out_of_range`.
+
+### 3.17 Eventos narrativos → `game/data/events/<id>.tres` (`EventDef`)
+
+Arquivos YAML em `docs/narrative/events/<círculo>/<id>.yaml`, no formato de `narrative-system.md` §3, lidos conforme o ADR-0012. O importador preenche os padrões de cada opção (`safe`, `requires`, `chance`, `outcomes`, `on_success`, `on_failure`) e recusa:
+
+- Tentação sem opção segura (`no_safe_option`, caso N02);
+- chance sem modificador (`chance_without_modifier`);
+- tipo de requisito ou de resultado desconhecido (`bad_enum`);
+- referência a santo, provisão, virtude ou encontro inexistente (`unknown_id`);
+- erro de formato (`bad_yaml`).

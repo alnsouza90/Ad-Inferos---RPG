@@ -55,6 +55,11 @@ const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
 const INTENT_ICONS: Array[String] = ["attack", "corrupt", "displace", "defend", "summon", "special"]
 const POOLS: Array[String] = ["easy", "hard", "elite", "boss", "ambush"]
 const ENCOUNTER_TYPES: Array[String] = ["common", "elite", "boss"]
+const EVENT_TYPES: Array[String] = ["temptation", "soul_meeting", "flashback", "council", "intercession_mission", "story"]
+const EVENT_OUTCOMES: Array[String] = ["virtue", "desolation", "light", "alms", "provisions", "relic", "injury", "suffrages", "set_flag", "start_battle", "unlock"]
+const EVENT_REQUIREMENTS: Array[String] = ["virtue_at_least", "saint_in_party", "provision", "alms_at_least", "flag_set"]
+const CHANCE_MODIFIERS: Array[String] = ["saint_in_party", "provision", "relic"]
+const VIRTUES: Array[String] = ["virtue_faith", "virtue_hope", "virtue_charity"]
 const MAP_ROLES: Array[String] = ["battle", "temptation", "variable", "soul"]
 const MAP_NODE_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_soul", "node_relic"]
 const PROVISION_TARGETING: Array[String] = ["none", "self", "ally", "all_allies"]
@@ -83,6 +88,7 @@ var encounters: Dictionary = {}
 var provisions: Dictionary = {}
 var map_templates: Dictionary = {}
 var starting_kits: Dictionary = {}
+var events: Dictionary = {}
 var saints: Dictionary = {}
 var ui_text: UiTextDef
 
@@ -123,6 +129,7 @@ func import_tables(texts: Dictionary) -> bool:
 	_build_starting_kits()
 	_build_saints()
 	_build_ui_text()
+	_build_events(texts.get("_events", {}))
 	_validate_effect_owners()
 	return errors.is_empty()
 
@@ -749,6 +756,154 @@ func _build_ui_text() -> void:
 			continue
 		_require_text(t, line, "text_pt", row)
 		ui_text.texts[String(row["id"])] = String(row["text_pt"])
+
+
+# --- narrative events (T23, narrative-system §3, ADR-0012) -----------------
+
+## `files` maps a file name (for messages) to YAML text.
+func _build_events(files: Dictionary) -> void:
+	var names: Array = files.keys()
+	names.sort()
+	for file: Variant in names:
+		var reader := EventYaml.new()
+		var raw: Dictionary = reader.parse(files[file], str(file))
+		errors.append_array(reader.errors)
+		if not reader.errors.is_empty():
+			continue
+		var d: EventDef = _event_from(raw, str(file))
+		if d == null:
+			continue
+		if events.has(String(d.id)):
+			_err("duplicate_id", str(file), 0, "evento '%s' repetido" % d.id)
+			continue
+		events[String(d.id)] = d
+
+
+func _event_from(raw: Dictionary, file: String) -> EventDef:
+	var d := EventDef.new()
+	var id: String = str(raw.get("id", ""))
+	if id.is_empty() or _id_pattern.search(id) == null:
+		_err("bad_id", file, 0, "ID '%s' fora do padrão snake_case" % id)
+		return null
+	d.id = StringName(id)
+	d.type = StringName(_event_enum(raw, "type", EVENT_TYPES, file))
+	d.origin = StringName(_event_enum(raw, "origin", ORIGINS, file))
+	d.circle = int(raw.get("circle", 0))
+	d.title_pt = str(raw.get("title_pt", ""))
+	if d.title_pt.is_empty():
+		_err("missing_value", file, 0, "title_pt vazio")
+	for page: Variant in _as_list(raw.get("pages")):
+		if not page is Dictionary or str((page as Dictionary).get("text_pt", "")).is_empty():
+			_err("missing_value", file, 0, "página sem text_pt")
+			continue
+		d.pages.append({"speaker": str(page.get("speaker", "narrator")), "text_pt": str(page["text_pt"])})
+	d.requirements = _event_requirements(raw.get("requirements"), file)
+	var seen: Dictionary = {}
+	var has_safe := false
+	for raw_option: Variant in _as_list(raw.get("options")):
+		if not raw_option is Dictionary:
+			_err("bad_yaml", file, 0, "opção precisa ser um mapa")
+			continue
+		var o: Dictionary = _event_option(raw_option, file)
+		if seen.has(o["id"]):
+			_err("duplicate_id", file, 0, "opção '%s' repetida" % o["id"])
+		seen[o["id"]] = true
+		has_safe = has_safe or bool(o["safe"])
+		d.options.append(o)
+	if d.options.is_empty():
+		_err("missing_value", file, 0, "evento sem opções")
+	if d.type == &"temptation" and not has_safe:
+		_err("no_safe_option", file, 0, "toda Tentação precisa de uma opção segura (safe: true)")
+	return d
+
+
+func _event_option(raw: Dictionary, file: String) -> Dictionary:
+	var id: String = str(raw.get("id", ""))
+	if id.is_empty() or _id_pattern.search(id) == null:
+		_err("bad_id", file, 0, "opção com ID '%s' fora do padrão" % id)
+	if str(raw.get("text_pt", "")).is_empty():
+		_err("missing_value", file, 0, "opção '%s' sem text_pt" % id)
+	var o: Dictionary = {
+		"id": id, "text_pt": str(raw.get("text_pt", "")), "safe": raw.get("safe", false) == true,
+		"result_pt": str(raw.get("result_pt", "")), "success_pt": str(raw.get("success_pt", "")),
+		"failure_pt": str(raw.get("failure_pt", "")),
+		"requires": _event_requirements(raw.get("requires"), file),
+		"chance": {}, "outcomes": _event_outcomes(raw.get("outcomes"), file),
+		"on_success": _event_outcomes(raw.get("on_success"), file),
+		"on_failure": _event_outcomes(raw.get("on_failure"), file),
+	}
+	var chance: Variant = raw.get("chance")
+	if chance is Dictionary:
+		var base: Variant = (chance as Dictionary).get("base")
+		if not (base is float or base is int) or float(base) < 0.0 or float(base) > 1.0:
+			_err("out_of_range", file, 0, "opção '%s': chance.base deve ir de 0 a 1" % id)
+		var modifiers: Array = []
+		for m: Variant in _as_list((chance as Dictionary).get("modifiers")):
+			if not m is Dictionary or not CHANCE_MODIFIERS.has(str(m.get("if", ""))) or not (m.get("add") is float or m.get("add") is int):
+				_err("bad_enum", file, 0, "opção '%s': modificador inválido %s" % [id, m])
+				continue
+			_check_event_reference(str(m["if"]), str(m.get("id", "")), file)
+			modifiers.append({"if": str(m["if"]), "id": str(m.get("id", "")), "add": float(m["add"]), "consume": m.get("consume", false) == true})
+		if modifiers.is_empty():
+			_err("chance_without_modifier", file, 0, "opção '%s': toda chance precisa poder ser melhorada por um santo, provisão ou relíquia" % id)
+		o["chance"] = {"base": float(base) if (base is float or base is int) else 0.0, "modifiers": modifiers}
+	elif chance != null:
+		_err("bad_yaml", file, 0, "opção '%s': chance precisa ser um mapa" % id)
+	return o
+
+
+func _event_requirements(raw: Variant, file: String) -> Array:
+	var result: Array = []
+	for r: Variant in _as_list(raw):
+		if not r is Dictionary or not EVENT_REQUIREMENTS.has(str(r.get("type", ""))):
+			_err("bad_enum", file, 0, "requisito inválido %s" % [r])
+			continue
+		var kind: String = str(r["type"])
+		_check_event_reference(kind, str(r.get("id", "")), file)
+		result.append({"type": kind, "id": str(r.get("id", "")), "value": float(r.get("value", 0))})
+	return result
+
+
+func _event_outcomes(raw: Variant, file: String) -> Array:
+	var result: Array = []
+	for r: Variant in _as_list(raw):
+		if not r is Dictionary or not EVENT_OUTCOMES.has(str(r.get("type", ""))):
+			_err("bad_enum", file, 0, "resultado inválido %s" % [r])
+			continue
+		var kind: String = str(r["type"])
+		var out: Dictionary = {"type": kind, "id": str(r.get("id", "")), "target": str(r.get("target", "")), "amount": float(r.get("amount", 0))}
+		if kind == "virtue" or kind == "provisions" or kind == "start_battle":
+			_check_event_reference(kind, out["id"], file)
+		if kind == "desolation" and out["target"] != "party" and not saints.has(out["target"]):
+			_err("unknown_id", file, 0, "desolação com alvo '%s' (use party ou um santo)" % out["target"])
+		result.append(out)
+	return result
+
+
+func _check_event_reference(kind: String, id: String, file: String) -> void:
+	var known := true
+	match kind:
+		"saint_in_party":
+			known = saints.has(id)
+		"provision", "provisions":
+			known = provisions.has(id)
+		"virtue", "virtue_at_least":
+			known = VIRTUES.has(id)
+		"start_battle":
+			known = encounters.has(id)
+	if not known:
+		_err("unknown_id", file, 0, "'%s' não existe (%s)" % [id, kind])
+
+
+func _event_enum(raw: Dictionary, key: String, allowed: Array[String], file: String) -> String:
+	var value: String = str(raw.get(key, ""))
+	if not allowed.has(value):
+		_err("bad_enum", file, 0, "%s '%s' inválido; aceitos: %s" % [key, value, ", ".join(allowed)])
+	return value
+
+
+static func _as_list(value: Variant) -> Array:
+	return value if value is Array else []
 
 
 # --- parsing helpers ------------------------------------------------------
