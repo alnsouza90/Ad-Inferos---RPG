@@ -16,6 +16,9 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - A verificação de scripts do CI (`--check-only -s arquivo.gd`) **não conhece os nomes dos autoloads**: `EventBus.algo` dá "Identifier not found". Acesse autoloads por caminho (`get_node("/root/EventBus")`) (T26).
 
+- `JSON.parse_string` com texto inválido imprime um erro do motor, que o GUT conta como falha ("Unexpected Errors"). Para dados que podem estar estragados (saves), use `JSON.new().parse(texto)` e confira o código (T26).
+- Números lidos de JSON voltam como float: ao reconstruir um estado salvo, regenere as partes guardadas como dicionário a partir das classes (`LegMap.to_dict()`), senão a comparação de texto acusa diferença (T26).
+
 ## GUT e CI
 
 - O GUT **ignora em silêncio** um script de teste com erro de sintaxe e ainda diz "All tests passed". O CI falha se aparecer "Ignoring script", "Parse Error" ou "SCRIPT ERROR".

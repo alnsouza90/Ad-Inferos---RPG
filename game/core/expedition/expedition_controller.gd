@@ -117,6 +117,8 @@ static func from_snapshot(p_catalog: ExpeditionCatalog, data: Dictionary) -> Exp
 	c.catalog = p_catalog
 	c.state = ExpeditionState.from_dict(data.get("expedition", {}))
 	c.map = LegMap.from_dict(c.state.map)
+	# Back in its own format: numbers read from a save come as floats.
+	c.state.map = c.map.to_dict()
 	var raw_saints: Dictionary = data.get("saints", {})
 	for id: Variant in raw_saints:
 		c.saints[StringName(str(id))] = SaintStatus.from_dict(raw_saints[id])

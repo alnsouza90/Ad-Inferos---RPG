@@ -73,10 +73,12 @@ func read() -> Dictionary:
 func _load(file_path: String) -> Dictionary:
 	if not FileAccess.file_exists(file_path):
 		return {"status": STATUS_CORRUPT}
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(file_path))
-	if not parsed is Dictionary:
+	# JSON.new().parse() reports bad text through its return value, without
+	# printing an engine error (a damaged save is an expected case, §6).
+	var json := JSON.new()
+	if json.parse(FileAccess.get_file_as_string(file_path)) != OK or not json.data is Dictionary:
 		return {"status": STATUS_CORRUPT}
-	var data: Dictionary = parsed
+	var data: Dictionary = json.data
 	for key: String in REQUIRED:
 		if not data.has(key):
 			return {"status": STATUS_CORRUPT}

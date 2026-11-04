@@ -33,8 +33,9 @@ func _save_and_load(ctrl: ExpeditionController) -> ExpeditionController:
 	return ExpeditionSave.restore(cat, result["data"])
 
 
+## Compared as they read back from JSON (numbers as floats), like the save.
 static func _same(a: ExpeditionController, b: ExpeditionController) -> bool:
-	return JSON.stringify(a.snapshot(), "", true) == JSON.stringify(b.snapshot(), "", true)
+	return JSON.stringify(ExpeditionSave._plain(a.snapshot()), "", true) == JSON.stringify(ExpeditionSave._plain(b.snapshot()), "", true)
 
 
 ## One step of a fixed policy through every phase of the leg.

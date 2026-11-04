@@ -8,11 +8,10 @@ var values: Dictionary = {}
 
 func _init(p_path: String = "user://settings.json") -> void:
 	file_path = p_path
-	var parsed: Variant = null
 	if FileAccess.file_exists(file_path):
-		parsed = JSON.parse_string(FileAccess.get_file_as_string(file_path))
-	if parsed is Dictionary:
-		values = parsed
+		var json := JSON.new()
+		if json.parse(FileAccess.get_file_as_string(file_path)) == OK and json.data is Dictionary:
+			values = json.data
 
 
 func get_value(key: String, default: Variant) -> Variant:
