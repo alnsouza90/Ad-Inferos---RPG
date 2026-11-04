@@ -2,6 +2,13 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
+## Sessão 3 · 04/11/2026
+
+- Sem Godot no ambiente (compilação negada de novo pelas permissões): testes pelo CI; sintaxe conferida com `gdtoolkit` (`pip install "gdtoolkit==4.*"`, comando `gdparse`).
+- Feitos: backlog do M1 (PR #24), T18 specs da caminhada (PR #25), T19 Lume e estado da expedição (PR #26), T20 gerador do trecho (PR #27).
+- Decisões de Alan: D-121 a D-133 (caminhada e mini-mapa, rascunho da Tentação pelo agente, kit fixo de provisões, nó variável sem elite, metas D-113, Incenso revela mais uma camada, números do gerador).
+- Estado ao fim: 329 testes passando. Próximo: **T21** (controlador da expedição e comandos, `docs/backlog/m1.md`).
+
 ## Sessão 2 · 03 e 04/11/2026
 
 - Sem Godot no ambiente (compilação negada pelas permissões): tudo testado pelo CI do GitHub; sintaxe conferida com `gdtoolkit`.

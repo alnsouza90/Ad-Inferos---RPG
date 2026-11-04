@@ -21,7 +21,14 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - A saída de um gancho `SessionStart` com mais de poucos KB chega ao agente **cortada** (só uma prévia). O gancho deve ser curto e mandar ler os arquivos com a ferramenta de leitura.
 
+## Dados
+
+- Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.
+- Sem Godot local, `.tres` gerados podem ser escritos à mão no formato do importador (dicionários com chaves em ordem alfabética): a conferência do CI (`--check`) compara o **conteúdo** (`ResourceSnapshot`), não o texto.
+
 ## Git e ambiente
+
+- Na nuvem, `pip install "gdtoolkit==4.*"` dá o `gdparse`, que confere a sintaxe dos scripts sem o Godot (não pega erro de tipo).
 
 - No `.gitignore`, uma regra com barra no meio (`tools/out/`) vale só a partir da raiz; para `game/tools/out/` é preciso escrever o caminho.
 - Nunca usar `git push -f`: é bloqueado pelas permissões, com razão.
