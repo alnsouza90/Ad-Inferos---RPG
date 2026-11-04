@@ -52,5 +52,5 @@ Registradas também no backlog de cada tarefa.
   - A imagem de Consolação tem um brilho claro atrás da cabeça; conferir no motor se ele briga com a auréola (a Direção de Arte pede imagens sem auréola).
   - Corpo nos três estados e auréola processados na T16 (`game/assets/`, `tools/art/process_art.py`).
   - **Arte nova (04/11/2026, D-204):** `_body_idle_v02` (848×1264, substitui a v01 pequena), `_body_attack_v01`, `_body_hit_v01`, `_body_fall_v01`, `_portrait_v02` e `_body_rig_neutral_v01` (guardada para o recorte do M2). Todas processadas, menos a neutra.
-- **Folhas de produção de Alan (04/11/2026, D-206):** `docs/art/prompts-saints.md` e `docs/art/prompts-environments.md`; consultar nas etapas de arte e animação (M2). Divergências de design em `open-questions.md`.
+- **Folhas de produção de Alan (04/11/2026, D-206, D-213):** `docs/art/prompts-saints.md`, `docs/art/prompts-environments.md` e `docs/art/prompts-splash.md` (telas de passagem); consultar nas etapas de arte e animação (M2). Divergências de design em `open-questions.md`.
 - **Arte do piloto em combate recebida (03/11/2026)**, originais em `art_source/`: os 7 inimigos da Família A (`characters/enemies/`), Bento e Teresinha em padrão, Noite Escura e Consolação, cenário do Círculo 2 trecho 1 (fundo e frente) e redemoinhos do Vendaval (`vfx/hazards/`). Pendências em `open-questions.md`.
