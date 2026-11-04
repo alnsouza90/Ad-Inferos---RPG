@@ -190,6 +190,7 @@ valor ×= duelo       → 1.25 se o atacante é São Jorge e o alvo está em Due
 valor ×= fúria       → 1 + 0.10 × pilhas de Fúria do atacante
 valor ×= afinidade   → bônus de Afinidade do tipo de dano (§12)
 valor ×= relíquia    → bônus de relíquias do atacante
+valor ×= lume        → 1.1 se o atacante é inimigo e o Lume está entre 0 e 24 (expedition.md §4)
 valor ×= amparo      → 0.5 se o alvo tem a ficha Amparo (consumida por golpe recebido)
 dano = arredondar_meio_para_cima(valor) − armor do alvo
 dano = máximo(dano, 1)   se amount > 0
