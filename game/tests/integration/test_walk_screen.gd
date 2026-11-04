@@ -278,8 +278,8 @@ func test_every_walk_text_exists_in_the_data() -> void:
 		"arena_walk", "walk_light", "walk_alms", "walk_minimap", "walk_minimap_close", "minimap_gate",
 		"minimap_camp", "walk_hint_choose", "walk_hint_confirm", "walk_content_hidden", "walk_content_enemies",
 		"walk_provisions", "walk_provision_line", "walk_no_provisions", "walk_choose_saint",
-		"walk_provision_used", "walk_test_node", "walk_test_resolve", "walk_test_camp",
-		"walk_test_leave_camp", "walk_test_ended",
+		"walk_provision_used", "walk_test_node", "walk_test_resolve", "walk_test_ambush",
+		"walk_test_ended",
 	]
 	for type: StringName in [MapNode.TYPE_BATTLE, MapNode.TYPE_ELITE, MapNode.TYPE_TEMPTATION, MapNode.TYPE_SOUL, MapNode.TYPE_RELIC, &"node_camp"]:
 		keys.append(String(type))

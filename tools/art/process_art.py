@@ -78,6 +78,13 @@ JOBS = [
     # T28: illustration behind the narrative event (screens §6).
     ("events/circle_02/event_c02_temptation_wind_shelter_v02.jpg",
      "events/circle_02/event_c02_temptation_wind_shelter.png", "event"),
+    # T29: camp of Circle 2 and the portraits of the camp screen.
+    ("environments/circles/circle_02/camp/env_circle_02_camp_v02.jpg",
+     "environments/camp/env_circle_02_camp.png", "env_camp"),
+    ("characters/saints/saint_benedict/saint_benedict_portrait_v01.jpg",
+     "characters/saints/saint_benedict/portrait/saint_benedict_portrait.png", "portrait"),
+    ("characters/saints/saint_therese/saint_therese_portrait_v01.jpg",
+     "characters/saints/saint_therese/portrait/saint_therese_portrait.png", "portrait"),
 ]
 
 # Event illustration: opaque, the size of the stage, cropped to fill it.
@@ -302,7 +309,7 @@ def cover(img: Image.Image, size: tuple[int, int]) -> Image.Image:
 
 def run(check_only: bool, only: str = "") -> int:
     jobs = [j for j in JOBS if only in j[0]]
-    scale = 0.0 if check_only or all(j[2].startswith("env") or j[2] == "event" for j in jobs) else pose_scale()
+    scale = 0.0 if check_only or all(j[2].startswith("env") or j[2] in ("event", "portrait") for j in jobs) else pose_scale()
     for src_rel, dst_rel, kind in jobs:
         src = SRC / src_rel
         if not src.exists() or src.stat().st_size < 1024:
@@ -314,6 +321,8 @@ def run(check_only: bool, only: str = "") -> int:
             continue
         if kind == "event":
             out = cover(img.convert("RGB"), EVENT_SIZE)
+        elif kind == "env_camp":
+            out = cover(img.convert("RGB"), ENV_SIZE)
         elif kind == "env_back":
             out = img.convert("RGB").resize(ENV_SIZE, Image.LANCZOS)
         elif kind == "env_front":
