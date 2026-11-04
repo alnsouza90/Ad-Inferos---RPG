@@ -72,6 +72,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-154 · 04/11/2026 · Alan** — T28 aprovada (tela do evento narrativo), com os textos novos de `ui_text.csv` revisados. *PR #35.*
 - **D-155 · 04/11/2026 · Alan** — Arte para a T29 recebida: retratos de São Bento e Santa Teresinha (896×1200) e o Pouso do Círculo 2 (`env_circle_02_camp`), este só com 512×217 (reduzido pelo chat); originais em `art_source/`. *T29.*
 - **D-156 · 04/11/2026 · Alan** — Nova versão do Pouso do Círculo 2 (v02, 1600×672) substitui a v01 pequena; usada na T29, ampliada para 2560×1080. *`art_source/environments/circles/circle_02/camp/`.*
+- **D-157 · 04/11/2026 · Alan** — T29 aprovada (tela do Pouso), com os textos revisados. *PR #36.*
 
 ## Arte
 

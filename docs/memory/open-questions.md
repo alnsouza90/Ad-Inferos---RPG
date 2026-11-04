@@ -39,3 +39,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Ilustração do evento "O abrigo do vento" em tamanho maior~~ v02 recebida com 1376×768 (D-153); se houver versão ≥ 1920×1080, fica mais nítida | Alan (T28) | 04/11/2026 |
 | Tela do evento: fonte própria (com itálico de verdade) e moldura de pergaminho da caixa de texto ficam para a arte de interface (M2) | M2 | 04/11/2026 |
 | ~~Pouso do Círculo 2 em tamanho cheio~~ v02 recebida com 1600×672 (D-156); se houver versão de 2560×1080, fica mais nítida | Alan (T29) | 04/11/2026 |
+| Teste de Alan no celular (04/11/2026): nós, provisões, mini-mapa e Tentação funcionam. Problemas: animação de andar, personagens pequenos, parallax da frente ruim. Pedido: caminhada **interativa** — andar até a tenda da Tentação e escolher entrar; no fim do corredor, andar até a entrada da derivação e entrar (em vez de botões). Proposta do agente: decidir com Alan quando entra (fim do M1 ou começo do M2) | Alan | 04/11/2026 |
