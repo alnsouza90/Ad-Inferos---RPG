@@ -119,3 +119,13 @@ func test_field_provision_uses_are_logged_and_replay_exactly() -> void:
 	assert_eq(ctrl.command_log.size(), 2)
 	var again := ExpeditionController.replay(cat, ctrl.initial_snapshot(), ctrl.command_log)
 	assert_eq(JSON.stringify(again.snapshot()), JSON.stringify(ctrl.snapshot()))
+
+
+func test_holy_water_in_battle_also_lowers_desolation() -> void:
+	var provisions: Array[StringName] = [&"holy_water"]
+	var ctrl := BattleController.new(RealData.battle("m0_easy_01", 1, provisions))
+	ctrl.start()
+	var saint: Combatant = ctrl.state.party_at(1)
+	saint.desolation = 40
+	assert_true(ctrl.execute(BattleCommand.use_provision(&"holy_water", 1, saint.id)).ok)
+	assert_eq(saint.desolation, 25)

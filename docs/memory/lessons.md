@@ -26,6 +26,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 - Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.
 - Sem Godot local, `.tres` gerados podem ser escritos à mão no formato do importador (dicionários com chaves em ordem alfabética): a conferência do CI (`--check`) compara o **conteúdo** (`ResourceSnapshot`), não o texto.
 
+- Efeito com `const=`: a constante dá só o tamanho; o sinal vem do `amount` da planilha (D-317). Na T22, a Água Benta aumentava a desolação porque o sinal se perdia.
+
 ## Git e ambiente
 
 - Na nuvem, `pip install "gdtoolkit==4.*"` dá o `gdparse`, que confere a sintaxe dos scripts sem o Godot (não pega erro de tipo).

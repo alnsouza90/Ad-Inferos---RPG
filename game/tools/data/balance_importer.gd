@@ -303,7 +303,10 @@ func _validate_effect_fields(t: CsvTable, line: int, row: Dictionary, d: EffectD
 		if not constants.has_key(StringName(key)):
 			_err("unknown_id", t.file_name, line, "constante '%s' não existe em constants.csv" % key)
 		else:
-			d.amount = constants.get_float(StringName(key))
+			# The constant holds the size; the CSV amount keeps the sign
+			# (Holy Water: -15 with holy_water_desolation = 15 lowers desolation).
+			var size: float = absf(constants.get_float(StringName(key)))
+			d.amount = -size if d.amount < 0.0 else size
 
 
 func _build_abilities() -> void:

@@ -225,3 +225,9 @@ func test_map_template_unknown_node_type_is_rejected() -> void:
 func test_map_template_with_a_gap_in_the_layer_is_rejected() -> void:
 	var tables := BalanceFixture.appended("map_templates", "t_leg,1,2,2,temptation,node_temptation,0")
 	_assert_error(tables, "slot_gap")
+
+
+func test_const_keeps_the_sign_written_in_the_csv() -> void:
+	var tables := BalanceFixture.replaced("effects", "t_pray,1,desolation,-10,,,,,,,,,,", "t_pray,1,desolation,-10,,,,,,,,,,const=bread_heal")
+	var a: AbilityDef = _import(tables).abilities["t_pray"]
+	assert_eq(a.effects[0].amount, -5.0, "constante 5 com sinal negativo da planilha")
