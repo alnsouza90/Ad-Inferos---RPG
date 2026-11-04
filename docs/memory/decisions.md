@@ -66,6 +66,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-148 · 04/11/2026 · Alan** — T26 aprovada (salvamento e retomada). *PR #33.*
 - **D-149 · 04/11/2026 · Alan** — T27: (1) a caminhada é testada no celular por um botão "Caminhada (teste)" na arena; ao entrar num nó, um quadro provisório o resolve sozinho (combate jogado pela política de teste, Tentação na primeira opção possível, relíquia na mochila) até as telas da T28 a T30; (2) os desvios se chamam Porta, Caverna e Escada, e o caminho reto "Seguir em frente"; (3) o corredor usa o cenário provisório do Círculo 2, trecho 1 (fundo e frente), com parallax simples. *T27, `scenes/map/`, `ui_text.csv`.*
 - **D-150 · 04/11/2026 · Alan** — T27 aprovada (tela da caminhada, bifurcações, mini-mapa e teste pela arena), com os textos novos de `ui_text.csv`. *PR #34.*
+- **D-151 · 04/11/2026 · Alan** — Tela do evento (T28): o agente escolhe onde aparece o nome de quem fala; Alan revisa ao testar. Proposta: nome numa aba sobre o canto esquerdo da caixa de texto; o narrador fica sem nome (texto em itálico). A ilustração do evento vem de Alan (prompt do agente); sem ela, a tela usa o fundo do Círculo 2 escurecido. *T28.*
 
 ## Arte
 
