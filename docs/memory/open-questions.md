@@ -23,3 +23,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Personagens pequenos na tela do celular (navegador sem tela cheia) | T17 (APK em tela cheia) | 04/11/2026 |
 | Forma de testar a auréola sem depender da sorte: botões de teste na T17 (D-117) | T17 | 04/11/2026 |
 | Noite Escura e Consolação de Jorge são da leva antiga (traço diferente da pose normal nova): Alan manteve por enquanto (D-205); rever depois do teste | Alan | 04/11/2026 |
+| Folhas de produção (D-206): os santos "andam" entre os nós num corredor com parallax (`_mid` emendável), mas `docs/ui/screens.md` §4 e `specs/expedition.md` têm só a tela de mapa de nós. Decidir se a expedição ganha caminhada lateral e atualizar a spec | Alan (M1/M2) | 04/11/2026 |
+| Folhas de produção (D-206): tela "Mapa do Inferno" (escolha do círculo em faixas que rolam) não está no fluxo de telas (`screens.md` §2). Decidir onde entra (ex.: passo de "Planejar a semana") | Alan (M2) | 04/11/2026 |
+| Linha do chão dos cenários a y ≈ 900 de 1080: a tela de combate hoje põe os pés a y ≈ 456 e as figuras com 300 px. Refazer o leiaute do campo quando os cenários entrarem (resolve também "Jorge pequeno") | M2 (arte final) | 04/11/2026 |
+| Estados espirituais: as folhas pedem só o **rosto** por estado (`face_*`); hoje Jorge usa o corpo inteiro por estado. Escolher no M2 (troca de rosto exige recorte e ponto da cabeça por pose) | M2 | 04/11/2026 |
+| Santa Rita: a pose de ataque segura o crucifixo à frente "em comando". Confirmar que o gesto é devocional e que a habilidade não trata o crucifixo como arma ou fonte de bônus (`writing-guide.md`, figuras sagradas) | Alan | 04/11/2026 |
