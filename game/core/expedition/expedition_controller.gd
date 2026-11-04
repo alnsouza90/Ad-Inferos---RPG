@@ -722,6 +722,11 @@ func rest_problem(activities: Array[Dictionary]) -> StringName:
 	return &""
 
 
+## True when the camp skill acts on a chosen ally (the camp screen asks whom).
+static func camp_skill_needs_target(skill: CampSkillDef) -> bool:
+	return _skill_needs_target(skill)
+
+
 static func _skill_needs_target(skill: CampSkillDef) -> bool:
 	return [&"heal_ally_pct", &"ally_desolation", &"remove_minor_injury"].has(skill.effect)
 

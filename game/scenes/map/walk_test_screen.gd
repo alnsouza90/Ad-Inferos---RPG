@@ -1,10 +1,10 @@
 class_name WalkTestScreen
 extends Control
-## Test of the walk from the arena (dev builds only), while the camp and
-## flow screens do not exist (T29 and T30): a new leg of Circle 2 with the
-## M1 kit, walked on the WalkScreen. A Temptation opens the EventScreen
-## (T28); other nodes show a placeholder that finishes them with
-## DevNodeResolver; the camp and the end of the leg show a short note.
+## Test of the walk from the arena (dev builds only), while the flow screens
+## do not exist (T30): a new leg of Circle 2 with the M1 kit, walked on the
+## WalkScreen. A Temptation opens the EventScreen (T28) and the camp the
+## CampScreen (T29); battles and relics show a placeholder that finishes
+## them with DevNodeResolver; the end of the leg shows a short note.
 ## Everything goes through commands, like the real game.
 
 ## M1 data ids: the leg is played in Circle 2 with the arena groups and the
@@ -22,6 +22,8 @@ var ctrl: ExpeditionController
 var walk: WalkScreen
 ## The Temptation in progress (T28), or null.
 var event_screen: EventScreen
+## The camp of the leg (T29), kept while an ambush is fought, or null.
+var camp_screen: CampScreen
 var leg_seed: int = 1
 var speed_index: int = 0
 ## True in the game: commands go through GameState, which saves after each
@@ -61,12 +63,9 @@ func run_command(cmd: ExpeditionCommand) -> StringName:
 	return ctrl.execute(cmd)
 
 
-## The placeholder's button: finish the node, leave the camp or go back.
+## The placeholder's button: finish the node or battle, or go back.
 func press_action() -> void:
 	match ctrl.phase:
-		ExpeditionController.Phase.AT_CAMP:
-			run_command(ExpeditionCommand.leave_camp(ExpeditionCommand.MODE_CONTINUE))
-			_show_state()
 		ExpeditionController.Phase.ENDED:
 			back_requested.emit()
 		_:
@@ -102,14 +101,32 @@ func _show_state() -> void:
 		event_screen.finished.connect(_on_event_finished)
 		add_child(event_screen)
 		return
+	if ctrl.phase == ExpeditionController.Phase.AT_CAMP:
+		_overlay.visible = false
+		if camp_screen == null:
+			camp_screen = CampScreen.new()
+			camp_screen.setup(data, ctrl, run_command)
+			camp_screen.battle_started.connect(_show_state)
+			camp_screen.left_camp.connect(_show_state)
+			add_child(camp_screen)
+		camp_screen.visible = true
+		camp_screen.refresh()
+		return
+	if camp_screen != null:
+		camp_screen.visible = false
+		if ctrl.is_over():
+			camp_screen.queue_free()
+			camp_screen = null
+	if ctrl.phase == ExpeditionController.Phase.IN_BATTLE and ctrl.state.camp_reached:
+		_message.text = t.text(&"walk_test_ambush")
+		_action.text = t.text(&"walk_test_resolve")
+		_overlay.visible = true
+		return
 	match ctrl.phase:
 		ExpeditionController.Phase.AT_FORK:
 			_overlay.visible = false
 			walk.arrive()
 			return
-		ExpeditionController.Phase.AT_CAMP:
-			_message.text = t.text(&"walk_test_camp", {"alms": ctrl.state.alms_banked})
-			_action.text = t.text(&"walk_test_leave_camp")
 		ExpeditionController.Phase.ENDED:
 			_message.text = t.text(&"walk_test_ended", {"reason": t.text(StringName("walk_end_%s" % ctrl.ended_reason)), "alms": ctrl.state.alms_banked})
 			_action.text = t.text(&"back_to_arena")

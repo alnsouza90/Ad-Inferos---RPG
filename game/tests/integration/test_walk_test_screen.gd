@@ -32,6 +32,8 @@ func test_a_whole_leg_is_walked_by_touch_to_the_end() -> void:
 				break
 			if screen.event_screen != null:
 				_play_event(screen.event_screen)
+			elif screen.camp_screen != null and screen.camp_screen.visible:
+				_play_camp(screen.camp_screen)
 			elif screen.overlay_shown():
 				assert_false(screen.message_text().contains("["), "sem texto faltando: %s" % screen.message_text())
 				screen.press_action()
@@ -43,6 +45,19 @@ func test_a_whole_leg_is_walked_by_touch_to_the_end() -> void:
 		assert_true(screen.ctrl.is_over())
 		var again := ExpeditionController.replay(cat, screen.ctrl.initial_snapshot(), screen.ctrl.command_log)
 		assert_eq(JSON.stringify(again.snapshot()), JSON.stringify(screen.ctrl.snapshot()), "tudo passou por comandos registrados")
+
+
+## Rest with a Vigil for everyone (once), then continue: two taps each.
+static func _play_camp(camp: CampScreen) -> void:
+	if not camp.ctrl.state.camp_rested and camp.ctrl.state.provisions.has(&"bread"):
+		for id: StringName in camp.ctrl.state.party:
+			camp.choose_activity(id, ExpeditionController.ACTIVITY_VIGIL)
+		camp.press_rest()
+		camp.press_rest()
+		camp.press_result_continue()
+		return
+	camp.press_continue()
+	camp.press_continue()
 
 
 ## Pages, then the first option that can be taken (two taps), then the result.

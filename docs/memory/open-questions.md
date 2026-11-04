@@ -38,3 +38,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Caminhada: entradas são retângulos com texto e o andar é só um deslize com balanço; ícones de tipo de nó, desenhos de porta/caverna/escada e animação de andar ficam para o M2 (D-210) | M2 | 04/11/2026 |
 | ~~Ilustração do evento "O abrigo do vento" em tamanho maior~~ v02 recebida com 1376×768 (D-153); se houver versão ≥ 1920×1080, fica mais nítida | Alan (T28) | 04/11/2026 |
 | Tela do evento: fonte própria (com itálico de verdade) e moldura de pergaminho da caixa de texto ficam para a arte de interface (M2) | M2 | 04/11/2026 |
+| ~~Pouso do Círculo 2 em tamanho cheio~~ v02 recebida com 1600×672 (D-156); se houver versão de 2560×1080, fica mais nítida | Alan (T29) | 04/11/2026 |
