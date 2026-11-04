@@ -106,11 +106,11 @@ Ao chegar ao `node_camp`:
 | Atividade | Efeito |
 | --- | --- |
 | Vigília | −[desolation_vigil] (20) de desolação no próprio santo |
-| Partilha | Cura [share_heal_pct] (30%) da vida máxima de um aliado |
-| Oração | +1 de Fervor inicial no próximo combate (somando as Orações, no máximo +2) |
+| Partilha | Cura [share_heal_pct] (30%) da vida máxima de um aliado (outro santo, nunca o próprio; D-144) |
+| Oração | +1 de Fervor inicial no próximo combate (somando as Orações, no máximo +2); a emboscada deste Pouso conta como próximo combate (D-143) |
 | Atividade própria | Definida em `saints.csv` (`camp_skill`) |
 
-4. Depois das atividades, sorteio de emboscada: [ambush_chance] (25%), multiplicada pelo Lume; anulada por Incenso (consumido). Emboscada = combate comum do trecho seguinte, iniciado com a equipe como está.
+4. Depois das atividades, sorteio de emboscada: [ambush_chance] (25%), multiplicada pelo Lume e pela atividade própria (Guarda de Jorge); se a emboscada acontecer e a equipe levar Incenso, ela é anulada e o Incenso é gasto. Emboscada = combate comum do trecho seguinte, iniciado com a equipe como está; as Esmolas dela ficam garantidas ao voltar ao Pouso.
 
 ## 7. Vigília (antes do chefe)
 
@@ -203,5 +203,6 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
 | Encontros do círculo (§3) | Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*` | Backlog do M1 |
 | Ordem da equipe | Cada combate começa na ordem em que o anterior terminou (vale também depois do M1) | D-134 |
+| Saída do Pouso (§6) | Seguir ou retirada planejada encerram o trecho, com as Esmolas garantidas | Backlog do M1 |
 | Experiência (§8) e ferimentos (§9) | Ferimentos ficam registrados no estado, sem efeito; sem experiência | Backlog do M1 |
 | Mecânica de ambiente do Círculo 2 (§10) | Sem Vendaval | Backlog do M1 |

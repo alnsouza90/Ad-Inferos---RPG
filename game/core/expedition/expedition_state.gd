@@ -24,6 +24,11 @@ var fallen_once: Array[StringName] = []
 var gate_level: int = 1
 ## Nodes whose content Incense revealed; known until the end of the leg (D-137).
 var revealed_nodes: Array[StringName] = []
+## Camp of this leg reached (consecrated) and rest taken (§6).
+var camp_reached: bool = false
+var camp_rested: bool = false
+## Starting Fervor of the next battle from Prayers, already capped (§6).
+var next_battle_fervor: int = 0
 
 
 ## New expedition from the gate, with full Light.
@@ -77,6 +82,7 @@ func to_dict() -> Dictionary:
 		"provisions": _to_strings(provisions), "alms_unbanked": alms_unbanked, "alms_banked": alms_banked,
 		"party": _to_strings(party), "fallen_once": _to_strings(fallen_once),
 		"gate_level": gate_level, "revealed_nodes": _to_strings(revealed_nodes),
+		"camp_reached": camp_reached, "camp_rested": camp_rested, "next_battle_fervor": next_battle_fervor,
 	}
 
 
@@ -97,6 +103,9 @@ static func from_dict(data: Dictionary) -> ExpeditionState:
 	state.fallen_once = _to_names(data.get("fallen_once", []))
 	state.gate_level = int(data.get("gate_level", 1))
 	state.revealed_nodes = _to_names(data.get("revealed_nodes", []))
+	state.camp_reached = bool(data.get("camp_reached", false))
+	state.camp_rested = bool(data.get("camp_rested", false))
+	state.next_battle_fervor = int(data.get("next_battle_fervor", 0))
 	return state
 
 
