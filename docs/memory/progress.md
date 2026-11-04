@@ -7,8 +7,8 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 - **Marco atual:** M0 · Protótipo de combate (`docs/backlog/m0.md`).
 - **Concluídas:** T00 a T14 (PRs #1 a #14, todos com merge na `main`); continuidade (PR #15); arte do piloto e memória do projeto (PR #16); T15 · tela de combate com arte provisória (PR #17, aprovado por Alan em 03/11/2026); T16 · auréola no motor com a arte piloto de São Jorge (PR #18, aprovado por Alan em 03/11/2026).
 - **Jogo no navegador:** https://alnsouza90.github.io/Ad-Inferos---RPG/ (publicado a cada merge na `main`).
-- **Em revisão:** complemento da T16 com a arte nova de Jorge (D-204).
-- **Depois:** T17 · Arena de teste (seletor de encontro e semente) e APK Android. Teste da T16 no celular (04/11/2026): Jorge aparece com auréola e parece nítido, mas **pequeno** (o navegador não deixa tela cheia); auréola ao vivo não testada (sem desolação no combate); combate segue funcionando.
+- **Concluído também:** complemento da T16 com a arte nova de Jorge (PR #19, aprovado em 04/11/2026, D-204, D-205).
+- **Próxima:** T17 · Arena de teste (seletor de encontro e semente) e APK Android. Teste da T16 no celular (04/11/2026): Jorge aparece com auréola e parece nítido, mas **pequeno** (o navegador não deixa tela cheia); auréola ao vivo não testada (sem desolação no combate); combate segue funcionando.
 - **Adiado para o M1 (decisão de Alan, 03/11/2026):** recalibrar as metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" (`docs/balance/sim-reports/2026-11-03-m0-t14.md`).
 
 ## Como trabalhamos

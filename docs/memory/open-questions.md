@@ -22,4 +22,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Animação de combate "como Darkest Dungeon" (santo vai até o inimigo e ataca; defesa com reação): Alan achou a atual simples demais. Planejada na trava "abordagem de animação" do roadmap (arte final do M2, ADR-0007); ~~proposta de antecipar~~ Alan decidiu manter no M2 (D-116) | M2 | 04/11/2026 |
 | Personagens pequenos na tela do celular (navegador sem tela cheia) | T17 (APK em tela cheia) | 04/11/2026 |
 | Forma de testar a auréola sem depender da sorte: botões de teste na T17 (D-117) | T17 | 04/11/2026 |
-| Noite Escura e Consolação de Jorge são da leva antiga (traço diferente da pose normal nova); Alan decide se gera versões novas no mesmo estilo | Alan | 04/11/2026 |
+| Noite Escura e Consolação de Jorge são da leva antiga (traço diferente da pose normal nova): Alan manteve por enquanto (D-205); rever depois do teste | Alan | 04/11/2026 |
