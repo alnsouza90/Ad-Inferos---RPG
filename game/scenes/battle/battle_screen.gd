@@ -103,7 +103,7 @@ func setup(p_data: GameData, p_ctrl: BattleController) -> void:
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	if data == null:
 		var loaded: GameData = GameData.load_all()
 		setup(loaded, BattleController.new(loaded.battle(encounter_id, battle_seed)))
@@ -723,9 +723,22 @@ func _enemy_x(anchor_slot: int) -> float:
 
 # --- building --------------------------------------------------------------------
 
+## The area this screen fills. A screen created in code (the battle inside
+## the arena) only gets its size after layout, so the viewport is the
+## fallback; never centre on a zero size (the T17 phone bug).
+func screen_size() -> Vector2:
+	if size.x > 0.0 and size.y > 0.0:
+		return size
+	return get_viewport_rect().size if is_inside_tree() else STAGE_SIZE
+
+
+func stage_position() -> Vector2:
+	return _stage.position if _stage != null else Vector2.ZERO
+
+
 func _center_stage() -> void:
 	if _stage != null:
-		_stage.position = ((size - STAGE_SIZE) * 0.5).floor()
+		_stage.position = ((screen_size() - STAGE_SIZE) * 0.5).floor()
 
 
 func _build_ui() -> void:
@@ -735,7 +748,7 @@ func _build_ui() -> void:
 	var background := ColorRect.new()
 	background.color = COLOR_BACKGROUND
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	background.set_anchors_preset(Control.PRESET_FULL_RECT)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(background)
 	_stage = Control.new()
 	_stage.size = STAGE_SIZE

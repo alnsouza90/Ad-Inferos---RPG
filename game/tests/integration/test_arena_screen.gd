@@ -47,3 +47,14 @@ func test_back_to_arena_after_the_result() -> void:
 	assert_true(battle.result_shown())
 	battle.press_back()
 	assert_null(arena.battle, "voltou à arena")
+
+
+## T17 phone bug: the battle created by the arena kept a zero size, so its
+## 1920×1080 stage was centred on nothing and drawn off screen.
+func test_battle_fills_the_arena_and_its_stage_is_centred() -> void:
+	arena.start()
+	var battle: BattleScreen = arena.battle
+	assert_gt(arena.size.x, 0.0)
+	assert_eq(battle.size, arena.size, "o combate ocupa a tela toda")
+	var expected: Vector2 = ((arena.size - BattleScreen.STAGE_SIZE) * 0.5).floor()
+	assert_eq(battle.stage_position(), expected, "palco centralizado")
