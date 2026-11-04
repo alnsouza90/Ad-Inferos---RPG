@@ -73,6 +73,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-155 · 04/11/2026 · Alan** — Arte para a T29 recebida: retratos de São Bento e Santa Teresinha (896×1200) e o Pouso do Círculo 2 (`env_circle_02_camp`), este só com 512×217 (reduzido pelo chat); originais em `art_source/`. *T29.*
 - **D-156 · 04/11/2026 · Alan** — Nova versão do Pouso do Círculo 2 (v02, 1600×672) substitui a v01 pequena; usada na T29, ampliada para 2560×1080. *`art_source/environments/circles/circle_02/camp/`.*
 - **D-157 · 04/11/2026 · Alan** — T29 aprovada (tela do Pouso), com os textos revisados. *PR #36.*
+- **D-158 · 04/11/2026 · Alan** — A caminhada interativa (andar até a tenda da Tentação e escolher entrar; andar até a entrada da derivação no fim do corredor e entrar), a animação de andar, os personagens maiores e o parallax da frente ficam para o **M2**, com a arte final (junto de D-209 e D-210). O M1 termina com a caminhada atual (T30 a T32). *`open-questions.md`, futuro `docs/backlog/m2.md`.*
 
 ## Arte
 
