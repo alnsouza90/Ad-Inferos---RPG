@@ -20,6 +20,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type"],
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
 	"map_templates": ["id", "leg", "layer", "index", "role", "type", "links"],
+	"starting_kits": ["id", "provision_id", "amount"],
 	"ui_text": ["id", "text_pt"],
 	"saints": ["id", "name_pt", "roles", "preferred_slots", "max_hp", "armor", "faith", "will", "hp_per_level", "faith_per_level", "abilities", "default_equipped", "miracle", "trait", "camp_skill", "affinities", "unlock", "m0"],
 }
@@ -81,6 +82,7 @@ var enemies: Dictionary = {}
 var encounters: Dictionary = {}
 var provisions: Dictionary = {}
 var map_templates: Dictionary = {}
+var starting_kits: Dictionary = {}
 var saints: Dictionary = {}
 var ui_text: UiTextDef
 
@@ -118,6 +120,7 @@ func import_tables(texts: Dictionary) -> bool:
 	_build_encounters()
 	_build_provisions()
 	_build_map_templates()
+	_build_starting_kits()
 	_build_saints()
 	_build_ui_text()
 	_validate_effect_owners()
@@ -300,7 +303,10 @@ func _validate_effect_fields(t: CsvTable, line: int, row: Dictionary, d: EffectD
 		if not constants.has_key(StringName(key)):
 			_err("unknown_id", t.file_name, line, "constante '%s' não existe em constants.csv" % key)
 		else:
-			d.amount = constants.get_float(StringName(key))
+			# The constant holds the size; the CSV amount keeps the sign
+			# (Holy Water: -15 with holy_water_desolation = 15 lowers desolation).
+			var size: float = absf(constants.get_float(StringName(key)))
+			d.amount = -size if d.amount < 0.0 else size
 
 
 func _build_abilities() -> void:
@@ -581,6 +587,33 @@ func _build_map_templates() -> void:
 		if not MapGenerator.is_valid(LegMap.from_template(d)):
 			_err("invalid_template", t.file_name, int(first_line[id]), "o modelo '%s' não cumpre as regras de caminho do trecho %d" % [id, d.leg])
 		map_templates[id] = d
+
+
+## Starting provisions (D-123): one row per provision, grouped by kit id, in
+## row order. A kit never holds more than the gate level 1 pack.
+func _build_starting_kits() -> void:
+	var t: CsvTable = _tables["starting_kits"]
+	for i: int in t.rows.size():
+		var row: Dictionary = t.rows[i]
+		var line: int = t.line_numbers[i]
+		var id: String = row["id"]
+		if id.is_empty() or _id_pattern.search(id) == null:
+			_err("bad_id", t.file_name, line, "ID '%s' fora do padrão snake_case" % id)
+			continue
+		if not starting_kits.has(id):
+			var kit := StartingKitDef.new()
+			kit.id = StringName(id)
+			starting_kits[id] = kit
+		var provision_id: String = row["provision_id"]
+		if not provisions.has(provision_id):
+			_err("unknown_id", t.file_name, line, "provisão '%s' não existe em provisions.csv" % provision_id)
+			continue
+		var amount: int = _int(t, line, "amount", row, 1, 99)
+		var d: StartingKitDef = starting_kits[id]
+		for n: int in amount:
+			d.provisions.append(StringName(provision_id))
+		if constants.has_key(&"gate_slots_l1") and d.provisions.size() > constants.get_int(&"gate_slots_l1"):
+			_err("out_of_range", t.file_name, line, "o kit '%s' passa de %d provisões (espaços do Portão nível 1)" % [id, constants.get_int(&"gate_slots_l1")])
 
 
 func _build_saints() -> void:

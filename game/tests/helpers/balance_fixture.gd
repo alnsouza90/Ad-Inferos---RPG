@@ -46,6 +46,7 @@ static func valid_tables() -> Dictionary:
 		"map_templates": "id,leg,layer,index,role,type,links\n"
 			+ "t_leg,1,1,0,battle,node_battle,0\nt_leg,1,2,0,temptation,node_temptation,0\n"
 			+ "t_leg,1,3,0,variable,node_relic,0\nt_leg,1,4,0,battle,node_battle,\n",
+		"starting_kits": "id,provision_id,amount\nt_kit,bread,2\n",
 		"saints": "id,name_pt,roles,preferred_slots,max_hp,armor,faith,will,hp_per_level,faith_per_level,abilities,default_equipped,miracle,trait,camp_skill,affinities,unlock,m0\n"
 			+ "saint_t,Santo Teste,fighter|protector,1|2,32,2,4,1,4,1,t_strike|t_bash|t_guard|t_pray|t_charge|t_rally,t_strike|t_bash|t_guard|t_charge,t_miracle,trait_t,camp_t,soldiers,start,y\n",
 	}

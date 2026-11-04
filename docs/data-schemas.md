@@ -251,3 +251,15 @@ Trechos fixos de reserva, usados quando o gerador não consegue um trecho válid
 | `links` | lista de inteiros | Posições ligadas na camada seguinte; vazio na última camada |
 
 Validação: o modelo inteiro passa pelas mesmas regras de caminho de um trecho gerado (`invalid_template`); nós fora da sequência dão `slot_gap`.
+
+### 3.16 `starting_kits.csv` → `game/data/starting_kits/<id>.tres` (`StartingKitDef`)
+
+Provisões com que a expedição parte enquanto não há vila (M1, D-123). Uma linha por provisão; as linhas com o mesmo `id` formam o kit, na ordem das linhas.
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | ID | Nome do kit (`m1_kit`) |
+| `provision_id` | ID | Provisão de `provisions.csv` |
+| `amount` | inteiro ≥ 1 | Quantidade |
+
+Validação: provisão inexistente dá `unknown_id`; kit com mais itens que [gate_slots_l1] dá `out_of_range`.

@@ -37,7 +37,7 @@ O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum vi
 
 - **O tipo de todo nó é sempre visível.**
 - O **conteúdo** (família de inimigos, tipo de recompensa) é revelado conforme o nível do Portão: nível 1 revela a próxima camada; nível 2, as duas próximas; nível 3, o trecho inteiro. A Biblioteca revela também resistências e a segunda fase dos chefes.
-- Incenso revela o conteúdo de **mais uma camada** além do que o Portão já mostra, nos nós ligados às entradas da bifurcação atual (D-129). Com o Portão nível 1: o conteúdo dos nós que vêm depois das entradas.
+- Incenso revela o conteúdo de **mais uma camada** além do que o Portão já mostra, nos nós ligados às entradas da bifurcação atual (D-129). Com o Portão nível 1: o conteúdo dos nós que vêm depois das entradas. O que foi revelado fica conhecido até o fim do trecho (D-137).
 
 ### 2.3 Caminhada e bifurcações (D-207, D-121)
 
@@ -89,10 +89,10 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 
 | Provisão | Em combate | Fora de combate |
 | --- | --- | --- |
-| Pão | Cura [bread_heal] (5); no Círculo 3, suspende a Fome naquele combate | Necessário para descansar no Pouso (1 por equipe) |
+| Pão | Cura [bread_heal] (5); no Círculo 3, suspende a Fome naquele combate | Só para descansar no Pouso (1 por equipe) |
 | Vela | — | +25 de Lume |
 | Água Benta | Remove Corrupção; −15 de desolação | Idem |
-| Ataduras | Remove Sangramento | Idem |
+| Ataduras | Remove Sangramento | — (o Sangramento acaba com o combate; D-136) |
 | Incenso | — | Revela mais uma camada à frente (§2.2) ou anula emboscada no Pouso |
 
 ## 6. Pouso
@@ -197,7 +197,7 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Regra completa | No M1 | Decisão |
 | --- | --- | --- |
 | Expedição de 3 trechos, Vigília e chefe (§1) | Só o trecho 1 e o Pouso; depois do Pouso, a expedição termina com um resumo | Backlog do M1 |
-| Provisões compradas na Despensa (§5) | Kit fixo, num CSV de `docs/balance/`: 2 Pães, 1 Vela, 2 Águas Bentas, 1 Ataduras e 1 Incenso (7 dos 8 espaços do Portão nível 1) | D-123 |
+| Provisões compradas na Despensa (§5) | Kit fixo em `docs/balance/starting_kits.csv`: 2 Pães, 1 Vela, 2 Águas Bentas, 1 Ataduras e 1 Incenso (7 dos 8 espaços do Portão nível 1) | D-123 |
 | Nível do Portão definido pela vila | Portão nível 1 | Backlog do M1 |
 | Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |

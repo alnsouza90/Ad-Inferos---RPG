@@ -22,6 +22,7 @@ const EV_BATTLE_RESOLVED: StringName = &"battle_resolved"
 const EV_NODE_COMPLETED: StringName = &"node_completed"
 const EV_CAMP_REACHED: StringName = &"camp_reached"
 const EV_EXPEDITION_ENDED: StringName = &"expedition_ended"
+const EV_PROVISION_USED: StringName = &"field_provision_used"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -125,7 +126,32 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 			return _battle_command(cmd)
 		ExpeditionCommand.COMPLETE_NODE:
 			return _complete_node(cmd)
+		ExpeditionCommand.USE_PROVISION:
+			return _use_provision(cmd)
 	return REJECT_UNKNOWN_COMMAND
+
+
+## Content of a node is known when the gate reaches it (§2.2) or Incense
+## revealed it earlier in this leg (D-129, D-137). The type is always known.
+func content_visible(n: MapNode) -> bool:
+	return LegMap.content_visible(n.layer, current_layer(), state.gate_level) or state.revealed_nodes.has(n.id)
+
+
+## Reason a provision cannot be used at this bifurcation, or &"" if it can.
+func field_provision_problem(provision_id: StringName, target_id: StringName = &"") -> StringName:
+	if phase != Phase.AT_FORK:
+		return REJECT_WRONG_PHASE
+	if not state.provisions.has(provision_id):
+		return FieldProvisions.REJECT_NOT_CARRIED
+	var def: ProvisionDef = catalog.battle_catalog.provision(provision_id)
+	if not FieldProvisions.usable_in_field(def):
+		return FieldProvisions.REJECT_NOT_USABLE_HERE
+	if FieldProvisions.needs_target(def) and not saints.has(target_id):
+		return FieldProvisions.REJECT_NEEDS_TARGET
+	for e: EffectDef in def.effects:
+		if e.type == &"reveal_or_cancel_ambush" and _nodes_incense_would_reveal().is_empty():
+			return FieldProvisions.REJECT_NOTHING_TO_REVEAL
+	return &""
 
 
 # --- commands -----------------------------------------------------------------
@@ -168,6 +194,65 @@ func _complete_node(cmd: ExpeditionCommand) -> StringName:
 	_emit(EV_NODE_COMPLETED, {"node": state.current_node})
 	_after_node()
 	return &""
+
+
+## Each field effect of the provision acts; effects that only make sense in
+## battle (removing conditions, healing) do nothing out here.
+func _use_provision(cmd: ExpeditionCommand) -> StringName:
+	var problem: StringName = field_provision_problem(cmd.provision_id, cmd.target_id)
+	if problem != &"":
+		return problem
+	command_log.append(cmd.to_dict())
+	state.provisions.erase(cmd.provision_id)
+	var def: ProvisionDef = catalog.battle_catalog.provision(cmd.provision_id)
+	for e: EffectDef in def.effects:
+		match e.type:
+			&"light":
+				state.light = clampi(state.light + int(e.amount), 0, ExpeditionLight.LIGHT_MAX)
+			&"desolation":
+				_change_desolation(cmd.target_id, int(e.amount), &"provision")
+			&"reveal_or_cancel_ambush":
+				for id: StringName in _nodes_incense_would_reveal():
+					state.revealed_nodes.append(id)
+	_emit(EV_PROVISION_USED, {"provision": cmd.provision_id, "target": cmd.target_id, "light": state.light})
+	return &""
+
+
+## Incense: one layer beyond the gate's reach, only the nodes reachable from
+## the entrances of this bifurcation (D-129).
+func _nodes_incense_would_reveal() -> Array[StringName]:
+	var result: Array[StringName] = []
+	var target_layer: int = current_layer() + state.gate_level + 1
+	var frontier: Array[MapNode] = entrances()
+	while not frontier.is_empty() and frontier[0].layer < target_layer:
+		var next: Array[MapNode] = []
+		for n: MapNode in frontier:
+			for linked: MapNode in map.entrances_from(n):
+				if not next.has(linked):
+					next.append(linked)
+		frontier = next
+	for n: MapNode in frontier:
+		if n.layer == target_layer and not content_visible(n):
+			result.append(n.id)
+	return result
+
+
+## Desolation outside battle goes through the same rules (thresholds,
+## Purification), on a temporary combatant built from the saint's status.
+func _change_desolation(saint_id: StringName, amount: int, source: StringName) -> void:
+	var status: SaintStatus = saints[saint_id]
+	var c := Combatant.from_saint(catalog.saint(saint_id))
+	status.apply_to(c)
+	var ctx := DesolationContext.new()
+	ctx.constants = catalog.constants
+	ctx.rng = RngStream.new(battle_seed(StringName("field_%d" % command_log.size())), RngStreams.FAITH)
+	ctx.light = state.light
+	Desolation.change(c, amount, source, ctx)
+	status.desolation = c.desolation
+	status.spirit_state = c.spirit_state
+	status.purified = c.purified
+	if c.pending_injury == Desolation.INJURY_MAJOR:
+		status.add_injury(SaintStatus.INJURY_MAJOR)
 
 
 # --- battle -------------------------------------------------------------------
