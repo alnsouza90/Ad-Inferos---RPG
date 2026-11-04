@@ -68,6 +68,7 @@ func start() -> void:
 	battle.speed_index = battle_speed_index
 	battle.show_back_button = true
 	battle.setup(data, BattleController.new(data.battle(chosen, arena_seed)))
+	battle.settings = _settings()
 	battle.back_requested.connect(back_to_arena)
 	_menu.visible = false
 	add_child(battle)
@@ -182,3 +183,18 @@ func _button(text: String, button_size: Vector2) -> Button:
 	button.text = text
 	button.custom_minimum_size = button_size
 	return button
+
+
+func _init() -> void:
+	var saved: SettingsStore = _settings()
+	if saved != null:
+		battle_speed_index = clampi(int(saved.get_value("animation_speed", 0)), 0, BattleScreen.SPEEDS.size() - 1)
+
+
+## The remembered preferences (SaveService autoload), if it is running.
+static func _settings() -> SettingsStore:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	var service: Node = tree.root.get_node_or_null("SaveService")
+	return service.get("settings") if service != null else null

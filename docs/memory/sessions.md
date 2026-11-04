@@ -5,9 +5,9 @@ Resumo curto de cada sessão. A mais recente no topo.
 ## Sessão 3 · 04/11/2026
 
 - Sem Godot no ambiente (compilação negada de novo pelas permissões): testes pelo CI; sintaxe conferida com `gdtoolkit` (`pip install "gdtoolkit==4.*"`, comando `gdparse`).
-- Feitos: backlog do M1 (PR #24), T18 specs da caminhada (PR #25), T19 Lume e estado da expedição (PR #26), T20 gerador do trecho (PR #27), T21 controlador da expedição (PR #28), T22 provisões e preparação (PR #29, com a correção da Água Benta, D-317), T23 Tentação e virtudes (PR #30, "O abrigo do vento"), T24 Pouso (PR #31).
-- Decisões de Alan: D-121 a D-145 (caminhada e mini-mapa, rascunho da Tentação pelo agente, kit fixo de provisões, nó variável sem elite, metas D-113, Incenso revela mais uma camada, números do gerador).
-- Estado: 354 testes passando. Próximo: **T25** (nó variável: relíquia ou combate, `docs/backlog/m1.md`). Sem Godot local: escrever os `.tres` à mão no formato do importador (ver `lessons.md`).
+- Feitos: backlog do M1 (PR #24), T18 specs da caminhada (PR #25), T19 Lume e estado da expedição (PR #26), T20 gerador do trecho (PR #27), T21 controlador da expedição (PR #28), T22 provisões e preparação (PR #29, com a correção da Água Benta, D-317), T23 Tentação e virtudes (PR #30, "O abrigo do vento"), T24 Pouso (PR #31), T25 relíquias (PR #32).
+- Decisões de Alan: D-121 a D-147 (caminhada e mini-mapa, rascunho da Tentação pelo agente, kit fixo de provisões, nó variável sem elite, metas D-113, Incenso revela mais uma camada, números do gerador).
+- Estado: 354 testes passando. Estado: 400 testes. Próximo: **T26** (salvamento e retomada, `docs/backlog/m1.md`). Sem Godot local: escrever os `.tres` à mão no formato do importador (ver `lessons.md`).
 
 ## Sessão 2 · 03 e 04/11/2026
 
