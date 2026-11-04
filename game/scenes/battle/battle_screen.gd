@@ -55,6 +55,9 @@ var texts: BattleTexts
 var ctrl: BattleController
 var selection: BattleSelection
 var speed_index: int = 0
+## Where the chosen speed is remembered (user://settings.json, screens §3).
+## Null in tests, so they never depend on a file from an earlier run.
+var settings: SettingsStore
 ## True while events are being animated: input waits.
 var busy: bool = false
 
@@ -218,6 +221,8 @@ func press_cancel() -> void:
 
 func press_speed() -> void:
 	speed_index = (speed_index + 1) % SPEEDS.size()
+	if settings != null:
+		settings.set_value("animation_speed", speed_index)
 	for view: CombatantView in _views.values():
 		view.speed = SPEEDS[speed_index]
 	_refresh_top()

@@ -149,6 +149,8 @@ Resumo (detalhes em `docs/specs/save-load.md`):
 - No combate, salva a semente e o log de comandos; ao reabrir, reaplica os comandos e chega ao mesmo estado.
 - Salva após cada comando resolvido, ao trocar de nó e quando o Android põe o app em segundo plano (`NOTIFICATION_APPLICATION_PAUSED`).
 
+Implementação (T26): `autoload/save_store.gd` (`SaveStore`: escrita atômica, `.bak`, `.corrupt`, versão futura), `save_migrations.gd` (`SaveMigrations`), `expedition_save.gd` (`ExpeditionSave`: expedição ↔ save), `settings_store.gd` (`SettingsStore`); os autoloads `SaveService` (arquivos do jogador) e `GameState` (expedição em memória; salva depois de cada comando aceito e quando o Android pausa ou fecha o app). Os autoloads não têm `class_name` (o nome do autoload já é global).
+
 ## 7. Eventos para a tela
 
 - `core` não emite sinais globais. O controlador devolve eventos na resposta do comando e também os expõe por um sinal local `events_emitted(events: Array[BattleEvent])`.

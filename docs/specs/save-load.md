@@ -53,6 +53,17 @@ Versão 1.0 · ADR-0005
 }
 ```
 
+### 3.0 Como o M1 grava a expedição (D-320)
+
+Em vez de guardar o estado do combate à parte (§3.2), o M1 guarda a expedição inteira como **retrato inicial + log de comandos**, com os comandos de combate dentro do log (`ExpeditionSave`):
+
+```json
+"expedition": { "initial": { "...": "retrato no Portão" }, "commands": [ { "type": "ChoosePath", "node": "l1_n0" } ], "check": { "...": "retrato atual" } },
+"battle": { "in_progress": true }
+```
+
+Ao carregar, os comandos são reaplicados e o resultado precisa bater com `check`; se não bater, o save conta como corrompido e o jogo tenta o `.bak` (§6). O efeito para o jogador é o mesmo do §3.2: volta exatamente ao mesmo ponto, inclusive no meio do turno.
+
 ### 3.1 Expedição em andamento
 
 ```json

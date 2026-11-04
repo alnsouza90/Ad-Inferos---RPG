@@ -100,6 +100,16 @@ static func replay(p_catalog: ExpeditionCatalog, initial: Dictionary, commands: 
 	return c
 
 
+## Like replay(), for data read from disk: returns null instead of failing
+## when a logged command is refused (a save that no longer matches the rules).
+static func try_replay(p_catalog: ExpeditionCatalog, initial: Dictionary, commands: Array) -> ExpeditionController:
+	var c := from_snapshot(p_catalog, initial)
+	for entry: Variant in commands:
+		if not entry is Dictionary or c.execute(ExpeditionCommand.from_dict(entry)) != &"":
+			return null
+	return c
+
+
 ## Restores a controller at a fork or node from snapshot() data (no battle
 ## in progress: battles are rebuilt by replay, save-load §3.2).
 static func from_snapshot(p_catalog: ExpeditionCatalog, data: Dictionary) -> ExpeditionController:
