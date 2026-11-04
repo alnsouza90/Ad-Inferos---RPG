@@ -1,6 +1,6 @@
 # Especificação · Expedição
 
-Versão 1.0 · base: GDD v1.1 §4, §8 e §12 · números em `docs/balance/constants.csv` e `economy.csv`
+Versão 1.1 (04/11/2026: caminhada e bifurcações, §2.3; simplificações do M1, §13) · base: GDD v1.1 §4, §8 e §12 · números em `docs/balance/constants.csv` e `economy.csv`
 
 ## 1. Estrutura
 
@@ -36,6 +36,20 @@ O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum vi
 - **O tipo de todo nó é sempre visível.**
 - O **conteúdo** (família de inimigos, tipo de recompensa) é revelado conforme o nível do Portão: nível 1 revela a próxima camada; nível 2, as duas próximas; nível 3, o trecho inteiro. A Biblioteca revela também resistências e a segunda fase dos chefes.
 - Incenso revela o conteúdo dos nós vizinhos.
+
+### 2.3 Caminhada e bifurcações (D-207, D-121)
+
+A expedição é vista como uma **caminhada lateral**: os santos andam por um corredor (da esquerda para a direita), como em Darkest Dungeon. O mapa de nós continua existindo por baixo (§2.1) e é ele que define as escolhas; o corredor é a forma de mostrá-lo.
+
+1. **Corredor.** Entre um ponto e o seguinte (Portão → camada 1, nó → próxima camada, última camada → Pouso), a equipe percorre um corredor. Andar não tem regra: não gasta Lume, não sorteia nada e não muda o estado.
+2. **Bifurcação.** No fim do corredor aparecem as **entradas** da próxima camada: uma para cada nó ligado ao nó atual (do Portão, todos os nós da camada 1). Uma das entradas é o caminho que **segue reto**; as outras são **desvios** (porta, caverna, escada...). Quando só há uma ligação, aparece só o caminho reto.
+3. **O que se vê de cada entrada.** O ícone do tipo de nó, sempre (§2.2). O conteúdo segue a regra do Portão: com nível 1, como as entradas são a próxima camada, o conteúdo delas aparece.
+4. **Escolher.** Tocar numa entrada mostra o que se sabe dela; o segundo toque confirma. Confirmar é um comando registrado no log (`ChoosePath`). A equipe entra no nó: Lume −5 (§4), salvamento (`save-load.md` §4) e conteúdo do nó.
+5. **Depois do nó.** Vencido o combate, terminado o evento ou recolhida a relíquia, a equipe volta ao corredor rumo à próxima camada. Depois da última camada do trecho, o corredor leva só ao Pouso.
+6. **Aparência.** Qual entrada é o caminho reto e qual desenho tem cada desvio é só apresentação: a tela escolhe a partir do ID do nó, sem usar o RNG das regras, para sempre parecer igual ao retomar o jogo.
+7. **Mini-mapa.** Um botão no corredor abre o trecho inteiro: todos os nós com o tipo, as ligações, o caminho já percorrido e a posição atual; o conteúdo segue §2.2. O mini-mapa só mostra: a escolha é feita nas entradas do corredor.
+8. **Provisões no corredor.** Na bifurcação, antes de escolher, o jogador pode usar provisões fora de combate (§5).
+9. **Retomada.** Fechar o app no corredor volta à bifurcação em que a equipe estava, com o mesmo estado.
 
 ## 3. Tipos de nó
 
@@ -169,3 +183,21 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 | E08 | Retirada de emergência com 300 Esmolas não garantidas | Perde 150 |
 | E09 | Derrota | Pousos consagrados mantidos |
 | E10 | 3ª revisita no mesmo tempo litúrgico | Esmolas × 0,5 |
+| E11 | Bifurcação depois de um nó com 2 ligações | Duas entradas, uma reta e um desvio, com o tipo dos dois nós ligados; nenhuma entrada para nós não ligados |
+| E12 | Andar pelo corredor e voltar à bifurcação sem escolher | Lume e estado iguais; nenhum comando no log |
+| E13 | Fechar e reabrir o app na bifurcação | Mesma bifurcação, mesmas entradas, mesmo estado |
+
+## 13. Simplificações do M1 (protótipo de trecho)
+
+Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
+
+| Regra completa | No M1 | Decisão |
+| --- | --- | --- |
+| Expedição de 3 trechos, Vigília e chefe (§1) | Só o trecho 1 e o Pouso; depois do Pouso, a expedição termina com um resumo | Backlog do M1 |
+| Provisões compradas na Despensa (§5) | Kit fixo, num CSV de `docs/balance/`: 2 Pães, 1 Vela, 2 Águas Bentas, 1 Ataduras e 1 Incenso (7 dos 8 espaços do Portão nível 1) | D-123 |
+| Nível do Portão definido pela vila | Portão nível 1 | Backlog do M1 |
+| Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
+| Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
+| Encontros do círculo (§3) | Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*` | Backlog do M1 |
+| Experiência (§8) e ferimentos (§9) | Ferimentos ficam registrados no estado, sem efeito; sem experiência | Backlog do M1 |
+| Mecânica de ambiente do Círculo 2 (§10) | Sem Vendaval | Backlog do M1 |
