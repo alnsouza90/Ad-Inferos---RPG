@@ -60,6 +60,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-142 · 04/11/2026 · Alan** — T23 aprovada, com o texto final de "O abrigo do vento". *PR #30.*
 - **D-143 · 04/11/2026 · Alan** — A Oração vale para a emboscada do mesmo Pouso: ela é o próximo combate e recebe o Fervor; sem emboscada, o bônus fica para o primeiro combate seguinte. *T24, `expedition.md` §6.*
 - **D-144 · 04/11/2026 · Alan** — A Partilha cura só outro santo, nunca o próprio. *T24, `expedition.md` §6.*
+- **D-145 · 04/11/2026 · Alan** — T24 aprovada (Pouso: atividades, Oração, emboscada e saída). *PR #31.*
 
 ## Arte
 
