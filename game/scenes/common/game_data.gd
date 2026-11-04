@@ -29,6 +29,19 @@ static func load_all() -> GameData:
 	return create(catalog, _folder("saints"), _folder("encounters"), load("res://data/ui_text.tres") as UiTextDef)
 
 
+## Everything an expedition needs, read from res://data (T27). Kept out of
+## load_all() so the battle screens do not pay for it.
+func load_expedition_catalog() -> ExpeditionCatalog:
+	var reserves: Dictionary = {}
+	for def: Variant in _folder("map_templates").values():
+		reserves[(def as MapTemplateDef).leg] = def
+	var c := ExpeditionCatalog.create(catalog, load("res://data/economy.tres") as ConstantsDef, saints, encounters, reserves)
+	c.starting_kits = _folder("starting_kits")
+	c.events = _folder("events")
+	c.relics = _folder("relics")
+	return c
+
+
 func m0_party() -> Array[SaintDef]:
 	var party: Array[SaintDef] = []
 	for id: StringName in M0_FORMATION:

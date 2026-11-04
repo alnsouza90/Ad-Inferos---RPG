@@ -18,6 +18,12 @@ var arena_seed: int = DEFAULT_SEED
 var battle: BattleScreen
 ## Speed the next battle starts with (tests use the instant one).
 var battle_speed_index: int = 0
+## The walk test (T27), or null.
+var walk_test: WalkTestScreen
+## Off in tests: the walk test then never writes the player's save slot.
+var walk_saves: bool = true
+## Read from res://data on the first walk; tests hand in their own.
+var expedition_catalog: ExpeditionCatalog
 
 var _stage: Control
 var _menu: Control
@@ -72,6 +78,30 @@ func start() -> void:
 	battle.back_requested.connect(back_to_arena)
 	_menu.visible = false
 	add_child(battle)
+
+
+## Dev test of the walk (T27): a new leg of Circle 2 with the arena seed.
+func start_walk() -> void:
+	if battle != null or walk_test != null:
+		return
+	if expedition_catalog == null:
+		expedition_catalog = data.load_expedition_catalog()
+	walk_test = WalkTestScreen.new()
+	walk_test.setup(data, expedition_catalog, arena_seed)
+	walk_test.speed_index = battle_speed_index
+	walk_test.use_game_state = walk_saves
+	walk_test.back_requested.connect(back_from_walk)
+	_menu.visible = false
+	add_child(walk_test)
+
+
+func back_from_walk() -> void:
+	if walk_test == null:
+		return
+	walk_test.queue_free()
+	walk_test = null
+	_menu.visible = true
+	_refresh()
 
 
 func back_to_arena() -> void:
@@ -140,9 +170,9 @@ func _build() -> void:
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_menu.add_child(_stage)
 	var box := VBoxContainer.new()
-	box.position = Vector2((STAGE_SIZE.x - BUTTON_SIZE.x) * 0.5, 90)
+	box.position = Vector2((STAGE_SIZE.x - BUTTON_SIZE.x) * 0.5, 50)
 	box.custom_minimum_size = Vector2(BUTTON_SIZE.x, 0)
-	box.add_theme_constant_override("separation", 22)
+	box.add_theme_constant_override("separation", 18)
 	_stage.add_child(box)
 	box.add_child(_label(data.ui.text(&"arena_title"), 52))
 	box.add_child(_label(data.ui.text(&"arena_choose"), 28))
@@ -168,6 +198,9 @@ func _build() -> void:
 	var start_button := _button(data.ui.text(&"arena_start"), Vector2(BUTTON_SIZE.x, 110))
 	start_button.pressed.connect(start)
 	box.add_child(start_button)
+	var walk_button := _button(data.ui.text(&"arena_walk"), Vector2(BUTTON_SIZE.x, 96))
+	walk_button.pressed.connect(start_walk)
+	box.add_child(walk_button)
 
 
 func _label(text: String, font_size: int) -> Label:
