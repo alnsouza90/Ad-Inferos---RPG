@@ -4,13 +4,24 @@
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_idle.png" id="2_idle"]
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_dark_night.png" id="3_dark"]
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_consolation.png" id="4_cons"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_attack.png" id="5_atk"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_hit.png" id="6_hit"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_fall.png" id="7_fall"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/portrait/saint_george_portrait.png" id="8_port"]
 
 [resource]
 script = ExtResource("1_art")
 body_normal = ExtResource("2_idle")
 body_dark_night = ExtResource("3_dark")
 body_consolation = ExtResource("4_cons")
-head_normal = Vector2(0.501, 0.222)
+body_attack = ExtResource("5_atk")
+body_hit = ExtResource("6_hit")
+body_fall = ExtResource("7_fall")
+portrait = ExtResource("8_port")
+head_normal = Vector2(0.554, 0.221)
 head_dark_night = Vector2(0.547, 0.219)
 head_consolation = Vector2(0.505, 0.219)
+head_attack = Vector2(0.702, 0.415)
+head_hit = Vector2(0.41, 0.285)
+head_fall = Vector2(0.759, 0.438)
 halo_diameter = 0.27

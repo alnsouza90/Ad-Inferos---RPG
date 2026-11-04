@@ -60,6 +60,9 @@ var _figure_material: ShaderMaterial
 var _halo: HaloView
 var _spirit_state: StringName = Desolation.NORMAL
 var _spirit_desolation: int = 0
+## Action pose on screen (&"attack", &"hit", &"fall") or &"" for the body
+## of the spiritual state.
+var _pose: StringName = &""
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -130,6 +133,10 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 	_down = not c.is_standing()
 	_dimmed = c.is_saint() and c.has_acted and c.is_standing()
 	_apply_style()
+	if _art != null:
+		var wanted: StringName = &"fall" if _down else &""
+		if wanted != _pose and (wanted == &"" or _art.pose_texture(wanted) != null):
+			_set_pose(wanted)
 	if _art != null and (c.spirit_state != _spirit_state or c.desolation != _spirit_desolation or _figure.texture == null):
 		_spirit_state = c.spirit_state
 		_spirit_desolation = c.desolation
@@ -162,6 +169,10 @@ func figure_texture() -> Texture2D:
 
 func halo() -> HaloView:
 	return _halo
+
+
+func pose() -> StringName:
+	return _pose
 
 
 func figure_saturation() -> float:
@@ -203,9 +214,17 @@ func play_action(_pose_id: StringName = &"") -> float:
 	var t: float = ACTION_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
 	var reach := home + Vector2(40.0 if is_saint else -40.0, 0)
+	var posed: bool = _show_pose_briefly(&"attack")
+	if posed:
+		# With a real attack pose the step is longer and the pose is held.
+		t = ACTION_TIME * 2.0 / speed
+		reach = home + Vector2(70.0, 0)
 	var tw := create_tween()
-	tw.tween_property(_body, "position", reach, t * 0.4)
-	tw.tween_property(_body, "position", home, t * 0.6)
+	tw.tween_property(_body, "position", reach, t * 0.35)
+	tw.tween_interval(t * 0.3)
+	tw.tween_property(_body, "position", home, t * 0.35)
+	if posed:
+		tw.tween_callback(_set_pose.bind(&""))
 	return t
 
 
@@ -217,10 +236,15 @@ func play_hit() -> float:
 	var home := Vector2(0, INTENT_HEIGHT)
 	var recoil := home + Vector2(-14.0 if is_saint else 14.0, 0)
 	_body.modulate = Color(1.6, 0.5, 0.5)
+	var posed: bool = _show_pose_briefly(&"hit")
+	if posed:
+		t = HIT_TIME * 2.0 / speed
 	var tw := create_tween()
 	tw.tween_property(_body, "position", recoil, t * 0.3)
 	tw.parallel().tween_property(_body, "modulate", Color.WHITE, t)
 	tw.tween_property(_body, "position", home, t * 0.7)
+	if posed:
+		tw.tween_callback(_set_pose.bind(&""))
 	return t
 
 
@@ -228,6 +252,8 @@ func play_hit() -> float:
 func play_fall() -> float:
 	_down = true
 	_apply_style()
+	if _art != null and _art.pose_texture(&"fall") != null:
+		_set_pose(&"fall")
 	if speed <= 0.0:
 		return 0.0
 	var t: float = FALL_TIME / speed
@@ -277,6 +303,31 @@ func _apply_style() -> void:
 		_halo.visible = not _down
 
 
+## A short-lived action pose; false when the art has none (or no animation).
+func _show_pose_briefly(pose_id: StringName) -> bool:
+	if _art == null or speed <= 0.0 or _down or _art.pose_texture(pose_id) == null:
+		return false
+	_set_pose(pose_id)
+	return true
+
+
+func _set_pose(pose_id: StringName) -> void:
+	_pose = pose_id
+	_place_figure()
+
+
+## Image and halo point for the current pose, or for the spiritual state.
+func _place_figure() -> void:
+	var tex: Texture2D = _art.pose_texture(_pose) if _pose != &"" else null
+	var head: Vector2 = _art.head_for(_spirit_state)
+	if tex != null:
+		head = _art.pose_head(_pose)
+	else:
+		tex = _art.body_for(_spirit_state)
+	_figure.texture = tex
+	_halo.position = _figure.position + head * FIGURE_SIZE - _halo.size * 0.5
+
+
 func _build_figure(width: float) -> void:
 	_figure_material = ShaderMaterial.new()
 	_figure_material.shader = load(SHADER_PATH)
@@ -298,9 +349,7 @@ func _build_figure(width: float) -> void:
 ## Body image, halo position and look for the current spiritual state
 ## (asset-pipeline §6). `animated` glides the halo when speed allows.
 func _apply_spirit(animated: bool) -> void:
-	_figure.texture = _art.body_for(_spirit_state)
-	var head: Vector2 = _figure.position + _art.head_for(_spirit_state) * FIGURE_SIZE
-	_halo.position = head - _halo.size * 0.5
+	_place_figure()
 	var look: HaloLook = HaloLook.of(_halo_settings, _spirit_state, _spirit_desolation)
 	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
 	_halo.apply(look, duration)

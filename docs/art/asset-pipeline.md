@@ -82,6 +82,7 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | `rays_visible` | não | não | não | sim (rotação lenta) |
 | Rosto | padrão | padrão | `face_dark_night` | `face_consolation` |
 
+- Poses de ação (`body_attack`, `body_hit`, `body_fall`) são opcionais no `CombatantArt`: quando existem, a animação troca para elas; são tratadas com a mesma escala da pose em pé (`tools/art/process_art.py`, tipo `pose`), para manter a proporção.
 - No piloto, o rosto por estado vem da imagem de corpo inteiro do estado (`saint_george_body_dark_night`, `..._consolation`), não de um rosto separado.
 - A auréola mostra **só o estado espiritual**; o Fervor fica na barra da equipe (Direção de Arte v1.1 prevalece sobre a tabela antiga da seção 12).
 - Valores do shader ficam num Resource de apresentação (`scenes/battle/halo_settings.tres`), não em `docs/balance/`, porque não afetam regras.

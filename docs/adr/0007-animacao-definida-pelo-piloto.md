@@ -27,3 +27,7 @@ As poses de ataque, golpe recebido e queda não saíram satisfatórias na geraç
 - **Queda:** tombar devagar, escurecer e dessaturar; a auréola se apaga.
 
 Plano B, se ficar amador no piloto: recortar a imagem em partes e animar com `Skeleton2D`. A interface `CombatantView` não muda em nenhum dos casos.
+
+## Atualização de 04/11/2026
+
+Alan gerou poses de ataque, golpe recebido e queda de São Jorge com qualidade suficiente. A animação no motor passa a **trocar para a pose durante o movimento**: avanço com a pose de ataque, recuo com a pose de golpe, pose de queda enquanto caído. Sem a pose, vale o comportamento anterior (só a imagem do estado se move). A animação completa no estilo Darkest Dungeon continua no M2 (D-116). Uma pose neutra para recorte em partes ficou guardada em `art_source/` para o plano B.

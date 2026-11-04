@@ -21,6 +21,10 @@ func before_each() -> void:
 	art.body_dark_night = _texture()
 	art.body_consolation = _texture()
 	art.head_dark_night = Vector2(0.6, 0.2)
+	art.body_attack = _texture()
+	art.body_hit = _texture()
+	art.body_fall = _texture()
+	art.head_fall = Vector2(0.75, 0.45)
 	saint = Combatant.from_saint(CombatFixture.saint(&"saint_a"))
 	view = CombatantView.new()
 	view.speed = 0.0
@@ -75,3 +79,29 @@ func test_view_without_art_stays_a_rectangle() -> void:
 	add_child_autofree(plain)
 	assert_false(plain.has_art())
 	assert_null(plain.figure_texture())
+
+
+func test_fallen_saint_shows_the_fall_pose_and_rises_back() -> void:
+	view.play_fall()
+	assert_eq(view.figure_texture(), art.body_fall)
+	assert_eq(view.pose(), &"fall")
+	saint.state = Combatant.State.FALLEN
+	_show()
+	assert_eq(view.figure_texture(), art.body_fall, "continua ajoelhado enquanto caído")
+	saint.state = Combatant.State.STANDING
+	_show()
+	assert_eq(view.figure_texture(), art.body_normal, "levantado, volta à pose normal")
+	assert_eq(view.pose(), &"")
+
+
+func test_attack_and_hit_poses_are_skipped_at_instant_speed() -> void:
+	view.play_action()
+	view.play_hit()
+	assert_eq(view.figure_texture(), art.body_normal, "sem animação, nada fica preso numa pose")
+
+
+func test_attack_pose_shows_during_the_animation() -> void:
+	view.speed = 1.0
+	view.play_action()
+	assert_eq(view.figure_texture(), art.body_attack)
+	assert_eq(view.pose(), &"attack")

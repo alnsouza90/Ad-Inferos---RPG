@@ -79,6 +79,9 @@ var _info_id: StringName = &""
 var _last_actor: StringName = &""
 var _ui_built: bool = false
 var _halo_settings: HaloSettings
+var _portrait: TextureRect
+## combatant id -> CombatantArt, for the saints that have art.
+var _arts: Dictionary = {}
 
 
 ## Tests and the arena hand in the data and a fresh controller; otherwise
@@ -243,6 +246,10 @@ func result_shown() -> bool:
 
 func confirm_shown() -> bool:
 	return _confirm_overlay.visible
+
+
+func portrait_texture() -> Texture2D:
+	return _portrait.texture if _portrait.visible else null
 
 
 func view_of(combatant_id: StringName) -> CombatantView:
@@ -481,6 +488,10 @@ func _refresh_controls() -> void:
 	var actor: Combatant = selection.actor()
 	var open: bool = _accepting_input() and actor != null
 	_actor_label.text = texts.name_of(actor) if actor != null else ""
+	var art: CombatantArt = _arts.get(actor.id) if actor != null else null
+	_portrait.texture = art.portrait if art != null else null
+	_portrait.visible = _portrait.texture != null
+	_actor_label.visible = not _portrait.visible
 	for i: int in ABILITY_SLOTS:
 		var button: Button = _ability_buttons[i]
 		if not open or i >= actor.equipped.size():
@@ -636,6 +647,8 @@ func _ensure_view(c: Combatant, width: float) -> CombatantView:
 		return _views[c.id]
 	var view := CombatantView.new()
 	var art: CombatantArt = _art_for(c)
+	if art != null:
+		_arts[c.id] = art
 	view.setup(c.id, c.is_saint(), width, art, _halo_settings if art != null else null)
 	view.speed = SPEEDS[speed_index]
 	view.tapped.connect(tap)
@@ -742,6 +755,15 @@ func _build_action_bar() -> void:
 	_actor_label = _label(Vector2(80, row_1), Vector2(200, BUTTON_SIZE.y), 26)
 	_actor_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_actor_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	# The portrait of the chosen saint takes the label's place when it exists.
+	_portrait = TextureRect.new()
+	_portrait.position = Vector2(86, 800)
+	_portrait.size = Vector2(108, 144)
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_portrait.visible = false
+	_stage.add_child(_portrait)
 	for i: int in ABILITY_SLOTS:
 		_ability_buttons.append(_button(Vector2(300 + i * (BUTTON_SIZE.x + 16), row_1), BUTTON_SIZE, press_ability.bind(i)))
 	_miracle_button = _button(Vector2(1300, row_1), Vector2(300, BUTTON_SIZE.y), press_miracle)

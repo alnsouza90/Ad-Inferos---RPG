@@ -31,6 +31,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-113 · 03/11/2026 · Alan** — Metas "vitória da heurística em combate difícil" e "Noite Escura na expedição longa" ficam para recalibrar no M1.
 - **D-114 · 03/11/2026 · Alan** — Textos da tela de combate (`docs/balance/ui_text.csv`) revisados e aprovados sem mudanças; T15 aprovada. *PR #17.*
 - **D-115 · 03/11/2026 · Alan** — T16 aprovada (auréola no motor com a arte piloto de São Jorge). *PR #18.*
+- **D-116 · 04/11/2026 · Alan** — Animação de combate estilo Darkest Dungeon fica no plano original: M2, junto com a arte final (trava "abordagem de animação" do roadmap, ADR-0007). *`open-questions.md`.*
+- **D-117 · 04/11/2026 · Alan** — A T17 inclui botões de teste (só na versão de desenvolvimento) para aumentar e diminuir a desolação e para pôr um santo em Consolação, para ver a auréola mudar. *`docs/backlog/m0.md` T17.*
 
 ## Arte
 
@@ -38,6 +40,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 
 - **D-202 · 03/11/2026 · Alan** — Teresinha: a imagem com muitas pétalas é a Consolação; a com poucas pétalas é o estado padrão. *`art_source/characters/saints/saint_therese/`.*
 - **D-203 · 03/11/2026 · Alan** — Depois de jogar a T15 no navegador (toque e leitura OK), Alan manteve o plano original: a T16 traz só São Jorge e a auréola; o resto da arte recebida (Bento, Teresinha, inimigos, cenário) entra depois. O seletor de encontro fica para a T17. *`progress.md`.*
+- **D-204 · 04/11/2026 · Alan** — Alan gerou arte nova de São Jorge (pose normal melhor, pose neutra para recorte, ataque, golpe recebido, queda e retrato) e pediu para testar antes da T17. As poses entram na animação no motor (troca de imagem durante o movimento); a animação completa estilo Darkest Dungeon segue no M2 (D-116). *ADR-0007 (atualização), PR do complemento da T16.*
+- **D-205 · 04/11/2026 · Alan** — Complemento da T16 aprovado (PR #19). Noite Escura e Consolação de Jorge ficam com as imagens antigas por enquanto; Alan testa assim. *`open-questions.md`.*
 
 ## Técnicas (do agente)
 
