@@ -63,6 +63,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-145 · 04/11/2026 · Alan** — T24 aprovada (Pouso: atividades, Oração, emboscada e saída). *PR #31.*
 - **D-146 · 04/11/2026 · Alan** — Relíquia encontrada na expedição: o jogador escolhe na hora o santo que a carrega (com espaço livre) e o efeito começa já; sem espaço, vai para a mochila sem efeito até a vila. *T25, `expedition.md` §13.*
 - **D-147 · 04/11/2026 · Alan** — T25 aprovada (nó de relíquia, portador e modificadores). *PR #32.*
+- **D-148 · 04/11/2026 · Alan** — T26 aprovada (salvamento e retomada). A T27 começa numa sessão nova. *PR #33.*
 
 ## Arte
 
