@@ -8,4 +8,5 @@
 - **Testes do jogo:** quer acompanhar pelo celular (Redmi 12, Android): navegador via GitHub Pages a partir da T15 e APK na T17.
 - **Arquivos:** guarda documentos e imagens no celular e no Google Drive; manda anexos pelo chat (até 20 por vez).
 - **Referência visual de combate:** Darkest Dungeon; quer animação de ataque e defesa em que o personagem avança até o inimigo e golpeia (04/11/2026).
+- **Troca de conversa:** quando o contexto estiver ficando cheio, avisar e mandar o texto pronto para colar na conversa nova (04/11/2026, D-215).
 - **Preocupações declaradas:** perder decisões entre sessões (por isso esta memória); boas práticas de desenvolvimento.
