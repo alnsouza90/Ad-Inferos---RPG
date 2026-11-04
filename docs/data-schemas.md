@@ -235,3 +235,19 @@ Textos da interface (botões, avisos, motivos de recusa, rótulos de estado). AD
 | `prevent_prostration` | `per=expedition;value=1` | Impede uma Prostração |
 
 Um modificador novo exige atualizar esta tabela e o código do motor de modificadores.
+
+### 3.15 `map_templates.csv` → `game/data/map_templates/<id>.tres` (`MapTemplateDef`)
+
+Trechos fixos de reserva, usados quando o gerador não consegue um trecho válido em [map_generation_retries] tentativas (`expedition.md` §2.1). Uma linha por nó; as linhas com o mesmo `id` formam um modelo (D-132).
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | ID | Nome do modelo (`leg1_reserve`) |
+| `leg` | inteiro 1–3 | Trecho a que o modelo serve |
+| `layer` | inteiro ≥ 1 | Camada do nó, sem buracos |
+| `index` | inteiro 0–2 | Posição na camada (de cima para baixo no mini-mapa), sem buracos |
+| `role` | enum | O que as regras de caminho contam: `battle`, `temptation`, `variable`, `soul` |
+| `type` | enum | Tipo de nó visível: `node_battle`, `node_elite`, `node_temptation`, `node_soul`, `node_relic` |
+| `links` | lista de inteiros | Posições ligadas na camada seguinte; vazio na última camada |
+
+Validação: o modelo inteiro passa pelas mesmas regras de caminho de um trecho gerado (`invalid_template`); nós fora da sequência dão `slot_gap`.

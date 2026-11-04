@@ -17,10 +17,12 @@ Portão → Trecho 1 (4 camadas) → Pouso → Trecho 2 (4 camadas) → Pouso �
 - Fluxo `map` do RNG, semente derivada da semente da campanha + círculo + número da expedição.
 - Cada trecho tem camadas; cada camada tem 2 ou 3 nós; todo nó de uma camada liga-se a pelo menos um nó da camada seguinte e todo nó é alcançável.
 - O jogador visita exatamente um nó por camada.
+- **Como o gerador monta o trecho (D-132):** cada camada tem 3 nós com chance [map_three_nodes_chance] (50%), senão 2. Cada nó liga ao nó mais próximo da camada seguinte (o caminho reto) e, com chance [map_second_link_chance] (50%), também a um vizinho desse nó; as ligações nunca se cruzam. Nó sem entrada recebe uma ligação do nó mais próximo da camada anterior. Os papéis (combate, Tentação, variável) são distribuídos de modo que todo caminho cumpra §2.1; depois o tipo de cada nó variável é sorteado.
+- **Modelo fixo de reserva:** `docs/balance/map_templates.csv` (`data-schemas.md` §3.15).
 
 ### 2.1 Restrições por caminho
 
-O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum violar as restrições, gera de novo (máximo de 50 tentativas; depois, usa o modelo fixo de reserva do círculo).
+O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum violar as restrições, gera de novo (máximo de [map_generation_retries] (50) tentativas; depois, usa o modelo fixo de reserva do círculo).
 
 | Trecho | Camadas | Todo caminho contém |
 | --- | --- | --- |

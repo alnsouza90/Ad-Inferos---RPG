@@ -53,6 +53,12 @@ static func constants() -> ConstantsDef:
 		"light_resume": 75.0,
 		"light_per_node": 5.0,
 		"candle_light": 25.0,
+		"map_three_nodes_chance": 0.5,
+		"map_second_link_chance": 0.5,
+		"map_generation_retries": 50.0,
+		"node_weight_elite": 40.0,
+		"node_weight_relic": 35.0,
+		"node_weight_battle": 25.0,
 	}
 	return c
 
