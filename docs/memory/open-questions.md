@@ -30,3 +30,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Santa Rita: a pose de ataque segura o crucifixo à frente "em comando". Confirmar que o gesto é devocional e que a habilidade não trata o crucifixo como arma ou fonte de bônus (`writing-guide.md`, figuras sagradas)~~ Aprovado por Alan (D-211) | Alan | 04/11/2026 |
 | Animação estilo Darkest Dungeon (D-210): andar, câmera, avanço e ataque; tela especial do milagre (ex.: Jorge a cavalo); imagem sobreposta de Consolação e de agonia. Precisa de imagens novas por santo (Alan) e da etapa de animação | M2 | 04/11/2026 |
 | Tempo de um combate no APK (meta do M0: 2 a 4 minutos) ainda não medido | Alan | 04/11/2026 |
+| Tela do milagre de São Jorge: em D-210 Alan citou "Jorge atacando com o cavalo", mas a folha `prompts-splash.md` pede Jorge a pé, erguendo a lança, e exclui cavalo e dragão. Confirmar qual vale antes de gerar | Alan | 04/11/2026 |
