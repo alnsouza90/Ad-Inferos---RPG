@@ -33,6 +33,12 @@ func gain_bonus(value: int) -> int:
 	return gained
 
 
+## Starting Fervor from camp Prayers (expedition §6): enters at round 1
+## within the cap, outside the per-round extra limit.
+func add_initial(value: int) -> int:
+	return _add(value)
+
+
 func can_afford(cost: int) -> bool:
 	return cost <= amount
 

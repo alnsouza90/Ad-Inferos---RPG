@@ -32,6 +32,8 @@ var active_affinities: Array[StringName] = []
 var rng: RngStreams
 ## Expedition Light during this battle, or -1 for the arena (desolation §2).
 var light: int = -1
+## Extra Fervor at round 1 from camp Prayers (expedition §6, already capped).
+var prayer_fervor: int = 0
 ## Callable(type, data) for desolation events; set by the controller.
 var emit: Callable = func(_type: StringName, _data: Dictionary) -> void: pass
 var party: Array[Combatant] = []

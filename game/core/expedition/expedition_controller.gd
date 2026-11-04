@@ -12,12 +12,23 @@ enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT }
 
 const END_DEFEATED: StringName = &"defeated"
 const END_RETREATED: StringName = &"retreated"
+const END_PLANNED_RETREAT: StringName = &"planned_retreat"
+## M1 only: the leg ends after its camp (expedition §13).
+const END_LEG_COMPLETE: StringName = &"leg_complete"
+
+const ACTIVITY_VIGIL: StringName = &"vigil"
+const ACTIVITY_SHARE: StringName = &"share"
+const ACTIVITY_PRAYER: StringName = &"prayer"
+const ACTIVITY_OWN: StringName = &"own"
 
 const REJECT_WRONG_PHASE: StringName = &"wrong_phase"
 const REJECT_NOT_AN_ENTRANCE: StringName = &"not_an_entrance"
 const REJECT_UNKNOWN_COMMAND: StringName = &"unknown_command"
 const REJECT_UNKNOWN_OPTION: StringName = &"unknown_option"
 const REJECT_REQUIREMENT: StringName = &"requirement_not_met"
+const REJECT_NO_BREAD: StringName = &"no_bread"
+const REJECT_ALREADY_RESTED: StringName = &"already_rested"
+const REJECT_BAD_ACTIVITY: StringName = &"bad_activity"
 
 const EV_NODE_ENTERED: StringName = &"node_entered"
 const EV_BATTLE_RESOLVED: StringName = &"battle_resolved"
@@ -27,6 +38,8 @@ const EV_EXPEDITION_ENDED: StringName = &"expedition_ended"
 const EV_PROVISION_USED: StringName = &"field_provision_used"
 const EV_EVENT_STARTED: StringName = &"event_started"
 const EV_EVENT_RESOLVED: StringName = &"event_resolved"
+const EV_CAMP_RESTED: StringName = &"camp_rested"
+const EV_AMBUSH: StringName = &"ambush"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -50,6 +63,9 @@ var flags: Array[StringName] = []
 ## The event in progress (IN_EVENT), else null.
 var event: EventDef
 
+## Circle of the encounter pools (EncounterDef.ARENA_CIRCLE in the M1).
+var ambush_encounter_circle: int = 0
+
 var _initial: Dictionary = {}
 
 
@@ -65,6 +81,7 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 		c.saints[id] = SaintStatus.from_def(p_catalog.saint(id))
 	var generator := MapGenerator.new(p_catalog.constants, RngStream.new(map_seed, RngStreams.MAP))
 	generator.battle_encounters = p_catalog.encounter_pool(encounter_circle, &"easy")
+	c.ambush_encounter_circle = encounter_circle
 	c.map = generator.generate(1, p_catalog.reserves.get(1))
 	c.state.map = c.map.to_dict()
 	c._initial = c.snapshot()
@@ -93,6 +110,7 @@ static func from_snapshot(p_catalog: ExpeditionCatalog, data: Dictionary) -> Exp
 	c.phase = int(data.get("phase", Phase.AT_FORK)) as Phase
 	c.ended_reason = StringName(str(data.get("ended_reason", "")))
 	c.virtues = Virtues.from_dict(data.get("virtues", {}))
+	c.ambush_encounter_circle = int(data.get("encounter_circle", 0))
 	for f: Variant in data.get("flags", []):
 		c.flags.append(StringName(str(f)))
 	c._initial = c.snapshot()
@@ -112,7 +130,7 @@ func snapshot() -> Dictionary:
 		flag_list.append(String(f))
 	return {
 		"expedition": state.to_dict(), "saints": saint_dicts, "phase": int(phase), "ended_reason": String(ended_reason),
-		"virtues": virtues.to_dict(), "flags": flag_list,
+		"virtues": virtues.to_dict(), "flags": flag_list, "encounter_circle": ambush_encounter_circle,
 	}
 
 
@@ -150,6 +168,10 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 			return _use_provision(cmd)
 		ExpeditionCommand.CHOOSE_OPTION:
 			return _choose_option(cmd)
+		ExpeditionCommand.REST:
+			return _rest(cmd)
+		ExpeditionCommand.LEAVE_CAMP:
+			return _leave_camp(cmd)
 	return REJECT_UNKNOWN_COMMAND
 
 
@@ -415,6 +437,8 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 		foes.append(_enemy_def(enemy_id))
 	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(seed_key))
 	bs.light = state.light
+	bs.prayer_fervor = state.next_battle_fervor
+	state.next_battle_fervor = 0
 	for c: Combatant in bs.party:
 		(saints[c.id] as SaintStatus).apply_to(c)
 	battle = BattleController.new(bs)
@@ -532,10 +556,160 @@ static func _result_name(result: BattleController.Phase) -> StringName:
 
 func _after_node() -> void:
 	if current_layer() >= map.layer_count():
-		phase = Phase.AT_CAMP
-		_emit(EV_CAMP_REACHED, {})
+		_arrive_at_camp()
 	else:
 		phase = Phase.AT_FORK
+
+
+## Reaching the camp consecrates it and banks the Alms carried (§6 step 1);
+## coming back to it after an ambush banks what that battle gave.
+func _arrive_at_camp() -> void:
+	phase = Phase.AT_CAMP
+	state.alms_banked += state.alms_unbanked
+	state.alms_unbanked = 0
+	if not state.camp_reached:
+		state.camp_reached = true
+		_emit(EV_CAMP_REACHED, {"alms_banked": state.alms_banked})
+
+
+# --- camp (expedition §6) ---------------------------------------------------------
+
+## Reason the rest cannot be taken with these activities, or &"" (E05).
+func rest_problem(activities: Array[Dictionary]) -> StringName:
+	if phase != Phase.AT_CAMP:
+		return REJECT_WRONG_PHASE
+	if state.camp_rested:
+		return REJECT_ALREADY_RESTED
+	if not state.provisions.has(&"bread"):
+		return REJECT_NO_BREAD
+	var seen: Dictionary = {}
+	for a: Dictionary in activities:
+		var saint_id := StringName(str(a.get("saint", "")))
+		if not state.party.has(saint_id) or seen.has(saint_id):
+			return REJECT_BAD_ACTIVITY
+		seen[saint_id] = true
+		var target := StringName(str(a.get("target", "")))
+		match StringName(str(a.get("activity", ""))):
+			ACTIVITY_VIGIL, ACTIVITY_PRAYER:
+				pass
+			ACTIVITY_SHARE:
+				# Share cares for another saint, never for oneself (D-144).
+				if target == saint_id or not state.party.has(target):
+					return REJECT_BAD_ACTIVITY
+			ACTIVITY_OWN:
+				var skill: CampSkillDef = catalog.saint(saint_id).camp_skill
+				if skill == null or (_skill_needs_target(skill) and not state.party.has(target)):
+					return REJECT_BAD_ACTIVITY
+			_:
+				return REJECT_BAD_ACTIVITY
+	if seen.size() != state.party.size():
+		return REJECT_BAD_ACTIVITY
+	return &""
+
+
+static func _skill_needs_target(skill: CampSkillDef) -> bool:
+	return [&"heal_ally_pct", &"ally_desolation", &"remove_minor_injury"].has(skill.effect)
+
+
+## Rest: 1 Bread, then every activity in party order, then the ambush roll.
+func _rest(cmd: ExpeditionCommand) -> StringName:
+	var problem: StringName = rest_problem(cmd.activities)
+	if problem != &"":
+		return problem
+	command_log.append(cmd.to_dict())
+	state.camp_rested = true
+	var c: ConstantsDef = catalog.constants
+	var refund := false
+	var ambush_mult: float = 1.0
+	var prayers: int = 0
+	var by_saint: Dictionary = {}
+	for a: Dictionary in cmd.activities:
+		by_saint[StringName(str(a["saint"]))] = a
+	for saint_id: StringName in state.party:
+		var a: Dictionary = by_saint[saint_id]
+		var target := StringName(str(a.get("target", "")))
+		match StringName(str(a["activity"])):
+			ACTIVITY_VIGIL:
+				_change_desolation(saint_id, -c.get_int(&"desolation_vigil"), &"vigil")
+			ACTIVITY_SHARE:
+				_heal_pct(target, c.get_float(&"share_heal_pct"))
+			ACTIVITY_PRAYER:
+				prayers += 1
+			ACTIVITY_OWN:
+				var skill: CampSkillDef = catalog.saint(saint_id).camp_skill
+				var value: float = float(skill.params.get("value", 0.0))
+				match skill.effect:
+					&"ambush_mult":
+						ambush_mult *= value
+					&"desolation_party":
+						for id: StringName in state.party:
+							_change_desolation(id, int(value), &"camp_skill")
+					&"heal_party_pct":
+						for id: StringName in state.party:
+							_heal_pct(id, value)
+					&"heal_ally_pct":
+						_heal_pct(target, value)
+					&"ally_desolation":
+						_change_desolation(target, int(value), &"camp_skill")
+					&"refund_bread":
+						refund = true
+					&"alms_bonus":
+						state.alms_banked += int(value)
+					&"remove_minor_injury":
+						var status: SaintStatus = saints[target]
+						if status.injury == SaintStatus.INJURY_MINOR:
+							status.injury = SaintStatus.INJURY_NONE
+					_:
+						# next_battle_condition, reveal_next_layer, suffrage_bonus:
+						# their saints and systems arrive after the M1.
+						_emit(&"camp_skill_not_in_m1", {"skill": skill.id})
+	if not refund:
+		state.provisions.erase(&"bread")
+	state.next_battle_fervor = mini(prayers, c.get_int(&"prayer_fervor_cap"))
+	_emit(EV_CAMP_RESTED, {"prayer_fervor": state.next_battle_fervor})
+	_roll_ambush(ambush_mult)
+	return &""
+
+
+func _heal_pct(saint_id: StringName, fraction: float) -> void:
+	var status: SaintStatus = saints[saint_id]
+	status.hp = mini(status.max_hp, status.hp + Damage.round_half_up(status.max_hp * fraction))
+
+
+## [ambush_chance] × Light band × camp skills (Guard); Incense cancels it
+## and is spent (E07). The ambush is a battle from the next leg's pool
+## (the hard pool in the M1), with the party as it is.
+func ambush_chance(skill_mult: float = 1.0) -> float:
+	var c: ConstantsDef = catalog.constants
+	return c.get_float(&"ambush_chance") * ExpeditionLight.ambush_multiplier(state.light, c) * skill_mult
+
+
+func _roll_ambush(skill_mult: float) -> void:
+	var rng := RngStream.new(battle_seed(StringName(String(state.current_node) + "_camp")), RngStreams.EVENTS)
+	var ambushed: bool = rng.next_float() < ambush_chance(skill_mult)
+	if ambushed and state.provisions.has(&"incense"):
+		state.provisions.erase(&"incense")
+		_emit(EV_AMBUSH, {"cancelled_by": &"incense"})
+		return
+	if not ambushed:
+		return
+	var pool: Array[StringName] = catalog.encounter_pool(ambush_encounter_circle, &"hard")
+	_emit(EV_AMBUSH, {"cancelled_by": &""})
+	if pool.is_empty():
+		return
+	_start_battle(pool[rng.pick_index(pool.size())], StringName(String(state.current_node) + "_ambush"))
+
+
+## M1: leaving the camp ends the leg; a planned retreat keeps every Alms
+## (§9). The next legs come in the M2.
+func _leave_camp(cmd: ExpeditionCommand) -> StringName:
+	if phase != Phase.AT_CAMP:
+		return REJECT_WRONG_PHASE
+	if cmd.mode != ExpeditionCommand.MODE_CONTINUE and cmd.mode != ExpeditionCommand.MODE_RETREAT:
+		return REJECT_UNKNOWN_COMMAND
+	command_log.append(cmd.to_dict())
+	_end(END_PLANNED_RETREAT if cmd.mode == ExpeditionCommand.MODE_RETREAT else END_LEG_COMPLETE)
+	return &""
 
 
 func _end(reason: StringName) -> void:

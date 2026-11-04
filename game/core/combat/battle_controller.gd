@@ -224,6 +224,9 @@ func _begin_round() -> void:
 	if state.round_number == 1 and state.active_affinities.has(&"franciscans"):
 		var extra: int = fervor.gain_bonus(state.constants.get_int(&"affinity_franciscan_first_round_fervor"))
 		_emit(EV_FERVOR_GAINED, {"amount": extra, "total": fervor.amount, "bonus": true, "source": &"franciscans"})
+	if state.round_number == 1 and state.prayer_fervor > 0:
+		var prayed: int = fervor.add_initial(state.prayer_fervor)
+		_emit(EV_FERVOR_GAINED, {"amount": prayed, "total": fervor.amount, "bonus": true, "source": &"prayer"})
 	_choose_intents()
 	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size(), "intents": _intent_dicts()})
 	_apply_round_start_conditions()

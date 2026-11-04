@@ -12,6 +12,12 @@ const COMPLETE_NODE: StringName = &"CompleteNode"
 const USE_PROVISION: StringName = &"UseProvisionField"
 ## Chooses an option of the event in progress; the option id travels in node_id.
 const CHOOSE_OPTION: StringName = &"ChooseOption"
+## Rests at camp (§6): one activity per saint, in `activities`.
+const REST: StringName = &"Rest"
+## Leaves the camp: `mode` is MODE_CONTINUE or MODE_RETREAT (planned retreat).
+const LEAVE_CAMP: StringName = &"LeaveCamp"
+const MODE_CONTINUE: StringName = &"continue"
+const MODE_RETREAT: StringName = &"retreat"
 
 var type: StringName = &""
 var node_id: StringName = &""
@@ -19,6 +25,9 @@ var battle_command: BattleCommand
 var provision_id: StringName = &""
 ## Saint who receives the provision (Holy Water); empty for Candle and Incense.
 var target_id: StringName = &""
+## REST: [{"saint": id, "activity": vigil|share|prayer|own, "target": id}]
+var activities: Array[Dictionary] = []
+var mode: StringName = &""
 
 
 static func choose_path(p_node: StringName) -> ExpeditionCommand:
@@ -50,6 +59,20 @@ static func choose_option(p_option: StringName) -> ExpeditionCommand:
 	return cmd
 
 
+static func rest(p_activities: Array[Dictionary]) -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = REST
+	cmd.activities = p_activities.duplicate(true)
+	return cmd
+
+
+static func leave_camp(p_mode: StringName) -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = LEAVE_CAMP
+	cmd.mode = p_mode
+	return cmd
+
+
 static func complete_node() -> ExpeditionCommand:
 	var cmd := ExpeditionCommand.new()
 	cmd.type = COMPLETE_NODE
@@ -65,6 +88,13 @@ func to_dict() -> Dictionary:
 	elif type == USE_PROVISION:
 		d["provision"] = String(provision_id)
 		d["target"] = String(target_id)
+	elif type == REST:
+		var list: Array = []
+		for a: Dictionary in activities:
+			list.append({"saint": str(a.get("saint", "")), "activity": str(a.get("activity", "")), "target": str(a.get("target", ""))})
+		d["activities"] = list
+	elif type == LEAVE_CAMP:
+		d["mode"] = String(mode)
 	return d
 
 
@@ -74,6 +104,10 @@ static func from_dict(data: Dictionary) -> ExpeditionCommand:
 	cmd.node_id = StringName(str(data.get("node", "")))
 	cmd.provision_id = StringName(str(data.get("provision", "")))
 	cmd.target_id = StringName(str(data.get("target", "")))
+	for a: Variant in data.get("activities", []):
+		if a is Dictionary:
+			cmd.activities.append({"saint": StringName(str(a.get("saint", ""))), "activity": StringName(str(a.get("activity", ""))), "target": StringName(str(a.get("target", "")))})
+	cmd.mode = StringName(str(data.get("mode", "")))
 	if data.has("command"):
 		cmd.battle_command = BattleCommand.from_dict(data["command"])
 	return cmd
