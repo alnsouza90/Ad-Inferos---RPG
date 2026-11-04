@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_wooden_crucifix"
+name_pt = "Crucifixo de madeira"
+category = &"sacramental"
+relic_class = &"sacramental"
+origin = &"tradition"
+to_confirm = false
+rarity = &"common"
+source = "relic_node"
+modifier = &"stat_add"
+params = {
+"stat": "faith",
+"value": 1.0
+}
+desc_pt = "+1 de Fé."

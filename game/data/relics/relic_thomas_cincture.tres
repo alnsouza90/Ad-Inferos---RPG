@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_thomas_cincture"
+name_pt = "Cíngulo de Santo Tomás"
+category = &"guardian"
+relic_class = &"2"
+origin = &"tradition"
+to_confirm = true
+rarity = &"rare"
+source = "relic_node"
+modifier = &"stat_add"
+params = {
+"stat": "will",
+"value": 1.0
+}
+desc_pt = "+1 de Vontade."

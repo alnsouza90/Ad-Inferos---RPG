@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_cluny_cross"
+name_pt = "Pequena cruz de Cluny"
+category = &"purgatory"
+relic_class = &"3"
+origin = &"tradition"
+to_confirm = true
+rarity = &"unique"
+source = "milestone:9"
+modifier = &"prevent_prostration"
+params = {
+"per": "expedition",
+"value": 1.0
+}
+desc_pt = "Uma vez por expedição, impede uma Prostração."

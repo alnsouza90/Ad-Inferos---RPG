@@ -47,6 +47,7 @@ static func expedition_catalog() -> ExpeditionCatalog:
 	var c := ExpeditionCatalog.create(catalog(), imp.economy, _keys(imp.saints), _keys(imp.encounters), {1: imp.map_templates["leg1_reserve"]})
 	c.starting_kits = _keys(imp.starting_kits)
 	c.events = _keys(imp.events)
+	c.relics = _keys(imp.relics)
 	return c
 
 

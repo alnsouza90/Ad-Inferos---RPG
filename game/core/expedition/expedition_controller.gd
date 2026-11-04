@@ -8,7 +8,7 @@ extends RefCounted
 ##   AT_FORK → (ChoosePath) → IN_BATTLE | IN_NODE → AT_FORK … → AT_CAMP
 ##   IN_BATTLE → (defeat or emergency retreat) → ENDED
 
-enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT }
+enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT, IN_RELIC }
 
 const END_DEFEATED: StringName = &"defeated"
 const END_RETREATED: StringName = &"retreated"
@@ -29,6 +29,7 @@ const REJECT_REQUIREMENT: StringName = &"requirement_not_met"
 const REJECT_NO_BREAD: StringName = &"no_bread"
 const REJECT_ALREADY_RESTED: StringName = &"already_rested"
 const REJECT_BAD_ACTIVITY: StringName = &"bad_activity"
+const REJECT_NO_SLOT: StringName = &"no_relic_slot"
 
 const EV_NODE_ENTERED: StringName = &"node_entered"
 const EV_BATTLE_RESOLVED: StringName = &"battle_resolved"
@@ -40,6 +41,8 @@ const EV_EVENT_STARTED: StringName = &"event_started"
 const EV_EVENT_RESOLVED: StringName = &"event_resolved"
 const EV_CAMP_RESTED: StringName = &"camp_rested"
 const EV_AMBUSH: StringName = &"ambush"
+const EV_RELIC_FOUND: StringName = &"relic_found"
+const EV_RELIC_PLACED: StringName = &"relic_placed"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -172,6 +175,8 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 			return _rest(cmd)
 		ExpeditionCommand.LEAVE_CAMP:
 			return _leave_camp(cmd)
+		ExpeditionCommand.PLACE_RELIC:
+			return _place_relic(cmd)
 	return REJECT_UNKNOWN_COMMAND
 
 
@@ -210,11 +215,13 @@ func _choose_path(cmd: ExpeditionCommand) -> StringName:
 	if target == null:
 		return REJECT_NOT_AN_ENTRANCE
 	command_log.append(cmd.to_dict())
-	state.enter_node(target.id, catalog.constants)
+	state.enter_node(target.id, catalog.constants, RelicEffects.light_per_node(carried_relics(), catalog.constants))
 	_emit(EV_NODE_ENTERED, {"node": target.id, "type": target.type, "light": state.light})
 	if target.is_battle_like():
 		_start_battle(target.encounter_id, target.id)
 	elif target.type == MapNode.TYPE_TEMPTATION and _start_event(target):
+		pass
+	elif target.type == MapNode.TYPE_RELIC and _start_relic_node(target):
 		pass
 	else:
 		phase = Phase.IN_NODE
@@ -422,6 +429,98 @@ func _apply_outcome(out: Dictionary) -> StringName:
 	return &""
 
 
+# --- relics (expedition §3 and §8, data-schemas §4) ---------------------------------
+
+func carried_relics() -> Array[RelicDef]:
+	var result: Array[RelicDef] = []
+	for id: StringName in state.party:
+		for r: StringName in (saints[id] as SaintStatus).relics:
+			var def: RelicDef = catalog.relic(r)
+			if def != null:
+				result.append(def)
+	return result
+
+
+func relic_slots(_saint_id: StringName) -> int:
+	return catalog.constants.get_int(&"relic_slots_start")
+
+
+func has_free_slot(saint_id: StringName) -> bool:
+	return saints.has(saint_id) and (saints[saint_id] as SaintStatus).relics.size() < relic_slots(saint_id)
+
+
+## The node's relic is drawn on entering (equal chance among the pool) and
+## may be guarded by a common battle ([relic_node_guarded_chance]).
+func _start_relic_node(n: MapNode) -> bool:
+	var pool: Array[StringName] = catalog.relic_node_pool()
+	if pool.is_empty():
+		return false
+	var rng := RngStream.new(battle_seed(StringName(String(n.id) + "_relic")), RngStreams.REWARDS)
+	state.pending_relic = pool[rng.pick_index(pool.size())]
+	var guarded: bool = rng.chance(catalog.constants.get_float(&"relic_node_guarded_chance"))
+	var guards: Array[StringName] = catalog.encounter_pool(ambush_encounter_circle, &"easy")
+	if guarded and not guards.is_empty():
+		_start_battle(guards[rng.pick_index(guards.size())], StringName(String(n.id) + "_guard"))
+	else:
+		_award_relic()
+	return true
+
+
+## [reward_relic_node] Alms (× circle band × low Light) and the relic, which
+## waits for a carrier (D-146).
+func _award_relic() -> void:
+	var value: float = catalog.economy.get_float(&"reward_relic_node") * circle_alms_multiplier() * ExpeditionLight.alms_multiplier(state.light, catalog.constants)
+	state.alms_unbanked += Damage.round_half_up(value)
+	state.relics_found.append(state.pending_relic)
+	phase = Phase.IN_RELIC
+	_emit(EV_RELIC_FOUND, {"relic": state.pending_relic})
+
+
+## A saint with a free slot carries it and its effect starts now; with no
+## target it goes to the pack, without effect until the village (D-146).
+func _place_relic(cmd: ExpeditionCommand) -> StringName:
+	if phase != Phase.IN_RELIC:
+		return REJECT_WRONG_PHASE
+	if cmd.target_id != &"" and not has_free_slot(cmd.target_id):
+		return REJECT_NO_SLOT
+	command_log.append(cmd.to_dict())
+	var relic_id: StringName = state.pending_relic
+	state.pending_relic = &""
+	if cmd.target_id == &"":
+		state.relic_pack.append(relic_id)
+	else:
+		var status: SaintStatus = saints[cmd.target_id]
+		status.relics.append(relic_id)
+		RelicEffects.apply_to_carrier(catalog.relic(relic_id), status, catalog.saint(cmd.target_id))
+	_emit(EV_RELIC_PLACED, {"relic": relic_id, "saint": cmd.target_id})
+	_after_node()
+	return &""
+
+
+## Defeat (§9): relics found in this expedition are lost, with their effects.
+func _lose_found_relics() -> void:
+	for id: StringName in state.party:
+		var status: SaintStatus = saints[id]
+		var kept: Array[StringName] = []
+		for r: StringName in status.relics:
+			if not state.relics_found.has(r):
+				kept.append(r)
+		if kept.size() == status.relics.size():
+			continue
+		var def: SaintDef = catalog.saint(id)
+		status.relics.clear()
+		status.max_hp = def.max_hp
+		status.hp = mini(status.hp, status.max_hp)
+		status.faith_bonus = 0
+		for r: StringName in kept:
+			status.relics.append(r)
+			RelicEffects.apply_to_carrier(catalog.relic(r), status, def)
+	for r: StringName in state.relics_found:
+		state.relic_pack.erase(r)
+	state.relics_found.clear()
+	state.pending_relic = &""
+
+
 # --- battle -------------------------------------------------------------------
 
 ## The battle starts with the party as it is: hit points, desolation, state,
@@ -485,13 +584,17 @@ func _resolve_battle() -> void:
 			for saint: Combatant in bs.party:
 				(saints[saint.id] as SaintStatus).add_injury(SaintStatus.INJURY_MAJOR)
 			state.alms_unbanked = 0
+			_lose_found_relics()
 	_settle_saints(bs)
 	last_battle = battle
 	battle = null
 	_emit(EV_BATTLE_RESOLVED, {"result": _result_name(result), "alms": state.alms_unbanked - alms_before})
 	match result:
 		BattleController.Phase.VICTORY:
-			_after_node()
+			if state.pending_relic != &"":
+				_award_relic()
+			else:
+				_after_node()
 		BattleController.Phase.RETREAT:
 			_end(END_RETREATED)
 		_:

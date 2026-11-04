@@ -194,6 +194,8 @@ func test_a_whole_leg_with_rest_replays_exactly() -> void:
 				ctrl.execute(ExpeditionCommand.complete_node())
 			ExpeditionController.Phase.IN_EVENT:
 				ctrl.execute(ExpeditionCommand.choose_option(&"follow_tracks"))
+			ExpeditionController.Phase.IN_RELIC:
+				ctrl.execute(ExpeditionCommand.place_relic(&"saint_george"))
 			ExpeditionController.Phase.IN_BATTLE:
 				ctrl.execute(ExpeditionCommand.battle(FirstValidPolicy.choose(ctrl.battle)))
 			ExpeditionController.Phase.AT_CAMP:

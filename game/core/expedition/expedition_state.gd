@@ -29,6 +29,12 @@ var camp_reached: bool = false
 var camp_rested: bool = false
 ## Starting Fervor of the next battle from Prayers, already capped (§6).
 var next_battle_fervor: int = 0
+## Relics found in this expedition (lost on defeat, §9) and those carried in
+## the pack without a saint (no effect until the village, D-146).
+var relics_found: Array[StringName] = []
+var relic_pack: Array[StringName] = []
+## Relic of the node in progress: waiting for its guard battle or a carrier.
+var pending_relic: StringName = &""
 
 
 ## New expedition from the gate, with full Light.
@@ -60,11 +66,14 @@ static func create_resumed(constants: ConstantsDef, p_circle: StringName, p_map_
 
 
 ## Entering a node costs Light (§4). Walking the corridor does not (§2.3).
-func enter_node(node_id: StringName, constants: ConstantsDef) -> void:
+func enter_node(node_id: StringName, constants: ConstantsDef, per_node: int = -1) -> void:
 	if current_node != &"":
 		visited.append(current_node)
 	current_node = node_id
-	light = ExpeditionLight.after_entering_node(light, constants)
+	if per_node < 0:
+		light = ExpeditionLight.after_entering_node(light, constants)
+	else:
+		light = clampi(light - per_node, 0, ExpeditionLight.LIGHT_MAX)
 
 
 func apply_candle(constants: ConstantsDef) -> void:
@@ -83,6 +92,7 @@ func to_dict() -> Dictionary:
 		"party": _to_strings(party), "fallen_once": _to_strings(fallen_once),
 		"gate_level": gate_level, "revealed_nodes": _to_strings(revealed_nodes),
 		"camp_reached": camp_reached, "camp_rested": camp_rested, "next_battle_fervor": next_battle_fervor,
+		"relics_found": _to_strings(relics_found), "relic_pack": _to_strings(relic_pack), "pending_relic": String(pending_relic),
 	}
 
 
@@ -106,6 +116,9 @@ static func from_dict(data: Dictionary) -> ExpeditionState:
 	state.camp_reached = bool(data.get("camp_reached", false))
 	state.camp_rested = bool(data.get("camp_rested", false))
 	state.next_battle_fervor = int(data.get("next_battle_fervor", 0))
+	state.relics_found = _to_names(data.get("relics_found", []))
+	state.relic_pack = _to_names(data.get("relic_pack", []))
+	state.pending_relic = StringName(str(data.get("pending_relic", "")))
 	return state
 
 

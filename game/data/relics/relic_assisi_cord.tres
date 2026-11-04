@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_assisi_cord"
+name_pt = "Cordão franciscano tocado em Assis"
+category = &"guardian"
+relic_class = &"3"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"heal_received_mult"
+params = {
+"value": 1.1
+}
+desc_pt = "Cura recebida +10%."

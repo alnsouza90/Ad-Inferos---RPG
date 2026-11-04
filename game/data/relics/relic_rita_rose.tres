@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_rita_rose"
+name_pt = "Rosa benta no dia de Santa Rita"
+category = &"saint"
+relic_class = &"sacramental"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"ability_param"
+params = {
+"ability": "rita_rose_in_winter",
+"param": "hp_fraction",
+"value": 0.6
+}
+desc_pt = "Rosa no Inverno levanta com 60% da vida."

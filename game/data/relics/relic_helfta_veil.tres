@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_helfta_veil"
+name_pt = "Véu tocado em Helfta"
+category = &"saint"
+relic_class = &"3"
+origin = &"tradition"
+to_confirm = false
+rarity = &"rare"
+source = "relic_node"
+modifier = &"turn_start_cleanse"
+params = {
+"value": 1.0
+}
+desc_pt = "Remove 1 condição negativa do portador no início de cada turno."

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_joan_ring"
+name_pt = "Anel atribuído a Santa Joana d'Arc"
+category = &"saint"
+relic_class = &"2"
+origin = &"tradition"
+to_confirm = true
+rarity = &"rare"
+source = "relic_node"
+modifier = &"battle_start_condition"
+params = {
+"condition": "strength",
+"stacks": 1.0
+}
+desc_pt = "Começa o combate com 1 Força."

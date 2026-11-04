@@ -60,6 +60,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-142 · 04/11/2026 · Alan** — T23 aprovada, com o texto final de "O abrigo do vento". *PR #30.*
 - **D-143 · 04/11/2026 · Alan** — A Oração vale para a emboscada do mesmo Pouso: ela é o próximo combate e recebe o Fervor; sem emboscada, o bônus fica para o primeiro combate seguinte. *T24, `expedition.md` §6.*
 - **D-144 · 04/11/2026 · Alan** — A Partilha cura só outro santo, nunca o próprio. *T24, `expedition.md` §6.*
+- **D-145 · 04/11/2026 · Alan** — T24 aprovada (Pouso: atividades, Oração, emboscada e saída). *PR #31.*
+- **D-146 · 04/11/2026 · Alan** — Relíquia encontrada na expedição: o jogador escolhe na hora o santo que a carrega (com espaço livre) e o efeito começa já; sem espaço, vai para a mochila sem efeito até a vila. *T25, `expedition.md` §13.*
 
 ## Arte
 
@@ -99,4 +101,5 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-316 · 04/11/2026 · agente** — Expedição: cada combate tem semente própria, derivada da semente do mapa e do ID do nó (um combate nunca depende de quantos sorteios os anteriores fizeram); `economy.csv` passa a ser importado como `game/data/economy.tres`; o estado de cada santo entre combates fica em `SaintStatus` (vida, desolação, estado espiritual, ferimento). *T21, `core/expedition/`.*
 - **D-317 · 04/11/2026 · agente** — Correção: o importador trocava o valor de um efeito pela constante (`const=`) e perdia o sinal da planilha; a Água Benta **aumentava** a desolação em 15 (também em combate, desde o M0). Agora a constante dá o tamanho e a planilha dá o sinal. *T22, `balance_importer.gd`, teste em `test_balance_importer.gd`.*
 - **D-318 · 04/11/2026 · agente** — Eventos em YAML simples lidos por um leitor próprio, sem biblioteca externa (ADR-0012); virtudes e bandeiras ficam no controlador da expedição enquanto não há campanha (M1); o sorteio do evento e da chance usa o fluxo `events` derivado do nó. *T23.*
+- **D-319 · 04/11/2026 · agente** — `relics.csv` importado; o nó de relíquia só oferece relíquias sacramentais de `relic_node` cujo modificador o motor já aplica (`RelicEffects.IMPLEMENTED`: no M1, as três de D-124); 1 espaço de relíquia por santo até o nível 4 (`relic_slots_start`, GDD §3). *T25.*
 - **D-308** — Simulador: formação do M0 Jorge (1), Bento (2), Teresinha (3); expedição longa simulada com 6 combates, Lume −5 por nó, Pousos com Vigília depois dos combates 2 e 4 e vida cheia a cada combate. *T13, `tools/sim/battle_simulator.gd`.*

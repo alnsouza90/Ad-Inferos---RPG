@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="RelicDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/relic_def.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+id = &"relic_blessed_salt"
+name_pt = "Sal bento"
+category = &"sacramental"
+relic_class = &"sacramental"
+origin = &"tradition"
+to_confirm = false
+rarity = &"common"
+source = "relic_node"
+modifier = &"damage_type_mult"
+params = {
+"type": "exorcism",
+"value": 1.1
+}
+desc_pt = "Exorcismo +10%."

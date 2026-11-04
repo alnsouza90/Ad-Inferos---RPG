@@ -16,6 +16,10 @@ var spirit_state: StringName = &"normal"
 var purified: bool = false
 ## Recorded only in the M1; its effect comes with the village (M2).
 var injury: StringName = INJURY_NONE
+## Relics this saint carries (one slot until level 4, GDD §3).
+var relics: Array[StringName] = []
+## Faith added by carried relics (stat_add), applied to every battle.
+var faith_bonus: int = 0
 
 
 static func from_def(def: SaintDef) -> SaintStatus:
@@ -39,12 +43,14 @@ func apply_to(c: Combatant) -> void:
 	c.desolation = desolation
 	c.spirit_state = spirit_state
 	c.purified = purified
+	c.faith += faith_bonus
 
 
 func to_dict() -> Dictionary:
 	return {
 		"id": String(id), "max_hp": max_hp, "hp": hp, "desolation": desolation,
 		"spirit_state": String(spirit_state), "purified": purified, "injury": String(injury),
+		"relics": relics.map(func(r: StringName) -> String: return String(r)), "faith_bonus": faith_bonus,
 	}
 
 
@@ -57,4 +63,7 @@ static func from_dict(data: Dictionary) -> SaintStatus:
 	s.spirit_state = StringName(str(data.get("spirit_state", "normal")))
 	s.purified = bool(data.get("purified", false))
 	s.injury = StringName(str(data.get("injury", "")))
+	for r: Variant in data.get("relics", []):
+		s.relics.append(StringName(str(r)))
+	s.faith_bonus = int(data.get("faith_bonus", 0))
 	return s
