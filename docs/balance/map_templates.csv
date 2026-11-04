@@ -1,0 +1,10 @@
+id,leg,layer,index,role,type,links
+leg1_reserve,1,1,0,battle,node_battle,0
+leg1_reserve,1,1,1,battle,node_battle,1
+leg1_reserve,1,2,0,temptation,node_temptation,0|1
+leg1_reserve,1,2,1,temptation,node_temptation,1|2
+leg1_reserve,1,3,0,variable,node_relic,0
+leg1_reserve,1,3,1,variable,node_battle,0|1
+leg1_reserve,1,3,2,variable,node_relic,1
+leg1_reserve,1,4,0,battle,node_battle,
+leg1_reserve,1,4,1,battle,node_battle,

@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="MapTemplateDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/map_template_def.gd" id="1_mapt"]
+
+[resource]
+script = ExtResource("1_mapt")
+id = &"leg1_reserve"
+leg = 1
+layers = [[{
+"links": [0],
+"role": &"battle",
+"type": &"node_battle"
+}, {
+"links": [1],
+"role": &"battle",
+"type": &"node_battle"
+}], [{
+"links": [0, 1],
+"role": &"temptation",
+"type": &"node_temptation"
+}, {
+"links": [1, 2],
+"role": &"temptation",
+"type": &"node_temptation"
+}], [{
+"links": [0],
+"role": &"variable",
+"type": &"node_relic"
+}, {
+"links": [0, 1],
+"role": &"variable",
+"type": &"node_battle"
+}, {
+"links": [1],
+"role": &"variable",
+"type": &"node_relic"
+}], [{
+"links": [],
+"role": &"battle",
+"type": &"node_battle"
+}, {
+"links": [],
+"role": &"battle",
+"type": &"node_battle"
+}]]

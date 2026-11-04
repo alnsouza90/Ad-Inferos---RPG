@@ -18,6 +18,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"enemies": ["id", "name_pt", "family", "circles", "nature", "role", "size", "max_hp", "armor", "immune", "leaves_remains", "remains_rounds", "actions", "art_id"],
 	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type"],
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
+	"map_templates": ["id", "leg", "layer", "index", "role", "type", "links"],
 	"ui_text": ["id", "text_pt"],
 	"saints": ["id", "name_pt", "roles", "preferred_slots", "max_hp", "armor", "faith", "will", "hp_per_level", "faith_per_level", "abilities", "default_equipped", "miracle", "trait", "camp_skill", "affinities", "unlock", "m0"],
 }
@@ -52,6 +53,8 @@ const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
 const INTENT_ICONS: Array[String] = ["attack", "corrupt", "displace", "defend", "summon", "special"]
 const POOLS: Array[String] = ["easy", "hard", "elite", "boss", "ambush"]
 const ENCOUNTER_TYPES: Array[String] = ["common", "elite", "boss"]
+const MAP_ROLES: Array[String] = ["battle", "temptation", "variable", "soul"]
+const MAP_NODE_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_soul", "node_relic"]
 const PROVISION_TARGETING: Array[String] = ["none", "self", "ally", "all_allies"]
 const SAINT_SLOTS: Array[int] = [1, 2, 3]
 const ABILITIES_PER_SAINT: int = 6
@@ -74,6 +77,7 @@ var enemy_actions: Dictionary = {}
 var enemies: Dictionary = {}
 var encounters: Dictionary = {}
 var provisions: Dictionary = {}
+var map_templates: Dictionary = {}
 var saints: Dictionary = {}
 var ui_text: UiTextDef
 
@@ -110,6 +114,7 @@ func import_tables(texts: Dictionary) -> bool:
 	_build_enemies()
 	_build_encounters()
 	_build_provisions()
+	_build_map_templates()
 	_build_saints()
 	_build_ui_text()
 	_validate_effect_owners()
@@ -505,6 +510,69 @@ func _build_provisions() -> void:
 			_err("missing_effects", t.file_name, line, "provisão '%s' sem efeitos" % d.id)
 		d.effects = effects
 		provisions[row["id"]] = d
+
+
+## Reserve legs (expedition §2.1): one row per node, grouped by `id`. Layers
+## and indexes start at 1 and 0 with no gaps; `links` are indexes in the next
+## layer. The finished template must pass the same path rules as a
+## generated leg.
+func _build_map_templates() -> void:
+	var t: CsvTable = _tables["map_templates"]
+	var rows_by_id: Dictionary = {}
+	var first_line: Dictionary = {}
+	for i: int in t.rows.size():
+		var row: Dictionary = t.rows[i]
+		var line: int = t.line_numbers[i]
+		var id: String = row["id"]
+		if id.is_empty() or _id_pattern.search(id) == null:
+			_err("bad_id", t.file_name, line, "ID '%s' fora do padrão snake_case" % id)
+			continue
+		if not rows_by_id.has(id):
+			rows_by_id[id] = []
+			first_line[id] = line
+		(rows_by_id[id] as Array).append([line, row])
+	for id: String in rows_by_id:
+		var d := MapTemplateDef.new()
+		d.id = StringName(id)
+		var cells: Dictionary = {}
+		var leg: int = 0
+		for entry: Array in rows_by_id[id]:
+			var line: int = entry[0]
+			var row: Dictionary = entry[1]
+			var row_leg: int = _int(t, line, "leg", row, 1, MapGenerator.LEG_RULES.size())
+			if leg == 0:
+				leg = row_leg
+			elif row_leg != leg:
+				_err("out_of_range", t.file_name, line, "trecho %d diferente do resto do modelo '%s'" % [row_leg, id])
+			var layer: int = _int(t, line, "layer", row, 1, 9)
+			var index: int = _int(t, line, "index", row, 0, MapGenerator.MAX_NODES - 1)
+			var key: String = "%d_%d" % [layer, index]
+			if cells.has(key):
+				_err("duplicate_id", t.file_name, line, "nó repetido: camada %d, posição %d" % [layer, index])
+				continue
+			cells[key] = {
+				"role": _enum(t, line, "role", row, MAP_ROLES),
+				"type": _enum(t, line, "type", row, MAP_NODE_TYPES),
+				"links": _int_list(t, line, "links", row, 0, MapGenerator.MAX_NODES - 1, false),
+				"line": line,
+			}
+		d.leg = maxi(leg, 1)
+		var layer_number: int = 1
+		while cells.has("%d_0" % layer_number):
+			var layer_list: Array = []
+			var node_index: int = 0
+			while cells.has("%d_%d" % [layer_number, node_index]):
+				var cell: Dictionary = cells["%d_%d" % [layer_number, node_index]]
+				layer_list.append({"role": cell["role"], "type": cell["type"], "links": Array(cell["links"])})
+				cells.erase("%d_%d" % [layer_number, node_index])
+				node_index += 1
+			d.layers.append(layer_list)
+			layer_number += 1
+		for key: String in cells:
+			_err("slot_gap", t.file_name, int(cells[key]["line"]), "nó fora da sequência de camadas e posições (%s)" % key)
+		if not MapGenerator.is_valid(LegMap.from_template(d)):
+			_err("invalid_template", t.file_name, int(first_line[id]), "o modelo '%s' não cumpre as regras de caminho do trecho %d" % [id, d.leg])
+		map_templates[id] = d
 
 
 func _build_saints() -> void:

@@ -196,3 +196,32 @@ func test_ui_text_with_duplicate_id_is_rejected() -> void:
 
 func test_ui_text_without_text_is_rejected() -> void:
 	_assert_error(BalanceFixture.appended("ui_text", "empty_one,"), "missing_value")
+
+
+# --- map templates (T20) ------------------------------------------------------
+
+func test_map_template_is_parsed_into_layers() -> void:
+	var d: MapTemplateDef = _import(BalanceFixture.valid_tables()).map_templates["t_leg"]
+	assert_eq(d.leg, 1)
+	assert_eq(d.layers.size(), 4)
+	assert_eq(StringName((d.layers[1][0] as Dictionary)["role"]), &"temptation")
+
+
+func test_map_template_breaking_the_path_rules_is_rejected() -> void:
+	var tables := BalanceFixture.replaced("map_templates", "t_leg,1,2,0,temptation,node_temptation,0", "t_leg,1,2,0,battle,node_battle,0")
+	_assert_error(tables, "invalid_template")
+
+
+func test_map_template_link_outside_the_next_layer_is_rejected() -> void:
+	var tables := BalanceFixture.replaced("map_templates", "t_leg,1,3,0,variable,node_relic,0", "t_leg,1,3,0,variable,node_relic,2")
+	_assert_error(tables, "invalid_template")
+
+
+func test_map_template_unknown_node_type_is_rejected() -> void:
+	var tables := BalanceFixture.replaced("map_templates", "t_leg,1,1,0,battle,node_battle,0", "t_leg,1,1,0,battle,node_dragon,0")
+	_assert_error(tables, "bad_enum")
+
+
+func test_map_template_with_a_gap_in_the_layer_is_rejected() -> void:
+	var tables := BalanceFixture.appended("map_templates", "t_leg,1,2,2,temptation,node_temptation,0")
+	_assert_error(tables, "slot_gap")

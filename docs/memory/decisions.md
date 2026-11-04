@@ -47,6 +47,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-129 · 04/11/2026 · Alan** — Incenso passa a revelar mais uma camada além do que o Portão mostra (nos nós ligados às entradas da bifurcação), ou anula a emboscada no Pouso. Substitui "revela os nós vizinhos". *`expedition.md` §2.2 e §5, caso E14.*
 - **D-130 · 04/11/2026 · Alan** — T18 aprovada (specs da caminhada e simplificações do M1). *PR #25.*
 - **D-131 · 04/11/2026 · Alan** — T19 aprovada (estado da expedição e Lume; +10% de dano inimigo com Lume baixo na fórmula de dano). *PR #26.*
+- **D-132 · 04/11/2026 · Alan** — Gerador do trecho: 2 ou 3 nós por camada, meio a meio (`map_three_nodes_chance` 0,5); cada nó liga ao caminho reto e, com 50% de chance, a um vizinho (`map_second_link_chance` 0,5), sem ligações cruzadas; trecho fixo de reserva desenhado pelo agente em `docs/balance/map_templates.csv`. *T20, `expedition.md` §2, `data-schemas.md` §3.15.*
 
 ## Arte
 
