@@ -1,7 +1,7 @@
 # Prólogo · Roteiro e pranchas
 
-Versão 1.2 · 05/11/2026 · base: GDD v1.1 §9 e §10, Direção de Arte v1.1 §11, *Inferno* de Dante, Cantos I e II
-Estado: **rascunho de roteiro para revisão do responsável (Alan)**. v1.1: as três feras dão lugar a três figuras humanas que respondem ao Peregrino, uma para cada parte do Inferno de Dante. Os textos marcados como tradução são traduções próprias e literais do italiano de Dante (domínio público).
+Versão 1.3 · 05/11/2026 · base: GDD v1.1 §9 e §10, Direção de Arte v1.1 §11, *Inferno* de Dante, Cantos I e II
+Estado: **rascunho de roteiro para revisão do responsável (Alan)**. v1.3: cortes para o leito de morte (decisão de 05/11/2026, D-198). v1.1: as três feras dão lugar a três figuras humanas que respondem ao Peregrino, uma para cada parte do Inferno de Dante. Os textos marcados como tradução são traduções próprias e literais do italiano de Dante (domínio público).
 
 ## 1. Decisões
 
@@ -9,7 +9,7 @@ Estado: **rascunho de roteiro para revisão do responsável (Alan)**. v1.1: as t
 | --- | --- |
 | Formato | Só cenas narrativas (pranchas e diálogos). O combate tutorial fica fora do prólogo e será definido depois, provavelmente no Antinferno |
 | Abertura | Na selva escura, com o Peregrino, como no Canto I |
-| A descida | O Peregrino desmaia na selva; o corpo fica à beira da morte e a alma é arrastada para o abismo. Isso liga o prólogo aos três finais do GDD |
+| A descida | O Peregrino desmaia na selva; o corpo fica à beira da morte e a alma é arrastada para o abismo. Isso liga o prólogo ao final único do GDD, a boa morte (D-198) |
 | A selva | O Peregrino pergunta onde se perdeu. Três figuras respondem, uma para cada divisão de pecados de Dante (*Inf.* XI): incontinência, violência e fraude. Ele cai de terror |
 | As três feras | Não aparecem. Cada figura carrega um traço da fera que lhe corresponde (easter egg): loba → incontinência, leão → violência, lonza → fraude |
 | Quem são as três figuras | Alegorias com o rosto de **pessoas que o Peregrino conheceu e com quem pecou**. No prólogo são os próprios pecados dele que o atormentam, vestidos com esses rostos; nos flashbacks dos círculos, as mesmas pessoas aparecem como eram na vida dele. Não entram no Arquivo de Santo Tomás. Para não confundir com as elites do jogo, não são chamadas de "Pecados Encarnados" |
@@ -21,6 +21,7 @@ Estado: **rascunho de roteiro para revisão do responsável (Alan)**. v1.1: as t
 | Escolhas | Nenhuma. O prólogo é conduzido; as escolhas começam no Círculo 1 |
 | Fim | No Átrio, antes da Porta. A Porta, a inscrição e o Anjo abrem o Círculo 1 |
 | Duração-alvo | 5 a 7 minutos, com texto avançado por toque |
+| O leito | Cortes rápidos para a cama mostram, desde o início, que o Peregrino está morrendo; a selva é alegoria |
 
 ## 2. Regras deste roteiro
 
@@ -42,6 +43,7 @@ Estado: **rascunho de roteiro para revisão do responsável (Alan)**. v1.1: as t
 | Santa Luzia | Mensageira; reúne os santos e os leva ao Átrio | Retrato `R02` e pranchas |
 | São Jorge, São Bento, Santa Teresinha | Recebem o chamado; uma fala cada no Átrio | Pranchas `P10` a `P14`; retratos de `prompts-saints-v1.md` |
 | Narrador | Versos de Dante e passagens curtas | Sem retrato |
+| A mulher idosa | Reza à cabeceira; sem identidade definida | Pranchas `P16` e `P17` |
 
 ## 4. Roteiro
 
@@ -63,6 +65,7 @@ Origem: Dante, *Inf.* I, 1–3 (tradução própria). Som: silêncio, depois ven
 | `P02` | NARRADOR: *Ninguém sabe dizer quando começou a se perder. Só que, um dia, já não via o caminho.* `[jogo]` |
 | `P02` + `R01` | PEREGRINO: Eu conhecia esta estrada... Eu a conhecia. `[jogo]` |
 | `P02` + `R01` | PEREGRINO: Está tudo escuro... `[jogo]` |
+| `P16` | Corte rápido, sem diálogo (cerca de 2 s): um quarto pobre à noite. Um homem respira com dificuldade numa cama; uma vela acesa; uma mulher idosa reza com contas de oração. |
 
 ### Cena 3 · A pergunta
 
@@ -101,6 +104,7 @@ Referências escondidas (não ditas na tela):
 | `P07` | NARRADOR: *O corpo ficou entre as raízes, ainda respirando. A alma, não. Algo a puxava para baixo, para dentro da terra.* `[jogo]` |
 | `P07` | As três figuras observam, imóveis, e se desfazem na escuridão. |
 | Tela escurece | Som: um último fôlego; o vento para. |
+| `P17` | Corte rápido, sem diálogo (cerca de 2 s): close da vela tremendo e da mão do homem sobre o lençol. A respiração fica mais fraca. |
 
 ### Cena 6 · O Céu se move
 
@@ -157,6 +161,7 @@ Ligação com o jogo: a lanterna é o **Lume** da expedição e o marcador da co
 | --- | --- |
 | `P15` | NARRADOR: *Muito abaixo, uma luz pálida descia. E, mais abaixo ainda, esperava uma porta.* `[jogo]` |
 | `P15` + `R02` | LUZIA: Descansem esta noite. Ao amanhecer, alguém os espera diante dela. `[jogo]` |
+| `P16` | Corte rápido, sem diálogo (cerca de 2 s): o mesmo quarto, com a vela um pouco mais baixa. |
 | `P15` | Título na tela: **AD INFEROS** · *A Companhia dos Santos* |
 
 Fim do prólogo. O jogo segue para a vila; a primeira expedição abre com a Porta do Inferno, a inscrição do Canto III e o Anjo da Guarda (Círculo 1).
@@ -297,6 +302,20 @@ Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked 
 Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, in the spirit of Gustave Dore engravings, four small figures seen from behind standing at the edge of a cliff at dusk, a woman with a lamp and three companions with spear, crozier and veil, one holding up a small lantern, looking down into an immense funnel-shaped abyss, far below a tiny pale light falling into the darkness, and deeper still the faint red glow of a colossal gate, immense scale, the upper half of the sky empty for a title, cinematic composition, thick irregular black ink outlines, heavy black shadows, crosshatched engraving texture, muted desaturated palette of black, bone, ash grey, warm amber and a touch of dark red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
 ```
 
+**`P16` · O leito** (pasta `assets/characters/narrative/deathbed/`)
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a poor 14th-century room at night, a gaunt pale bearded man lying gravely ill in a simple wooden bed breathing with difficulty, a single candle burning on a stool beside the bed, an elderly woman in a plain dark veil kneeling at the bedside praying with wooden prayer beads, a small wooden cross on the bare wall, long shadows, quiet and heavy atmosphere, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, rosary with crucifix pendant, modern objects, cartoon, anime, glossy, 3D, photorealistic
+```
+
+**`P17` · A vela e a mão**
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, extreme close-up of a guttering candle flame on a stool beside a bed at night and a thin pale man's hand lying limp on a rough linen sheet, wax dripping, the flame bending as if from a weak breath, intimate cinematic framing, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, blood, cartoon, anime, glossy, 3D, photorealistic
+```
+
+O Peregrino no leito é o mesmo homem do retrato `R01`, mais magro e pálido; a mulher idosa usa véu escuro simples e contas de oração de madeira (no séc. XIV, contas de oração, não terço). O corte do fim da Cena 11 reaproveita `P16`; o motor baixa a vela e a luz.
+
 ## 6. Para o Claude Code
 
 - Este prólogo é um evento do tipo `story` (`docs/specs/narrative-system.md` §1), com id `prologue_main`, de `circle_00`.
@@ -311,3 +330,4 @@ Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked 
 - [ ] Confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897, *Últimos Colóquios*), a abertura da Regra de São Bento e os dados de Santa Luzia.
 - [ ] Combate tutorial: definir com o Claude Code (provavelmente no Antinferno).
 - [ ] Música e sons do prólogo (indicados como notas nas cenas).
+- [ ] Vinhetas do leito e cena final: decisão D-198 em `docs/memory/decisions.md` (GDD §9, `narrative-system.md` §4.5 e §4.6, Direção de Arte §11).
