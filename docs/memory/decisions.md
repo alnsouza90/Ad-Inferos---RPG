@@ -79,6 +79,9 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-160 · 05/11/2026 · Alan** — T30 aprovada (fluxo completo do trecho: título, preparação, combate na expedição, relíquia, resumo). *PR #37.*
 - **D-161 · 05/11/2026 · Alan** — Liberada de novo a compilação do Godot 4.7.2 a partir do código-fonte no ambiente na nuvem (reafirma D-005); o agente compila no início das sessões que precisarem rodar testes localmente. *`progress.md` (Ambiente).*
 
+- **D-163 · 05/11/2026 · Alan** — Decisão de conteúdo: os Pecados Encarnados representam seus pecados de forma mais fiel e mais pesada, dentro das regras do GDD §10 (gore e horror demoníaco permitidos; nenhuma nudez sexualizada, também por exigência da Google Play). Vertigem sedutora com o corpo sempre coberto; Cisma redesenhado para o Círculo 6. Folhas `docs/art/prompts-enemies-v1.md` (v1.1, com os Pecados novos) e `docs/art/prompts-elites-bosses-v1.md` guardadas como vieram; têm prioridade sobre a Direção de Arte §6, que não foi alterada (nem o GDD nem o writing-guide). *`docs/art/`, `asset-pipeline.md`.*
+- **D-164 · 05/11/2026 · Alan** — T31: meta de Noite Escura por trecho 1 = **0,02 a 0,10** santo; desolação de fim de combate comum **12 → 25**; Lume alto deixa de reduzir a desolação (**×0,8 → ×1,0**). Vitória em combate difícil: o agente define a meta (fica 75–90%) e ajusta no momento certo (M2); Alan sente que os combates difíceis do M0 são o nível que quer para o jogo normal. *`constants.csv`, `desolation.md`, `expedition.md` §4, `testing.md` §5.3.*
+
 ## Arte
 
 - **D-201 · 03/11/2026 · Alan** — Poses de ataque, golpe recebido e queda não serão geradas: animação feita no motor a partir de uma imagem por estado; plano B é recorte com `Skeleton2D`. *ADR-0007.*

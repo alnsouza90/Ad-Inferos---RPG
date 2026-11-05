@@ -60,8 +60,8 @@ O relatório lista as métricas fora da meta. O agente propõe ajustes de númer
 
 | Métrica | Meta |
 | --- | --- |
-| Vitória da heurística em combate difícil, medida nos combates difíceis dentro de trechos simulados (no M1, as emboscadas do Pouso) | 75–90% (D-125) |
-| Santos em Noite Escura por trecho 1 (heurística) | Proposta no primeiro relatório (`sim-reports/2026-11-05-m1-t31.md`), à espera de Alan (D-126) |
+| Vitória da heurística em combate difícil, medida nos combates difíceis dentro de trechos simulados (no M1, as emboscadas do Pouso) | 75–90% (D-125); recalibrada no M2 com os combates reais do trecho 2 (D-164) |
+| Santos em Noite Escura por trecho 1 (heurística) | 0,02–0,10 (D-126, D-164) |
 | Vitória da heurística em combate fácil dentro de trechos | ≥ 95% |
 
 A meta "Noite Escura numa expedição longa" (0,5–1,5) de §5.2 volta no M2 (D-126).

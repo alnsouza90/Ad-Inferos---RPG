@@ -7,6 +7,8 @@ Este documento diz **como** uma imagem gerada vira um asset do jogo. **O que** g
 - `docs/art/prompts-saints.md` — os 12 santos jogáveis: corpo padrão, rostos de Noite Escura e Consolação, retrato, poses de ataque, golpe e queda, pose neutra e folha de peças para o rig.
 - `docs/art/prompts-splash.md` — telas de passagem dos 12 santos (milagre, Noite Escura e Consolação): o santo sozinho em meio corpo; o motor monta a cena (raios, auréola, nome, interface), como as telas de virtude e de aflição de Darkest Dungeon (D-210).
 - `docs/art/prompts-environments.md` — cenários em camadas para parallax (`_ref`, `_back`, `_mid`, `_front`) de cada trecho e chefe dos 9 círculos, almas, partículas, Pouso, Vigília, chegada, mapa de escolha dos círculos e extras.
+- `docs/art/prompts-enemies-v1.md` (v1.1) — inimigos comuns das famílias A, B e C e os 8 Pecados Encarnados: pose padrão, pose neutra do rig, ataque e defesa. Os Pecados seguem a decisão de conteúdo de 05/11/2026 (D-163) e têm prioridade sobre as descrições da Direção de Arte §6.
+- `docs/art/prompts-elites-bosses-v1.md` — Guardiões de Dante (elites) e chefes de círculo, com as mesmas quatro imagens.
 
 Os padrões abaixo são provisórios até o piloto com São Jorge. Onde as folhas de produção forem mais detalhadas (tamanhos, camadas, linha do chão), elas valem; divergências de design ficam em `docs/memory/open-questions.md`.
 
