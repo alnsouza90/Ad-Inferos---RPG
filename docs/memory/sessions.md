@@ -9,7 +9,8 @@ Resumo curto de cada sessão. A mais recente no topo.
 - Alan testou no celular (04/11): caminhada, provisões, mini-mapa e Tentação ok; caminhada interativa, animação, tamanho e parallax ficam para o M2 (D-158).
 - Godot compilado na sessão com a autorização de Alan (D-161) e preparado automaticamente nas próximas (D-162).
 - T31 aprovada (D-163 a D-166, D-325); T32 aceita no Redmi (D-167); Moscardo sorteia entre 2 e 3 (D-168, D-326). **M1 concluído.**
-- Próximo: backlog do M2 com Alan.
+- Plano de caça a exploits aprovado (D-170).
+- Próximo: backlog do M2 com Alan, numa sessão nova.
 
 ## Sessão 3 · 04/11/2026
 

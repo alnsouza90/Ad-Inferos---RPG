@@ -18,6 +18,7 @@ Base: GDD v1.1 §11. Cada marco só começa depois que o anterior cumpre o crit�
 | Kits completos dos santos | Antes do M3 de cada santo | Alan aprova a proposta do agente |
 | Roteiro (flashbacks, Encontros, Tentações) | A partir do M1, um círculo por vez | Alan, com apoio, seguindo `narrative/writing-guide.md` |
 | Pesquisa do Martirológio | A partir do M2 | Alan, com apoio; nunca inventar fontes |
+| Caça a exploits (glitches e abusos de mecânica, D-170) | Testes de regras invioláveis em toda tarefa; tarefa própria no fim do M2; repetida a cada família no M3; teste com jogadores de fora no M4 | Agente; Alan joga os casos suspeitos |
 
 ## Decisões que travam marcos
 
