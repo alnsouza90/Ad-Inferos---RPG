@@ -72,7 +72,9 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | Fundo de combate `_front` | PNG RGBA | 3240 × 1080 | Parallax ≈ 130% |
 | Rosto por estado (`face_*`) | PNG RGBA 1:1 | 1024 × 1024, reduzido à cabeça do idle (≈ 170 px) | Mesmo ângulo do idle |
 | Tela de passagem (`splash_<id>_miracle`, `_dark_night`, `_consolation`) | PNG RGBA 4:5, meio corpo | 1024 × 1280 | `assets/characters/saints/<id>/splash/` |
-| Rig (`rig_base`, `rig_parts`) | PNG RGBA | Matriz 2048 × 3072 / 2048 × 2048 em `art_source/`; peças na escala do idle | `assets/characters/saints/<id>/rig/` |
+| Rig (`rig_base`; `rig_parts` opcional) | PNG RGBA | Matriz 2048 × 3072 em `art_source/`; o agente recorta as peças na escala do idle (§7) | `assets/characters/<grupo>/<id>/rig/` |
+| Entrada da bifurcação (`prop_<círculo>_entry_*`) | PNG RGBA 2:3 | 1024 × 1536 | Base a 96 px da borda de baixo (linha dos pés) |
+| Objeto do corredor (tenda, relicário fechado/aberto) | PNG RGBA 1:1 | 1536 × 1536 (tenda) / 1024 × 1024 (relicário, mesmo enquadramento nos dois) | Idem; `environments/circles/<círculo>/props/` e `environments/props/` |
 | Ilustração de evento | PNG opaco 16:9 | 1920 × 1080 (recortada para preencher); o terço de baixo fica sob a caixa de texto | `assets/events/<círculo>/` |
 | Ícone | PNG 1:1 | 256 × 256 (exibido a 64–96) | — |
 | Auréola | PNG 1:1 | 512 × 512 | Centro |
@@ -103,11 +105,14 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 - A auréola mostra **só o estado espiritual**; o Fervor fica na barra da equipe (Direção de Arte v1.1 prevalece sobre a tabela antiga da seção 12).
 - Valores do shader ficam num Resource de apresentação (`scenes/battle/halo_settings.tres`), não em `docs/balance/`, porque não afetam regras.
 
-## 7. Animação (pendente do piloto, ADR-0007)
+## 7. Animação (D-176, D-180; ADR-0007 atualizado na T35)
 
-Primeiro teste: poses estáticas (idle, ataque, golpe recebido, queda) trocadas com pequenos tremores e deslocamentos por `Tween`. Se ficar amador, testar recortes com `Skeleton2D` para movimentos simples. A decisão vira ADR e atualiza este documento.
-
-A interface `CombatantView` (`architecture.md`) é a mesma nas duas abordagens, então o código de combate não muda.
+- **Personagens** (santos, inimigos, elites, chefes): esqueleto 2D (`Skeleton2D`) para andar, atacar, defender, golpe recebido e queda, como em Darkest Dungeon.
+- **Peças do esqueleto:** Alan entrega a pose neutra (`rig_base`: vista de lado, membros afastados, sem sobreposição, luz chapada). O agente recorta as peças com scripts em `tools/art/` (cabeça, tronco com quadril, braços em três partes, pernas em duas, roupas soltas e objetos), completa as áreas escondidas e grava em `assets/characters/<grupo>/<id>/rig/`. Se o recorte não ficar bom no piloto, Alan tenta gerar a folha de peças (`rig_parts`).
+- **Cenário, fundo, almas, milagres e efeitos:** animação no motor (tweens, partículas e shaders), sem imagens novas.
+- **Por quadros:** quando indicado, troca entre poucas imagens (ex.: relicário fechado e aberto).
+- A interface `CombatantView` (`architecture.md`) continua a mesma; o código de combate não muda.
+- Pedido completo de arte do M2: `docs/art/m2-art-request.md`.
 
 ## 8. Checklist de aceite de um asset
 
