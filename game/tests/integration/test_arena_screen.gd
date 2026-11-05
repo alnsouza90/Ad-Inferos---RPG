@@ -67,12 +67,3 @@ func test_title_button_asks_for_the_title() -> void:
 	arena.title_requested.connect(func() -> void: asked[0] = true)
 	arena.press_title()
 	assert_true(asked[0])
-
-
-func test_rig_preview_opens_plays_every_motion_and_returns() -> void:
-	arena.open_rig_preview()
-	assert_not_null(arena.rig_preview, "botão Animações (teste) abre a tela do esqueleto")
-	for motion: StringName in RigMotions.names():
-		assert_gt(arena.rig_preview.play(motion), 0.0, String(motion))
-	arena.close_rig_preview()
-	assert_null(arena.rig_preview)

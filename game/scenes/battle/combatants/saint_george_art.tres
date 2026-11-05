@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_hit.png" id="6_hit"]
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/body/saint_george_body_fall.png" id="7_fall"]
 [ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/portrait/saint_george_portrait.png" id="8_port"]
-[ext_resource type="Resource" path="res://assets/characters/saints/saint_george/rig/saint_george_rig.tres" id="9_rig"]
 
 [resource]
 script = ExtResource("1_art")
@@ -19,7 +18,6 @@ body_attack = ExtResource("5_atk")
 body_hit = ExtResource("6_hit")
 body_fall = ExtResource("7_fall")
 portrait = ExtResource("8_port")
-rig = ExtResource("9_rig")
 head_normal = Vector2(0.554, 0.221)
 head_dark_night = Vector2(0.547, 0.219)
 head_consolation = Vector2(0.505, 0.219)

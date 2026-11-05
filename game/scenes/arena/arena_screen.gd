@@ -16,8 +16,6 @@ var chosen: StringName = &""
 var arena_seed: int = DEFAULT_SEED
 ## The running battle, or null while the arena is shown.
 var battle: BattleScreen
-## The skeleton test screen (T35), or null.
-var rig_preview: RigPreviewScreen
 ## Speed the next battle starts with (tests use the instant one).
 var battle_speed_index: int = 0
 ## Emitted by "Voltar ao título" (the title opens the arena in dev builds).
@@ -76,24 +74,6 @@ func start() -> void:
 	battle.back_requested.connect(back_to_arena)
 	_menu.visible = false
 	add_child(battle)
-
-
-func open_rig_preview() -> void:
-	if battle != null or rig_preview != null:
-		return
-	rig_preview = RigPreviewScreen.new()
-	rig_preview.setup(data)
-	rig_preview.back_requested.connect(close_rig_preview)
-	_menu.visible = false
-	add_child(rig_preview)
-
-
-func close_rig_preview() -> void:
-	if rig_preview == null:
-		return
-	rig_preview.queue_free()
-	rig_preview = null
-	_menu.visible = true
 
 
 func press_title() -> void:
@@ -166,9 +146,9 @@ func _build() -> void:
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_menu.add_child(_stage)
 	var box := VBoxContainer.new()
-	box.position = Vector2((STAGE_SIZE.x - BUTTON_SIZE.x) * 0.5, 30)
+	box.position = Vector2((STAGE_SIZE.x - BUTTON_SIZE.x) * 0.5, 50)
 	box.custom_minimum_size = Vector2(BUTTON_SIZE.x, 0)
-	box.add_theme_constant_override("separation", 12)
+	box.add_theme_constant_override("separation", 18)
 	_stage.add_child(box)
 	box.add_child(_label(data.ui.text(&"arena_title"), 52))
 	box.add_child(_label(data.ui.text(&"arena_choose"), 28))
@@ -194,9 +174,6 @@ func _build() -> void:
 	var start_button := _button(data.ui.text(&"arena_start"), Vector2(BUTTON_SIZE.x, 110))
 	start_button.pressed.connect(start)
 	box.add_child(start_button)
-	var rig_button := _button(data.ui.text(&"arena_rig"), Vector2(BUTTON_SIZE.x, 96))
-	rig_button.pressed.connect(open_rig_preview)
-	box.add_child(rig_button)
 	var title_button := _button(data.ui.text(&"back_to_title"), Vector2(BUTTON_SIZE.x, 96))
 	title_button.pressed.connect(press_title)
 	box.add_child(title_button)

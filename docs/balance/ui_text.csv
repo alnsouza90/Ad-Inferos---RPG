@@ -87,16 +87,6 @@ arena_seed,Semente {seed}
 arena_seed_minus,-
 arena_seed_plus,+
 arena_start,Começar
-arena_rig,Animações (teste)
-rig_title,Animações de São Jorge
-rig_idle,Parado
-rig_idle_weary,Parado (Noite Escura)
-rig_walk,Andar
-rig_attack,Atacar
-rig_defend,Defender
-rig_hit,Golpe recebido
-rig_fall,Queda
-rig_back,Voltar à arena
 pool_easy,Fácil
 pool_hard,Difícil
 pool_elite,Elite

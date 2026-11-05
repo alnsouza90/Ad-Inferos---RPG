@@ -19,9 +19,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 - `JSON.parse_string` com texto inválido imprime um erro do motor, que o GUT conta como falha ("Unexpected Errors"). Para dados que podem estar estragados (saves), use `JSON.new().parse(texto)` e confira o código (T26).
 - Números lidos de JSON voltam como float: ao reconstruir um estado salvo, regenere as partes guardadas como dicionário a partir das classes (`LegMap.to_dict()`), senão a comparação de texto acusa diferença (T26).
 
-- Classe nova com `class_name` só é reconhecida por outros scripts (e pelo `--check-only`) depois de `godot --headless --path game --import`, que atualiza o cache de classes globais; sem isso aparece "Could not find type" (T35).
-- `z_index` de um `Node2D` dentro de uma tela de `Control` vale para a tela inteira e passa por cima de rótulos de outros nós. Para ordenar peças de um personagem, desenhe-as como irmãs na ordem certa e prenda cada uma ao seu osso com `RemoteTransform2D` (T35).
-- O Godot compilado na nuvem não desenha (sem OpenGL). Para ver uma animação, um script do Godot grava a posição de cada peça por quadro em JSON e um script Python monta um GIF com as peças (T35).
+- Classe nova com `class_name` só é reconhecida por outros scripts (e pelo `--check-only`) depois de `godot --headless --path game --import`, que atualiza o cache de classes globais; sem isso aparece "Could not find type" (05/11/2026).
+- O Godot compilado na nuvem não desenha (sem OpenGL). Para mostrar uma animação a Alan, um script do Godot grava a posição de cada peça ou quadro em JSON e um script Python monta um GIF (05/11/2026).
 
 ## GUT e CI
 
@@ -31,6 +30,10 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 ## Claude Code
 
 - A saída de um gancho `SessionStart` com mais de poucos KB chega ao agente **cortada** (só uma prévia). O gancho deve ser curto e mandar ler os arquivos com a ferramenta de leitura.
+
+## Arte e animação
+
+- Esqueleto 2D a partir de uma imagem parada gerada por IA (peças recortadas e giradas) ficou "boneco articulado" e foi reprovado (D-195). Para o estilo Darkest Dungeon que Alan quer, use poses desenhadas (quadros e poses-chave) e deixe o motor fazer a ligação entre elas (D-194).
 
 ## Dados
 

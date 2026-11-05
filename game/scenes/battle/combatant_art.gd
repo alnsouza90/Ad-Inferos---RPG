@@ -19,9 +19,6 @@ extends Resource
 @export var head_attack: Vector2 = Vector2(0.5, 0.2)
 @export var head_hit: Vector2 = Vector2(0.5, 0.2)
 @export var head_fall: Vector2 = Vector2(0.5, 0.2)
-## The 2D skeleton (T35, D-176); when set it animates the saint instead of
-## the pose images.
-@export var rig: RigDef
 ## Halo disk diameter as a fraction of the body texture width.
 @export var halo_diameter: float = 0.27
 

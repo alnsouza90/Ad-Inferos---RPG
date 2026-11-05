@@ -1,6 +1,6 @@
 # ADR-0007 · Abordagem de animação definida pelo piloto de arte
 
-**Situação:** Decidida por Alan em 03/11/2026 (primeira abordagem); esqueleto 2D para os personagens desde 05/11/2026 (D-176, seção no fim)
+**Situação:** Decidida por Alan em 03/11/2026 (primeira abordagem); desde 05/11/2026, quadros e poses-chave com a ligação feita no motor (D-194, seção no fim)
 
 ## Contexto
 
@@ -32,14 +32,11 @@ Plano B, se ficar amador no piloto: recortar a imagem em partes e animar com `Sk
 
 Alan gerou poses de ataque, golpe recebido e queda de São Jorge com qualidade suficiente. A animação no motor passa a **trocar para a pose durante o movimento**: avanço com a pose de ataque, recuo com a pose de golpe, pose de queda enquanto caído. Sem a pose, vale o comportamento anterior (só a imagem do estado se move). A animação completa no estilo Darkest Dungeon continua no M2 (D-116). Uma pose neutra para recorte em partes ficou guardada em `art_source/` para o plano B.
 
-## Decisão de 05/11/2026 · esqueleto 2D (D-176, D-180)
+## Decisão de 05/11/2026 · quadros e poses-chave (D-194, D-195)
 
-Para animar como em Darkest Dungeon (andar, atacar com avanço, defender, golpe recebido e queda), Alan decidiu usar **esqueleto 2D** nos personagens (santos, inimigos, elites e chefes); cenário, fundo, almas e milagres seguem com animação no motor (tweens, partículas, shaders), e troca de quadros só quando indicada (ex.: relicário fechado e aberto). Substitui "uma imagem por estado" de 03/11/2026 para os personagens.
+Alan decidiu animar os personagens com esqueleto 2D (D-176). O piloto com São Jorge (peças recortadas da pose neutra, 7 movimentos) foi reprovado: girar peças de uma imagem parada parece um boneco articulado e não chega ao que se espera de Darkest Dungeon. Os GIFs de exemplo de Alan (parado com a capa ao vento; poses de andar, correr, golpe, defesa, golpe recebido e queda) mostraram o caminho, aprovado por ele:
 
-Como ficou no piloto com São Jorge (T35):
-
-- **Arte:** Alan entrega a pose neutra (`rig_base`). O agente recorta as peças com `tools/art/rig_cut.py` a partir de um mapa de corte por personagem (`tools/art/rigs/<id>.json`: contorno, junta, pai e ordem de desenho de cada peça). O que fica escondido atrás de uma peça da frente é pintado a partir das cores da própria peça; sob objetos finos (lança) a cor é copiada de logo acima ou abaixo, para as pregas e dobras continuarem retas. Sai um PNG por peça e um `RigDef` (`assets/characters/<grupo>/<id>/rig/<id>_rig.tres`).
-- **Motor:** `RigFigure` monta um `Skeleton2D` com um `Bone2D` por peça; as peças são desenhadas numa lista à parte, na ordem de profundidade, e cada uma segue o seu osso por um `RemoteTransform2D` (a ordem de desenho não depende da árvore dos ossos e não usa `z_index`, que vazaria para o resto da tela).
-- **Movimentos compartilhados:** `RigMotions` guarda os movimentos de um corpo humano (parado, parado em Noite Escura, andar, atacar, defender, golpe recebido, queda) por nome de osso; todo personagem com os mesmos nomes de osso usa os mesmos movimentos. Corpos diferentes (inseto voador, fera, chefes) ganham o seu conjunto.
-- **Tela de combate:** a interface da `CombatantView` não mudou (`play_idle`, `play_action`, `play_hit`, `play_fall`); com `CombatantArt.rig` preenchido, ela usa o esqueleto no lugar das imagens de pose. Sem esqueleto, vale o comportamento anterior.
-- **Estratégia para muitos personagens (proposta a Alan em 05/11/2026, aguardando decisão):** pose neutra "de mãos vazias" (sem arma, escudo e capa, membros afastados) mais cada objeto gerado sozinho; o agente marca as juntas, recorta e reaproveita os movimentos por tipo de corpo.
+- **Parado e andar:** quadros desenhados em ciclo (6 a 9), entregues como sprite sheet ou GIF (D-196).
+- **Ações:** poses-chave (atacar: preparar e golpear; defender; golpe recebido; queda: ajoelhar e caído).
+- **Motor:** a ligação entre as poses (deslizar até o alvo, câmera que aproxima, tremor, clarão, esticar e encolher, partículas), respiração e capa sutis; cenário, fundo, almas e milagres com tweens, partículas e shaders.
+- A interface `CombatantView` continua a mesma. O código do esqueleto foi retirado antes do merge (PR #45).
