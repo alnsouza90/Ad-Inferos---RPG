@@ -76,7 +76,7 @@ Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão 
 
 | Imagem | Situação | Onde está o prompt |
 | --- | --- | --- |
-| Prólogo: 5 retratos de diálogo (`R01` a `R05`) e 14 pranchas (`P02` a `P15`) | ⬜ | `docs/narrative/prologue.md` §5 (D-190) |
+| Prólogo: 5 retratos de diálogo (`R01` a `R05`) e 16 pranchas (`P02` a `P17`) | ⬜ | `docs/narrative/prologue.md` §5 (D-190, D-198) |
 | `env_gate_of_hell` | ⬜ | `prompts-environments.md` · Extras |
 | `fx_light_shafts` | ⬜ | Idem |
 

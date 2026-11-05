@@ -52,3 +52,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Salto do Círculo 1 na fatia do M2~~ Aceito, com o Círculo 1 bloqueado no Mapa do Inferno (D-192) | T49 | 05/11/2026 |
 | Prólogo: confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897), a abertura da Regra de São Bento e os dados de Santa Luzia (`prologue.md` §7) | Alan | 05/11/2026 |
 | ~~Formato dos quadros de animação~~ GIFs do Meta AI com os prompts de `animation-prompts.md`; os de Jorge chegaram (D-197) | — | 05/11/2026 |
+| Texto do ato de contrição nas três versões (roteiro, com revisão teológica) (D-198) | Alan | 05/11/2026 |
+| Texto das nove vinhetas do leito (D-198) | Alan | 05/11/2026 |
+| Roteiro dos flashbacks de antes, por círculo, com as três pessoas da selva (D-198) | Alan | 05/11/2026 |
+| Revisão teológica de toda a sequência final antes do M4 (D-198) | Alan | 05/11/2026 |
+| A cópia do GDD no Claude Docs (fora do repositório) precisa receber as mudanças de D-198 | Alan | 05/11/2026 |
