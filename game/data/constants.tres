@@ -20,7 +20,7 @@ values = {
 "dark_night_exit_threshold": 50.0,
 "desolation_ally_fallen": 15.0,
 "desolation_battle_end_boss": 35.0,
-"desolation_battle_end_common": 25.0,
+"desolation_battle_end_common": 20.0,
 "desolation_battle_end_elite": 20.0,
 "desolation_emergency_retreat": 25.0,
 "desolation_max": 200.0,

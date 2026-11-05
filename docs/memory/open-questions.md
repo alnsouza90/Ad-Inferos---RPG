@@ -6,7 +6,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | --- | --- | --- |
 | ~~Corpo padrão de São Jorge em resolução maior~~ Alan enviou a v02 (848×1264) em 04/11/2026 | Alan | 03/11/2026 |
 | Brilho atrás da cabeça na imagem de Consolação de São Jorge: conferir no motor se briga com a auréola | T16 | 03/11/2026 |
-| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126. Primeiro relatório feito (T31, 05/11/2026): propostas aguardando Alan | Alan | 03/11/2026 |
+| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126. Feito na T31 (D-164, D-165); o difícil volta a ser medido no M2 | M2 | 03/11/2026 |
 | ~~Criar `docs/backlog/m1.md`~~ Proposta feita e perguntas respondidas por Alan em 04/11/2026 (D-121 a D-126) | Alan | 03/11/2026 |
 | Datas das festas dos santos (`feasts.csv`) | Pesquisa do Martirológio (Alan) | 03/11/2026 |
 | Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números) | T14+ / M1 | 03/11/2026 |
@@ -40,4 +40,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Tela do evento: fonte própria (com itálico de verdade) e moldura de pergaminho da caixa de texto ficam para a arte de interface (M2) | M2 | 04/11/2026 |
 | ~~Pouso do Círculo 2 em tamanho cheio~~ v02 recebida com 1600×672 (D-156); se houver versão de 2560×1080, fica mais nítida | Alan (T29) | 04/11/2026 |
 | Teste de Alan no celular (04/11/2026): nós, provisões, mini-mapa e Tentação funcionam. Problemas: animação de andar, personagens pequenos, parallax da frente ruim. Pedido: caminhada **interativa** — andar até a tenda da Tentação e escolher entrar; no fim do corredor, andar até a entrada da derivação e entrar (em vez de botões). Decidido: entra no M2 com a arte final (D-158); levar ao `backlog/m2.md` | M2 | 04/11/2026 |
-| T31: com 25 de desolação no fim do combate e Lume alto ×1,0 (D-164), a Noite Escura dá 0,21 por trecho, acima da meta aprovada (0,02–0,10). Escolher: manter e subir a meta, ou 20 e ×1,0 (recomendado: 0,097 e 83% no difícil) | Alan | 05/11/2026 |
+| ~~T31: com 25 de desolação no fim do combate e Lume alto ×1,0 (D-164), a Noite Escura dá 0,21 por trecho, acima da meta aprovada (0,02–0,10). Escolher: manter e subir a meta, ou 20 e ×1,0 (recomendado: 0,097 e 83% no difícil)~~ Escolhida a A: 20 e ×1,0 (D-165) | Alan | 05/11/2026 |

@@ -31,7 +31,7 @@ Reduções (valores negativos) não passam pelos multiplicadores.
 
 | Fonte | Valor base [constante] | Quando |
 | --- | --- | --- |
-| Fim de combate comum vencido | [desolation_battle_end_common] (25, D-164; era 12) | Em todos os santos que participaram |
+| Fim de combate comum vencido | [desolation_battle_end_common] (20, D-165; era 12) | Em todos os santos que participaram |
 | Fim de combate de elite | [desolation_battle_end_elite] (20) | Idem |
 | Fim de combate de chefe | [desolation_battle_end_boss] (35) | Idem |
 | Ação inimiga espiritual | Definido no efeito `desolation` do inimigo | No alvo |

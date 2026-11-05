@@ -29,7 +29,7 @@ consolation_desolation_mult,0.5,Ganho de desolação na Consolação
 dark_night_exit_threshold,50,Desolação abaixo da qual a Noite Escura termina (Purificação)
 prostration_reset_value,150,Desolação após Prostração
 purification_xp_bonus,0.25,Experiência extra após Purificação
-desolation_battle_end_common,25,Fim de combate comum
+desolation_battle_end_common,20,Fim de combate comum
 desolation_battle_end_elite,20,Fim de combate de elite
 desolation_battle_end_boss,35,Fim de combate de chefe
 desolation_ally_fallen,15,Aliado caído
