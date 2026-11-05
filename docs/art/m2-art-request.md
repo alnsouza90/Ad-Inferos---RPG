@@ -6,6 +6,8 @@ Lista de **tudo o que o M2 precisa de imagem**, na ordem em que o código vai us
 
 Referência de clima, tamanho e composição: `docs/art/reference/` (D-187).
 
+**Para gerar:** `docs/art/m2-art-prompts.md` junta todos os prompts deste pedido, já copiados das folhas e na ordem de prioridade, com uma caixa para marcar cada imagem aprovada (pedido de Alan, 05/11/2026).
+
 ## 1. Como entregar
 
 - Mandar pelo chat (até 20 por vez), com o nome da tabela. O agente guarda o original em `art_source/` com versão (`_v01`) e trata a imagem (`tools/art/`, `asset-pipeline.md`).
@@ -75,7 +77,7 @@ Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão 
 | `env_gate_of_hell` | ⬜ | `prompts-environments.md` · Extras |
 | `fx_light_shafts` | ⬜ | Idem |
 
-**Fonte da interface:** não é imagem gerada. O agente propõe na T53 uma fonte gratuita de licença aberta (com itálico de verdade), com a licença anotada.
+**Fontes da interface:** não são imagens geradas; já estão definidas na Direção de Arte §12 (Uncial Antiqua nos títulos, EB Garamond nos textos, licença OFL) e entram na T53.
 
 ## 4. O que o motor faz sozinho (não precisa de imagem)
 
