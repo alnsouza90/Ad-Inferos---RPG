@@ -39,7 +39,7 @@ Abertura → Título ─┬─ Continuar ───► (último ponto salvo)
                                                 └─ Pouso ─► (emboscada?) ─► Resumo do trecho
 ```
 
-A arena do M0 continua acessível só na versão de desenvolvimento.
+A arena do M0 continua acessível só na versão de desenvolvimento (botão no título). "Novo trecho" com um trecho salvo pede um segundo toque (o salvo é apagado). A preparação mostra a equipe e o kit e tem "Partir". A relíquia encontrada abre um painel para escolher quem a carrega (D-146) ou guardá-la na mochila; o fim do trecho mostra um resumo com Esmolas, santos, relíquias e virtudes (D-324).
 
 ## 3. Combate (tela principal do jogo)
 
@@ -91,7 +91,7 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121).
 - Barra superior: Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo.
 - **Mini-mapa:** sobreposto ao corredor, camadas da esquerda para a direita, ícone do tipo de todo nó, ligações, caminho já feito e posição atual. Só consulta; fecha com um toque fora ou no botão.
 - Arte do M1: provisória (cenário do Círculo 2, trecho 1, e retângulos para as entradas); Jorge usa a arte que já existe. Arte final e animação de andar no M2 (D-210).
-- Nomes dos caminhos no M1: o reto é "Seguir em frente"; os desvios são Porta, Caverna ou Escada (D-149). Enquanto as telas dos nós não existem, a caminhada se testa pelo botão "Caminhada (teste)" da arena (D-149).
+- Nomes dos caminhos no M1: o reto é "Seguir em frente"; os desvios são Porta, Caverna ou Escada (D-149). A caminhada interativa (andar até a entrada ou a tenda e entrar) é do M2 (D-158).
 
 ## 5. Pouso e Vigília
 

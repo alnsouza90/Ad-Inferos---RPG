@@ -55,6 +55,9 @@ var ended_reason: StringName = &""
 var battle: BattleController
 ## The last finished battle, kept for the screens (result, events).
 var last_battle: BattleController
+## Answer of the last battle command (its events, for the battle screen to
+## animate), or null before any.
+var last_battle_result: CommandResult
 ## Accepted commands, in order (ExpeditionCommand.to_dict()).
 var command_log: Array[Dictionary] = []
 ## {"type": StringName, "data": Dictionary} in order, for the screens.
@@ -89,6 +92,13 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 	c.state.map = c.map.to_dict()
 	c._initial = c.snapshot()
 	return c
+
+
+## Seed of an expedition's map (expedition §2): derived from the campaign
+## seed, the circle and the expedition number, so a campaign always draws the
+## same legs.
+static func map_seed_for(campaign_seed: int, circle: StringName, expedition_number: int) -> int:
+	return RngStream.hash32(campaign_seed ^ RngStream.fnv1a32("%s_e%d" % [circle, expedition_number]))
 
 
 ## Rebuilds an expedition from its starting snapshot and command log.
@@ -244,6 +254,7 @@ func _battle_command(cmd: ExpeditionCommand) -> StringName:
 	if phase != Phase.IN_BATTLE or cmd.battle_command == null:
 		return REJECT_WRONG_PHASE
 	var result: CommandResult = battle.execute(cmd.battle_command)
+	last_battle_result = result
 	if not result.ok:
 		return result.reason
 	command_log.append(cmd.to_dict())

@@ -50,6 +50,14 @@ var dev_tools: bool = OS.is_debug_build() or OS.has_feature("dev_tools")
 
 signal back_requested
 
+## Inside an expedition (T30): every command goes through `executor` (logged
+## and saved by the expedition), "Jogar de novo" and the dev buttons are
+## hidden (they would bypass the log) and the result offers "Continuar".
+var in_expedition: bool = false
+## Takes a BattleCommand and returns its CommandResult. Default: the
+## controller itself (the arena).
+var executor: Callable
+
 var data: GameData
 var texts: BattleTexts
 var ctrl: BattleController
@@ -322,10 +330,17 @@ func _accepting_input() -> bool:
 	return not busy and ctrl.phase == BattleController.Phase.PARTY_TURN
 
 
+## Sends a command as if it came from the touches (also used by tests that
+## play a whole leg, T30).
+func send(cmd: BattleCommand) -> void:
+	if _accepting_input():
+		_execute(cmd)
+
+
 func _execute(cmd: BattleCommand) -> void:
 	if cmd == null:
 		return
-	var result: CommandResult = ctrl.execute(cmd)
+	var result: CommandResult = _run(cmd)
 	if not result.ok:
 		_refresh()
 		_hint.text = texts.reason(result.reason)
@@ -338,7 +353,17 @@ func _end_turn() -> void:
 		return
 	selection.reset()
 	_provision_menu.visible = false
-	_play(ctrl.end_party_turn())
+	var result: CommandResult = _run(BattleCommand.end_party_turn())
+	if result.ok:
+		_play(result.events)
+	else:
+		_refresh()
+
+
+func _run(cmd: BattleCommand) -> CommandResult:
+	if executor.is_valid():
+		return executor.call(cmd)
+	return ctrl.execute(cmd)
 
 
 ## Animates the events in order, then redraws from the state. At instant
@@ -787,9 +812,10 @@ func _build_ui() -> void:
 	_result_overlay = _overlay()
 	_result_label = _overlay_label(_result_overlay)
 	_result_label.add_theme_font_size_override("font_size", 56)
-	_overlay_button(_result_overlay, texts.t(&"play_again"), press_play_again)
-	var back: Button = _overlay_button(_result_overlay, texts.t(&"back_to_arena"), press_back)
-	back.visible = show_back_button
+	var again: Button = _overlay_button(_result_overlay, texts.t(&"play_again"), press_play_again)
+	again.visible = not in_expedition
+	var back: Button = _overlay_button(_result_overlay, texts.t(&"result_continue" if in_expedition else &"back_to_arena"), press_back)
+	back.visible = show_back_button or in_expedition
 	_ui_built = true
 
 
@@ -839,7 +865,7 @@ func _build_dev_row(row_y: float) -> void:
 	_dev_row = HBoxContainer.new()
 	_dev_row.position = Vector2(560, row_y)
 	_dev_row.add_theme_constant_override("separation", 12)
-	_dev_row.visible = dev_tools
+	_dev_row.visible = dev_tools and not in_expedition
 	_stage.add_child(_dev_row)
 	var title := Label.new()
 	title.text = texts.t(&"dev_title")

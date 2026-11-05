@@ -60,15 +60,10 @@ func test_battle_fills_the_arena_and_its_stage_is_centred() -> void:
 	assert_eq(battle.stage_position(), expected, "palco centralizado")
 
 
-## T27: the walk test opens from the arena and comes back.
-func test_walk_test_opens_and_comes_back() -> void:
-	arena.walk_saves = false
-	arena.expedition_catalog = RealData.expedition_catalog()
-	arena.change_seed(2)
-	arena.start_walk()
-	assert_not_null(arena.walk_test)
-	assert_eq(arena.walk_test.leg_seed, 3)
-	assert_eq(arena.walk_test.size, arena.size, "a caminhada ocupa a tela toda")
-	assert_eq(arena.walk_test.walk.ctrl.phase, ExpeditionController.Phase.AT_FORK)
-	arena.back_from_walk()
-	assert_null(arena.walk_test)
+
+## T30: the arena is reached from the title in dev builds and goes back.
+func test_title_button_asks_for_the_title() -> void:
+	var asked: Array[bool] = [false]
+	arena.title_requested.connect(func() -> void: asked[0] = true)
+	arena.press_title()
+	assert_true(asked[0])
