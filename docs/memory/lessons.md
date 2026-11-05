@@ -43,6 +43,7 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - No `.gitignore`, uma regra com barra no meio (`tools/out/`) vale só a partir da raiz; para `game/tools/out/` é preciso escrever o caminho.
 - Godot compilado na nuvem (D-161): o binário fica em `<scratchpad>/godot/src/bin/godot.linuxbsd.editor.x86_64` (some com a sessão); ligar em `~/.local/bin/godot` e rodar `git lfs pull` e `godot --headless --path game --import` antes dos testes. O import cria os `.import` e `.gd.uid` que faltavam; o repositório já versiona os dois tipos, então eles entram no commit (05/11/2026).
+- Se o ambiente reiniciar no meio da compilação do Godot, sobra a trava `~/.cache/godot-4.7.2/building` e o `setup_godot.sh` diz "em andamento" para sempre (o log para sem `PRONTO` nem `FALHOU`). Conferir com `pgrep -f scons`; se não houver processo, apagar a trava e rodar o script de novo: a compilação continua de onde parou (05/11/2026).
 - Nunca usar `git push -f`: é bloqueado pelas permissões, com razão.
 - Na nuvem, downloads de `github.com` são bloqueados e `git clone` funciona: o Godot é compilado do código-fonte (comando em `progress.md`).
 - Depois do merge de um PR, recriar a branch de trabalho a partir da `main` (`git fetch origin main && git checkout -B <branch> origin/main`).
