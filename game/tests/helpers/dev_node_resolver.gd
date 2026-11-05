@@ -1,11 +1,10 @@
 class_name DevNodeResolver
 extends RefCounted
-## Test tool (dev builds only, like the arena): finishes the node the party
-## entered while its screens do not exist yet (T28 to T30), so the whole leg
-## can be walked on the phone. It only sends ordinary commands, through the
-## same `run` callable the corridor uses, so they are logged and saved:
-## battles with "first valid ability, else pass", the first option of an
-## event that can be taken, relics into the pack.
+## Test helper: finishes the node the party entered with ordinary commands
+## sent through `run` (logged like the player's): battles with "first valid
+## ability, else pass", the first option of an event that can be taken,
+## relics into the pack. Moved from scenes/map/ when the leg got its real
+## screens (T30).
 
 ## Ability target sets tried in order (positions 1 to 4, then pairs).
 const SLOT_SETS: Array = [[], [1], [2], [3], [4], [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
@@ -26,7 +25,7 @@ static func resolve(ctrl: ExpeditionController, run: Callable) -> void:
 static func next_command(ctrl: ExpeditionController) -> ExpeditionCommand:
 	match ctrl.phase:
 		ExpeditionController.Phase.IN_BATTLE:
-			return ExpeditionCommand.battle(_battle_command(ctrl.battle))
+			return ExpeditionCommand.battle(battle_command(ctrl.battle))
 		ExpeditionController.Phase.IN_NODE:
 			return ExpeditionCommand.complete_node()
 		ExpeditionController.Phase.IN_RELIC:
@@ -39,7 +38,7 @@ static func next_command(ctrl: ExpeditionController) -> ExpeditionCommand:
 	return null
 
 
-static func _battle_command(battle: BattleController) -> BattleCommand:
+static func battle_command(battle: BattleController) -> BattleCommand:
 	for saint: Combatant in battle.state.party:
 		if not saint.is_standing() or saint.has_acted:
 			continue

@@ -212,7 +212,7 @@ func test_every_camp_text_exists_in_the_data() -> void:
 		"camp_share_desc", "camp_prayer_desc", "camp_choose_target", "camp_injury_minor", "camp_injury_major",
 		"camp_confirm_rest", "camp_confirm_continue", "camp_confirm_retreat", "camp_change_hp",
 		"camp_change_desolation", "camp_change_injury_healed", "camp_change_bread", "camp_bread_kept",
-		"camp_change_fervor", "camp_ambush_none", "camp_ambush_cancelled", "camp_ambush_battle", "walk_test_ambush",
+		"camp_change_fervor", "camp_ambush_none", "camp_ambush_cancelled", "camp_ambush_battle",
 	]
 	for activity: StringName in [ExpeditionController.ACTIVITY_VIGIL, ExpeditionController.ACTIVITY_SHARE, ExpeditionController.ACTIVITY_PRAYER]:
 		keys.append("camp_%s" % activity)
