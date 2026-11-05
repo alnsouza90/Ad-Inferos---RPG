@@ -71,27 +71,29 @@ A arena do M0 continua acessível só na versão de desenvolvimento (botão no t
 
 ## 4. Caminhada da expedição (corredor) e mini-mapa
 
-Regras em `specs/expedition.md` §2.3 (D-207, D-121).
+Regras em `specs/expedition.md` §2.3 (D-207, D-121; caminhada interativa do M2: D-158, D-178, D-184 a D-186).
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ [Pausa] Lume ▮▮▮▮▮▮▮▮▯▯ 80   Esmolas 70 (+140 não garantidas)  [Mini-mapa]│ ← barra superior
 │                                                                          │
-│   (fundo com parallax)                          ┌────┐                   │
-│                                                 │porta│  ⚔ Combate       │ ← desvio
-│   Teres  Bento  Jorge  ───── andam ─────►       └────┘                   │
-│                                                        ═══► ✦ Tentação   │ ← segue reto
-│                                                                          │
-│ [Provisões]                                         [painel da entrada]  │
+│  (fundo, meio e frente com parallax)        ┌──────┐                     │
+│                                             │ tenda│                     │
+│      Teres  Bento  Jorge  ►                 └──────┘          ┌────┐  ══►│ ← porta (desvio) e caminho reto
+│  ═══════════════════ chão (y ≈ 900) ═════════════════════════ └────┘     │
+│ [Provisões]            ‹‹ segurar: voltar │ segurar: andar ››   [Entrar] │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-- A equipe anda da esquerda para a direita. A velocidade da caminhada segue a preferência de animação (1×, 2×, instantâneo).
-- Na bifurcação, cada entrada mostra o ícone do tipo de nó e o nome do tipo em texto (nunca só o ícone). Tocar mostra no painel o que se sabe do nó; o segundo toque confirma a ida.
-- Barra superior: Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo.
+- **Andar:** segurar o dedo na metade direita do corredor anda para a frente; na esquerda, para trás; soltar para (D-178). A câmera acompanha a equipe; as camadas do cenário se movem em velocidades diferentes (parallax). Animação de andar dos santos com esqueleto 2D (D-176). A velocidade segue a preferência de animação.
+- **Conteúdo do nó no caminho:** ao chegar, a equipe para e aparecem os botões do conteúdo, perto dele: tenda com **Entrar** e **Passar ao largo** (com o custo à vista), baú ou relicário com **Abrir** (animação por quadros, fechado e aberto), alma com **Falar**. Inimigos chegam sozinhos e o combate começa, com a animação de chegada (D-185).
+- **Bifurcação:** as entradas ficam no trecho final do corredor; parado diante de uma, o painel mostra o ícone e o nome do tipo de nó (nunca só o ícone) e o que se sabe do conteúdo; o botão **Entrar** confirma.
+- **Barra superior:** Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo, com a equipe parada.
+- **Luz:** o cenário escurece com o Lume baixo (só aparência).
 - **Mini-mapa:** sobreposto ao corredor, camadas da esquerda para a direita, ícone do tipo de todo nó, ligações, caminho já feito e posição atual. Só consulta; fecha com um toque fora ou no botão.
-- Arte do M1: provisória (cenário do Círculo 2, trecho 1, e retângulos para as entradas); Jorge usa a arte que já existe. Arte final e animação de andar no M2 (D-210).
-- Nomes dos caminhos no M1: o reto é "Seguir em frente"; os desvios são Porta, Caverna ou Escada (D-149). A caminhada interativa (andar até a entrada ou a tenda e entrar) é do M2 (D-158).
+- **Arte:** cenário em 4 camadas com o chão a y ≈ 900 e a camada do meio emendável (D-159); entradas desenhadas (porta, caverna, escada, tenda...) no pedido de arte da T34. Referência de clima e tamanho dos personagens: `docs/art/reference/` (D-187).
+- Nomes dos caminhos: o reto é "Seguir em frente"; os desvios são Porta, Caverna ou Escada (D-149).
+- **No M1:** a equipe deslizava sozinha até a bifurcação, e as entradas eram retângulos tocados duas vezes (mostrar e confirmar).
 
 ## 5. Pouso e Vigília
 
