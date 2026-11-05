@@ -39,19 +39,44 @@ O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum vi
 - O **conteúdo** (família de inimigos, tipo de recompensa) é revelado conforme o nível do Portão: nível 1 revela a próxima camada; nível 2, as duas próximas; nível 3, o trecho inteiro. A Biblioteca revela também resistências e a segunda fase dos chefes.
 - Incenso revela o conteúdo de **mais uma camada** além do que o Portão já mostra, nos nós ligados às entradas da bifurcação atual (D-129). Com o Portão nível 1: o conteúdo dos nós que vêm depois das entradas. O que foi revelado fica conhecido até o fim do trecho (D-137).
 
-### 2.3 Caminhada e bifurcações (D-207, D-121)
+### 2.3 Caminhada interativa e bifurcações (D-207, D-121, D-158, D-178, D-184 a D-186)
 
-A expedição é vista como uma **caminhada lateral**: os santos andam por um corredor (da esquerda para a direita), como em Darkest Dungeon. O mapa de nós continua existindo por baixo (§2.1) e é ele que define as escolhas; o corredor é a forma de mostrá-lo.
+A expedição é vista como uma **caminhada lateral**: os santos andam por um corredor (da esquerda para a direita), como em Darkest Dungeon. O mapa de nós continua existindo por baixo (§2.1) e é ele que define as escolhas; o corredor é a forma de mostrá-lo. No M2 a caminhada passa a ser **interativa**: o jogador anda com o dedo, encontra o conteúdo do nó no caminho e entra nas bifurcações andando até elas.
 
-1. **Corredor.** Entre um ponto e o seguinte (Portão → camada 1, nó → próxima camada, última camada → Pouso), a equipe percorre um corredor. Andar não tem regra: não gasta Lume, não sorteia nada e não muda o estado.
-2. **Bifurcação.** No fim do corredor aparecem as **entradas** da próxima camada: uma para cada nó ligado ao nó atual (do Portão, todos os nós da camada 1). Uma das entradas é o caminho que **segue reto**; as outras são **desvios** (porta, caverna, escada...). Quando só há uma ligação, aparece só o caminho reto.
-3. **O que se vê de cada entrada.** O ícone do tipo de nó, sempre (§2.2). O conteúdo segue a regra do Portão: com nível 1, como as entradas são a próxima camada, o conteúdo delas aparece.
-4. **Escolher.** Tocar numa entrada mostra o que se sabe dela; o segundo toque confirma. Confirmar é um comando registrado no log (`ChoosePath`). A equipe entra no nó: Lume −5 (§4), salvamento (`save-load.md` §4) e conteúdo do nó.
-5. **Depois do nó.** Vencido o combate, terminado o evento ou recolhida a relíquia, a equipe volta ao corredor rumo à próxima camada. Depois da última camada do trecho, o corredor leva só ao Pouso.
-6. **Aparência.** Qual entrada é o caminho reto e qual desenho tem cada desvio é só apresentação: a tela escolhe a partir do ID do nó, sem usar o RNG das regras, para sempre parecer igual ao retomar o jogo.
-7. **Mini-mapa.** Um botão no corredor abre o trecho inteiro: todos os nós com o tipo, as ligações, o caminho já percorrido e a posição atual; o conteúdo segue §2.2. O mini-mapa só mostra: a escolha é feita nas entradas do corredor (D-128).
-8. **Provisões no corredor.** Na bifurcação, antes de escolher, o jogador pode usar provisões fora de combate (§5).
-9. **Retomada.** Fechar o app no corredor volta à bifurcação em que a equipe estava, com o mesmo estado.
+**Um corredor por nó.** Cada nó em que a equipe entra tem o seu corredor:
+
+```text
+[começo] ── andar ── [conteúdo do nó] ── andar ── [bifurcação: entradas da próxima camada]
+```
+
+- O corredor que sai do Portão (ou de um Pouso consagrado, no começo da expedição) não tem conteúdo: só leva à bifurcação da camada 1.
+- Pouso (§6), Vigília (§7) e chefe não têm corredor próprio: entrar neles abre direto a tela do Pouso, a da Vigília ou o combate com o chefe. Depois do Pouso, a equipe segue para o corredor que leva à camada 1 do trecho seguinte.
+
+**Regras da caminhada**
+
+1. **Andar.** Segurar o dedo na metade direita do corredor anda para a frente; na metade esquerda, para trás; soltar para (D-178). Os botões da tela não contam como corredor. A velocidade segue a preferência de animação (1× ou 2×; "instantâneo" anda a 2×).
+2. **Andar não tem regra.** Não gasta Lume, não sorteia nada, não muda o estado e não entra no log de comandos.
+3. **Voltar.** Só até o começo do corredor atual; nunca a um nó já visitado, porque o mapa só anda para a frente (D-186). Conteúdo já resolvido fica como cenário (tenda vazia, baú aberto) e pode ser atravessado nos dois sentidos.
+4. **Conteúdo do nó no caminho** (D-184, D-185). Ao chegar ao conteúdo, a equipe para sozinha e não passa adiante enquanto ele não for resolvido:
+
+| Nó | No corredor | Ao chegar |
+| --- | --- | --- |
+| `node_battle`, `node_elite` | Inimigos fora de vista | O combate começa sem toque, com os inimigos chegando como em Darkest Dungeon (D-185) |
+| `node_temptation` | Tenda (ou o objeto da Tentação do círculo) | Botões **Entrar** (abre o evento) e **Passar ao largo** (aplica a primeira opção `safe: true` do evento, com o mesmo custo; `narrative-system.md` §4.1) |
+| `node_relic` | Baú ou relicário fechado | Botão **Abrir**. Relíquia guardada (§3): os guardiões chegam e o combate começa; a relíquia vem depois da vitória |
+| `node_soul` | A alma parada no caminho | Botão **Falar** (abre o Encontro); não há como passar sem falar |
+
+   Começar o conteúdo é um comando registrado no log (`EngageNode`: combate, Entrar, Abrir, Falar), e Passar ao largo também (`PassBy`). Entre `ChoosePath` e esse comando, o nó fica **entrado, com conteúdo pendente**: o Lume já caiu, e o conteúdo e a semente do combate não mudam se o jogador andar, voltar ou fechar o app.
+
+5. **Bifurcação no fim do corredor.** As **entradas** da próxima camada ficam espalhadas no trecho final: uma para cada nó ligado ao nó atual. O caminho que **segue reto** fica no fim do corredor; os **desvios** (porta, caverna, escada...) ficam nas paredes antes dele. Quando só há uma ligação, aparece só o caminho reto.
+6. **O que se vê de cada entrada.** O ícone e o nome do tipo de nó, sempre (§2.2); o conteúdo segue a regra do Portão e o Incenso.
+7. **Entrar.** Parado diante de uma entrada, o painel mostra o que se sabe do nó (a pré-visualização) e o botão **Entrar**. Tocar em Entrar é o comando `ChoosePath`, registrado no log: Lume −5 (§4), salvamento (`save-load.md` §4) e a equipe passa ao corredor do nó escolhido.
+8. **Provisões.** Com a equipe parada e fora de combate, o jogador pode usar provisões em qualquer ponto do corredor (§5).
+9. **Mini-mapa.** Um botão no corredor abre o trecho inteiro: todos os nós com o tipo, as ligações, o caminho já percorrido e a posição atual; o conteúdo segue §2.2. O mini-mapa só mostra: a escolha é feita nas entradas do corredor (D-128).
+10. **Aparência.** Qual entrada é o caminho reto, o desenho de cada desvio e o tamanho do corredor são só apresentação: a tela escolhe a partir do ID do nó, sem usar o RNG das regras, para sempre parecer igual ao retomar o jogo. O Lume também aparece na luz do cenário (mais escuro com Lume baixo), sem efeito de regra.
+11. **Retomada.** A posição da equipe no corredor fica guardada no save como dado de apresentação (`save-load.md` §3.1), fora do log. Fechar o app no corredor volta ao mesmo ponto, com o mesmo estado; fechar diante de um conteúdo ainda não resolvido volta diante dele, com os mesmos botões.
+
+**No M1** (D-121, D-149) a caminhada era um deslize automático: o conteúdo do nó era resolvido logo depois de `ChoosePath` e as entradas eram tocadas (primeiro toque mostra, segundo confirma), sem andar até elas.
 
 ## 3. Tipos de nó
 
@@ -189,6 +214,14 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 | E12 | Andar pelo corredor e voltar à bifurcação sem escolher | Lume e estado iguais; nenhum comando no log |
 | E13 | Fechar e reabrir o app na bifurcação | Mesma bifurcação, mesmas entradas, mesmo estado |
 | E14 | Usar Incenso na bifurcação com Portão nível 1 | Conteúdo dos nós ligados às entradas revelado; Incenso consumido |
+| E15 | Segurar para andar para trás no começo do corredor | A equipe não sai do lugar; nenhum comando no log |
+| E16 | Andar o corredor inteiro para a frente e para trás antes de entrar numa bifurcação | Lume e estado iguais; nenhum comando no log |
+| E17 | Chegar aos inimigos de um `node_battle` | O combate começa sem toque; a equipe não passa do ponto sem vencer |
+| E18 | Chegar à tenda e escolher Passar ao largo | Mesmo efeito da primeira opção `safe: true` do evento (no "Abrigo do vento", −5 de Lume); o evento não abre; um comando no log |
+| E19 | Abrir uma relíquia guardada | Combate começa; a relíquia só é entregue depois da vitória |
+| E20 | Chegar a uma alma e tentar seguir sem Falar | A equipe não passa |
+| E21 | Fechar e reabrir o app no meio do corredor e diante de uma tenda | Mesma posição, mesmo estado; diante da tenda, os mesmos botões; nenhum comando novo no log |
+| E22 | Parar diante de um desvio e tocar em Entrar | Painel mostra o que se sabe do nó; Entrar = `ChoosePath` (Lume −5, salvamento) |
 
 ## 13. Simplificações do M1 (protótipo de trecho)
 

@@ -89,7 +89,7 @@ No M1, `relic`, `suffrages` e `unlock` ainda não têm sistema: ficam só regist
 
 ### 4.1 Tentação
 
-- Pelo menos uma opção `safe: true`, com custo pequeno.
+- Pelo menos uma opção `safe: true`, com custo pequeno. Na caminhada interativa, **Passar ao largo** da tenda aplica a primeira opção `safe: true` do evento, sem abrir o evento (`expedition.md` §2.3, D-184).
 - Toda chance é visível e pode ser melhorada por pelo menos um santo, provisão ou relíquia.
 - Consequências ficam na expedição ou nas virtudes do Peregrino. **Nunca** ferimento permanente além do sistema normal, e **nunca** o santo comete pecado.
 
