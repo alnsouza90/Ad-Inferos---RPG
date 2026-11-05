@@ -1,0 +1,98 @@
+[gd_resource type="Resource" script_class="RigDef" load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/rig/rig_def.gd" id="1_rig"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_cape.png" id="2_cape"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_thigh_back.png" id="3_thigh_back"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_shin_back.png" id="4_shin_back"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_thigh_front.png" id="5_thigh_front"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_shin_front.png" id="6_shin_front"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_head.png" id="7_head"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_torso.png" id="8_torso"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_shield.png" id="9_shield"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_arm_upper.png" id="10_arm_upper"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_spear.png" id="11_spear"]
+[ext_resource type="Texture2D" path="res://assets/characters/saints/saint_george/rig/saint_george_arm_fore.png" id="12_arm_fore"]
+
+[resource]
+script = ExtResource("1_rig")
+character_id = &"saint_george"
+root_pivot = Vector2(9.7, -446.6)
+head_point = Vector2(22.6, -1108.5)
+parts = Array[Dictionary]([{
+"name": &"cape",
+"offset": Vector2(-266.1, -1011.9),
+"parent": &"torso",
+"pivot": Vector2(-117.3, -982.6),
+"texture": ExtResource("2_cape"),
+"z": 0
+}, {
+"name": &"thigh_back",
+"offset": Vector2(-111.1, -452.9),
+"parent": &"root",
+"pivot": Vector2(-54.9, -438.0),
+"texture": ExtResource("3_thigh_back"),
+"z": 1
+}, {
+"name": &"shin_back",
+"offset": Vector2(-111.1, -335.9),
+"parent": &"thigh_back",
+"pivot": Vector2(-52.7, -321.8),
+"texture": ExtResource("4_shin_back"),
+"z": 2
+}, {
+"name": &"thigh_front",
+"offset": Vector2(17.9, -452.9),
+"parent": &"root",
+"pivot": Vector2(72.1, -438.0),
+"texture": ExtResource("5_thigh_front"),
+"z": 3
+}, {
+"name": &"shin_front",
+"offset": Vector2(6.9, -335.9),
+"parent": &"thigh_front",
+"pivot": Vector2(61.3, -319.6),
+"texture": ExtResource("6_shin_front"),
+"z": 4
+}, {
+"name": &"head",
+"offset": Vector2(-66.1, -1200.9),
+"parent": &"torso",
+"pivot": Vector2(22.6, -1006.3),
+"texture": ExtResource("7_head"),
+"z": 5
+}, {
+"name": &"torso",
+"offset": Vector2(-158.1, -1025.9),
+"parent": &"root",
+"pivot": Vector2(9.7, -446.6),
+"texture": ExtResource("8_torso"),
+"z": 6
+}, {
+"name": &"shield",
+"offset": Vector2(99.9, -879.9),
+"parent": &"torso",
+"pivot": Vector2(128.1, -791.0),
+"texture": ExtResource("9_shield"),
+"z": 7
+}, {
+"name": &"arm_upper",
+"offset": Vector2(-158.1, -875.9),
+"parent": &"torso",
+"pivot": Vector2(-106.5, -861.0),
+"texture": ExtResource("10_arm_upper"),
+"z": 8
+}, {
+"name": &"spear",
+"offset": Vector2(-394.1, -797.9),
+"parent": &"arm_fore",
+"pivot": Vector2(-59.2, -554.3),
+"texture": ExtResource("11_spear"),
+"z": 9
+}, {
+"name": &"arm_fore",
+"offset": Vector2(-144.1, -728.9),
+"parent": &"arm_upper",
+"pivot": Vector2(-110.9, -707.1),
+"texture": ExtResource("12_arm_fore"),
+"z": 10
+}])

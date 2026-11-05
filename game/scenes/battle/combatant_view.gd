@@ -32,6 +32,9 @@ const FLOAT_TIME: float = 0.8
 const FIGURE_SIZE := Vector2(200, 300)
 const COLOR_OUTLINE := Color(0, 0, 0, 0.9)
 const SHADER_PATH: String = "res://shaders/halo.gdshader"
+## Body textures and skeleton share one scale (asset-pipeline §4).
+const BODY_TEXTURE_HEIGHT: float = 1536.0
+const BODY_FEET_MARGIN: float = 96.0
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -63,6 +66,9 @@ var _spirit_desolation: int = 0
 ## Action pose on screen (&"attack", &"hit", &"fall") or &"" for the body
 ## of the spiritual state.
 var _pose: StringName = &""
+## The 2D skeleton (T35, D-176) when the art has one; it replaces the pose
+## images and the figure texture (kept hidden for the tests and the portrait).
+var _rig: RigFigure
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -133,7 +139,10 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 	_down = not c.is_standing()
 	_dimmed = c.is_saint() and c.has_acted and c.is_standing()
 	_apply_style()
-	if _art != null:
+	if _rig != null:
+		if not _down and _rig.current == RigMotions.FALL:
+			_play_rig_idle()
+	elif _art != null:
 		var wanted: StringName = &"fall" if _down else &""
 		if wanted != _pose and (wanted == &"" or _art.pose_texture(wanted) != null):
 			_set_pose(wanted)
@@ -161,6 +170,10 @@ func set_spirit_state(state_id: StringName) -> void:
 
 func has_art() -> bool:
 	return _art != null
+
+
+func rig() -> RigFigure:
+	return _rig
 
 
 func figure_texture() -> Texture2D:
@@ -203,6 +216,8 @@ func center() -> Vector2:
 func play_idle() -> float:
 	_body.position = Vector2(0, INTENT_HEIGHT)
 	_body.rotation = 0.0
+	if _rig != null and not _down:
+		_play_rig_idle()
 	return 0.0
 
 
@@ -214,6 +229,14 @@ func play_action(_pose_id: StringName = &"") -> float:
 	var t: float = ACTION_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
 	var reach := home + Vector2(40.0 if is_saint else -40.0, 0)
+	if _rig != null:
+		# The skeleton strikes while the whole figure steps toward the target.
+		t = _rig.play(RigMotions.ATTACK, speed)
+		var step := create_tween()
+		step.tween_property(_body, "position", home + Vector2(70.0, 0), t * 0.4)
+		step.tween_interval(t * 0.3)
+		step.tween_property(_body, "position", home, t * 0.3)
+		return t
 	var posed: bool = _show_pose_briefly(&"attack")
 	if posed:
 		# With a real attack pose the step is longer and the pose is held.
@@ -236,7 +259,9 @@ func play_hit() -> float:
 	var home := Vector2(0, INTENT_HEIGHT)
 	var recoil := home + Vector2(-14.0 if is_saint else 14.0, 0)
 	_body.modulate = Color(1.6, 0.5, 0.5)
-	var posed: bool = _show_pose_briefly(&"hit")
+	if _rig != null:
+		t = maxf(t, _rig.play(RigMotions.HIT, speed))
+	var posed: bool = _rig == null and _show_pose_briefly(&"hit")
 	if posed:
 		t = HIT_TIME * 2.0 / speed
 	var tw := create_tween()
@@ -252,6 +277,9 @@ func play_hit() -> float:
 func play_fall() -> float:
 	_down = true
 	_apply_style()
+	if _rig != null:
+		var held: float = _rig.play(RigMotions.FALL, speed)
+		return held
 	if _art != null and _art.pose_texture(&"fall") != null:
 		_set_pose(&"fall")
 	if speed <= 0.0:
@@ -301,6 +329,8 @@ func _apply_style() -> void:
 		_style.bg_color = Color(0, 0, 0, 0.25)
 		_figure.self_modulate = Color(0.55, 0.55, 0.55) if (_dimmed or _down) else Color.WHITE
 		_halo.visible = not _down
+		if _rig != null:
+			_rig.modulate = _figure.self_modulate
 
 
 ## A short-lived action pose; false when the art has none (or no animation).
@@ -344,12 +374,46 @@ func _build_figure(width: float) -> void:
 	# Added first, so the halo is drawn behind the figure.
 	_body.add_child(_halo)
 	_body.add_child(_figure)
+	if _art.rig != null:
+		_build_rig(width)
+
+
+## The skeleton stands where the body image would: same scale as the body
+## textures (asset-pipeline §4: 1536 px tall, feet 96 px above the bottom).
+func _build_rig(width: float) -> void:
+	var s: float = FIGURE_SIZE.y / BODY_TEXTURE_HEIGHT
+	_rig = RigFigure.new()
+	_rig.setup(_art.rig)
+	_rig.scale = Vector2(s, s)
+	_rig.position = Vector2(width * 0.5, _figure.position.y + (BODY_TEXTURE_HEIGHT - BODY_FEET_MARGIN) * s)
+	_rig.set_parts_material(_figure_material)
+	_rig.motion_finished.connect(_on_rig_motion_finished)
+	_figure.visible = false
+	_body.add_child(_rig)
+	_play_rig_idle()
+
+
+func _process(_delta: float) -> void:
+	if _rig != null and _halo != null:
+		_halo.position = _rig.transform * _rig.head_position() - _halo.size * 0.5
+
+
+func _play_rig_idle() -> void:
+	var weary: bool = _spirit_state == Desolation.DARK_NIGHT
+	_rig.play(RigMotions.IDLE_WEARY if weary else RigMotions.IDLE, speed if speed > 0.0 else 1.0)
+
+
+func _on_rig_motion_finished(motion: StringName) -> void:
+	if not _down and motion in [RigMotions.ATTACK, RigMotions.HIT, RigMotions.DEFEND]:
+		_play_rig_idle()
 
 
 ## Body image, halo position and look for the current spiritual state
 ## (asset-pipeline §6). `animated` glides the halo when speed allows.
 func _apply_spirit(animated: bool) -> void:
 	_place_figure()
+	if _rig != null and not _down and _rig.current in [RigMotions.IDLE, RigMotions.IDLE_WEARY, &""]:
+		_play_rig_idle()
 	var look: HaloLook = HaloLook.of(_halo_settings, _spirit_state, _spirit_desolation)
 	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
 	_halo.apply(look, duration)

@@ -51,3 +51,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Sem combate de ensino no M2: dicas na tela?~~ Sim, no primeiro combate e na primeira caminhada (D-191) | T51 | 05/11/2026 |
 | ~~Salto do Círculo 1 na fatia do M2~~ Aceito, com o Círculo 1 bloqueado no Mapa do Inferno (D-192) | T49 | 05/11/2026 |
 | Prólogo: confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897), a abertura da Regra de São Bento e os dados de Santa Luzia (`prologue.md` §7) | Alan | 05/11/2026 |
+| Esqueleto em larga escala: proposta do agente (05/11/2026) de gerar cada personagem "de mãos vazias" (sem arma, escudo e capa, membros afastados) e cada objeto sozinho; o agente marca as juntas, recorta e reaproveita os movimentos por tipo de corpo. Alan decide depois de ver o piloto da T35 | Alan | 05/11/2026 |
+| Recorte de Jorge (T35): sob a lança e o braço, a capa e o tronco foram completados pelo script e ficam um pouco borrados; só aparecem durante o golpe. Juntas dos joelhos mostram uma pequena fresta na queda. Melhora com a pose "de mãos vazias" | Alan (T35) | 05/11/2026 |
