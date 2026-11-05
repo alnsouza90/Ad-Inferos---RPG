@@ -20,7 +20,15 @@ jobs:
 
       - name: Baixar Godot ${{ env.GODOT_VERSION }}
         run: |
-          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          # Download com novas tentativas: o arquivo às vezes chega incompleto (PR #44).
+          fetch() {
+            for i in 1 2 3; do
+              if curl -fsSL --retry 3 --retry-all-errors -o "$2" "$1" && unzip -tq "$2" >/dev/null; then return 0; fi
+              echo "Download incompleto de $2 (tentativa $i); tentando de novo"; sleep $((i * 5))
+            done
+            return 1
+          }
+          fetch "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" godot.zip
           unzip -q godot.zip
           mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
           godot --version
