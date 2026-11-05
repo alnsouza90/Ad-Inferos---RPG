@@ -54,6 +54,18 @@ Para cada encontro do M0: rodar o mesmo combate duas vezes com a mesma semente e
 
 O relatório lista as métricas fora da meta. O agente propõe ajustes de números, mas **quem aprova é o responsável**.
 
+### 5.3 Simulador do trecho (M1)
+
+`run_sim.gd -- --mode=leg --runs=N` joga trechos inteiros com o `ExpeditionController` (T31): caminhos sorteados, políticas de §5.1 nos combates e escolhas simples de provisões, Tentação, relíquia e Pouso (`tools/sim/leg_simulator.gd`). Grava `tools/out/leg_<data>.csv`, uma linha por trecho.
+
+| Métrica | Meta |
+| --- | --- |
+| Vitória da heurística em combate difícil, medida nos combates difíceis dentro de trechos simulados (no M1, as emboscadas do Pouso) | 75–90% (D-125); recalibrada no M2 com os combates reais do trecho 2 (D-164) |
+| Santos em Noite Escura por trecho 1 (heurística) | 0,02–0,10 (D-126, D-164) |
+| Vitória da heurística em combate fácil dentro de trechos | ≥ 95% |
+
+A meta "Noite Escura numa expedição longa" (0,5–1,5) de §5.2 volta no M2 (D-126).
+
 ## 6. Teste manual no Android (fim de cada marco)
 
 - [ ] Instala e abre em um aparelho de entrada (2 GB de RAM) e em um intermediário.

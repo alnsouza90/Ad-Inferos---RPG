@@ -19,7 +19,7 @@ ganho = arredondar_meio_para_cima(valor_base × mult_lume × mult_afinidade × m
 
 | Multiplicador | Valor |
 | --- | --- |
-| `mult_lume` | Lume 75–100: [light_high_desolation_mult] (0,8) · 25–74: 1,0 · 0–24: [light_low_desolation_mult] (1,3). Só durante expedições |
+| `mult_lume` | Lume 75–100: [light_high_desolation_mult] (1,0 desde D-164; era 0,8) · 25–74: 1,0 · 0–24: [light_low_desolation_mult] (1,3). Só durante expedições |
 | `mult_afinidade` | Afinidade do Carmelo ativa: 0,85 |
 | `mult_relíquias` | Ex.: Sino de Santo Antão 0,9 |
 | `mult_estado` | Consolação: [consolation_desolation_mult] (0,5) |
@@ -31,7 +31,7 @@ Reduções (valores negativos) não passam pelos multiplicadores.
 
 | Fonte | Valor base [constante] | Quando |
 | --- | --- | --- |
-| Fim de combate comum vencido | [desolation_battle_end_common] (12) | Em todos os santos que participaram |
+| Fim de combate comum vencido | [desolation_battle_end_common] (20, D-165; era 12) | Em todos os santos que participaram |
 | Fim de combate de elite | [desolation_battle_end_elite] (20) | Idem |
 | Fim de combate de chefe | [desolation_battle_end_boss] (35) | Idem |
 | Ação inimiga espiritual | Definido no efeito `desolation` do inimigo | No alvo |
@@ -108,7 +108,7 @@ A tela usa esses eventos para a barra, a auréola (`docs/art/asset-pipeline.md` 
 
 | # | Cenário | Esperado |
 | --- | --- | --- |
-| D01 | Santo com 90 recebe 12 com Lume 80 | Ganho 10 (12 × 0,8 = 9,6 → 10); vai a 100; teste de Fé |
+| D01 | Santo com 90 recebe 12 com Lume 80 e multiplicador de Lume alto 0,8 (caso do mecanismo, valores do teste) | Ganho 10 (12 × 0,8 = 9,6 → 10); vai a 100; teste de Fé |
 | D02 | Fé 5, semente que sorteia 0,29 | Chance 30%: sucesso; desolação 50; Consolação |
 | D03 | Fé 5, semente que sorteia 0,31 | Falha; Noite Escura |
 | D04 | Fé 15 (relíquias) | Chance limitada a 60% |

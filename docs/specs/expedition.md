@@ -77,7 +77,7 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 
 | Faixa | Efeito |
 | --- | --- |
-| 75–100 | Chance de emboscada no Pouso × 0,5; desolação × 0,8 |
+| 75–100 | Chance de emboscada no Pouso × 0,5; desolação × [light_high_desolation_mult] (1,0 desde D-164; não reduz mais) |
 | 25–74 | Neutro |
 | 0–24 | Desolação × 1,3; inimigos causam +10% de dano; Esmolas × 1,5; peso de relíquia oculta × 2 nos nós variáveis gerados a partir daí |
 

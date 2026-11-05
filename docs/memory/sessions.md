@@ -7,7 +7,8 @@ Resumo curto de cada sessão. A mais recente no topo.
 - Sem Godot no ambiente (compilação do código-fonte negada pelas permissões): testes pelo CI; sintaxe com `gdparse`. Arquivos do Git LFS baixados com `git lfs pull --include=...` antes de processar arte.
 - Feitas: T27 · tela da caminhada e das bifurcações (D-148 a D-150, D-321); T28 · tela do evento narrativo (D-151 a D-154, D-322), com a ilustração de Alan; T29 · tela do Pouso (D-155 a D-157, D-323); T30 · fluxo completo (D-158, D-159, D-324).
 - Alan testou no celular (04/11): caminhada, provisões, mini-mapa e Tentação ok; caminhada interativa, animação, tamanho e parallax ficam para o M2 (D-158).
-- Próximo: T31 (simulador do trecho).
+- Godot compilado na sessão com a autorização de Alan (D-161) e preparado automaticamente nas próximas (D-162).
+- T31: simulador do trecho e primeiro relatório (D-325); propostas aguardando Alan.
 
 ## Sessão 3 · 04/11/2026
 

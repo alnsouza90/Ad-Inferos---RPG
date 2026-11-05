@@ -29,7 +29,7 @@ consolation_desolation_mult,0.5,Ganho de desolação na Consolação
 dark_night_exit_threshold,50,Desolação abaixo da qual a Noite Escura termina (Purificação)
 prostration_reset_value,150,Desolação após Prostração
 purification_xp_bonus,0.25,Experiência extra após Purificação
-desolation_battle_end_common,12,Fim de combate comum
+desolation_battle_end_common,20,Fim de combate comum
 desolation_battle_end_elite,20,Fim de combate de elite
 desolation_battle_end_boss,35,Fim de combate de chefe
 desolation_ally_fallen,15,Aliado caído
@@ -44,7 +44,7 @@ light_per_node,5,Lume perdido por nó
 candle_light,25,Lume da Vela
 light_high_threshold,75,Início da faixa alta de Lume
 light_low_threshold,24,Fim da faixa baixa de Lume
-light_high_desolation_mult,0.8,Desolação com Lume alto
+light_high_desolation_mult,1.0,Desolação com Lume alto
 light_low_desolation_mult,1.3,Desolação com Lume baixo
 light_low_enemy_damage_mult,1.1,Dano inimigo com Lume baixo
 light_low_alms_mult,1.5,Esmolas com Lume baixo

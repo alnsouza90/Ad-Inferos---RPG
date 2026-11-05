@@ -30,6 +30,7 @@ Se a especificação e o GDD divergirem, **a especificação vale** e você apon
 
 - **Engine:** Godot 4.7.x estável (série estável mais recente em nov/2026). Confirme a versão instalada com `godot --version` e atualize esta linha se for diferente. Nunca use sintaxe ou APIs do Godot 3.
 - **`godot --version` registrado (03/11/2026):** `4.7.2.stable.official.ed1daf0bf` (CI do GitHub, `.github/workflows/tests.yml`).
+- **Godot na sessão (D-162):** o gancho `SessionStart` roda `tools/dev/setup_godot.sh`, que liga o Godot já compilado ou começa a compilação em segundo plano (cerca de 25 min). Antes de testar localmente, confira se ficou pronto (o script diz onde está o log); depois `git lfs pull` e `godot --headless --path game --import`.
 - **Linguagem:** GDScript **com tipagem estática obrigatória** (`var hp: int`, `func f(x: int) -> void`). Sem C#.
 - **Renderizador:** Compatibility (OpenGL ES 3), para cobrir Android de entrada.
 - **Testes:** GUT (Godot Unit Test) em `game/addons/gut/`. Ver `docs/testing.md`.
