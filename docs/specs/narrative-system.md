@@ -14,13 +14,17 @@ Este documento define **como** os eventos narrativos funcionam. **O que** eles d
 | Conselho da vila | `council` | Na vila, após o flashback |
 | Missão de Intercessão | `intercession_mission` | Marcos 1 e 7 da trilha do Purgatório |
 | Cena | `story` | Prólogo, portões de Dite, final etc. |
+| Flashback de antes | `flashback_before` | Antes da primeira expedição de cada círculo |
+| Vinheta do leito | `deathbed` | Depois do flashback pós-chefe, na primeira conclusão de cada círculo |
+| Ato de contrição | `contrition` | Depois da vitória sobre Lúcifer |
+| Epílogo | `epilogue` | Depois da contrição: unção, boa morte, Purgatório e Paraíso |
 
 ## 2. Virtudes do Peregrino
 
 - `virtue_faith`, `virtue_hope`, `virtue_charity`: inteiros de 0 a 5, sempre visíveis.
 - Valor inicial: [virtue_start] (2) cada.
 - Alteradas apenas por escolhas em eventos da primeira passagem por um círculo. Revisitas nunca alteram virtudes.
-- Final pela soma (premissa, a validar no roteiro): 11–15 `awakening`, 6–10 `restless_awakening`, 0–5 `good_death`.
+- As virtudes não escolhem o final. No evento `contrition`, a soma define a versão do ato de contrição: 11–15 `contrition_perfect`, 6–10 `contrition_imperfect`, 0–5 `contrition_fragile` (premissa a validar). O final é sempre `good_death` (D-198).
 
 ## 3. Formato de um evento (dados)
 
@@ -114,6 +118,16 @@ testimony:
 - Duração-alvo: menos de 2 minutos.
 - Exatamente uma decisão, com efeito concreto (virtude, bandeira, desconto numa instalação ou evento no próximo círculo).
 
+### 4.5 Contrição e epílogo
+
+- `contrition` tem uma única opção ("Arrepender-se"), sem chance e sem opção de recusa; o texto da opção e das falas vem da versão definida pela soma das virtudes. A liberdade do Peregrino está no caminho inteiro (as escolhas que formaram as virtudes); o botão é o gesto final dessa conversão (D-198).
+- `epilogue` lê o número de marcos da Trilha do Purgatório: 8–10 `purgatory_brief`, 4–7 `purgatory_middle`, 0–3 `purgatory_long`. A diferença é o número de pranchas e falas da subida da montanha; o fim é sempre o Paraíso.
+- Sacramentos e figuras sagradas aparecem só como cena; nenhum deles concede bônus.
+
+### 4.6 Vinheta do leito (`deathbed`)
+
+Nove versões (`deathbed_01` a `deathbed_09`), uma por círculo, sem escolhas. A vela fica mais baixa a cada versão; a partir da `deathbed_07`, o frei é chamado; na `deathbed_09`, ele chega à porta.
+
 ## 5. Bandeiras narrativas
 
 - Booleanos com ID `cNN_descricao`. Usadas só para abrir ou fechar falas e eventos futuros.
@@ -155,4 +169,6 @@ Entradas são desbloqueadas ao encontrar o personagem ou lugar.
 | N03 | Chance 0,5 + Bento na equipe | Chance exibida 70% |
 | N04 | Virtude 5 recebe +1 | Fica em 5 |
 | N05 | Evento em revisita | Resultados de virtude ignorados |
-| N06 | Soma de virtudes 10 ao final | `restless_awakening` |
+| N06 | Soma de virtudes 10 na contrição | Versão `contrition_imperfect`; final `good_death` |
+| N07 | 9 marcos de Sufrágios no epílogo | `purgatory_brief` |
+| N08 | Evento `contrition` | Uma única opção, sem recusa |
