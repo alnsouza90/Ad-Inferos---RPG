@@ -23,7 +23,7 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 ## Ambiente
 
 - **CI do GitHub** (`.github/workflows/tests.yml`): baixa o Godot 4.7.2 oficial, analisa os scripts, roda o GUT, falha se algum teste for ignorado e confere se `game/data` está em dia com os CSVs.
-- **Sessões 2 e 3 (03 e 04/11/2026):** a compilação do Godot foi negada pelas permissões do ambiente; a T15 foi verificada pelo CI e pelo analisador `gdtoolkit` (só sintaxe). Os `.gd.uid` dos scripts novos não foram gerados (o editor cria ao abrir).
+- **Sessão 4 (05/11/2026):** com a autorização de Alan dada no chat (D-161), o clone e a compilação do Godot passaram. **Sessões 2 e 3 (03 e 04/11/2026):** a compilação do Godot foi negada pelas permissões do ambiente; a T15 foi verificada pelo CI e pelo analisador `gdtoolkit` (só sintaxe). Os `.gd.uid` dos scripts novos não foram gerados (o editor cria ao abrir).
 - **Sessões na nuvem:** não há Godot pré-instalado e downloads do GitHub são bloqueados. A saída usada foi compilar o Godot 4.7.2 do código-fonte (tag `4.7.2-stable`, `scons platform=linuxbsd target=editor x11=no wayland=no vulkan=no opengl3=no alsa=no pulseaudio=no dbus=no speechd=no fontconfig=no udev=no sdl=no accesskit=no`), cerca de 25 min em segundo plano. Sem isso, os testes rodam pelo CI ao enviar o código.
 - **Comandos:** `CLAUDE.md` §5.
 
