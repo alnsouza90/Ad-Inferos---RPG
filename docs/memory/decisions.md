@@ -83,6 +83,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-164 · 05/11/2026 · Alan** — T31: meta de Noite Escura por trecho 1 = **0,02 a 0,10** santo; desolação de fim de combate comum **12 → 25**; Lume alto deixa de reduzir a desolação (**×0,8 → ×1,0**). Vitória em combate difícil: o agente define a meta (fica 75–90%) e ajusta no momento certo (M2); Alan sente que os combates difíceis do M0 são o nível que quer para o jogo normal. *`constants.csv`, `desolation.md`, `expedition.md` §4, `testing.md` §5.3.*
 - **D-165 · 05/11/2026 · Alan** — Com 25 e Lume alto ×1,0 a Noite Escura dava 0,21 por trecho (acima da meta); Alan escolheu a opção A: fim de combate comum **20** (substitui o 25 de D-164), Lume alto ×1,0. Resultado em 2.000 trechos: Noite Escura 0,097 por trecho, vitória no difícil 82,9%, 98,1% dos trechos concluídos. A folha `prompts-environments` enviada de novo é idêntica à do repositório. *`constants.csv`, relatório da T31.*
 - **D-166 · 05/11/2026 · Alan** — T31 aprovada (simulador do trecho, metas recalibradas, estimativa da expedição longa). Visão confirmada: completar uma expedição de primeira não é o esperado; retirada planejada, vila, Esmolas, relíquias e novos santos são a estratégia para avançar. *PR #38.*
+- **D-167 · 05/11/2026 · Alan** — T32 aceita: duas partidas no Redmi com cerca de 10 minutos por trecho (meta 10–14) e retomada exata no meio do turno e na caminhada. Observação de Alan: excesso de ataques inimigos na posição 3 (investigação na sequência). *`docs/backlog/m1.md` T32.*
 
 ## Arte
 
