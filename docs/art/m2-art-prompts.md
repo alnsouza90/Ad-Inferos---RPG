@@ -954,7 +954,127 @@ Dark gothic vertical illustration in the style of Darkest Dungeon, hand-inked co
 
 ## Prioridade 4 · Prólogo e acabamento
 
-As cenas do Prólogo vêm do seu roteiro (D-172).
+Roteiro: `docs/narrative/prologue.md` (D-190). Retratos: PNG RGBA **768 × 1024** (`--ar 3:4`), fundo cinza, sem auréola. Pranchas: PNG **1920 × 1080** (`--ar 16:9`, matriz 3840 × 2160), terço de baixo mais escuro para o texto; nas pranchas com santos, use os `body_idle` aprovados como referência de personagem. Nomes finais conforme o roteiro §5.1 (ex.: `prologue_p02_forest`).
+
+### Retratos de diálogo
+
+- [ ] **`R01`** · O Peregrino
+
+```text
+Dark gothic graphic novel illustration in the style of Darkest Dungeon character art, hand-inked comic art, Mike Mignola influence, head to waist portrait, the Pilgrim, a weary 14th-century man in his thirties with an unkempt beard and haunted sunken eyes, worn hooded pilgrim's cloak, a scallop shell badge, gripping a pilgrim's staff, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of bone, ash grey, black and dark blood red, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing right --ar 3:4 --no halo, parchment background, textured background, vignette, gold, cartoon, anime, smile, glossy, 3D, photorealistic, white background
+```
+
+- [ ] **`R02`** · Santa Luzia
+
+```text
+Dark gothic graphic novel illustration in the style of Darkest Dungeon character art, hand-inked comic art, Mike Mignola influence, head to waist portrait, three-quarter view facing right, Saint Lucy as a young 4th-century Sicilian virgin martyr with a calm resolute face, simple light veil and plain dark red robes, holding a burning clay oil lamp close to her chest, a martyr's palm in the other hand, warm lamplight on her face, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of bone, ash grey, black, dark red and warm amber, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing right --ar 3:4 --no halo, parchment background, textured background, vignette, eyes on a dish, blood, cartoon, anime, smile, glossy, 3D, photorealistic, white background
+```
+
+- [ ] **`R03`** · A Faminta
+
+```text
+Dark gothic graphic novel illustration in the style of Darkest Dungeon character art, hand-inked comic art, Mike Mignola influence, head to waist portrait, three-quarter view facing left, a tall strikingly beautiful but terribly emaciated woman with sunken hungry eyes and a sweet inviting smile, a she-wolf pelt draped over her shoulders like a shawl, modest dark gown, holding an empty ornate cup forward, non-sexualized, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 3:4 --no halo, gold, nude, cleavage, lingerie, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
+```
+
+- [ ] **`R04`** · O Coroado
+
+```text
+Dark gothic graphic novel illustration in the style of Darkest Dungeon character art, hand-inked comic art, Mike Mignola influence, head to waist portrait, three-quarter view facing left, a towering proud man with his head held high and a cold accusing stare, a heavy cloak made from a lion's mane and hide, a crude iron crown, scarred bruised knuckles, one finger pointing in accusation, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 3:4 --no halo, gold, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
+```
+
+- [ ] **`R05`** · O Mercador Manchado
+
+```text
+Dark gothic graphic novel illustration in the style of Darkest Dungeon character art, hand-inked comic art, Mike Mignola influence, head to waist portrait, three-quarter view facing left, a lean merchant with a sweet treacherous grin, laughing mockingly, a long cloak of spotted dappled leopard-like hide, a rope cord tied around his waist, a merchant's purse and small scales at his belt, one hand raised in a mocking flourish, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 3:4 --no halo, gold, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
+```
+
+### Pranchas
+
+- [ ] **`P02`** · A selva escura
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a lone weary 14th-century pilgrim with a hooded cloak and a staff lost in a dark tangled forest at night, gnarled trees and thorny branches closing in on all sides, no path visible, the pilgrim small in the frame looking around in fear, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, animals, beasts, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P03`** · A Faminta
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, in a dark tangled forest at night a tall strikingly beautiful but terribly emaciated woman steps out of the shadows toward a frightened 14th-century pilgrim, a she-wolf pelt draped over her shoulders like a shawl, sunken hungry eyes, a sweet inviting smile, offering him an empty ornate cup with a thin hand, modest dark gown, non-sexualized, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, nude, cleavage, lingerie, wolf animal, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P04`** · O Coroado
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, in a dark tangled forest at night a towering proud man with his head held high looms over a frightened 14th-century pilgrim, a heavy cloak made from a lion's mane and hide, a crude iron crown, scarred bruised knuckles, a cold accusing stare, pointing at the pilgrim, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, lion animal, gold, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P05`** · O Mercador Manchado
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, in a dark tangled forest at night a lean smiling merchant leans in mockingly close to a frightened 14th-century pilgrim, a long cloak of spotted dappled leopard-like hide, a rope cord tied around his waist, a merchant's purse and a set of scales, a sweet treacherous grin, laughing, one hand patting the pilgrim's shoulder, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, leopard animal, gold, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P06`** · O cerco
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a terrified 14th-century pilgrim stumbling backward among the roots of a dark forest at night, surrounded by three looming figures closing in: an emaciated woman with a she-wolf pelt and an empty cup, a proud crowned man in a lion-mane cloak, and a grinning merchant in a spotted cloak with a rope at his waist, faces half lost in shadow, the pilgrim's staff slipping from his hand, claustrophobic cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, animals, nude, gold, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P07`** · A queda
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, the body of a 14th-century pilgrim lying unconscious among the roots of the dark forest, still breathing, his staff fallen beside him, above him a pale translucent ghostly double of the same man being pulled downward into cracks in the earth by long shadowy hands, three dim human silhouettes watching from the darkness, a woman with a shawl, a crowned man and a man in a long cloak, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dark blood red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, blood, gore, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P08`** · Nossa Senhora
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, reverent iconographic image of the Virgin Mary, veiled, in a deep ultramarine mantle over a dark red dress, gazing downward with grieving compassion, hands open in intercession, surrounded by a soft flat gold radiance, cinematic composition, thick irregular black ink outlines, deep black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ultramarine blue and flat gold, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, sensual
+```
+
+- [ ] **`P09`** · Santa Luzia desce
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, Saint Lucy as a young 4th-century Sicilian martyr, simple veil and robes, holding a burning oil lamp and a martyr's palm, a small dish with two eyes at her side as in traditional iconography, flat gold halo, descending a stair of light into darkness to deliver a message, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and flat gold, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P10`** · O chamado: São Jorge
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, Saint George as a young beardless Roman military officer of the late 3rd century with short curly hair, bronze muscle cuirass and red paludamentum cloak, kneeling in prayer in the darkness with his long spear planted beside him and his round cross shield at his side, a warm beam of lamplight falling on him from the left as he lifts his head and begins to rise, flat gold halo, close cinematic framing, the lower third of the image darker for the name, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, dark blood red and warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, medieval knight, plate armor, horse, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P11`** · O chamado: São Bento
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, Saint Benedict of Nursia as an elderly abbot with a long white beard in a black Benedictine habit, sitting in a bare stone monastic cell reading the book of his Rule by a small window at night, a raven perched on the sill, a warm beam of lamplight falling on him from the left as he closes the book and looks up, flat gold halo, close cinematic framing, the lower third of the image darker for the name, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, readable text, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P12`** · O chamado: Santa Teresinha
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, Saint Therese of Lisieux as a young Carmelite nun with a gentle round face, brown habit, white mantle and black veil, standing in a quiet Carmelite cloister garden at night among rose bushes, holding a crucifix wrapped in roses, a warm beam of lamplight falling on her from the left as she turns toward it with a small confident nod, a few rose petals in the air, flat gold halo, close cinematic framing, the lower third of the image darker for the name, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, dark red and warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P13`** · Chegada ao Átrio
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, Saint Lucy with a burning oil lamp leading three saints, a young Roman officer with spear and round shield, an elderly black-robed abbot with a crozier and a young Carmelite nun with a crucifix of roses, through the gate of a small fortified medieval monastery village perched on the rim of an immense dark abyss, candlelit windows, a pale gold dawn sky above and endless darkness below the cliff, all four with flat gold halos, wide cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, warm amber and small touches of flat gold, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P14`** · A lanterna da companhia
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, close-up of Saint Lucy tilting her burning clay oil lamp to light a small iron hanging lantern held up by a young Roman officer's hand in a bronze bracer, the flame passing from one to the other in flat gold, faces of the saints softly lit around the flame in the darkness, intimate cinematic framing, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, warm amber and flat gold, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P15`** · A beira do abismo
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, in the spirit of Gustave Dore engravings, four small figures seen from behind standing at the edge of a cliff at dusk, a woman with a lamp and three companions with spear, crozier and veil, one holding up a small lantern, looking down into an immense funnel-shaped abyss, far below a tiny pale light falling into the darkness, and deeper still the faint red glow of a colossal gate, immense scale, the upper half of the sky empty for a title, cinematic composition, thick irregular black ink outlines, heavy black shadows, crosshatched engraving texture, muted desaturated palette of black, bone, ash grey, warm amber and a touch of dark red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+```
+
+### Acabamento
 
 - [ ] **`env_gate_of_hell`** — Porta do Inferno (entrada da primeira expedição e do prólogo)
 

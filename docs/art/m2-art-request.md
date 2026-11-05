@@ -73,7 +73,7 @@ Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão 
 
 | Imagem | Situação | Onde está o prompt |
 | --- | --- | --- |
-| Cenas do Prólogo | ⬜ | Do roteiro de Alan (D-172) |
+| Prólogo: 5 retratos de diálogo (`R01` a `R05`) e 14 pranchas (`P02` a `P15`) | ⬜ | `docs/narrative/prologue.md` §5 (D-190) |
 | `env_gate_of_hell` | ⬜ | `prompts-environments.md` · Extras |
 | `fx_light_shafts` | ⬜ | Idem |
 
