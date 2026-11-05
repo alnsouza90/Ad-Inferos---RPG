@@ -163,3 +163,25 @@ Darkest Dungeon style 2D side-view game prop, hand-painted gothic horror, hand-i
 Para o aberto, trocar `lid tightly closed` por `lid open, a soft pale gold light rising from inside, the contents hidden by the glow`.
 
 Para os trechos 2 e 3 e os outros círculos, as entradas seguem o mesmo modelo, trocando a descrição do material e a cor do círculo (`prompts-environments.md`).
+
+## 7. Variações do meio do corredor (D-216)
+
+Depois da prévia, Alan definiu: trechos com evento ficam **mais limpos**; porta e caverna precisam de **parede atrás**; o trecho atual (com o trono de Minos) fica para **combate** e para a **escada**; o "seguir em frente" só precisa da emenda do chão; as almas aparecem **só no trecho do Encontro com a alma**.
+
+**`env_circle_02_t1_mid_clean`** — Meio limpo (tenda, relicário, alma)
+
+> **Gerar:** `--ar 21:9` + Upscale 2× (se possível) · use o `env_circle_02_t1_mid` aprovado como referência de estilo  
+> **Arquivo final:** PNG RGBA, **2560 × 1080 px** · chão em **y ≈ 900 px** · bordas emendáveis
+
+```text
+Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a clean open stretch of the same rocky cliff ledge with only a few low scattered rocks and small debris at the edges, no tall structures, no throne, wide open empty space above the ground, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
+```
+
+**`env_circle_02_t1_mid_wall`** — Meio com parede de rocha (porta, caverna)
+
+> **Gerar:** `--ar 21:9` + Upscale 2× (se possível) · mesma referência de estilo  
+> **Arquivo final:** PNG RGBA, **2560 × 1080 px** · chão em **y ≈ 900 px** · bordas emendáveis
+
+```text
+Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a continuous tall rugged rock cliff wall rising behind the walkway along the whole image, a flat vertical rock face where a doorway or a cave mouth can be set, no openings drawn in it, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
+```

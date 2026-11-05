@@ -152,6 +152,22 @@ _São Jorge: os quadros de animação (parado, andar e poses das ações) entram
 
 ---
 
+### Variações do meio do corredor (D-216)
+
+- [ ] **`env_circle_02_t1_mid_clean`** — Meio limpo (tenda, relicário, alma) · PNG 2560 × 1080, chão a y ≈ 900, bordas emendáveis
+
+```text
+Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a clean open stretch of the same rocky cliff ledge with only a few low scattered rocks and small debris at the edges, no tall structures, no throne, wide open empty space above the ground, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
+```
+
+- [ ] **`env_circle_02_t1_mid_wall`** — Meio com parede de rocha (porta, caverna) · PNG 2560 × 1080, chão a y ≈ 900, bordas emendáveis
+
+```text
+Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a continuous tall rugged rock cliff wall rising behind the walkway along the whole image, a flat vertical rock face where a doorway or a cave mouth can be set, no openings drawn in it, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
+```
+
+---
+
 ## Prioridade 2 · Círculo 2 completo
 
 ### Santos
