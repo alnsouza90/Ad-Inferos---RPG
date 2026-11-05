@@ -6,7 +6,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | --- | --- | --- |
 | ~~Corpo padrão de São Jorge em resolução maior~~ Alan enviou a v02 (848×1264) em 04/11/2026 | Alan | 03/11/2026 |
 | Brilho atrás da cabeça na imagem de Consolação de São Jorge: conferir no motor se briga com a auréola | T16 | 03/11/2026 |
-| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126 | T31 (M1) | 03/11/2026 |
+| Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126. Primeiro relatório feito (T31, 05/11/2026): propostas aguardando Alan | Alan | 03/11/2026 |
 | ~~Criar `docs/backlog/m1.md`~~ Proposta feita e perguntas respondidas por Alan em 04/11/2026 (D-121 a D-126) | Alan | 03/11/2026 |
 | Datas das festas dos santos (`feasts.csv`) | Pesquisa do Martirológio (Alan) | 03/11/2026 |
 | Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números) | T14+ / M1 | 03/11/2026 |
