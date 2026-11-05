@@ -6,7 +6,8 @@ Resumo curto de cada sessão. A mais recente no topo.
 
 - Godot compilado em segundo plano pelo gancho (D-162).
 - Feito: proposta do backlog do M2 (`docs/backlog/m2.md`, T33 a T57); decisões de Alan D-171 a D-182 (blocos, Santo Antão, recorte das partes pelo agente, Conselho no M3, sons, Prólogo, vila mínima, companhia e tela de novo santo, encontros, animação com esqueleto 2D, áudio, caminhada segurando o dedo).
-- Próximo: aprovação do PR; depois T33 e T34.
+- Depois: T33 (PR #42), T34 (PR #43), roteiro do Prólogo (PR #44); esqueleto 2D de Jorge testado e reprovado, trocado por quadros e poses-chave com GIFs do Meta AI (PR #45, D-194 a D-197, D-200); decisão do leito de morte e final único aplicada (D-198, D-199).
+- Próximo: T35 com os GIFs de Jorge.
 
 ## Sessão 4 · 04/11/2026
 

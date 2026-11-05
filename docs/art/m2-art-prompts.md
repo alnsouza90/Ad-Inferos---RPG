@@ -946,6 +946,19 @@ Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked 
 Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, in the spirit of Gustave Dore engravings, four small figures seen from behind standing at the edge of a cliff at dusk, a woman with a lamp and three companions with spear, crozier and veil, one holding up a small lantern, looking down into an immense funnel-shaped abyss, far below a tiny pale light falling into the darkness, and deeper still the faint red glow of a colossal gate, immense scale, the upper half of the sky empty for a title, cinematic composition, thick irregular black ink outlines, heavy black shadows, crosshatched engraving texture, muted desaturated palette of black, bone, ash grey, warm amber and a touch of dark red, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
 ```
 
+- [ ] **`P16`** · O leito
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a poor 14th-century room at night, a gaunt pale bearded man lying gravely ill in a simple wooden bed breathing with difficulty, a single candle burning on a stool beside the bed, an elderly woman in a plain dark veil kneeling at the bedside praying with wooden prayer beads, a small wooden cross on the bare wall, long shadows, quiet and heavy atmosphere, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, rosary with crucifix pendant, modern objects, cartoon, anime, glossy, 3D, photorealistic
+```
+
+- [ ] **`P17`** · A vela e a mão
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, extreme close-up of a guttering candle flame on a stool beside a bed at night and a thin pale man's hand lying limp on a rough linen sheet, wax dripping, the flame bending as if from a weak breath, intimate cinematic framing, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, blood, cartoon, anime, glossy, 3D, photorealistic
+```
+
+
 ### Acabamento
 
 - [ ] **`env_gate_of_hell`** — Porta do Inferno (entrada da primeira expedição e do prólogo)

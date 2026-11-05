@@ -156,7 +156,11 @@ Termos oficiais do jogo. A coluna "Código" é o nome obrigatório em classes, v
 | Missão de Intercessão | `intercession_mission` | |
 | Martirológio | `martyrology` | Só santos e arcanjos |
 | Arquivo de Santo Tomás | `archive` | Demônios, almas, lugares, fontes |
-| Final | `ending` | `awakening`, `restless_awakening`, `good_death` |
+| Final | `ending` | Único: `good_death` |
+| Ato de contrição | `contrition` | `contrition_perfect`, `contrition_imperfect`, `contrition_fragile` |
+| Vinheta do leito | `deathbed` | `deathbed_01` a `deathbed_09` |
+| Flashback de antes | `flashback_before` | Um por círculo |
+| Epílogo | `epilogue` | `purgatory_brief`, `purgatory_middle`, `purgatory_long` |
 
 ## Instalações
 
