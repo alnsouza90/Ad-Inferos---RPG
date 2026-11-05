@@ -10,6 +10,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-003 · 03/11/2026 · Alan** — "Acompanhe sempre os PR": o agente acompanha cada PR aberto (CI e comentários) até o merge e corrige falhas sozinho.
 - **D-004 · 03/11/2026 · Alan** — Plano curto antes de programar; pergunta quando a spec é ambígua; nunca inventa regra (`CLAUDE.md` §9).
 - **D-005 · 03/11/2026 · Alan** — Liberada a compilação do Godot a partir do código-fonte no ambiente na nuvem. *`progress.md` (Ambiente).*
+- **D-162 · 05/11/2026 · Alan** — Toda sessão nova neste repositório já prepara o Godot: o gancho `SessionStart` (`.claude/settings.json`) roda `tools/dev/setup_godot.sh`, que reaproveita o binário ou clona e compila o 4.7.2 em segundo plano. *`CLAUDE.md` §4.*
 - **D-006 · 03/11/2026 · Alan** — GitHub Pages ligado (Settings → Pages → Source: GitHub Actions) para testar o jogo no navegador do celular a partir da T15.
 - **D-007 · 03/11/2026 · Alan** — Originais de arte ficam no Google Drive de Alan; ele envia pelo chat só o que a tarefa precisa; o agente processa conforme `docs/art/asset-pipeline.md`. Cuidado com a cota de 1 GB do Git LFS.
 - **D-008 · 03/11/2026 · Alan** — Memória do projeto no repositório (`docs/memory/`), carregada automaticamente no início de cada sessão; checklist de memória em todo PR. *Esta pasta, `.claude/settings.json`, `.github/pull_request_template.md`.*
