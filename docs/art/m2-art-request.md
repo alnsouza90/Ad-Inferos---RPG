@@ -17,7 +17,7 @@ Referência de clima, tamanho e composição: `docs/art/reference/` (D-187).
 
 ## 2. Animação dos personagens: quadros e poses (D-194)
 
-O esqueleto 2D foi testado e reprovado (D-195). Cada personagem passa a ser animado com **quadros desenhados** e **poses-chave**, e o motor faz a ligação entre eles (deslizar até o alvo, câmera, tremor, clarão, esticar e encolher, partículas). Alan escolhe o formato de entrega, sprite sheet ou GIF (D-196). Seja qual for, o que importa:
+O esqueleto 2D foi testado e reprovado (D-195). Cada personagem passa a ser animado com **quadros desenhados** e **poses-chave**, e o motor faz a ligação entre eles (deslizar até o alvo, câmera, tremor, clarão, esticar e encolher, partículas). **Formato escolhido (D-197):** GIFs gerados no Meta AI a partir da imagem padrão, com os prompts prontos de `docs/art/animation-prompts.md` (santos: parado, andar e ações; inimigos, elites e chefe: parado e ações). O que importa:
 
 - **Mesma escala, mesma câmera e mesma linha do chão em todos os clipes** do personagem: é o que impede a figura de "pular" na troca de pose.
 - Vista de lado, santos olhando para a **direita** e inimigos para a **esquerda**; fundo cinza-claro liso; sem auréola, texto ou sombra no chão.

@@ -51,4 +51,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Sem combate de ensino no M2: dicas na tela?~~ Sim, no primeiro combate e na primeira caminhada (D-191) | T51 | 05/11/2026 |
 | ~~Salto do Círculo 1 na fatia do M2~~ Aceito, com o Círculo 1 bloqueado no Mapa do Inferno (D-192) | T49 | 05/11/2026 |
 | Prólogo: confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897), a abertura da Regra de São Bento e os dados de Santa Luzia (`prologue.md` §7) | Alan | 05/11/2026 |
-| Formato dos quadros de animação de cada personagem (sprite sheet ou GIF em boa qualidade, figura ≥ 1000 px, mesma escala e linha do chão em todos os clipes); Alan manda os de São Jorge primeiro (D-196) | Alan (T35) | 05/11/2026 |
+| ~~Formato dos quadros de animação~~ GIFs do Meta AI com os prompts de `animation-prompts.md`; os de Jorge chegaram (D-197) | — | 05/11/2026 |
