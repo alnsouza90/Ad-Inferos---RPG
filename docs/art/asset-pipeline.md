@@ -72,7 +72,7 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 | Fundo de combate `_front` | PNG RGBA | 3240 × 1080 | Parallax ≈ 130% |
 | Rosto por estado (`face_*`) | PNG RGBA 1:1 | 1024 × 1024, reduzido à cabeça do idle (≈ 170 px) | Mesmo ângulo do idle |
 | Tela de passagem (`splash_<id>_miracle`, `_dark_night`, `_consolation`) | PNG RGBA 4:5, meio corpo | 1024 × 1280 | `assets/characters/saints/<id>/splash/` |
-| Rig (`rig_base`; `rig_parts` opcional) | PNG RGBA | Matriz 2048 × 3072 em `art_source/`; o agente recorta as peças na escala do idle (§7) | `assets/characters/<grupo>/<id>/rig/` |
+| Quadros de animação (parado, andar, poses das ações) | Sprite sheet ou GIF (D-196) | Figura ≥ 1000 px no original; no jogo, na escala do `body_idle`, todos com a mesma linha do chão (§7) | `assets/characters/<grupo>/<id>/frames/` |
 | Entrada da bifurcação (`prop_<círculo>_entry_*`) | PNG RGBA 2:3 | 1024 × 1536 | Base a 96 px da borda de baixo (linha dos pés) |
 | Objeto do corredor (tenda, relicário fechado/aberto) | PNG RGBA 1:1 | 1536 × 1536 (tenda) / 1024 × 1024 (relicário, mesmo enquadramento nos dois) | Idem; `environments/circles/<círculo>/props/` e `environments/props/` |
 | Ilustração de evento | PNG opaco 16:9 | 1920 × 1080 (recortada para preencher); o terço de baixo fica sob a caixa de texto | `assets/events/<círculo>/` |
@@ -105,12 +105,11 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 - A auréola mostra **só o estado espiritual**; o Fervor fica na barra da equipe (Direção de Arte v1.1 prevalece sobre a tabela antiga da seção 12).
 - Valores do shader ficam num Resource de apresentação (`scenes/battle/halo_settings.tres`), não em `docs/balance/`, porque não afetam regras.
 
-## 7. Animação (D-176, D-180; ADR-0007 atualizado na T35)
+## 7. Animação (D-194; ADR-0007)
 
-- **Personagens** (santos, inimigos, elites, chefes): esqueleto 2D (`Skeleton2D`) para andar, atacar, defender, golpe recebido e queda, como em Darkest Dungeon.
-- **Peças do esqueleto:** Alan entrega a pose neutra (`rig_base`: vista de lado, membros afastados, sem sobreposição, luz chapada). O agente recorta as peças com scripts em `tools/art/` (cabeça, tronco com quadril, braços em três partes, pernas em duas, roupas soltas e objetos), completa as áreas escondidas e grava em `assets/characters/<grupo>/<id>/rig/`. Se o recorte não ficar bom no piloto, Alan tenta gerar a folha de peças (`rig_parts`).
-- **Cenário, fundo, almas, milagres e efeitos:** animação no motor (tweens, partículas e shaders), sem imagens novas.
-- **Por quadros:** quando indicado, troca entre poucas imagens (ex.: relicário fechado e aberto).
+- **Personagens:** quadros desenhados para parado e andar (ciclos) e poses-chave para as ações (atacar, defender, golpe recebido, queda), entregues por Alan como sprite sheet ou GIF (D-196). O agente tira o fundo, alinha os pés numa mesma linha e escala e corta os quadros (`tools/art/`).
+- **No motor:** a ligação entre as poses (deslizar até o alvo, câmera que aproxima, tremor, clarão, esticar e encolher), respiração e capa sutis; cenário, fundo, almas e milagres com tweens, partículas e shaders; troca de quadros quando indicada (ex.: relicário fechado e aberto).
+- O esqueleto 2D foi testado com São Jorge e reprovado (D-195).
 - A interface `CombatantView` (`architecture.md`) continua a mesma; o código de combate não muda.
 - Pedido completo de arte do M2: `docs/art/m2-art-request.md`.
 

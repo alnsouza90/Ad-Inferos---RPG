@@ -15,25 +15,29 @@ Referência de clima, tamanho e composição: `docs/art/reference/` (D-187).
 - Sem auréola, texto, moldura ou vinheta desenhados.
 - O código **não espera** a arte: usa a provisória e troca quando a final chega. Por isso a ordem abaixo é a ordem de prioridade, não uma trava.
 
-## 2. Esqueleto 2D: o que preciso de cada personagem (D-176, D-180)
+## 2. Animação dos personagens: quadros e poses (D-194)
 
-Para animar como em Darkest Dungeon, cada personagem precisa da **pose neutra para o rig** (`rig_base`), além da pose padrão (`body_idle`):
+O esqueleto 2D foi testado e reprovado (D-195). Cada personagem passa a ser animado com **quadros desenhados** e **poses-chave**, e o motor faz a ligação entre eles (deslizar até o alvo, câmera, tremor, clarão, esticar e encolher, partículas). **Formato escolhido (D-197):** GIFs gerados no Meta AI a partir da imagem padrão, com os prompts prontos de `docs/art/animation-prompts.md` (santos: parado, andar e ações; inimigos, elites e chefe: parado e ações). O que importa:
 
-- Vista de lado, olhando para o lado certo (santos à **direita**, inimigos à **esquerda**).
-- Braços um pouco afastados do corpo, pernas levemente separadas; nenhum membro cruzando o tronco ou outro membro; arma e objetos afastados do corpo.
-- Luz chapada, sem sombra cortando as juntas.
-- **Eu recorto as peças** (cabeça, tronco com quadril, braços em três partes, pernas em duas, roupas soltas, objetos) e completo o que fica escondido atrás dos membros. A folha de peças (`rig_parts`) é opcional: só se o recorte não ficar bom no piloto (T35), aí você tenta gerar as peças separadas.
-- As poses de ataque, golpe recebido, defesa e queda continuam úteis como **referência** do movimento (e como quadro-chave em golpes fortes), mas não são obrigatórias para cada personagem.
+- **Mesma escala, mesma câmera e mesma linha do chão em todos os clipes** do personagem: é o que impede a figura de "pular" na troca de pose.
+- Vista de lado, santos olhando para a **direita** e inimigos para a **esquerda**; fundo cinza-claro liso; sem auréola, texto ou sombra no chão.
+- Figura com **pelo menos 1000 px de altura** no quadro (o jogo mostra cerca de metade da altura da tela).
+- **Clipes por personagem:**
+  - **parado** em ciclo, com 6 a 9 quadros (o último emenda no primeiro), como o GIF de exemplo com a capa ao vento;
+  - **andar** em ciclo, com 6 a 8 quadros;
+  - **poses-chave das ações**, na ordem: atacar (preparar e golpear), defender, golpe recebido e queda (ajoelhar e caído), como o GIF de exemplo das ações;
+  - opcional: **parado em Noite Escura** (curvado), 1 a 4 quadros.
+- O agente tira o fundo, alinha os pés, corta os quadros e monta tudo (`tools/art/`).
 
 ## 3. Inventário e prioridade
 
 Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão nova · ⬜ falta.
 
-### Prioridade 1 · Bloco A (piloto do esqueleto e caminhada; T35 a T37)
+### Prioridade 1 · Bloco A (piloto de troca de pose e caminhada; T35 a T37)
 
 | Imagem | Situação | Onde está o prompt |
 | --- | --- | --- |
-| `saint_george_rig_base` | 🟡 `saint_george_body_rig_neutral_v01` existe; serve para o piloto. Se o recorte mostrar problema (membro colado, sombra na junta), peço outra | `prompts-saints.md` · São Jorge |
+| Quadros de São Jorge: parado, andar e poses das ações (§2) | ⬜ Alan está definindo o formato (D-196); os GIFs de exemplo mostraram o caminho | Prompts de Alan; referência: `body_idle` aprovado |
 | `env_circle_02_t1_ref`, `_back`, `_mid`, `_front` | 🟡 há só `_back` e `_front` com 1584×672 e sem `_mid`; precisa das 4 camadas no tamanho final, com o chão a y ≈ 900 e o `_mid` emendável | `prompts-environments.md` · Luxúria · T1 |
 | Entradas da bifurcação: `prop_c02_entry_door`, `_cave`, `_stair`, `_straight` | ⬜ | **§6 deste documento** |
 | Objetos do corredor: `prop_c02_tent` (Tentação), `prop_reliquary_closed` e `prop_reliquary_open` (relíquia) | ⬜ | **§6 deste documento** |
@@ -44,12 +48,11 @@ Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão 
 
 | Imagem | Situação | Onde está o prompt |
 | --- | --- | --- |
-| `saint_benedict_rig_base`, `saint_therese_rig_base` | ⬜ | `prompts-saints.md` |
-| Bento e Teresinha: `body_attack`, `body_hit`, `body_fall` (referência de movimento) | ⬜ | `prompts-saints.md` |
-| Os 7 inimigos da Família A: `rig_base` (o `body_idle` já veio, mas em JPG com fundo xadrez pintado; se possível, regerar em PNG com fundo liso) | 🟡 / ⬜ | `prompts-enemies-v1.md` · Família A |
-| Minos (`elite_minos`): `body_idle`, `rig_base`, `body_attack`, `body_defend` | ⬜ | `prompts-elites-bosses-v1.md` · Minos |
-| Vertigem (`elite_sin_vertigo`): as mesmas 4 | ⬜ | `prompts-enemies-v1.md` · Vertigem |
-| Asmodeu (`boss_asmodeus`): as mesmas 4 | ⬜ | `prompts-elites-bosses-v1.md` · Asmodeu |
+| Quadros de Bento e Teresinha: parado, andar e poses das ações (§2) | ⬜ | Prompts de Alan; referência: `body_idle` e poses de `prompts-saints.md` |
+| Quadros dos 7 inimigos da Família A: parado e poses das ações (§2); o `body_idle` já veio, mas em JPG com fundo xadrez pintado: se possível, regerar em PNG com fundo liso | 🟡 / ⬜ | `prompts-enemies-v1.md` · Família A (padrão, ataque e defesa como referência) |
+| Minos (`elite_minos`): padrão, depois os quadros (§2) | ⬜ | `prompts-elites-bosses-v1.md` · Minos |
+| Vertigem (`elite_sin_vertigo`): idem | ⬜ | `prompts-enemies-v1.md` · Vertigem |
+| Asmodeu (`boss_asmodeus`): idem | ⬜ | `prompts-elites-bosses-v1.md` · Asmodeu |
 | `env_circle_02_t2_*`, `env_circle_02_t3_*`, `env_circle_02_boss_*` (4 camadas cada) | ⬜ | `prompts-environments.md` · Luxúria |
 | `env_circle_02_camp` em 2560×1080 | 🟡 v02 tem 1600×672 | `prompts-environments.md` · Luxúria · Ambientação |
 | `env_circle_02_vigil` | ⬜ | Idem |
@@ -81,7 +84,7 @@ Situação: ✅ já recebido e usável · 🟡 recebido, mas precisa de versão 
 
 ## 4. O que o motor faz sozinho (não precisa de imagem)
 
-- Andar, atacar, defender, golpe recebido e queda (esqueleto 2D a partir do `rig_base`).
+- A ligação entre as poses: deslizar até o alvo, câmera que aproxima, tremor, clarão, esticar e encolher; respiração e capa sutis por cima dos quadros.
 - Chegada dos inimigos, câmera que aproxima, tremor, clarões, rastros de golpe.
 - Auréola, raios, brilho, estados de desolação.
 - Parallax, névoa, partículas soltas, almas balançando, redemoinhos girando.

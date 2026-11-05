@@ -44,10 +44,11 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Ataques na posição 3 (teste de Alan, 05/11/2026): o Moscardo (`gadfly_sting`, alvo `back_most` nas posições 2 e 3) acerta Teresinha em 90% das vezes e está em 3 dos 4 encontros do M0; a Sombra (`lowest_hp`) também a escolhe. Em 1.200 combates simulados Teresinha recebeu 17 mil de dano, Jorge 13 mil e Bento 3 mil. Decidir se fica assim, se o Moscardo passa a sortear entre 2 e 3, ou se os encontros do M2 ganham variedade~~ Moscardo sorteia entre 2 e 3 (D-168); mais variedade de encontros fica para o M2 | Alan | 05/11/2026 |
 | ~~Testes de abuso (glitches, exploits, meta que quebra mecânicas), pedido de Alan em 05/11/2026. Proposta do agente: (1) desde já, testes automáticos de regras invioláveis em cada tarefa; (2) uma tarefa "Caça a exploits" no fim do M2, quando existirem vila, economia e expedição completa; (3) repetir a cada família no M3; (4) teste com jogadores de fora no M4.~~ Aprovado (D-170); entra no backlog do M2 | M2 | 05/11/2026 |
 | ~~Roteiro do Prólogo (D-172)~~ Recebido (`docs/narrative/prologue.md`, D-190); faltam as artes (`m2-art-prompts.md`, prioridade 4) | Alan | 05/11/2026 |
-| Esqueleto 2D (D-176): ~~quem separa as partes~~ o agente recorta a partir das imagens preparadas de Alan (D-180); o piloto com Jorge (T35) mostra se o recorte fica bom | T35 | 05/11/2026 |
+| ~~Esqueleto 2D (D-176, D-180)~~ Testado e reprovado; substituído por quadros e poses-chave (D-194, D-195) | — | 05/11/2026 |
 | ~~Santo Antão ao vencer Asmodeu: só a tela de novo santo no M2~~ Confirmado por Alan (D-179) | Alan | 05/11/2026 |
 | ~~Conselho da vila depois de Asmodeu entra no M2?~~ Fica para o M3 (D-181) | M3 | 05/11/2026 |
 | Downloads de bancos de som pela nuvem podem ser bloqueados; se forem, o agente manda a lista e onde baixar, e Alan baixa e envia (D-182) | T54 | 05/11/2026 |
 | ~~Sem combate de ensino no M2: dicas na tela?~~ Sim, no primeiro combate e na primeira caminhada (D-191) | T51 | 05/11/2026 |
 | ~~Salto do Círculo 1 na fatia do M2~~ Aceito, com o Círculo 1 bloqueado no Mapa do Inferno (D-192) | T49 | 05/11/2026 |
 | Prólogo: confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897), a abertura da Regra de São Bento e os dados de Santa Luzia (`prologue.md` §7) | Alan | 05/11/2026 |
+| ~~Formato dos quadros de animação~~ GIFs do Meta AI com os prompts de `animation-prompts.md`; os de Jorge chegaram (D-197) | — | 05/11/2026 |

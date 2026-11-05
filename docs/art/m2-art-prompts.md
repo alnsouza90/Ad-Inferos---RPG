@@ -2,7 +2,7 @@
 
 Gerado em 05/11/2026 a partir do pedido de arte (`docs/art/m2-art-request.md`) e das folhas de produção. Os prompts são cópias exatas das folhas; se houver diferença, valem as folhas. Na ordem de prioridade: gere de cima para baixo e marque a caixa quando aprovar.
 
-**Regras de sempre:** fundo cinza-claro liso (menos nos `_back` e telas inteiras); sem auréola, texto, moldura ou vinheta; mande pelo chat com o nome em negrito (ex.: `env_circle_02_t1_mid`). Para o esqueleto 2D basta a pose neutra (`rig_base`) de cada personagem: eu recorto as peças.
+**Regras de sempre:** fundo cinza-claro liso (menos nos `_back` e telas inteiras); sem auréola, texto, moldura ou vinheta; mande pelo chat com o nome em negrito (ex.: `env_circle_02_t1_mid`). Os personagens são animados com quadros e poses-chave (D-194): o formato está em `m2-art-request.md` §2; as poses neutras (`rig_base`) não são mais necessárias.
 
 ---
 
@@ -148,45 +148,17 @@ Dark gothic 2D game character sheet in the style of Darkest Dungeon, hand-inked 
 2D game VFX layer in the style of Darkest Dungeon, hand-inked comic art, a long low horizontal band of soft drifting fog with ink-like wisps, thicker at the bottom and fading upward, seamless left and right edges, neutral pale grey, isolated on a plain flat solid dark grey background --ar 4:1 --no text, objects, characters, cartoon, glossy, 3D, photorealistic
 ```
 
-_São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu precisar de outra, o prompt é o `saint_george_rig_base` (Prioridade 2)._
+_São Jorge: os quadros de animação (parado, andar e poses das ações) entram aqui assim que você definir o formato (D-196)._
 
 ---
 
 ## Prioridade 2 · Círculo 2 completo
 
-### Santos (pose neutra para o esqueleto)
+### Santos
 
-- [ ] **`saint_george_rig_base`** — Pose neutra para o rig · animação no Godot
+Os quadros de Bento e Teresinha (parado, andar e poses das ações) seguem o formato de `m2-art-request.md` §2.
 
-> **Gerar:** proporção 2:3 na **maior resolução possível** · Midjourney: `--ar 2:3` + Upscale 2× (≥ 1792 × 2688 px) · GPT Image: 1024 × 1536 px e ampliar 2×  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, guardada em `art_source/` (figura ≈ 2400 px)  
-> **Peças finais:** recortadas e exportadas a **50%**, na escala do `body_idle` (figura ≈ 1200 px), em `assets/characters/saints/<id>/rig/`
-
-```text
-2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body strict side profile view, entire figure from head to feet fully inside the frame, figure height about 78 percent of the image height, feet resting about 6 percent above the bottom edge, figure centered horizontally, Saint George as a young Roman military officer of the late 3rd century, beardless with short curly hair as in Eastern icons, bronze muscle cuirass with pteruges, flowing red paludamentum cloak, Roman military boots, long spear and round shield bearing a cross, neutral rigging pose for 2D skeletal animation: standing straight, arms held slightly away from the torso, legs slightly apart, no limb overlapping the torso or another limb, the spear and the round shield held clearly apart from the body, loose garments hanging straight without wrapping around the limbs, clearly readable joints at the neck, shoulders, elbows, wrists, hips, knees and ankles, calm neutral expression, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, dark blood red accents, bone and ash grey, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing right --ar 2:3 --no halo, parchment background, textured background, vignette, cartoon, anime, smile, glossy, 3D, photorealistic, white background, facing left, medieval knight, plate armor, great helm, tabard, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
-- [ ] **`saint_benedict_rig_base`** — Pose neutra para o rig · animação no Godot
-
-> **Gerar:** proporção 2:3 na **maior resolução possível** · Midjourney: `--ar 2:3` + Upscale 2× (≥ 1792 × 2688 px) · GPT Image: 1024 × 1536 px e ampliar 2×  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, guardada em `art_source/` (figura ≈ 2400 px)  
-> **Peças finais:** recortadas e exportadas a **50%**, na escala do `body_idle` (figura ≈ 1200 px), em `assets/characters/saints/<id>/rig/`
-
-```text
-2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body strict side profile view, entire figure from head to feet fully inside the frame, figure height about 78 percent of the image height, feet resting about 6 percent above the bottom edge, figure centered horizontally, Saint Benedict of Nursia as an elderly 6th-century abbot with a long white beard, black Benedictine habit with hood and scapular, abbot's crozier, book of the Rule at his belt, a raven on his shoulder, a chalice with a small serpent rising from it, neutral rigging pose for 2D skeletal animation: standing straight, arms held slightly away from the torso, legs slightly apart, no limb overlapping the torso or another limb, the crozier and the chalice held clearly apart from the body, loose garments hanging straight without wrapping around the limbs, clearly readable joints at the neck, shoulders, elbows, wrists, hips, knees and ankles, calm neutral expression, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, dark blood red accents, bone and ash grey, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing right --ar 2:3 --no halo, parchment background, textured background, vignette, cartoon, anime, smile, glossy, 3D, photorealistic, white background, facing left, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
-- [ ] **`saint_therese_rig_base`** — Pose neutra para o rig · animação no Godot
-
-> **Gerar:** proporção 2:3 na **maior resolução possível** · Midjourney: `--ar 2:3` + Upscale 2× (≥ 1792 × 2688 px) · GPT Image: 1024 × 1536 px e ampliar 2×  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, guardada em `art_source/` (figura ≈ 2400 px)  
-> **Peças finais:** recortadas e exportadas a **50%**, na escala do `body_idle` (figura ≈ 1200 px), em `assets/characters/saints/<id>/rig/`
-
-```text
-2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body strict side profile view, entire figure from head to feet fully inside the frame, figure height about 78 percent of the image height, feet resting about 6 percent above the bottom edge, figure centered horizontally, Saint Therese of Lisieux as a young 19th-century Carmelite nun with a gentle round face, brown Carmelite habit and scapular, white mantle, black veil over white wimple, a crucifix wrapped in roses, neutral rigging pose for 2D skeletal animation: standing straight, arms held slightly away from the torso, legs slightly apart, no limb overlapping the torso or another limb, the crucifix wrapped in roses held clearly apart from the body, loose garments hanging straight without wrapping around the limbs, clearly readable joints at the neck, shoulders, elbows, wrists, hips, knees and ankles, calm neutral expression, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, dark blood red accents, bone and ash grey, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing right --ar 2:3 --no halo, parchment background, textured background, vignette, cartoon, anime, smile, glossy, 3D, photorealistic, white background, facing left, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
-### Inimigos da Família A (pose neutra; se puder, regere também o `body_idle` em PNG com fundo liso)
+### Inimigos da Família A (se puder, regere o `body_idle` em PNG com fundo liso; depois, os quadros de `m2-art-request.md` §2)
 
 - [ ] **`enemy_mud_devil_body_idle`** — Pose padrão
 
@@ -195,16 +167,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 
 ```text
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a hulking hunched mud demon with long dragging arms and a toothed mouth gaping in its chest, dripping black filth, long arms hanging to the ground, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
-```
-
-- [ ] **`enemy_mud_devil_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a hulking hunched mud demon with long dragging arms and a toothed mouth gaping in its chest, dripping black filth, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: limbs held slightly away from the body, no limb overlapping the torso or another limb, weapons and held objects clearly apart from the body, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
 ```
 
 - [ ] **`enemy_infernal_scarab_body_idle`** — Pose padrão
@@ -216,16 +178,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a man-sized infernal beetle standing on its hind legs, a thick cracked carapace, serrated mandibles, its carapace raised like a shield, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
 ```
 
-- [ ] **`enemy_infernal_scarab_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a man-sized infernal beetle standing on its hind legs, a thick cracked carapace, serrated mandibles, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: carapace shell held slightly apart from the body, legs spread and not overlapping, no limb overlapping another, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
 - [ ] **`enemy_gadfly_body_idle`** — Pose padrão
 
 > **Gerar:** `--ar 2:3` + Upscale 2×  
@@ -233,16 +185,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 
 ```text
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a gaunt insect-man hybrid with membranous wings, a long proboscis and too many joints, hovering slightly with wings spread, proboscis aimed forward, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
-```
-
-- [ ] **`enemy_gadfly_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a gaunt insect-man hybrid with membranous wings, a long proboscis and too many joints, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: wings spread wide and clear of the body, all limbs held apart, none overlapping, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
 ```
 
 - [ ] **`enemy_shade_of_desire_body_idle`** — Pose padrão
@@ -254,16 +196,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a tall faceless silhouette with many elongated reaching hands, its hands drifting outward around it, translucent body of smoke and ink, pale inverted linework on black, glowing pale edges, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude
 ```
 
-- [ ] **`enemy_shade_of_desire_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a tall faceless silhouette with many elongated reaching hands, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: each long arm held apart from the others and from the body, no arm crossing another, clearly readable joints, calm neutral stance, translucent body of smoke and ink, pale inverted linework on black, glowing pale edges, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
 - [ ] **`enemy_wandering_breath_body_idle`** — Pose padrão
 
 > **Gerar:** `--ar 2:3` + Upscale 2×  
@@ -271,16 +203,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 
 ```text
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a swirling whirlwind with screaming faces trapped inside it, spinning in place, translucent body of smoke and ink, pale inverted linework on black, glowing pale edges, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
-```
-
-- [ ] **`enemy_wandering_breath_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a swirling whirlwind with screaming faces trapped inside it, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: a calm upright whirlwind with its spiral bands clearly separated, faces clearly visible, clearly readable joints, calm neutral stance, translucent body of smoke and ink, pale inverted linework on black, glowing pale edges, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
 ```
 
 - [ ] **`enemy_swarm_mother_body_idle`** — Pose padrão
@@ -292,16 +214,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a bloated swollen demon covered in flies, open hive-like sores across its body, a swarm circling it, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
 ```
 
-- [ ] **`enemy_swarm_mother_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 78 percent of the image height, base resting about 6 percent above the bottom edge, a bloated swollen demon covered in flies, open hive-like sores across its body, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: limbs held slightly away from the body, no limb overlapping the torso or another limb, weapons and held objects clearly apart from the body, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
 - [ ] **`enemy_swarmling_body_idle`** — Pose padrão
 
 > **Gerar:** `--ar 2:3` + Upscale 2×  
@@ -311,17 +223,7 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, small creature, figure height about 40 percent of the image height, base resting about 6 percent above the bottom edge, a small infernal fly-larva demon the size of a dog, a pale bloated grub body with tiny clawed legs, a ring of teeth for a mouth, a few flies buzzing around it, crouched low on the ground, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
 ```
 
-- [ ] **`enemy_swarmling_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2048 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body , small creature, figure height about 40 percent of the image height, base resting about 6 percent above the bottom edge, a small infernal fly-larva demon the size of a dog, a pale bloated grub body with tiny clawed legs, a ring of teeth for a mouth, a few flies buzzing around it, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: limbs held slightly away from the body, no limb overlapping the torso or another limb, weapons and held objects clearly apart from the body, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone and ash grey, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
-### Elites e chefe (as 4 imagens: padrão, neutra, ataque, defesa)
+### Elites e chefe (padrão, ataque e defesa como referência; depois, os quadros de `m2-art-request.md` §2)
 
 - [ ] **`elite_minos_body_idle`** — Pose padrão
 
@@ -330,16 +232,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 
 ```text
 2D gothic horror game elite enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 83 percent of the image height, base resting about 6 percent above the bottom edge, Minos the infernal judge as a towering crowned demonic king seated on a stone seat of judgment, an enormous serpent tail, the tail coiled many times around his body, one clawed hand pointing in condemnation, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right
-```
-
-- [ ] **`elite_minos_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2732 × 4096 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game elite enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 83 percent of the image height, base resting about 6 percent above the bottom edge, Minos the infernal judge as a towering crowned demonic king seated on a stone seat of judgment, an enormous serpent tail, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: the tail uncoiled and laid out to the side without crossing itself, arms held apart, clearly readable joints, calm neutral stance, solid heavy flesh, massive black ink shadows, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
 ```
 
 - [ ] **`elite_minos_body_attack`** — Ataque
@@ -369,16 +261,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 2D gothic horror game elite enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure height about 83 percent of the image height, base resting about 6 percent above the bottom edge, Vertigo, allegorical personification of lust as a tall elegant alluring demon of dark smoke and flowing ink, a striking beautiful face with hypnotic pale empty eyes and a faint corrupted smile, long sheer veils of dark smoke wrapped around the body and covering it completely, a suggestive but fully draped silhouette, ribbons of dark incense smoke trailing from its shoulders and lower body, decadent and corrupting, graceful swaying posture, long fingers beckoning, translucent body of smoke and ink, pale inverted linework on black, glowing stormy violet edges, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude, nudity, nipples, explicit, erotic, lingerie
 ```
 
-- [ ] **`elite_sin_vertigo_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 2:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **2732 × 4096 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game elite enemy art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure height about 83 percent of the image height, base resting about 6 percent above the bottom edge, Vertigo, allegorical personification of lust as a tall elegant alluring demon of dark smoke and flowing ink, a striking beautiful face with hypnotic pale empty eyes and a faint corrupted smile, long sheer veils of dark smoke wrapped around the body and covering it completely, a suggestive but fully draped silhouette, ribbons of dark incense smoke trailing from its shoulders and lower body, decadent and corrupting, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: arms clearly separated from the torso, veils hanging still and close to the body, clearly readable joints, calm neutral stance, translucent body of smoke and ink, pale inverted linework on black, glowing stormy violet edges, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 2:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude, nudity, nipples, explicit, erotic, lingerie, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
-```
-
 - [ ] **`elite_sin_vertigo_body_attack`** — Ataque
 
 > **Gerar:** `--ar 2:3` + Upscale 2×  
@@ -404,16 +286,6 @@ _São Jorge: a pose neutra que você já mandou serve para o piloto. Se eu preci
 
 ```text
 2D gothic horror game boss art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, figure filling about 85 percent of the image height, base resting about 6 percent above the bottom edge, Asmodeus the demon king with three heads, a bull head, a crowned human head and a ram head, rooster legs and clawed feet, a serpent tail, a lance with a blank banner, riding a winged infernal dragon, non-sexualized, the dragon's wings half spread, translucent body of smoke and ink, pale inverted linework on black, glowing stormy violet edges, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, ink splatter on the figure only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 4:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude, letters
-```
-
-- [ ] **`boss_asmodeus_rig_base`** — Pose neutra para o rig
-
-> **Gerar:** `--ar 4:3` + Upscale 2× (o maior tamanho possível)  
-> **Matriz:** PNG RGBA **4096 × 3072 px**, 72 ppi, sRGB, em `art_source/` (o dobro do tamanho final)  
-> **Peças:** recortadas no editor a partir desta imagem e exportadas a **50%**, na escala do `body_idle`, em `rig/`
-
-```text
-2D gothic horror game boss art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body, figure filling about 85 percent of the image height, base resting about 6 percent above the bottom edge, Asmodeus the demon king with three heads, a bull head, a crowned human head and a ram head, rooster legs and clawed feet, a serpent tail, a lance with a blank banner, riding a winged infernal dragon, non-sexualized, neutral rigging pose for 2D skeletal animation in strict side profile view facing left: the dragon's wings and legs spread and clear, the rider sitting upright with the lance held apart, the three heads clearly separated, clearly readable joints, calm neutral stance, translucent body of smoke and ink, pale inverted linework on black, glowing stormy violet edges, thick irregular black ink outlines, angular blocky shading kept inside each body part, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and stormy violet, dark blood red, even flat lighting with no cast shadows crossing the joints, no ink splatter, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text, facing left --ar 4:3 --no gold, halo, parchment background, textured background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing right, nude, letters, overlapping limbs, crossed arms, dynamic pose, motion blur, heavy shadows
 ```
 
 - [ ] **`boss_asmodeus_body_attack`** — Ataque
