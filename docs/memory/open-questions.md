@@ -48,6 +48,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Santo Antão ao vencer Asmodeu: só a tela de novo santo no M2~~ Confirmado por Alan (D-179) | Alan | 05/11/2026 |
 | ~~Conselho da vila depois de Asmodeu entra no M2?~~ Fica para o M3 (D-181) | M3 | 05/11/2026 |
 | Downloads de bancos de som pela nuvem podem ser bloqueados; se forem, o agente manda a lista e onde baixar, e Alan baixa e envia (D-182) | T54 | 05/11/2026 |
-| Sem combate de ensino no M2 (D-190): o primeiro combate do jogador será no Círculo 2. Proposta: dicas curtas na tela no primeiro combate e na primeira caminhada | Alan | 05/11/2026 |
-| O Prólogo termina apontando para a Porta e o Anjo da Guarda (Círculo 1), mas na fatia do M2 a primeira expedição é no Círculo 2. Proposta: aceitar o salto no M2, com o Círculo 1 "bloqueado" no Mapa do Inferno | Alan | 05/11/2026 |
+| ~~Sem combate de ensino no M2: dicas na tela?~~ Sim, no primeiro combate e na primeira caminhada (D-191) | T51 | 05/11/2026 |
+| ~~Salto do Círculo 1 na fatia do M2~~ Aceito, com o Círculo 1 bloqueado no Mapa do Inferno (D-192) | T49 | 05/11/2026 |
 | Prólogo: confirmar na pesquisa do Martirológio a frase de Santa Teresinha (17/07/1897), a abertura da Regra de São Bento e os dados de Santa Luzia (`prologue.md` §7) | Alan | 05/11/2026 |
