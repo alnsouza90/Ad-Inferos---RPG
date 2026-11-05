@@ -404,7 +404,8 @@ O Céu envia a companhia de santos para resgatar a alma de um Peregrino vivo, fi
 
 **Premissa**
 
-- **O Peregrino:** alegoria pura da condição humana, sem biografia concreta. Não é moralmente superior aos condenados; está diante do que também poderia se tornar.
+- **O Peregrino:** alegoria da condição humana, sem nome e com biografia mínima: só o necessário para os flashbacks e o leito. Não é moralmente superior aos condenados; está diante do que também poderia se tornar.
+- **A verdade da história:** o Peregrino está morrendo numa cama. A viagem pelo Inferno é a alegoria das falhas da vida dele; a companhia intercede por uma alma ainda viva. O jogo segue a estrutura da *Comédia*: Inferno, Purgatório e Paraíso.
 - **Quem envia:** Nossa Senhora se compadece e manda Santa Luzia com o recado, como no canto II do *Inferno*. Beatriz é omitida.
 - **Guia:** o Anjo da Guarda do Peregrino, no papel de Virgílio.
 - **A vila:** o Átrio, concedido pela graça para a companhia se preparar.
@@ -412,10 +413,12 @@ O Céu envia a companhia de santos para resgatar a alma de um Peregrino vivo, fi
 **Ritmo de cada círculo**
 
 1. A companhia chega ao círculo logo atrás do Peregrino.
-2. Expedição: combates, Tentações e o Encontro com uma alma.
-3. Chefe.
-4. **Flashback:** a queda do Peregrino ligada àquele pecado, apresentada como alegoria, e a lição. Cada santo presente na companhia acrescenta uma fala ou reflexão a partir da própria vida (o testemunho), sem alterar opções.
-5. Conselho da vila, com uma decisão.
+2. Flashback curto **antes** da primeira expedição do círculo: o momento da tentação.
+3. Expedição: combates, Tentações e o Encontro com uma alma.
+4. Chefe.
+5. Flashback **depois** do chefe: a queda e a lição, com o testemunho dos santos (cada santo presente acrescenta uma fala a partir da própria vida, sem alterar opções).
+6. Vinheta do leito de morte.
+7. Conselho da vila, com uma decisão.
 
 **Encontros com almas inspiradas em Dante**
 
@@ -461,13 +464,19 @@ O jogo reúne assim os três arcanjos nomeados nas Escrituras.
 
 O objetivo é libertar a alma do Peregrino antes que o gelo da Judeca a prenda. São Miguel intervém na fase final; a companhia escala o corpo de Lúcifer e emerge para rever as estrelas. Lúcifer continua preso: a vitória definitiva pertence a Cristo.
 
+Ao sair do Inferno a companhia revê as estrelas; a cena corta para o leito, onde o jogador faz o **ato de contrição** pelo Peregrino.
+
 **Finais**
 
-| Final | Condição \[Premissa\] | Desfecho |
+**Final único: a boa morte**
+
+| Etapa | O que acontece | O que varia |
 | --- | --- | --- |
-| Despertar | Soma das virtudes de 11 a 15 | O Peregrino acorda convertido |
-| Despertar inquieto | De 6 a 10 | Vive, mas a luta continua |
-| Boa morte | De 0 a 5 | Morre reconciliado, com São José à cabeceira; vai ao Purgatório, e o epílogo mostra sua entrada no Céu |
+| Ato de contrição | Escolha do jogador, depois de Lúcifer | As virtudes definem as palavras: soma 11–15 contrição perfeita, por amor; 6–10 contrição imperfeita, por temor, mas sincera; 0–5 contrição frágil, quase só um pedido de socorro. Todas são válidas \[premissa a validar no roteiro\] |
+| Extrema-unção | O frei unge o Peregrino; a mulher idosa reza | — |
+| Boa morte | São José e Nossa Senhora à cabeceira | Tom da cena segundo a contrição |
+| Purgatório | A alma sobe a montanha do Purgatório | Os Sufrágios acumulados encurtam a purificação: marcos 8–10 passagem breve; 4–7 média; 0–3 longa \[premissa\] |
+| Paraíso | A entrada na luz, com a companhia dos santos | — |
 
 O Peregrino sai transformado não por ter ficado imune ao pecado, mas por compreender sua condição e a necessidade de permanecer no caminho.
 
@@ -560,7 +569,7 @@ Cada elemento do jogo tem origem identificável; figuras sagradas nunca viram un
 | Deus Pai e Espírito Santo | Luz, voz, a pomba |
 | Jesus Cristo | Iconografia; a vitória final é atribuída a Ele |
 | Nossa Senhora | Prólogo e cena final; nunca dá bônus |
-| São José | Cena da boa morte |
+| São José | Cena da boa morte, com Nossa Senhora |
 | Anjos | Anjo da Guarda, Rafael, Gabriel, Miguel |
 
 **Conteúdo (18 anos)**
@@ -581,7 +590,7 @@ A versão 1 tem 12 santos, 9 círculos e o prólogo, 19 inimigos comuns, 16 elit
 | M1 · Protótipo de trecho | Mapa de 4 nós, Lume, provisões, Tentação, Pouso, salvamento | Trecho de 10 a 14 min; retomada exata após fechar o app |
 | M2 · Fatia vertical no Android | Prólogo e Círculo 2 completos, vila mínima, arte final do trecho | 45 a 60 min de jogo contínuo |
 | M3 · Produção por família | Famílias A, B e C em sequência | Cada família aprovada antes da próxima |
-| M4 · Narrativa e acabamento | Finais, Purgatório, Conselhos, Martirológio, revisão teológica | Campanha completa; revisão teológica aprovada |
+| M4 · Narrativa e acabamento | Contrição, boa morte, Purgatório e Paraíso, Conselhos, Martirológio, revisão teológica | Campanha completa; revisão teológica aprovada |
 
 Em paralelo ao M0: piloto de arte com São Jorge e com a Capela (Direção de Arte).
 
@@ -619,6 +628,7 @@ Recomendações das revisões aprovadas em bloco; valem como regras e prevalecem
 | P13 | Encontros de combate com pelo menos duas funções táticas; grupos fácil e difícil por trecho | G7 |
 | P14 | Biblioteca revela resistências, segunda fase dos chefes e conteúdo dos nós | G6 |
 | P15 | Kits de Nicolau de Mira e Santa Gertrudes marcados como proposta no elenco | Seção 3 |
+| P16 | O Peregrino no leito de morte; final único com ato de contrição | Decisão de 05/11/2026 |
 
 ## 13. Kits dos santos (proposta de 03/11/2026, números a calibrar)
 
