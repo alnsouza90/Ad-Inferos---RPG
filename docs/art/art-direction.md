@@ -1311,28 +1311,68 @@ Rever as estrelas (saída do Inferno):
 Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a company of saints with flat gold halos and a pale pilgrim emerging from a narrow rocky passage into the open night, a vast sky full of stars above them, the darkness of Hell left behind, cinematic composition, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, deep night blue and flat gold, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
 ```
 
-Final 1 · Despertar:
+Personagens recorrentes do leito e do final (usar a primeira imagem aprovada de cada um como referência de personagem nas seguintes): **o Peregrino no leito**, o mesmo homem do retrato `R01` do Prólogo, mais magro e pálido; **a mulher idosa**, véu escuro simples, mãos enrugadas, contas de oração de madeira (séc. XIV: contas de oração, não terço); **o frei**, franciscano idoso, hábito marrom, cordão de três nós, tonsura, estola roxa para o sacramento. Pranchas 16:9, PNG 1920 × 1080; pastas `assets/characters/narrative/deathbed/` e `assets/characters/narrative/ending/` (decisão D-198).
+
+Final · O ato de contrição (`F02`):
 
 ```text
-Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a 14th-century pilgrim waking at dawn at the edge of a forest, kneeling with hands joined, tears on his face, the first golden rays of sunrise breaking through the trees, cinematic composition, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm dawn gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, the dying pale bearded man in the wooden bed with his eyes open at last, tears running down his face, his weak hands joined around a small wooden cross, the elderly Franciscan friar with a purple stole leaning close to listen, the elderly woman weeping quietly behind with her prayer beads, the candle stub glowing, a faint warm light beginning to fill the room, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, halo, demons, cartoon, anime, glossy, 3D, photorealistic
 ```
 
-Final 2 · Despertar inquieto:
+Final · A extrema-unção (`F03`):
 
 ```text
-Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a 14th-century pilgrim waking at night in a humble room, sitting up in bed by a single candle, clutching a small wooden cross, a long shadow stretching across the wall behind him, uncertain expression, cinematic composition, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, the elderly Franciscan friar with a purple stole tracing a small cross of holy oil on the forehead of the dying man in the wooden bed, a small open wooden box of oils on the stool, the elderly woman kneeling in prayer with wooden prayer beads, the candle light steady and calm now, reverent and peaceful, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, halo, gold, cartoon, anime, glossy, 3D, photorealistic
 ```
 
-Final 3 · Boa morte, com São José:
+Final · A boa morte (`F04`):
 
 ```text
-Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a dying 14th-century pilgrim at peace in a simple bed, a crucifix in his hands, Saint Joseph as an elderly bearded carpenter with a staff blossoming with lilies and a flat gold halo standing gently at his bedside, warm candlelight, cinematic composition, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, warm amber and flat gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, cartoon, anime, glossy, 3D, photorealistic
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a dying 14th-century man at peace in a simple wooden bed with a small cross in his hands and a faint smile of relief, Saint Joseph as an elderly bearded carpenter with a staff blossoming with lilies and a flat gold halo standing gently at the head of the bed, the Virgin Mary veiled in a deep ultramarine mantle with a flat gold halo standing beside him with open compassionate hands, both seen only by the viewer, the friar and the elderly woman praying unaware in the warm candlelight, cinematic composition, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, ultramarine blue, warm amber and flat gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, demons, cartoon, anime, glossy, 3D, photorealistic, sensual
 ```
 
-Epílogo · Do Purgatório ao Céu:
+Final · O Purgatório (o motor usa uma, duas ou três variações conforme os Sufrágios) (`F05`):
 
 ```text
-Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a purified soul in a plain white robe rising from the summit of the mountain of Purgatory through a ring of gentle flame into a sky of flat gold light and stars, small grateful figures watching from the terraces below, cinematic composition, thick irregular black ink outlines, angular blocky shading, muted desaturated colors with painterly flat fills, palette of bone, white, ash grey and flat gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, demons, cartoon, anime, glossy, 3D, photorealistic
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, in the spirit of Gustave Dore engravings of Dante's Purgatorio, a soul in a plain white robe climbing the terraces of a vast mountain rising from the sea at dawn, other humble souls praying along the stone ledges, a gentle wall of purifying flame near the summit, a calm angel at a gate of three steps, hopeful and serene, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, angular blocky shading, crosshatched engraving texture, muted desaturated colors with painterly flat fills, palette of bone, white, ash grey, pale dawn blue and flat gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, demons, torture, cartoon, anime, glossy, 3D, photorealistic
+```
+
+Final · O Paraíso (Deus aparece só como luz; nenhuma figura no centro da rosa) (`F06`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, inspired by the celestial rose of Dante's Paradiso, a soul in a white robe rising into an immense rose of light made of countless tiers of small haloed figures, among them a company of saints with flat gold halos welcoming him, the center of the rose an overwhelming flat gold light with no figure inside it, awe and peace, cinematic composition, thick irregular black ink outlines, angular blocky shading, muted desaturated colors with painterly flat fills, palette of white, bone, pale blue and flat gold, distressed print texture, soft vignette --ar 16:9 --no text, letters, UI, demons, face of God, old bearded god, cartoon, anime, glossy, 3D, photorealistic
+```
+
+### Leito de morte
+
+O leito (Prólogo e vinhetas) (`P16`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a poor 14th-century room at night, a gaunt pale bearded man lying gravely ill in a simple wooden bed breathing with difficulty, a single candle burning on a stool beside the bed, an elderly woman in a plain dark veil kneeling at the bedside praying with wooden prayer beads, a small wooden cross on the bare wall, long shadows, quiet and heavy atmosphere, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, rosary with crucifix pendant, modern objects, cartoon, anime, glossy, 3D, photorealistic
+```
+
+A vela e a mão (Prólogo) (`P17`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, extreme close-up of a guttering candle flame on a stool beside a bed at night and a thin pale man's hand lying limp on a rough linen sheet, wax dripping, the flame bending as if from a weak breath, intimate cinematic framing, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber candlelight, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, blood, cartoon, anime, glossy, 3D, photorealistic
+```
+
+Vinheta do leito: a vela baixa (vinhetas 1 a 6; o motor varia a altura da vela e a luz) (`D01`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, the same poor 14th-century room at night, the gravely ill pale bearded man in the wooden bed, eyes closed, the candle beside him burned halfway down, the elderly woman in a dark veil asleep in a chair with wooden prayer beads still in her hands, deep stillness, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dim warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, cartoon, anime, glossy, 3D, photorealistic
+```
+
+Vinheta do leito: chamam o frei (vinhetas 7 e 8) (`D02`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, the same poor 14th-century room at night, the elderly woman in a dark veil standing at the open door speaking urgently into the darkness outside, the dying pale bearded man in the bed behind her, the candle almost burned down, cold night air stirring the flame, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and dim warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, cartoon, anime, glossy, 3D, photorealistic
+```
+
+Vinheta do leito: o frei chega (vinheta 9) (`D03`):
+
+```text
+Dark gothic illustrated story panel in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, an elderly 14th-century Franciscan friar with tonsure, brown habit and a rope belt with three knots, entering the poor room through the doorway at night carrying a small lantern and a little wooden box for the holy oils, a purple stole over his shoulders, the elderly woman stepping aside, the dying man in the bed, the candle a stub, cinematic composition, the lower third of the image darker for subtitles, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey, brown and warm amber, distressed print texture, dark vignette --ar 16:9 --no text, letters, UI, halo, gold, cartoon, anime, glossy, 3D, photorealistic
 ```
 
 ## 12. Interface
