@@ -23,7 +23,7 @@ id = &"gadfly_sting"
 use_slots = Array[int]([2, 3, 4])
 target_slots = Array[int]([2, 3])
 targeting = &"single"
-target_rule = &"back_most"
+target_rule = &"random"
 conditions = Array[Dictionary]([{
 "name": "always",
 "param": null

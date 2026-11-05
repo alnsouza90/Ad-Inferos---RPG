@@ -3,7 +3,7 @@ mud_devil_crush,1,1|2,1|2,single,lowest_hp_pct,self_hp_below:50,2,attack
 mud_devil_slam,2,1|2,1|2,single,front_most,always,0,attack
 scarab_carapace,1,1|2,,ally_enemy,lowest_hp_pct,ally_hp_below:60,2,defend
 scarab_bite,2,1|2|3,1,single,front_most,always,0,attack
-gadfly_sting,1,2|3|4,2|3,single,back_most,always,0,attack
+gadfly_sting,1,2|3|4,2|3,single,random,always,0,attack
 shade_whisper,1,2|3|4,1|2|3,single,highest_desolation,always,1,corrupt
 shade_touch,2,1|2|3|4,1|2|3,single,lowest_hp,always,0,attack
 breath_gust,1,2|3|4,1|2,single,front_most,every_n_rounds:2,0,displace
