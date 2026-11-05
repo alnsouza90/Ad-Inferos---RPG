@@ -75,6 +75,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-157 · 04/11/2026 · Alan** — T29 aprovada (tela do Pouso), com os textos revisados. *PR #36.*
 - **D-158 · 04/11/2026 · Alan** — A caminhada interativa (andar até a tenda da Tentação e escolher entrar; andar até a entrada da derivação no fim do corredor e entrar), a animação de andar, os personagens maiores e o parallax da frente ficam para o **M2**, com a arte final (junto de D-209 e D-210). O M1 termina com a caminhada atual (T30 a T32). *`open-questions.md`, futuro `docs/backlog/m2.md`.*
 - **D-159 · 05/11/2026 · Alan** — Ajustes de rumo aprovados: no começo do M2, uma tarefa de especificação da caminhada interativa (como a T18), e o pedido de arte da caminhada (camada `_mid` emendável com o chão a y ≈ 900, entradas desenhadas: porta, caverna, escada, tenda; frente só com peças nas bordas). Seguir com a T30. *Futuro `docs/backlog/m2.md`.*
+- **D-160 · 05/11/2026 · Alan** — T30 aprovada (fluxo completo do trecho: título, preparação, combate na expedição, relíquia, resumo). *PR #37.*
 
 ## Arte
 
