@@ -85,6 +85,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-166 · 05/11/2026 · Alan** — T31 aprovada (simulador do trecho, metas recalibradas, estimativa da expedição longa). Visão confirmada: completar uma expedição de primeira não é o esperado; retirada planejada, vila, Esmolas, relíquias e novos santos são a estratégia para avançar. *PR #38.*
 - **D-167 · 05/11/2026 · Alan** — T32 aceita: duas partidas no Redmi com cerca de 10 minutos por trecho (meta 10–14) e retomada exata no meio do turno e na caminhada. Observação de Alan: excesso de ataques inimigos na posição 3 (investigação na sequência). *`docs/backlog/m1.md` T32.*
 - **D-168 · 05/11/2026 · Alan** — Ferroada do Moscardo passa a sortear o alvo entre as posições 2 e 3 (`target_rule` `back_most` → `random`). Golpes do Moscardo antes: Teresinha 2.700, Bento 300; depois: 1.391 e 1.407 (1.200 combates). Trecho com a heurística (2.000): vitória no difícil 79,0%, Noite Escura 0,082 por trecho, 97,9% concluídos: metas mantidas. *`enemy_actions.csv`.*
+- **D-169 · 05/11/2026 · Alan** — Fechamento do M1 aprovado (PR #39): **M1 concluído**. *`docs/backlog/m1.md`.*
+- **D-170 · 05/11/2026 · Alan** — Plano de testes de abuso (glitches, exploits, meta que quebra mecânicas) aprovado: (1) em toda tarefa, testes automáticos das regras invioláveis; (2) tarefa "Caça a exploits" no fim do M2 (vila, economia, expedição completa); (3) repetida a cada família no M3; (4) teste com jogadores de fora no M4. Todo exploit achado vira teste automático. O backlog do M2 será montado numa sessão nova. *`docs/roadmap.md` (trilhas paralelas), futuro `backlog/m2.md`.*
 
 ## Arte
 
