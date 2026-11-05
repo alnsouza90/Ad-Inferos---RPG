@@ -95,6 +95,10 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-176 · 05/11/2026 · Alan** — Pedido de arte do M2 aprovado em princípio, incluindo as artes das bifurcações. Animação igual a Darkest Dungeon: **esqueleto 2D** (`Skeleton2D`) para andar, atacar, defender e golpe recebido dos santos, inimigos e chefes; **animação no motor** (tweens e código) para elementos do cenário, fundo, almas e milagres; **por quadros** quando indicado (ex.: relicário fechado e aberto). Revê D-201 e o ADR-0007 (atualizado na T35). *`m2.md` T34, T35, T52, T53.*
 - **D-177 · 05/11/2026 · Alan** — Áudio provisório de banco de sons gratuito: som de fundo que muda por ambiente, fica mais intenso a cada trecho e muda no chefe; efeitos de passos, ataque, golpe recebido e morte. *`m2.md` T54.*
 - **D-178 · 05/11/2026 · Alan** — Controle da caminhada interativa: segurar o dedo para andar para frente e para trás, como em Darkest Dungeon (no lugar da proposta de tocar no chão). *`m2.md` T33, T37.*
+- **D-179 · 05/11/2026 · Alan** — Confirmado: ao vencer Asmodeu entra **Santo Antão** (a menção a "Santo Antônio" foi erro de digitação); no M2 aparece só a tela de novo santo, e jogar com ele fica para o M3. *`m2.md` escopo e T50.*
+- **D-180 · 05/11/2026 · Alan** — Esqueleto 2D: Alan manda imagens preparadas (pose neutra) e o **agente separa as partes e faz a animação sozinho**; se o recorte não ficar bom, Alan tenta gerar as peças separadas (a IA costuma não gerar peças satisfatórias). *`m2.md` T34, T35, T52.*
+- **D-181 · 05/11/2026 · Alan** — O Conselho da vila fica para o M3. *`m2.md` escopo, T43.*
+- **D-182 · 05/11/2026 · Alan** — Se o download dos sons for bloqueado na nuvem, o agente manda a lista com onde baixar; Alan baixa e envia pelo chat. *`m2.md` T54.*
 
 ## Arte
 

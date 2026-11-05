@@ -5,7 +5,7 @@ Resumo curto de cada sessão. A mais recente no topo.
 ## Sessão 5 · 05/11/2026
 
 - Godot compilado em segundo plano pelo gancho (D-162).
-- Feito: proposta do backlog do M2 (`docs/backlog/m2.md`, T33 a T57); decisões de Alan D-171 a D-178 (blocos, Prólogo, vila mínima, companhia e tela de novo santo, encontros, animação com esqueleto 2D, áudio, caminhada segurando o dedo).
+- Feito: proposta do backlog do M2 (`docs/backlog/m2.md`, T33 a T57); decisões de Alan D-171 a D-182 (blocos, Santo Antão, recorte das partes pelo agente, Conselho no M3, sons, Prólogo, vila mínima, companhia e tela de novo santo, encontros, animação com esqueleto 2D, áudio, caminhada segurando o dedo).
 - Próximo: aprovação do PR; depois T33 e T34.
 
 ## Sessão 4 · 04/11/2026

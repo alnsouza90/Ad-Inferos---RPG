@@ -44,7 +44,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Ataques na posição 3 (teste de Alan, 05/11/2026): o Moscardo (`gadfly_sting`, alvo `back_most` nas posições 2 e 3) acerta Teresinha em 90% das vezes e está em 3 dos 4 encontros do M0; a Sombra (`lowest_hp`) também a escolhe. Em 1.200 combates simulados Teresinha recebeu 17 mil de dano, Jorge 13 mil e Bento 3 mil. Decidir se fica assim, se o Moscardo passa a sortear entre 2 e 3, ou se os encontros do M2 ganham variedade~~ Moscardo sorteia entre 2 e 3 (D-168); mais variedade de encontros fica para o M2 | Alan | 05/11/2026 |
 | ~~Testes de abuso (glitches, exploits, meta que quebra mecânicas), pedido de Alan em 05/11/2026. Proposta do agente: (1) desde já, testes automáticos de regras invioláveis em cada tarefa; (2) uma tarefa "Caça a exploits" no fim do M2, quando existirem vila, economia e expedição completa; (3) repetir a cada família no M3; (4) teste com jogadores de fora no M4.~~ Aprovado (D-170); entra no backlog do M2 | M2 | 05/11/2026 |
 | Roteiro e artes do Prólogo (D-172) | Alan | 05/11/2026 |
-| Esqueleto 2D (D-176) pede cada personagem em partes separadas (cabeça, tronco, braços, pernas, arma): muito trabalho de arte; o pedido sai na T34 e o piloto com Jorge na T35 decide o formato | Alan (T34, T35) | 05/11/2026 |
-| Santo Antão ao vencer Asmodeu (`village-economy.md` §10): no M2 aparece só a tela de novo santo e ele fica para o M3 (D-174); confirmar com Alan se é isso | Alan | 05/11/2026 |
-| Conselho da vila depois de Asmodeu (fluxo de `screens.md` §2): entra no M2? Perguntar na T43 | Alan (T43) | 05/11/2026 |
-| Downloads de bancos de som pela nuvem podem ser bloqueados; se forem, Alan baixa a lista da T54 | T54 | 05/11/2026 |
+| Esqueleto 2D (D-176): ~~quem separa as partes~~ o agente recorta a partir das imagens preparadas de Alan (D-180); o piloto com Jorge (T35) mostra se o recorte fica bom | T35 | 05/11/2026 |
+| ~~Santo Antão ao vencer Asmodeu: só a tela de novo santo no M2~~ Confirmado por Alan (D-179) | Alan | 05/11/2026 |
+| ~~Conselho da vila depois de Asmodeu entra no M2?~~ Fica para o M3 (D-181) | M3 | 05/11/2026 |
+| Downloads de bancos de som pela nuvem podem ser bloqueados; se forem, o agente manda a lista e onde baixar, e Alan baixa e envia (D-182) | T54 | 05/11/2026 |
