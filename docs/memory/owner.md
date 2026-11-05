@@ -10,3 +10,4 @@
 - **Referência visual de combate:** Darkest Dungeon; quer animação de ataque e defesa em que o personagem avança até o inimigo e golpeia (04/11/2026).
 - **Troca de conversa:** quando o contexto estiver ficando cheio, avisar e mandar o texto pronto para colar na conversa nova (04/11/2026, D-215).
 - **Preocupações declaradas:** perder decisões entre sessões (por isso esta memória); boas práticas de desenvolvimento.
+- **Visão de dificuldade (05/11/2026, D-166):** a expedição deve pressionar a gestão de recursos e o planejamento; não completar de primeira é o esperado; voltar, se equipar, juntar Esmolas, procurar relíquias, liberar santos e até repetir conteúdo fazem parte da estratégia. Os combates difíceis do M0 são o nível que ele quer para o jogo normal.

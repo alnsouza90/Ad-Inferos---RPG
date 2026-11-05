@@ -76,6 +76,10 @@ static func from_events(events: Array[BattleEvent], cancelled: Array[StringName]
 				(entry.call(d["target"]) as PreviewEntry).desolation += int(d["new"]) - int(d["old"])
 			&"fell", &"enemy_died":
 				(entry.call(d["target"]) as PreviewEntry).falls = true
-	for enemy_id: StringName in cancelled:
+	# Cancelled intents come from the intents list, whose order changes when a
+	# new round draws them; sort by id so preview and execution list them alike.
+	var sorted_cancelled: Array[StringName] = cancelled.duplicate()
+	sorted_cancelled.sort_custom(func(a: StringName, b: StringName) -> bool: return String(a) < String(b))
+	for enemy_id: StringName in sorted_cancelled:
 		(entry.call(enemy_id) as PreviewEntry).intent_cancelled = true
 	return order
