@@ -166,6 +166,17 @@ Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, 
 Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a continuous tall rugged rock cliff wall rising behind the walkway along the whole image, a flat vertical rock face where a doorway or a cave mouth can be set, no openings drawn in it, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
 ```
 
+- [ ] **`env_circle_02_t1_mid_battle`** — Meio genérico de combate (a maioria dos trechos)
+
+> **Gerar:** `--ar 21:9` + Upscale 2× (se possível) · mesma referência de estilo · se puder, gere 2 ou 3 variações para alternar entre os nós  
+> **Arquivo final:** PNG RGBA, **2560 × 1080 px** · chão em **y ≈ 900 px** · bordas emendáveis
+
+```text
+Darkest Dungeon style 2D side-view game background, hand-painted gothic horror, hand-inked comic art, middle layer only for parallax, a generic windswept rocky cliff ledge, jagged storm-battered boulders of different heights, a few broken stone fragments and torn cloth caught on thorns, no throne, no seat, no landmark, varied but low-detail shapes, a continuous flat walkable ground strip along the bottom of the image with the ground surface at about 83 percent of the image height, empty plain flat solid light grey background above and behind instead of sky, seamless left and right edges for horizontal tiling, thick black ink outlines, heavy black shadows, muted desaturated palette of black, bone, ash grey and stormy violet, distressed print texture --ar 21:9 --no sky, clouds, characters, people, creatures, text, letters, UI, throne, seat, cartoon, anime, glossy, 3D, photorealistic, vignette, frame
+```
+
+O meio com o **trono de Minos** (`env_circle_02_t1_mid`, já recebido) fica reservado para **um trecho só** (D-218).
+
 ---
 
 ## Prioridade 2 · Círculo 2 completo
