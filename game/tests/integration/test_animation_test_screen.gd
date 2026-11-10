@@ -225,14 +225,17 @@ func _effects(kind: StringName) -> Array[SpellEffect]:
 	return found
 
 
-func test_asmodeus_smoke_reaches_the_target_and_he_acts_in_front() -> void:
-	# D-240: the engine carries his smoke on to the target; whoever acts is
+func test_asmodeus_breathes_from_afar_in_front_of_the_others() -> void:
+	# D-240, D-242: his breath video shows the whole smoke; whoever acts is
 	# drawn over the others.
 	screen.choose(&"boss_asmodeus")
+	var kinds: Array[StringName] = []
+	screen.actor.impact.connect(func(_at: Vector2, _s: float, k: StringName) -> void: kinds.append(k))
 	var t: float = screen.play(&"spell")
 	assert_eq(screen.actor.get_index(), screen.actor.get_parent().get_child_count() - 1)
-	await wait_until(func() -> bool: return not _effects(&"smoke").is_empty(), t + 2.0)
-	assert_false(_effects(&"smoke").is_empty(), "fumaça completada pelo motor")
+	await wait_until(func() -> bool: return kinds.size() > 0, t + 2.0)
+	assert_eq(kinds, [&"spell"] as Array[StringName])
+	assert_true(_effects(&"smoke").is_empty(), "a fumaça vem inteira do vídeo")
 	await wait_seconds(t)
 
 

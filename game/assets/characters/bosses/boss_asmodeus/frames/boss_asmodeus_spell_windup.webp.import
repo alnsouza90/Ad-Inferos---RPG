@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfit1087rfcn"
-path="res://.godot/imported/boss_asmodeus_smoke_puff.webp-c730a248c9434134572f77c06749101e.ctex"
+uid="uid://cvmnklg7cxck0"
+path="res://.godot/imported/boss_asmodeus_spell_windup.webp-1cc79f93f7fe992fd87942a710b3c995.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_smoke_puff.webp"
-dest_files=["res://.godot/imported/boss_asmodeus_smoke_puff.webp-c730a248c9434134572f77c06749101e.ctex"]
+source_file="res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_spell_windup.webp"
+dest_files=["res://.godot/imported/boss_asmodeus_spell_windup.webp-1cc79f93f7fe992fd87942a710b3c995.ctex"]
 
 [params]
 

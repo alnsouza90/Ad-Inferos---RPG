@@ -344,7 +344,10 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	_target_global = target_global
 	_target_view = target_view
 	_to_front()
-	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
+	# A boss can have the preparation of its own spell (Asmodeus' breath
+	# video, D-242).
+	var windup_id: StringName = &"spell_windup" if _frames.has_clip(&"spell_windup") else &"windup"
+	var windup: float = _player.play(windup_id) if _frames.has_clip(windup_id) else 0.0
 	var strike: FrameClip = _frames.clip(&"strike")
 	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
 	var release: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
@@ -358,7 +361,10 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 		&"crosses":
 			flight = _player.scaled(CROSSES_TIME)
 		&"own":
-			flight = _player.scaled(SMOKE_TIME * SpellEffect.SMOKE_TRAVEL)
+			# Only a cloud cut from the video is carried on by the engine; a
+			# clip that already shows the whole breath lands at once (D-242).
+			if _frames.has_clip(&"smoke_puff"):
+				flight = _player.scaled(SMOKE_TIME * SpellEffect.SMOKE_TRAVEL)
 	var tw := create_tween()
 	tw.tween_interval(windup)
 	tw.tween_callback(_player.play.bind(&"strike"))
@@ -628,6 +634,10 @@ func _breathe_smoke() -> void:
 		mouth = _player.get_global_transform() * local
 	var target: Vector2 = _target_global if _target_global != Vector2.INF else chest_global()
 	var puff: FrameClip = _frames.clip(&"smoke_puff")
+	if puff == null:
+		# The clip shows the whole breath (Asmodeus' breath video, D-242).
+		impact.emit(target, SPELL_STRENGTH, &"spell")
+		return
 	var fx: SpellEffect
 	if puff != null:
 		# Copies of a cloud of his own video, at the size it has in his frames.

@@ -72,5 +72,6 @@ func test_george_stands_sideways_and_only_breathes() -> void:
 func test_asmodeus_moves_faster_than_the_video() -> void:
 	# Alan found him slow and stiff (D-235): his clips play 1.35× faster.
 	var frames: CharacterFrames = AnimationTestScreen.frames_of(&"boss_asmodeus")
-	assert_gt(frames.clip(&"strike").fps, 15.0 * 1.3)
+	# The breath video is kept one frame in three (10 a second), sped up 1.35×.
+	assert_gt(frames.clip(&"strike").fps, 10.0 * 1.3)
 	assert_gt(frames.clip(&"idle").fps, 10.0 * 1.3)

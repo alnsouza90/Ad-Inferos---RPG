@@ -90,6 +90,12 @@ PROTECT_HALF_WIDTH = 0.22
 PROTECT_HOLE_RADIUS = 12
 # Exact background grey left anywhere, even a single pixel.
 SPECK_TOLERANCE = 6
+# Treatment "fade_smoke_tail": the smoke fades over the last frames.
+SMOKE_TAIL_FRAMES = 6
+SMOKE_TAIL_MIN_SAT = 40
+SMOKE_RIM_PX = 4
+# Treatment "smoke_darker": brightness kept on the breath video's violet.
+SMOKE_EXTRA = 0.83
 # Treatment "fade_left": width of the fade at the cut border of the video.
 FADE_LEFT_PX = 90
 # Treatment "light_wisps" (Vertigo): pale grey streaks also count as
@@ -379,6 +385,45 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
     return np.dstack([colour.clip(0, 255), alpha * 255.0]).astype(np.uint8)
 
 
+def violet_mask(rgba: np.ndarray) -> np.ndarray:
+    hsv = np.asarray(Image.fromarray(rgba[..., :3]).convert("HSV")).astype(np.float32)
+    return (hsv[..., 0] >= SMOKE_HUE[0]) & (hsv[..., 0] <= SMOKE_HUE[1]) & (hsv[..., 1] > SMOKE_TAIL_MIN_SAT)
+
+
+def darken_violet(rgba: np.ndarray, factor: float) -> np.ndarray:
+    """"smoke_darker": the breath video came out lighter than the smoke Alan
+    approved (D-227); its violet goes down to the same tone (D-242)."""
+    out = rgba.copy()
+    m = violet_mask(rgba)
+    out[..., :3] = np.where(m[..., None], (rgba[..., :3] * factor).astype(np.uint8), rgba[..., :3])
+    return out
+
+
+def fade_smoke_tail(frames: list[np.ndarray], limit_x: int) -> list[np.ndarray]:
+    """The smoke thins out over the last frames of the clip, so the breath
+    ends instead of stopping (Asmodeus' breath video, D-242). Only violet
+    pixels fade; the dragon stays."""
+    n = min(SMOKE_TAIL_FRAMES, len(frames))
+    out = list(frames)
+    for j in range(n):
+        i = len(frames) - n + j
+        keep = 1.0 - (j + 1) / (n + 1)
+        f = frames[i].copy()
+        # The ink rim of the clouds fades with them (a dark ring stayed).
+        violet = violet_mask(f)
+        for _ in range(SMOKE_RIM_PX):
+            grown = violet.copy()
+            grown[1:, :] |= violet[:-1, :]
+            grown[:-1, :] |= violet[1:, :]
+            grown[:, 1:] |= violet[:, :-1]
+            grown[:, :-1] |= violet[:, 1:]
+            violet = grown
+        violet[:, limit_x:] = False
+        f[..., 3] = np.where(violet, (f[..., 3] * keep).astype(np.uint8), f[..., 3])
+        out[i] = f
+    return out
+
+
 def fade_left(rgba: np.ndarray, width: int) -> np.ndarray:
     """Fades the left edge out: what the video cut at its border (Asmodeus'
     smoke) dissolves instead of ending in a straight line."""
@@ -460,6 +505,13 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         frames = [darken_smoke(f) for f in frames]
     if "fade_left" in clip.treatment.split("+"):
         frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
+    if "smoke_darker" in clip.treatment.split("+"):
+        frames = [darken_violet(f, SMOKE_EXTRA) for f in frames]
+    if "fade_smoke_tail" in clip.treatment.split("+"):
+        # Only the smoke ahead of the dragon's head (its left edge in the
+        # first frame of the video) fades; the violet aura on him stays.
+        head_x = figure_box(first)[0] if clip.is_video else 0
+        frames = fade_smoke_tail(frames, head_x)
     k = OUTPUT_SCALE * ref_height / fh
     component = next((t for t in clip.treatment.split("+") if t.startswith("component=")), None)
     if component is not None:
