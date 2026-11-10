@@ -64,5 +64,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Alcance do ataque de cada inimigo no combate: hoje vem da tabela de arte (`attack_style`); quando `bosses.md` definir as ações de Asmodeu, Minos e Vertigem, conferir se o tipo de dano de cada ação bate com a animação | T38/T52 | 10/11/2026 |
 | ~~Estilo dos efeitos~~ Escolhidos (D-237, D-238) | — | 10/11/2026 |
 | Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto | T36/T52 | 10/11/2026 |
-| Arquivos do Drive sem nome descritivo (Boss 5, Saints 3, Retratos 3, UI/Icons 30, VFX 3, Prop 2): identificar com Alan e renomear ao trazer para o repositório (`drive-inventory.md`) | Tarefa de cada arte | 10/11/2026 |
-| Almas, relicário, redemoinhos do Vendaval e faixa de névoa não estão no Drive, só no histórico do Git (commit `5be06ed`): subir ao Drive ou trazer de volta na T39/T53 | Alan / T39, T53 | 10/11/2026 |
+| Arquivos do Drive sem nome descritivo (bosses 5, saints 3, portraits 3, ui/icons 30, vfx 3, props 2, raiz de circle_02): identificar com Alan e renomear ao trazer para o repositório (`drive-inventory.md`) | Tarefa de cada arte | 10/11/2026 |
+| Almas, relicário, redemoinhos do Vendaval e faixa de névoa: pedir a Alan na T39/T53 (ele sobe ao Drive ou manda pelo chat, D-246) | Alan / T39, T53 | 10/11/2026 |

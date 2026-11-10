@@ -2,32 +2,54 @@
 
 Varredura de 10/11/2026 (D-245). O Drive "Art Source" (`owner.md`, D-230) é o **arquivo de toda a arte aprovada**; o repositório guarda **só a arte que o jogo ou as ferramentas usam hoje**. Quando uma tarefa começa, o agente busca no Drive a arte dela, traz para `art_source/` e processa.
 
-## 1. O que há no Drive e em que tarefa entra
+## 1. Estrutura do Drive (espelho do repositório, D-246)
 
-| Pasta do Drive | Conteúdo | Tarefa |
-| --- | --- | --- |
-| Characters/Enemies | 7 da Família A (Diabo de Lodo, Escaravelho, Moscardo, Sombra do Desejo, Mãe do Enxame, Enxame (prévia), Sopro Errante) | **T52** (quadros e poses) |
-| Characters/Enemies | Vertigem (`elite_sin_vertigo`) | já no jogo (T35); T40 |
-| Characters/Enemies | 13 inimigos de outros círculos (Chifre de Ferro, Sentinela de Dite, Centauro Arqueiro, Caído de Dite, Harpia, Sentinela do Gelo, Malebranche, Caído das Muralhas, Homem-Fornalha, Arpoador, Sombra Mascarada, Serpente Ladra, Arauto da Mentira) | M3 em diante |
-| Characters/Enemies | 7 Pecados Encarnados de outros círculos (Cobiça, Engano, Rancor, Perfídia, Cisma, Crueldade, Voracidade) | M3 em diante |
-| Characters/Boss | Minos (pose de ataque) | já no jogo (T35) |
-| Characters/Boss | Chefes de outros círculos: Caronte, Belzebu, Mamon (2 versões), Belfegor (+ referência em pé), Moloch (+ braços abertos), Belial, Azazel; elites: Cérbero, Pluto, Flégias, Medusa, Minotauro, Malacoda; cena: Anteu | M3 em diante (Caronte no Antinferno, D-172) |
-| Characters/Boss | 5 arquivos sem nome descritivo (números / `file_…`) | a identificar |
-| Characters/Saints | 3 arquivos sem nome descritivo (`file_…png`) | a identificar |
-| Characters/Retratos | 3 retratos sem nome descritivo | T50 (tela de novo santo) / T44 |
-| Characters/Splash Scenes | 8 telas de passagem (`prompts-splash.md`) | **T44** |
-| Environments/Circle 02 | Trechos 1 a 3 (fundo, meio, frente), cenário do chefe (fundo, meio, frente), Vigília, Pouso (2560×1080), 3 nós, entradas (caverna, porta, escada, seguir em frente), tenda | **T36, T37** (trecho 1), **T42** (trechos 2 e 3, Vigília), **T41** (chefe), **T53** |
-| Environments (Antinferno, Village, Circle 01, 03 a 09) | pastas vazias | — |
-| Village | vista geral (2), edifícios níveis 1 a 3 de dia e de noite (62), interiores (9) | **T49** (telas da vila); níveis 2 e 3 no M3 |
-| UI/Icons | 30 ícones sem nome descritivo | **T53** (interface) |
-| VFX | 3 imagens sem nome descritivo | T53 / efeitos |
-| Prop | 2 imagens sem nome descritivo | T37 / T53 |
-| Prancha | vazia | — |
+Reorganizado em 10/11/2026 com autorização de Alan. As pastas seguem a mesma árvore de `art_source/` e os nomes seguem o padrão `categoria_nome_parte_variante` (`docs/art/asset-pipeline.md`).
+
+```
+Art Source/
+  characters/
+    saints/                  3 arquivos sem nome descritivo (a identificar)
+    portraits/               3 retratos sem nome descritivo (T50 / T44)
+    enemies/                 20 inimigos comuns: enemy_<id>_body_idle_v01.png
+                             (7 da Família A → T52; 13 de outros círculos → M3)
+    elites/
+      elite_minos/           pose de ataque (já no jogo, T35)
+      elite_sin_<pecado>/    8 Pecados Encarnados (Vertigem já no jogo; 7 → M3)
+      elite_<id>/            Cérbero, Pluto, Flégias, Medusa, Minotauro, Malacoda → M3
+    bosses/
+      boss_<id>/             Caronte (Antinferno, D-172), Belzebu, Mamon, Belfegor,
+                             Moloch, Belial, Azazel → M3
+                             + 5 arquivos sem nome descritivo na raiz (a identificar)
+    narrative/               scene_antaeus_body_idle_v01.png
+  environments/
+    circles/
+      antinferno/, circle_01/, circle_03/ … circle_09/   vazias
+      circle_02/
+        t1/      env_circle_02_t1_mid_v02, _front_v03          → T36, T37
+        t2/      env_circle_02_t2_mid_v01, _front_v01          → T42
+        t3/      env_circle_02_t3_back_v01, _mid_v01, _front_v01 → T42
+        boss/    env_circle_02_boss_back_v01, _mid_v01, _front_cutout_v01 → T41
+        vigil/   env_circle_02_vigil_v01                       → T42
+        camp/    env_circle_02_camp_v03 (Pouso, 2560×1080)     → T53
+        nodes/   env_circle_02_node_v01 a v03                  → T53
+        props/   prop_c02_entry_cave/door/stair/straight_v02, prop_c02_tent_v03 → T37, T53
+        (raiz)   arquivos com nome numérico, ainda não identificados
+    props/                   2 imagens sem nome descritivo (T37 / T53)
+    village/
+      buildings/level_1..3/day|night/   62 edifícios → T49 (níveis 2 e 3 no M3)
+      interiors/                        9 interiores → T49
+  splash/                    8 telas de passagem (`prompts-splash.md`) → T44
+  ui/icons/                  30 ícones sem nome descritivo → T53
+  vfx/                       3 imagens sem nome descritivo → T53 / efeitos
+  Prancha/                   vazia
+  _vazia_pode_apagar/        pasta vazia, Alan apaga
+```
 
 Observações:
-- Vários arquivos têm nomes de câmera ou do Meta AI (números). Na tarefa de cada um, o agente abre a imagem, confirma o que é com Alan e renomeia no padrão `categoria_nome_parte_variante` ao trazer para o repositório.
-- Há arquivos repetidos em Circle 02 (escada, seguir em frente e tenda aparecem duas vezes).
-- **Não estão no Drive:** os vídeos do Wan 3 (no repositório e na biblioteca do ImagineArt) e algumas artes recebidas pelo chat nas sessões 2 a 5 (ver §3).
+- Arquivos com nome numérico (câmera ou Meta AI) ficaram onde estavam: na tarefa de cada um, o agente abre a imagem, confirma o que é com Alan e renomeia no Drive e no repositório.
+- Não há arquivos repetidos no Círculo 2: o que parecia repetido era o mesmo arquivo em duas páginas da listagem.
+- **Não estão no Drive:** os vídeos do Wan 3 (no repositório e na biblioteca do ImagineArt). Almas, relicário, redemoinhos do Vendaval e faixa de névoa: Alan sobe ou manda pelo chat quando a tarefa pedir (D-246).
 
 ## 2. O que fica no repositório (`art_source/`)
 
@@ -51,4 +73,4 @@ Tudo o que saiu continua no **histórico do Git** (commit `5be06ed`, antes da li
 | 7 inimigos da Família A | ainda não usados (T52) | sim (Enemies) |
 | Cenário do trecho 1 v02 e meio v01, Pouso v01, evento v01, ambiente do Círculo 2, entradas, tendas, almas, relicário, redemoinhos do Vendaval, faixa de névoa | ainda não usados (T36, T37, T39, T53) ou substituídos | entradas, tenda e trechos: sim (Circle 02); almas, relicário, redemoinhos, névoa: **só no Git** |
 
-**Atenção à cota do Git LFS:** apagar arquivos do repositório **não libera** a cota de 1 GB, porque o histórico continua guardando cada versão. A limpeza deixa o repositório organizado e o download do projeto menor, mas não devolve espaço da cota.
+**Cota do Git LFS (D-246):** apagar arquivos do repositório **não libera** a cota de 1 GB, porque o histórico continua guardando cada versão. Recuperar a cota exige reescrever o histórico do Git **e** pedir ao suporte do GitHub que apague os objetos LFS antigos (ou apagar e recriar o repositório, perdendo PRs e lançamentos). Uso medido em 10/11/2026: ~214 MB de 1 GB (só ~93 MB estão apenas no histórico). Não compensa agora; reavaliar se passar de ~700 MB.
