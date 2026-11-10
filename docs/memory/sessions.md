@@ -2,6 +2,12 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
+## Sessão 6 · 10/11/2026
+
+- Godot compilado em segundo plano (a compilação foi interrompida por um reinício e retomada; lição em `lessons.md`).
+- Feito: T35 · ferramenta `tools/art/process_frames.py` + `animation_clips.csv`, `FrameClip`, `CharacterFrames`, `FramePlayer`, quadros no `CombatantView` (parado, andar, atacar com deslize, rastro e impacto, defender, golpe recebido, queda), `ImpactCamera` e a tela "Animações (teste)" na arena. Decisões D-231 (Alan: Minos parado do vídeo, ações pelas poses) e D-329 a D-331.
+- Próximo: Alan testa no celular a tela "Animações (teste)"; depois T36.
+
 ## Sessão 5 · 05 a 10/11/2026
 
 - Godot compilado em segundo plano pelo gancho (D-162).

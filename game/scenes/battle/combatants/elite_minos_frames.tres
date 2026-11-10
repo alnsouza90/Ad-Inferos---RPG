@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_idle.webp"
+frame_size = Vector2i(337, 473)
+columns = 12
+count = 20
+fps = 15
+looping = true
+anchor = Vector2(170, 466)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_windup.webp"
+frame_size = Vector2i(340, 477)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(173, 471)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_strike.webp"
+frame_size = Vector2i(363, 431)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(188, 424)
+impact_frame = 0
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_defend.webp"
+frame_size = Vector2i(301, 454)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(157, 447)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_fall.webp"
+frame_size = Vector2i(337, 428)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(170, 421)
+impact_frame = -1
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"elite_minos"
+figure_height = 459.9
+stationary = true
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

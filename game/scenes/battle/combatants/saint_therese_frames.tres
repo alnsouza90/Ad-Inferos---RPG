@@ -1,0 +1,95 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_idle.webp"
+frame_size = Vector2i(280, 499)
+columns = 14
+count = 20
+fps = 15
+looping = true
+anchor = Vector2(139, 493)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_walk"]
+script = ExtResource("2_clip")
+id = &"walk"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_walk.webp"
+frame_size = Vector2i(263, 504)
+columns = 15
+count = 16
+fps = 15
+looping = true
+anchor = Vector2(134, 494)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_windup.webp"
+frame_size = Vector2i(305, 505)
+columns = 12
+count = 12
+fps = 15
+looping = false
+anchor = Vector2(133, 494)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_strike.webp"
+frame_size = Vector2i(327, 551)
+columns = 12
+count = 12
+fps = 15
+looping = false
+anchor = Vector2(134, 529)
+impact_frame = 3
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_defend.webp"
+frame_size = Vector2i(300, 516)
+columns = 12
+count = 12
+fps = 15
+looping = false
+anchor = Vector2(141, 494)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_hit"]
+script = ExtResource("2_clip")
+id = &"hit"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_hit.webp"
+frame_size = Vector2i(340, 479)
+columns = 3
+count = 3
+fps = 15
+looping = false
+anchor = Vector2(170, 478)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/characters/saints/saint_therese/frames/saint_therese_fall.webp"
+frame_size = Vector2i(408, 462)
+columns = 10
+count = 14
+fps = 10
+looping = false
+anchor = Vector2(217, 432)
+impact_frame = -1
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"saint_therese"
+figure_height = 486.0
+stationary = false
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

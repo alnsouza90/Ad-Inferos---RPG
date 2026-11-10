@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_idle.webp"
+frame_size = Vector2i(298, 520)
+columns = 13
+count = 24
+fps = 10
+looping = true
+anchor = Vector2(182, 513)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_windup.webp"
+frame_size = Vector2i(342, 525)
+columns = 11
+count = 12
+fps = 10
+looping = false
+anchor = Vector2(218, 519)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_strike.webp"
+frame_size = Vector2i(506, 540)
+columns = 8
+count = 15
+fps = 15
+looping = false
+anchor = Vector2(291, 533)
+impact_frame = 6
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_defend.webp"
+frame_size = Vector2i(472, 529)
+columns = 8
+count = 15
+fps = 15
+looping = false
+anchor = Vector2(291, 516)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_fall.webp"
+frame_size = Vector2i(506, 558)
+columns = 8
+count = 12
+fps = 10
+looping = false
+anchor = Vector2(291, 519)
+impact_frame = -1
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"elite_sin_vertigo"
+figure_height = 494.1
+stationary = false
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
