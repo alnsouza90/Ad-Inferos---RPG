@@ -1,7 +1,7 @@
 # Alan, o responsável
 
 - **Papel:** navegador, aprovador e olhar crítico. Não é técnico. Decide design, narrativa, tom, arte, números e prioridades.
-- **Idioma:** sempre português do Brasil, linguagem simples, sem jargão (ou com o jargão explicado).
+- **Idioma:** sempre português do Brasil em **todas** as mensagens, inclusive resumos e propostas (Alan reforçou em 10/11/2026), linguagem simples, sem jargão (ou com o jargão explicado).
 - **Como pedir coisas:** pedidos claros e numerados ("O que preciso de você: 1… 2…"); propostas com uma recomendação; perguntas de design com opções concretas e exemplo.
 - **Aprovação:** responde "Aprovado" para fazer merge; costuma aceitar propostas bem explicadas e às vezes ajusta números (ex.: +20% em vez de +15%, Vigília −20).
 - **Expectativa de ritmo:** quer ver avanço contínuo; quando o agente diz que vai começar, deve começar no mesmo turno ("E agora?" em 03/11/2026 foi cobrança por isso).
