@@ -1009,3 +1009,43 @@ Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art, 
 ```
 
 **Fontes:** já definidas na Direção de Arte (Uncial Antiqua nos títulos, EB Garamond nos textos, licença OFL); não são geradas.
+
+## Interface do combate (T36, D-257, D-258)
+
+Clima de Darkest Dungeon: preto e cinza, ferro forjado, vermelho só para perigo e dourado só para o especial. Fundo cinza liso em todas, para o recorte. Fonte da interface: Pirata One (OFL), não é gerada. Guardar no Drive em `ui/hud/`.
+
+- [ ] **`ui_lume_lantern_v02`** — Lamparina do Lume
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art with heavy crosshatching, a single hanging oil lantern, blackened wrought iron frame with rivets, four smoked glass panes, small warm flame inside, ring handle on top, desaturated black and grey tones, only the flame in warm amber, front view, centered, isolated on a flat medium grey background, no shadow on the background, no text, 1024x1024
+```
+
+- [ ] **`ui_lume_scale_v01`** — Escala vertical do Lume
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art with crosshatching, a tall narrow vertical wrought iron rod gauge, blackened iron bar with engraved notches every tenth of its length and larger notches at each quarter, small iron finials at top and bottom, worn and scratched metal, black and grey palette, front view, centered, isolated on a flat medium grey background, no numbers, no text, 512x2048
+```
+
+- [ ] **`ui_panel_frame_v01`** — Moldura do painel de baixo
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art with crosshatching, a wide rectangular UI frame border made of blackened wrought iron, riveted iron corner brackets, hammered and worn edges, empty dark interior, black and charcoal grey palette, flat front view, symmetric, isolated on a flat medium grey background, no text, 2048x768
+```
+
+- [ ] **`ui_portrait_frame_v01`** — Moldura do retrato (o motor tinge conforme a desolação)
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art with crosshatching, a square portrait frame of blackened wrought iron with small rivets and a subtle pointed arch on top, worn metal, empty interior, neutral light grey iron so it can be tinted, flat front view, symmetric, isolated on a flat medium grey background, no text, 1024x1024
+```
+
+- [ ] **`ui_button_frame_v01`** — Moldura de botão de habilidade
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art, a small square button frame of dark wrought iron with beveled edges and tiny corner rivets, empty dark interior, black and grey palette, flat front view, isolated on a flat medium grey background, no text, 512x512
+```
+
+- [ ] **`ui_banner_keys_v01`** — Estandarte da Companhia (chaves cruzadas)
+
+```text
+Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art with heavy crosshatching, a tall hanging vertical banner of deep crimson red cloth with a swallowtail bottom, half torn and frayed, burnt and scorched edges with soot stains and small holes, embroidered in the center two crossed keys in faded gold thread tied with a gold cord, the embroidery partly worn and singed, hung from a blackened wrought iron rod with rings, desaturated palette with muted crimson and dull gold, front view, centered, isolated on a flat medium grey background, no text, 768x2048
+```
