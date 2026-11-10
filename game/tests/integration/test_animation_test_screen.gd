@@ -225,6 +225,27 @@ func _effects(kind: StringName) -> Array[SpellEffect]:
 	return found
 
 
+func test_asmodeus_smoke_reaches_the_target_and_he_acts_in_front() -> void:
+	# D-240: the engine carries his smoke on to the target; whoever acts is
+	# drawn over the others.
+	screen.choose(&"boss_asmodeus")
+	var t: float = screen.play(&"spell")
+	assert_eq(screen.actor.get_index(), screen.actor.get_parent().get_child_count() - 1)
+	await wait_until(func() -> bool: return not _effects(&"smoke").is_empty(), t + 2.0)
+	assert_false(_effects(&"smoke").is_empty(), "fumaça completada pelo motor")
+	await wait_seconds(t)
+
+
+func test_vertigo_attacks_from_where_she_stands() -> void:
+	screen.choose(&"elite_sin_vertigo")
+	var seen: Dictionary = {"offset": 0.0}
+	var t: float = screen.play(&"attack")
+	await wait_until(func() -> bool:
+		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
+		return false, t + 0.3)
+	assert_lte(float(seen["offset"]), CombatantView.STATIONARY_LEAN + 0.1, "os véus vão longe; ela não desliza")
+
+
 func test_a_physical_blow_darkens_the_scenery_and_splashes_blood() -> void:
 	# G1 (D-237).
 	screen.choose(&"saint_george")

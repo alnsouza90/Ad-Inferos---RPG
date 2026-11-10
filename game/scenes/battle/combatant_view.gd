@@ -58,6 +58,10 @@ const ORB_TIME: float = 0.35
 const CROSSES_TIME: float = 1.4
 ## G1: the blow's blood flies for this long (D-237).
 const SPLATTER_TIME: float = 0.6
+## Asmodeus' smoke carried on to the target (D-240): seconds, and where
+## his mouth is in his frame (shares of the frame from its left and top).
+const SMOKE_TIME: float = 1.3
+const MOUTH := Vector2(0.06, 0.52)
 const SPELL_STRENGTH: float = 0.5
 const BLESSING_TIME: float = 1.1
 const COLOR_HOLY := Color(1.0, 0.86, 0.45)
@@ -312,6 +316,7 @@ func play_action(_pose_id: StringName = &"", reach_px: float = -1.0, target_glob
 		return 0.0
 	if _player != null and not _down:
 		_target_global = target_global
+		_to_front()
 		return _play_frame_attack(reach_px if reach_px >= 0.0 else DEFAULT_REACH)
 	var t: float = ACTION_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
@@ -338,6 +343,7 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	_player.speed = speed
 	_target_global = target_global
 	_target_view = target_view
+	_to_front()
 	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
 	var strike: FrameClip = _frames.clip(&"strike")
 	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
@@ -351,6 +357,8 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 			flight = _player.scaled(ORB_TIME)
 		&"crosses":
 			flight = _player.scaled(CROSSES_TIME)
+		&"own":
+			flight = _player.scaled(SMOKE_TIME * SpellEffect.SMOKE_TRAVEL)
 	var tw := create_tween()
 	tw.tween_interval(windup)
 	tw.tween_callback(_player.play.bind(&"strike"))
@@ -363,7 +371,7 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 		&"outline":
 			tw.tween_callback(func() -> void: impact.emit(_target_global, SPELL_STRENGTH, &"outline"))
 		_:
-			tw.tween_callback(func() -> void: impact.emit(_target_global, SPELL_STRENGTH, &"spell"))
+			tw.tween_callback(_breathe_smoke)
 	tw.tween_interval(maxf(strike_time - release, flight) + hold)
 	tw.tween_callback(_back_to_idle)
 	return windup + release + maxf(strike_time - release, flight) + hold
@@ -608,6 +616,21 @@ func _emit_impact() -> void:
 	impact.emit(at, 1.0, &"physical")
 
 
+## Asmodeus' own smoke, carried on by the engine to the target (D-240).
+func _breathe_smoke() -> void:
+	var holder: Node = get_parent() if get_parent() != null else self
+	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
+	var d: Dictionary = _player.current_draw()
+	var mouth: Vector2 = chest_global()
+	if not d.is_empty():
+		var rect: Rect2 = d["rect"]
+		var local := rect.position + rect.size * Vector2(MOUTH.x if not is_saint else 1.0 - MOUTH.x, MOUTH.y)
+		mouth = _player.get_global_transform() * local
+	var target: Vector2 = _target_global if _target_global != Vector2.INF else chest_global()
+	var fx := SpellEffect.smoke(holder, to_local * mouth, to_local * target, _player.scaled(SMOKE_TIME), effect_scale(holder))
+	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
+
+
 ## E1: crosses of light orbit the enemy, close in and burst (D-237).
 func _cast_crosses(seconds: float) -> void:
 	var holder: Node = get_parent() if get_parent() != null else self
@@ -640,6 +663,14 @@ func _spawn_blessing(feet: Vector2, seconds: float) -> void:
 			SpellEffect.shield(holder, at, seconds, 1.0 if is_saint else -1.0, size)
 		_:
 			SpellEffect.ring(holder, at, seconds, size)
+
+
+## Whoever acts is drawn over the others (Asmodeus' wings and smoke went
+## behind his target, D-240).
+func _to_front() -> void:
+	var holder: Node = get_parent()
+	if holder != null:
+		holder.move_child(self, holder.get_child_count() - 1)
 
 
 func _back_to_idle() -> void:

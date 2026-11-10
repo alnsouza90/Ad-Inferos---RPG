@@ -20,11 +20,11 @@ saint_therese,saints,strike,saint_therese_anim_actions_v01.mp4,54,78,2,once,,60,
 saint_therese,saints,defend,saint_therese_anim_actions_v01.mp4,78,102,2,once,,,
 saint_therese,saints,hit,saint_therese_anim_actions_v01.mp4,102,108,2,once,,,
 saint_therese,saints,fall,saint_therese_anim_actions_v01.mp4,108,150,3,once,,,
-elite_minos,elites,idle,elite_minos_anim_idle_v01.mp4,30,70,2,loop,6,,
-elite_minos,elites,windup,elite_minos_body_windup_v01.jpg,,,,once,,,
-elite_minos,elites,strike,elite_minos_body_attack_v02.png,,,,once,,0,
-elite_minos,elites,defend,elite_minos_body_defend_v01.png,,,,once,,,
-elite_minos,elites,fall,elite_minos_body_fall_v01.png,,,,once,,,
+elite_minos,elites,idle,elite_minos_anim_idle_v01.mp4,30,70,2,loop,6,,border_only
+elite_minos,elites,windup,elite_minos_body_windup_v01.jpg,,,,once,,,border_only
+elite_minos,elites,strike,elite_minos_body_attack_v02.png,,,,once,,0,border_only
+elite_minos,elites,defend,elite_minos_body_defend_v01.png,,,,once,,,border_only
+elite_minos,elites,fall,elite_minos_body_fall_v01.png,,,,once,,,border_only
 elite_sin_vertigo,elites,idle,elite_sin_vertigo_anim_idle_v01.mp4,38,110,3,loop,9,,light_wisps+veil_key+protect_head
 elite_sin_vertigo,elites,windup,elite_sin_vertigo_anim_actions_v01.mp4,12,48,3,once,,,light_wisps+veil_key+protect_head
 elite_sin_vertigo,elites,strike,elite_sin_vertigo_anim_actions_v01.mp4,48,78,2,once,,60,light_wisps+veil_key+protect_head

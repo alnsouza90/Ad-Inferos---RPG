@@ -201,6 +201,7 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
     treat = clip.treatment.split("+")
     wisps = "light_wisps" in treat
     veil = "veil_key" in treat
+    inner = "border_only" not in treat
     frames = video(SRC / clip.group / clip.character / clip.source)
     protect = None
     if "protect_all" in treat:
@@ -218,12 +219,12 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
             # to keep, and the box would only keep grey.
             if protect[1] > fy - fh * PROTECT_FOLLOW_MIN:
                 protect = None
-        f = cut_out(frames[i], wisps, veil, protect)
+        f = cut_out(frames[i], wisps, veil, protect, inner)
         if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
             twin = clip.start - (clip.end - i)
             if twin >= 0:
                 t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps, veil, protect), t)
+                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner), t)
         out.append(f)
     return out
 
@@ -283,7 +284,7 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
 
 
 def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
-            protect: tuple[int, int, int, int] | None = None) -> np.ndarray:
+            protect: tuple[int, int, int, int] | None = None, inner: bool = True) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -306,6 +307,11 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
     # feet) go too: the art never uses that flat grey...
     specks = dist <= SPECK_TOLERANCE
     box = np.zeros_like(flat)
+    if not inner:
+        # "border_only" (Minos): the light belly of his tail is the grey of
+        # the background; only the grey that reaches the border goes (D-240).
+        holes = np.zeros_like(flat)
+        specks = np.zeros_like(flat)
     if protect is not None:
         # ...except Vertigo's face, painted in that very grey (D-236): in the
         # box of the head only big patches go.
@@ -380,11 +386,11 @@ def darken_smoke(rgba: np.ndarray) -> np.ndarray:
     return np.dstack([rgb, rgba[..., 3]])
 
 
-def image_rgba(path: Path) -> np.ndarray:
+def image_rgba(path: Path, inner: bool = True) -> np.ndarray:
     img = Image.open(path)
     if img.mode == "RGBA" and np.asarray(img)[..., 3].min() < 255:
         return np.asarray(img).copy()  # already cut (Minos poses, D-229)
-    return cut_out(np.asarray(img.convert("RGB")))
+    return cut_out(np.asarray(img.convert("RGB")), inner=inner)
 
 
 # --- placing ------------------------------------------------------------------
@@ -419,11 +425,11 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         fx, fy, fh = feet_point(first)
         frames = clip_cut_frames(clip)
     else:
-        frames = [image_rgba(SRC / clip.group / clip.character / clip.source)]
+        frames = [image_rgba(SRC / clip.group / clip.character / clip.source, "border_only" not in clip.treatment.split("+"))]
         fx, fy, fh = feet_point(frames[0])
         still = STILL_REFERENCE.get(clip.character)
         if still is not None:
-            ref = image_rgba(SRC / clip.group / clip.character / still)
+            ref = image_rgba(SRC / clip.group / clip.character / still, "border_only" not in clip.treatment.split("+"))
             rx, ry, rh = feet_point(ref)
             ratio = frames[0].shape[0] / ref.shape[0]
             fx, fy, fh = rx * ratio, ry * ratio, rh * ratio
