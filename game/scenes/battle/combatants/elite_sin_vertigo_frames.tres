@@ -7,12 +7,12 @@
 script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_idle.webp"
-frame_size = Vector2i(405, 661)
-columns = 10
-count = 12
-fps = 15
+frame_size = Vector2i(424, 704)
+columns = 9
+count = 20
+fps = 6
 looping = true
-anchor = Vector2(228, 655)
+anchor = Vector2(236, 658)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_windup"]
