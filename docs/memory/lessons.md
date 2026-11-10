@@ -33,6 +33,13 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - A saída de um gancho `SessionStart` com mais de poucos KB chega ao agente **cortada** (só uma prévia). O gancho deve ser curto e mandar ler os arquivos com a ferramenta de leitura.
 
+- **Drive: arquivo pequeno que o `download_file_content` devolve só no texto (D-346).** O conteúdo em base64 fica gravado no registro da sessão (`~/.claude/projects/<projeto>/<sessão>.jsonl`); basta procurar pelo id do arquivo nesse registro com Python e decodificar. Arquivos grandes vão para `tool-results/*.txt` (JSON com `content` em base64).
+
+- **Captura real da tela do jogo (T36).** O Godot da sessão é compilado sem vídeo (`opengl3=no`). Para ver a tela de verdade: baixar o Godot oficial da mesma versão (`Godot_v4.7.2-stable_linux.x86_64.zip`, no rascunho) e rodar `xvfb-run -a -s "-screen 0 1920x1080x24" <godot> --path game --rendering-driver opengl3 -s res://<script>.gd`; o script põe a tela na raiz, espera alguns quadros e salva `root.get_texture().get_image()`. O Mesa (llvmpipe) desenha devagar: o tempo de uma sequência capturada não é o do jogo. Não commitar os scripts de captura.
+- **Teste de animação com velocidade alta (FAST) e quadro lento.** Num quadro lento da suíte inteira o tween pula do preparo direto para o parado e o golpe nunca aparece no `clip_id()`. Siga os clipes pelo sinal `FramePlayer.clip_started`, não olhando o clipe a cada quadro.
+
+- **TextureRect com textura: defina `expand_mode` antes da `texture`.** Com a textura já posta no modo padrão, o tamanho mínimo vira o da textura e o `size` menor é ignorado (moldura do retrato saiu com 525 × 512, D-348).
+
 ## Arte e animação
 
 - Esqueleto 2D a partir de uma imagem parada gerada por IA (peças recortadas e giradas) ficou "boneco articulado" e foi reprovado (D-195). Para o estilo Darkest Dungeon que Alan quer, use poses desenhadas (quadros e poses-chave) e deixe o motor fazer a ligação entre elas (D-194).

@@ -1,7 +1,7 @@
 # Alan, o responsável
 
 - **Papel:** navegador, aprovador e olhar crítico. Não é técnico. Decide design, narrativa, tom, arte, números e prioridades.
-- **Idioma:** sempre português do Brasil, linguagem simples, sem jargão (ou com o jargão explicado).
+- **Idioma:** sempre português do Brasil em **todas** as mensagens, inclusive resumos e propostas (Alan reforçou em 10/11/2026), linguagem simples, sem jargão (ou com o jargão explicado).
 - **Como pedir coisas:** pedidos claros e numerados ("O que preciso de você: 1… 2…"); propostas com uma recomendação; perguntas de design com opções concretas e exemplo.
 - **Aprovação:** responde "Aprovado" para fazer merge; costuma aceitar propostas bem explicadas e às vezes ajusta números (ex.: +20% em vez de +15%, Vigília −20).
 - **Expectativa de ritmo:** quer ver avanço contínuo; quando o agente diz que vai começar, deve começar no mesmo turno ("E agora?" em 03/11/2026 foi cobrança por isso).
@@ -15,3 +15,4 @@
 - **Repositório de mídia no Google Drive (10/11/2026, D-230):** pasta "Art Source" (`https://drive.google.com/drive/folders/1Vm26W-48pxeEtZwhPqJOp53aRPEHTBTG`, conta adinferosgame), acessada pelo conector Google Drive com leitura e escrita. Subpastas: Characters, Environments, Village, UI, Prancha. Lá ficam **todas as artes aprovadas** (e som e animação); no repositório Git só o essencial para o jogo. **Em toda sessão, lembrar desse acesso** e buscar a arte no Drive antes de pedir a Alan.
 - **Repositório × Drive (10/11/2026, D-245):** o repositório Git guarda **só a arte que o jogo ou as ferramentas usam agora**; o Drive "Art Source" é o arquivo de toda a arte aprovada. No início de cada tarefa de arte, o agente busca no Drive o que ela precisa (mapa em `docs/art/drive-inventory.md`). Arquivos grandes (mais de ~3 MB) não sobem pelo conector do Drive: mandar a Alan o link direto do repositório para ele subir.
 - **Organização do Drive (10/11/2026, D-246):** o agente tem autorização para criar pastas, mover e renomear arquivos no "Art Source", mantendo-o como espelho de `art_source/` (estrutura em `drive-inventory.md` §1). Quando faltar uma arte, Alan sobe ao Drive, indica onde está ou manda pelo chat, e o agente guarda.
+- **Sempre acompanhar o CI (D-261):** ao abrir um PR, inscrever-se nos eventos dele, corrigir o que o CI acusar e só fazer o merge com o CI verde e o "Aprovado" de Alan.

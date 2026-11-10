@@ -150,6 +150,8 @@ func _show_battle() -> void:
 	battle.in_expedition = true
 	battle.speed_index = speed_index
 	battle.setup(data, ctrl.battle)
+	battle.light = ctrl.state.light
+	battle.light_max = ctrl.catalog.constants.get_int(&"light_start")
 	battle.executor = run_battle
 	battle.back_requested.connect(show_phase)
 	_replace(battle)

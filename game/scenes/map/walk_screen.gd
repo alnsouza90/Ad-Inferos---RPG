@@ -411,9 +411,8 @@ func _screen_size() -> Vector2:
 
 
 func _build() -> void:
-	var ui_theme := Theme.new()
-	ui_theme.default_font_size = 30
-	theme = ui_theme
+	# The interface of the battle (T36, D-258): Pirata One, iron buttons.
+	theme = HudStyle.theme(30)
 	clip_contents = true
 	var background := ColorRect.new()
 	background.color = COLOR_BACKGROUND
@@ -524,6 +523,7 @@ func _build_minimap_overlay() -> void:
 		dim.add_theme_stylebox_override(state_name, dim_style)
 	dim.pressed.connect(close_minimap)
 	_minimap_overlay.add_child(dim)
+	_minimap_overlay.add_child(HudStyle.iron_panel(Rect2(70, 130, 1780, 840)))
 	_minimap = MiniMapView.new()
 	_minimap.position = Vector2(110, 170)
 	_minimap.size = Vector2(1700, 760)

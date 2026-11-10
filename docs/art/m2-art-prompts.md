@@ -1009,3 +1009,55 @@ Dark gothic illustration in the style of Darkest Dungeon, hand-inked comic art, 
 ```
 
 **Fontes:** já definidas na Direção de Arte (Uncial Antiqua nos títulos, EB Garamond nos textos, licença OFL); não são geradas.
+
+## Interface do combate (T36, D-257, D-258)
+
+Clima de Darkest Dungeon, no mesmo estilo dos ícones e inimigos do jogo: preto e cinza, ferro forjado, vermelho só para perigo e dourado só para o especial. Fundo cinza claro liso para o recorte. Fonte da interface: Pirata One (OFL), não é gerada. Guardar no Drive em `ui/hud/`.
+
+- [ ] **`ui_lume_lantern_v02`** — Lamparina do Lume
+
+> **Arquivo final:** PNG RGBA 512 × 512 (fundo removido)
+
+```text
+2D gothic horror game UI element in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a single hanging oil lantern, blackened wrought iron cage frame with rivets and a ring handle on top, four smoked cracked glass panes, a small warm flame inside, front view, centered, bold readable silhouette, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey and iron grey, only the flame in warm amber, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 1:1 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, gold, ornate filigree
+```
+
+- [ ] **`ui_lume_scale_v01`** — Escala vertical do Lume (a lamparina desce por ela)
+
+> **Arquivo final:** PNG RGBA 128 × 1024 (fundo removido)
+
+```text
+2D gothic horror game UI element in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a tall narrow vertical gauge, a blackened wrought iron rod with hammered texture, engraved notches every tenth of its length and longer notches at each quarter, small spiked iron finials at the top and bottom, worn and scratched metal, front view, centered, perfectly straight and vertical, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey and iron grey, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 1:4 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, gold, glow, flame
+```
+
+- [ ] **`ui_panel_frame_v01`** — Moldura do painel de baixo
+
+> **Arquivo final:** PNG RGBA 1920 × 360 (fundo e miolo removidos)
+
+```text
+2D gothic horror game UI frame in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a wide rectangular frame border made of blackened wrought iron bands, riveted iron corner brackets with small spikes, hammered and dented edges, rust stains, empty hollow interior, flat front view, symmetric, the border thin compared to the empty center, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey and iron grey with faint rust brown, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 16:3 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, gold, stone, wood, filled center
+```
+
+- [ ] **`ui_portrait_frame_v01`** — Moldura do retrato (o motor tinge conforme a desolação)
+
+> **Arquivo final:** PNG RGBA 512 × 512 (fundo e miolo removidos)
+
+```text
+2D gothic horror game UI frame in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a square portrait frame of wrought iron with small rivets and a subtle pointed gothic arch on top, worn hammered metal, empty hollow interior, flat front view, symmetric, light neutral grey iron so it can be tinted in the engine, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey and light iron grey, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 1:1 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, gold, color tint, filled center
+```
+
+- [ ] **`ui_button_frame_v01`** — Moldura de botão de habilidade
+
+> **Arquivo final:** PNG RGBA 256 × 256 (fundo e miolo removidos)
+
+```text
+2D gothic horror game UI frame in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a small square button frame of dark wrought iron with beveled edges and tiny corner rivets, scratched metal, empty hollow interior, flat front view, symmetric, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey and iron grey, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 1:1 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, gold, filled center
+```
+
+- [ ] **`ui_banner_keys_v01`** — Estandarte da Companhia (chaves cruzadas)
+
+> **Arquivo final:** PNG RGBA 384 × 1024 (fundo removido)
+
+```text
+2D gothic horror game UI element in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, a tall hanging vertical banner of deep crimson red cloth with a swallowtail bottom, half torn and frayed, burnt and scorched edges with soot stains and small burn holes, embroidered in the center two crossed keys in faded gold thread tied with a gold cord, the embroidery partly worn and singed, hung from a blackened wrought iron rod with rings, front view, centered, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated flat colors, palette of black, ash grey, muted crimson red and dull tarnished gold, distressed print texture, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no text --ar 3:8 --no letters, numbers, cartoon, anime, glossy, 3D, photorealistic, white background, gradient background, vignette, parchment, bright gold, shiny, clean fabric, text on banner
+```

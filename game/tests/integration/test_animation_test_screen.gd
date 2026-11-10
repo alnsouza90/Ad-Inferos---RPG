@@ -140,13 +140,16 @@ func test_every_character_plays_every_move() -> void:
 
 func test_asmodeus_lunges_with_his_own_frame_and_breathes_smoke_from_afar() -> void:
 	screen.choose(&"boss_asmodeus")
-	# Physical: the lunge frame slides to the target (D-236).
+	# Physical: the lunge frame slides to the target (D-236). The clips are
+	# followed by their start signal: at FAST the blow is shorter than one
+	# slow frame of the full suite.
 	var seen: Dictionary = {"offset": 0.0, "clip": &""}
+	screen.actor.player().clip_started.connect(func(id: StringName) -> void:
+		if id == &"melee_strike":
+			seen["clip"] = id)
 	var t: float = screen.play(&"attack")
 	var watch := func() -> bool:
 		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
-		if screen.actor.player().clip_id() == &"melee_strike":
-			seen["clip"] = &"melee_strike"
 		return screen.actor.player().clip_id() == &"idle" and seen["clip"] != &""
 	await wait_until(watch, t + 2.0)
 	assert_eq(seen["clip"], &"melee_strike")

@@ -11,7 +11,7 @@ Art Source/
   characters/
     saints/                  3 arquivos sem nome descritivo (a identificar)
     portraits/               3 retratos sem nome descritivo (T50 / T44)
-    enemies/                 20 inimigos comuns: enemy_<id>_body_idle_v01.png
+    enemies/                 20 inimigos comuns: enemy_<id>_body_idle_v01.png (Enxame: enemy_swarmling_body_idle_v01, D-348)
                              (7 da Família A → T52; 13 de outros círculos → M3)
     elites/
       elite_minos/           pose de ataque (já no jogo, T35)
@@ -34,14 +34,17 @@ Art Source/
         camp/    env_circle_02_camp_v03 (Pouso, 2560×1080)     → T53
         nodes/   env_circle_02_node_v01 a v03                  → T53
         props/   prop_c02_entry_cave/door/stair/straight_v02, prop_c02_tent_v03 → T37, T53
-        (raiz)   arquivos com nome numérico, ainda não identificados
+        common/  env_circle_02_back_storm_v01, _back_storm_eye_v01, _mid_plain_v01, _mid_rock_wall_v01 (camadas comuns aos trechos, D-345)
+        souls/   env_circle_02_souls_sheet_v01, _souls_crowd_v01 (almas do Encontro e do Vendaval)
+        (raiz)   fx_circle_02_ambient_v01 (folha de partículas)
     props/                   2 imagens sem nome descritivo (T37 / T53)
     village/
       buildings/level_1..3/day|night/   62 edifícios → T49 (níveis 2 e 3 no M3)
       interiors/                        9 interiores → T49
   splash/                    8 telas de passagem (`prompts-splash.md`) → T44
-  ui/icons/                  30 ícones sem nome descritivo → T53
-  vfx/                       3 imagens sem nome descritivo → T53 / efeitos
+  ui/icons/                  30 ícones nomeados (icon_intent_*, icon_state_*, icon_condition_*, icon_damage_*, icon_node_*, icon_item_*, D-345, D-346); falta o de Sufrágios → T36, T53
+  ui/hud/                    lamparina do Lume v02, escala vertical, moldura do painel, moldura do retrato, moldura de botão, estandarte das chaves v01 e v02 (D-258, D-346, D-348)
+  vfx/halo/                  vfx_halo_disk_v01, vfx_halo_rays_v01 (auréola)
   Prancha/                   vazia
   _vazia_pode_apagar/        pasta vazia, Alan apaga
 ```

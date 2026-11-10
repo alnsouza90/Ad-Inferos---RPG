@@ -22,6 +22,10 @@ extends Resource
 ## The sign of a blessing (D-237, D-238): &"petals" (Teresinha), &"shield"
 ## (Jorge) or &"ring" (Bento, and the others until their own is chosen).
 @export var blessing_style: StringName = &"ring"
+## Halo behind the head of the idle figure (T36, D-259): centre and
+## diameter in pixels of the first idle frame (0: no halo).
+@export var halo_center: Vector2 = Vector2.ZERO
+@export var halo_diameter: float = 0.0
 @export var clips: Array[FrameClip] = []
 
 

@@ -42,3 +42,10 @@ boss_asmodeus,bosses,melee_strike,boss_asmodeus_anim_actions_v01.mp4,40,41,1,onc
 boss_asmodeus,bosses,defend,boss_asmodeus_anim_actions_v01.mp4,84,108,2,once,,,smoke_dark+fade_left
 boss_asmodeus,bosses,hit,boss_asmodeus_anim_actions_v01.mp4,105,114,2,once,,,smoke_dark
 boss_asmodeus,bosses,fall,boss_asmodeus_anim_actions_v01.mp4,114,150,3,once,,,smoke_dark
+enemy_gadfly,enemies,idle,enemy_gadfly_body_idle_v01.png,,,,loop,,,
+enemy_infernal_scarab,enemies,idle,enemy_infernal_scarab_body_idle_v01.png,,,,loop,,,
+enemy_mud_devil,enemies,idle,enemy_mud_devil_body_idle_v01.png,,,,loop,,,
+enemy_shade_of_desire,enemies,idle,enemy_shade_of_desire_body_idle_v01.png,,,,loop,,,
+enemy_swarm_mother,enemies,idle,enemy_swarm_mother_body_idle_v01.png,,,,loop,,,
+enemy_wandering_breath,enemies,idle,enemy_wandering_breath_body_idle_v01.png,,,,loop,,,
+enemy_swarmling,enemies,idle,enemy_swarmling_body_idle_v01.png,,,,loop,,,
