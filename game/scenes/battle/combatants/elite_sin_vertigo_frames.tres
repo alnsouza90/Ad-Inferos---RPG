@@ -75,16 +75,28 @@ looping = false
 anchor = Vector2(246, 637)
 impact_frame = -1
 
+[sub_resource type="Resource" id="clip_hit"]
+script = ExtResource("2_clip")
+id = &"hit"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_hit.webp"
+frame_size = Vector2i(469, 654)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(281, 608)
+impact_frame = -1
+
 [sub_resource type="Resource" id="clip_fall"]
 script = ExtResource("2_clip")
 id = &"fall"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_fall.webp"
-frame_size = Vector2i(430, 658)
-columns = 7
-count = 7
+frame_size = Vector2i(449, 658)
+columns = 9
+count = 16
 fps = 15
 looping = false
-anchor = Vector2(250, 651)
+anchor = Vector2(261, 651)
 impact_frame = -1
 
 [resource]
@@ -95,4 +107,4 @@ display_scale = 1
 attack_style = &"ranged"
 spell_style = &"outline"
 blessing_style = &"ring"
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_windup"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_windup"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

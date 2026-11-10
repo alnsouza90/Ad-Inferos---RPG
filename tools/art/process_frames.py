@@ -19,6 +19,7 @@ Needs Pillow, numpy and ffmpeg. Development tool only.
 from __future__ import annotations
 
 import csv
+from collections import deque
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -100,6 +101,12 @@ PROTECT_HOLE_RADIUS = 12
 # size follows the canvas width, between the whites of the eyes (kept) and
 # the gaps between veils (cut).
 DRAWING_HOLE_SHARE = 0.0045
+# ...and grey pockets closed in by the drawing (hair, smoke, a hand on the
+# dress, D-248): at least this many pixels on a 683 px wide drawing, with
+# this share of them on the flat grey (eyes and skin: none).
+POCKET_MIN_PIXELS = 20
+POCKET_REFERENCE_WIDTH = 683
+POCKET_FLAT_SHARE = 0.25
 
 
 def drawing_hole_radius(width: int) -> int:
@@ -282,12 +289,12 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
             # to keep, and the box would only keep grey.
             if protect[1] > fy - fh * PROTECT_FOLLOW_MIN:
                 protect = None
-        f = cut_out(frames[i], wisps, veil, protect, inner, hr)
+        f = cut_out(frames[i], wisps, veil, protect, inner, hr, clip.is_gif)
         if clip.mode == "loop" and clip.blend > 0 and i >= end - clip.blend:
             twin = clip.start - (end - i)
             if twin >= 0:
                 t = (i - (end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner, hr), t)
+                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner, hr, clip.is_gif), t)
         out.append(f)
     return out
 
@@ -370,7 +377,7 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
 
 def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
             protect: tuple[int, int, int, int] | None = None, inner: bool = True,
-            hole_radius: int = PROTECT_HOLE_RADIUS) -> np.ndarray:
+            hole_radius: int = PROTECT_HOLE_RADIUS, dark_pockets: bool = False) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -407,6 +414,8 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
         holes = np.where(box, big, holes)
         specks &= ~box
     core = grow(border | holes | specks, flat)
+    if dark_pockets:
+        core |= pockets(dist, flat & ~core)
     # The video blurs the step from the grey to the black outline: the
     # pixels a few steps from the cut background are a mix of the two, and
     # left opaque they draw a grey line around the figure on a dark screen
@@ -441,6 +450,43 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
     a = np.maximum(alpha, 1e-3)[..., None]
     colour = np.where(alpha[..., None] < 1.0, (colour - (1.0 - a) * bg) / a, colour)
     return np.dstack([colour.clip(0, 255), alpha * 255.0]).astype(np.uint8)
+
+
+def components(mask: np.ndarray) -> list[np.ndarray]:
+    """The 4-connected pieces of a small mask, as arrays of (y, x)."""
+    seen = np.zeros_like(mask)
+    h, w = mask.shape
+    out: list[np.ndarray] = []
+    for y, x in zip(*np.nonzero(mask)):
+        if seen[y, x]:
+            continue
+        seen[y, x] = True
+        queue = deque([(y, x)])
+        pts = []
+        while queue:
+            a, b = queue.popleft()
+            pts.append((a, b))
+            for u, v in ((a + 1, b), (a - 1, b), (a, b + 1), (a, b - 1)):
+                if 0 <= u < h and 0 <= v < w and mask[u, v] and not seen[u, v]:
+                    seen[u, v] = True
+                    queue.append((u, v))
+        out.append(np.array(pts))
+    return out
+
+
+def pockets(dist: np.ndarray, grey: np.ndarray) -> np.ndarray:
+    """Background closed in by hair, smoke or a hand against the dress
+    (Alan, D-248): a patch big enough where a good share of the pixels is
+    the flat grey itself. The whites of the eyes and the light skin are
+    near that grey but never flat on it, and stay."""
+    least = POCKET_MIN_PIXELS * (dist.shape[1] / POCKET_REFERENCE_WIDTH) ** 2
+    out = np.zeros_like(grey)
+    for pts in components(grey):
+        if len(pts) < least:
+            continue
+        if (dist[pts[:, 0], pts[:, 1]] <= HOLE_TOLERANCE).mean() >= POCKET_FLAT_SHARE:
+            out[pts[:, 0], pts[:, 1]] = True
+    return out
 
 
 def violet_mask(rgba: np.ndarray) -> np.ndarray:
@@ -591,7 +637,8 @@ def image_rgba(path: Path, inner: bool = True, frame: int = 0, big_holes: bool =
         img = img.resize(size, Image.LANCZOS)
     rgb = np.asarray(img)
     protect = (0, 0, rgb.shape[1], rgb.shape[0]) if big_holes else None
-    return cut_out(rgb, inner=inner, protect=protect, hole_radius=drawing_hole_radius(rgb.shape[1]))
+    return cut_out(rgb, inner=inner, protect=protect, hole_radius=drawing_hole_radius(rgb.shape[1]),
+                   dark_pockets=big_holes)
 
 
 # --- placing ------------------------------------------------------------------

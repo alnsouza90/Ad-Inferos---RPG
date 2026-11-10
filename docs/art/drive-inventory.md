@@ -57,7 +57,7 @@ Só o que as ferramentas usam (`tools/art/process_art.py` e `tools/art/animation
 
 - Santos: vídeos do Wan 3 de Jorge, Bento e Teresinha; imagens de Jorge usadas na tela de combate (padrão, ataque, golpe, queda, Noite Escura, Consolação, retrato v02); retratos de Bento e Teresinha.
 - Minos: vídeo parado e as 4 poses desenhadas (preparar, chicotada v02, defesa, derrota) + a pose parada desenhada (referência de escala).
-- Vertigem e Asmodeu: vídeos do Wan 3 (Asmodeu: parado, ações e o sopro novo, D-242).
+- Vertigem: desenhos em stop motion (GIFs parado, ataque, magia v02 e queda; imagens parada, guarda, defesa e salto, D-247, D-248). Asmodeu: vídeos do Wan 3 (parado, ações e o sopro novo, D-242).
 - Cenário do trecho 1 (fundo e frente v01), Pouso v02, evento "O abrigo do vento" v02, auréola (disco e raios).
 
 ## 3. O que saiu do repositório (D-245) e onde recuperar

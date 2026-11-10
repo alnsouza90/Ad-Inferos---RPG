@@ -31,7 +31,8 @@ elite_sin_vertigo,elites,strike,elite_sin_vertigo_body_guard_v01.jpg|elite_sin_v
 elite_sin_vertigo,elites,spell_windup,elite_sin_vertigo_anim_spell_v02.gif#0|elite_sin_vertigo_body_idle_v02.jpg,,,,once,,,tween=2+protect_all+fade_sides
 elite_sin_vertigo,elites,spell_strike,elite_sin_vertigo_body_idle_v02.jpg|elite_sin_vertigo_anim_idle_v02.gif#4|elite_sin_vertigo_anim_idle_v02.gif#5,,,,once,,1,tween=2+protect_all+fade_sides
 elite_sin_vertigo,elites,defend,elite_sin_vertigo_body_guard_v01.jpg|elite_sin_vertigo_body_defend_v01.jpg,,,,once,,,tween=2+protect_all+fade_sides
-elite_sin_vertigo,elites,fall,elite_sin_vertigo_anim_fall_v02.gif,0,3,1,once,,,tween=2+protect_all+fade_sides
+elite_sin_vertigo,elites,hit,elite_sin_vertigo_body_hit_v01.jpg,,,,once,,,protect_all+fade_sides
+elite_sin_vertigo,elites,fall,elite_sin_vertigo_anim_fall_v02.gif,0,6,1,once,,,tween=2+protect_all+fade_sides
 boss_asmodeus,bosses,idle,boss_asmodeus_anim_idle_v01.mp4,13,133,3,loop,12,,smoke_dark
 boss_asmodeus,bosses,windup,boss_asmodeus_anim_actions_v01.mp4,18,42,2,once,,,smoke_dark
 boss_asmodeus,bosses,spell_windup,boss_asmodeus_anim_breath_v01.mp4,0,30,3,once,,,smoke_dark+smoke_darker
