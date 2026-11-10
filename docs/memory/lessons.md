@@ -39,6 +39,21 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - Ao endurecer a limpeza de fundo para um personagem, refaça e confira **todos**: as regras de "buraco" e de "pontos do cinza exato" (D-333) furaram a cauda de Minos e o rosto de Vertigem, pintados no mesmo cinza do fundo. Conferir sempre sobre o fundo escuro do jogo, não sobre verde (T35).
 
+### Animação de personagens: o que custou tempo na T35 e como fazer de primeira
+
+Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `animation_characters.csv`, prévia em Python porque o Godot da nuvem não desenha):
+
+1. **Antes de recortar, confira se a figura cabe no quadro.** Vídeo ou desenho em que a personagem, a fumaça ou a magia encostam na borda ficam cortados em linha reta no jogo, e Alan reprova (fumaça de Asmodeu, sombras da Vertigem). Meça cada quadro (pixels opacos nas colunas da borda) e **não use quadro cortado** sem perguntar (D-247). Se faltar um quadro inteiro, peça a Alan versão com margem em volta.
+2. **Fundo cinza de IA é a mesma cor de partes do desenho** (branco dos olhos, rosto da Vertigem, barriga de Minos). Regras que tiram todo pixel do cinza exato apagam olhos e furam corpos. Para desenhos limpos: `protect_all` (só manchas grandes saem, tamanho proporcional à largura) + bolsões fechados com ≥25% de pixels no cinza exato (`pockets`). Para vídeo borrado: `veil_key`/`light_wisps`/`protect_head`. Para figura cujo corpo é cinza: `border_only` (D-337, D-341).
+3. **Sempre conferir de perto** (rosto, mãos, cabelo, fumaça) sobre o fundo escuro do jogo (23/18/20), em tamanho grande, antes de mandar a prévia. Alan nota: rosto escuro, fundo entre os dedos, crescentes claros no cabelo.
+4. **Mande prévia antes de implementar efeitos** e antes de abrir PR: GIF no layout da tela "Animações (teste)" (`vertigo_preview.py`/`breath_preview.py` no scratchpad, mesmos tamanhos do motor). Alan escolhe por modelo (G1, E1, B2…) (D-235).
+5. **Stop motion (GIFs do Meta AI):** 5 desenhos por segundo com 2 quadros de fusão (`tween=2`); listas `a.jpg|b.gif#4` misturam GIF e imagem solta, todos levados à tela do desenho de referência (`STILL_REFERENCE`). Figura limitada a 640 px (`MAX_FIGURE_PX`) para as folhas não pesarem.
+6. **Folhas novas `.webp`**: o primeiro `--import` cria o `.import` com `compress/mode=0` e qualidade 0.7; trocar para `compress/mode=1` e `lossy_quality=0.88` como as outras e importar de novo.
+7. **Escala e lado:** bosses maiores (`display_scale`), estilo de ataque por personagem (melee/ranged/throne), quem age vai para a frente (`_to_front`). Magias de longe não deslizam até o alvo (D-233, D-240).
+8. **O recorte de desenhos grandes é lento** (~2 min por personagem): rodar em segundo plano e, enquanto isso, preparar testes e o script de prévia.
+9. **Drive:** `download_file_content` salva o arquivo grande num `.txt` JSON com base64; decodificar com Python. Envio ao Drive passa só até ~3 MB.
+10. **Git:** `git checkout <commit> --` **sem caminho** troca a branch inteira (HEAD solto) e deixa arquivos LFS como ponteiros; para recuperar um arquivo use sempre `git checkout <commit> -- <caminho>`, e depois de voltar rode `git lfs pull`.
+
 ## Dados
 
 - Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.
