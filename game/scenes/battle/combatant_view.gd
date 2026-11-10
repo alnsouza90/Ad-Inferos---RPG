@@ -70,11 +70,9 @@ const COLOR_DARK := Color(0.68, 0.42, 1.0)
 const SPIRIT_HIT_TIME: float = 1.1
 const SPIRIT_SHAKES: int = 8
 const SPIRIT_SHAKE_PX: float = 4.0
-## Halo over animated frames (T36, D-258): its diameter and the height of
-## its centre under the top of the standing figure, as shares of the
-## figure's height on screen.
-const FRAME_HALO_SIZE: float = 0.17
-const FRAME_HALO_DROP: float = 0.07
+## Light red outline on the saint an enemy's intent aims at (T36, D-259).
+const COLOR_INTENT_TARGET := Color(1.0, 0.25, 0.2)
+const INTENT_TARGET_OUTLINE: float = 0.55
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -122,6 +120,7 @@ var _target_view: Node
 ## Share of the last action's length until its blow lands (T36): the battle
 ## lets the target react then, while the attacker goes home.
 var _impact_share: float = 1.0
+var _intent_target: bool = false
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -285,6 +284,21 @@ func set_hp(hp: int) -> void:
 func set_mark(p_mark: Mark) -> void:
 	mark = p_mark
 	_apply_style()
+
+
+## Light red outline while an enemy's intent aims at this combatant (the
+## enemy was tapped, D-259), whatever else marks it.
+func set_intent_target(on: bool) -> void:
+	if _player == null or on == _intent_target:
+		return
+	_intent_target = on
+	_player.outline_pulse = not on
+	_player.outline_color = COLOR_INTENT_TARGET if on else COLOR_DARK
+	_player.outline_strength = INTENT_TARGET_OUTLINE if on else 0.0
+
+
+func is_intent_target() -> bool:
+	return _intent_target
 
 
 func show_preview(text: String) -> void:
@@ -455,6 +469,7 @@ func play_spirit_hit(color: Color = COLOR_DARK) -> float:
 	var t: float = SPIRIT_HIT_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
 	_player.outline_color = color
+	_player.outline_pulse = true
 	var tw := create_tween()
 	tw.tween_property(_player, "outline_strength", 1.0, t * 0.15)
 	for i: int in SPIRIT_SHAKES:
@@ -575,16 +590,25 @@ func _build_player(width: float) -> void:
 ## The halo stands behind the head of the idle figure; it hides while an
 ## action clip plays (the head moves) and when the saint is down.
 func _build_frame_halo() -> void:
-	if _halo != null or _player == null:
+	if _halo != null or _player == null or _frames.halo_diameter <= 0.0:
 		return
-	var height: float = _player.display_height
 	_halo = HaloView.new()
-	_halo.setup(_halo_settings, height * FRAME_HALO_SIZE)
-	var centre := _player.feet - Vector2(0.0, height * (1.0 - FRAME_HALO_DROP))
-	_halo.position = centre - _halo.size * 0.5
+	_halo.setup(_halo_settings, _frames.halo_diameter * _player.pixel_scale())
+	_place_frame_halo()
 	_body.add_child(_halo)
 	_body.move_child(_halo, _player.get_index())
 	_apply_player_look(false)
+
+
+## The halo's centre is the head point measured on the idle frame
+## (CharacterFrames.halo_center, D-259); it rises and falls with the breath.
+func _place_frame_halo() -> void:
+	var idle: FrameClip = _frames.clip(&"idle")
+	if idle == null:
+		return
+	var offset: Vector2 = (_frames.halo_center - idle.anchor) * _player.pixel_scale()
+	offset.y *= _player.breath_stretch()
+	_halo.position = _player.position + _player.feet + offset - _halo.size * 0.5
 
 
 ## The figure loses colour as desolation grows, like the still images; the
@@ -746,6 +770,8 @@ func _back_to_idle() -> void:
 func _process(delta: float) -> void:
 	if _player != null and _halo != null:
 		_halo.visible = not _down and _player.clip_id() == &"idle"
+		if _halo.visible:
+			_place_frame_halo()
 	if _trail_left <= 0.0:
 		return
 	_trail_left -= delta

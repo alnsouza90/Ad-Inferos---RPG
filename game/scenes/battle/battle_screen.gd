@@ -38,6 +38,11 @@ const LUME_TOP: float = 70.0
 const LUME_BOTTOM: float = 600.0
 const LANTERN_HEIGHT: float = 120.0
 const PIP_SIZE := Vector2(18, 18)
+## The portrait frame on screen, and the window inside it where the portrait
+## goes (shares of the frame measured on ui_portrait_frame.png, D-259): the
+## iron never covers the face.
+const PORTRAIT_FRAME := Rect2(44, 30, 168, 164)
+const PORTRAIT_WINDOW := Rect2(0.18, 0.235, 0.645, 0.67)
 const COLOR_BACKGROUND := Color(0.035, 0.035, 0.04)
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 const COLOR_DAMAGE := Color(1.0, 0.45, 0.4)
@@ -652,18 +657,14 @@ func _refresh_views() -> void:
 		if intent_target != null and intent_target.id == id and mark == CombatantView.Mark.NONE:
 			mark = CombatantView.Mark.INTENT_TARGET
 		view.set_mark(mark)
+		view.set_intent_target(intent_target != null and intent_target.id == id)
 		view.show_preview(previews.get(id, ""))
 		var badge: CombatantBadge = _badges.get(id)
 		if badge != null:
 			badge.set_mark(mark)
 			badge.show_preview(previews.get(id, ""))
-	var enemy_badge: CombatantBadge = _badges.get(_info_id)
-	var target_badge: CombatantBadge = _badges.get(intent_target.id) if intent_target != null else null
-	if enemy_badge != null and target_badge != null:
-		var from: Vector2 = enemy_badge.position - Vector2(0, enemy_badge.head_height * 0.5)
-		_lines.show_line(from, target_badge.position - Vector2(0, target_badge.head_height * 0.5))
-	else:
-		_lines.hide_line()
+	# The intent's target is outlined in light red (D-259), no line.
+	_lines.hide_line()
 
 
 func _show(view: CombatantView, c: Combatant) -> void:
@@ -1193,19 +1194,21 @@ func _build_hero_panel(rect: Rect2) -> void:
 	var x0: float = rect.position.x
 	var y0: float = rect.position.y
 	_portrait = TextureRect.new()
-	_portrait.position = Vector2(x0 + 44, y0 + 44)
-	_portrait.size = Vector2(140, 136)
+	var frame_rect := Rect2(PORTRAIT_FRAME.position + Vector2(x0, y0), PORTRAIT_FRAME.size)
+	_portrait.position = frame_rect.position + PORTRAIT_WINDOW.position * frame_rect.size
+	_portrait.size = PORTRAIT_WINDOW.size * frame_rect.size
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_portrait.visible = false
 	_stage.add_child(_portrait)
 	_portrait_frame = TextureRect.new()
-	_portrait_frame.texture = HudStyle.hud_texture("ui_portrait_frame")
-	_portrait_frame.position = Vector2(x0 + 22, y0 + 14)
-	_portrait_frame.size = Vector2(184, 180)
+	# Expand before the texture: otherwise the frame keeps the texture's size.
 	_portrait_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait_frame.stretch_mode = TextureRect.STRETCH_SCALE
+	_portrait_frame.texture = HudStyle.hud_texture("ui_portrait_frame")
+	_portrait_frame.position = frame_rect.position
+	_portrait_frame.size = frame_rect.size
 	_portrait_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(_portrait_frame)
 	_actor_label = _label(Vector2(x0 + 240, y0 + 18), Vector2(420, 50), 42)
@@ -1228,10 +1231,12 @@ func _build_hero_panel(rect: Rect2) -> void:
 	for i: int in ABILITY_SLOTS:
 		_ability_buttons.append(_button(Vector2(bx + i * (size_ability.x + 8), y0 + 100), size_ability, press_ability.bind(i)))
 	var row: float = y0 + 204
-	_miracle_button = _button(Vector2(bx, row), Vector2(232, 72), press_miracle)
-	_swap_button = _button(Vector2(bx + 240, row), Vector2(128, 72), press_swap)
-	_pass_button = _button(Vector2(bx + 376, row), Vector2(128, 72), press_pass)
-	_provisions_button = _button(Vector2(bx + 512, row), Vector2(140, 72), press_provisions)
+	_miracle_button = _button(Vector2(bx, row), Vector2(248, 72), press_miracle)
+	_miracle_button.add_theme_font_size_override("font_size", 20)
+	_swap_button = _button(Vector2(bx + 256, row), Vector2(110, 72), press_swap)
+	_pass_button = _button(Vector2(bx + 374, row), Vector2(110, 72), press_pass)
+	_provisions_button = _button(Vector2(bx + 492, row), Vector2(166, 72), press_provisions)
+	_provisions_button.add_theme_font_size_override("font_size", 19)
 	_hint = _label(Vector2(bx, y0 + 280), Vector2(652, 56), 22)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

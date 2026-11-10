@@ -38,6 +38,8 @@ var outline_color: Color = Color(0.68, 0.42, 1.0)
 const OUTLINE_OFFSETS: Array[Vector2] = [Vector2(-5, 0), Vector2(5, 0), Vector2(0, -5), Vector2(0, 5), Vector2(-4, -4), Vector2(4, 4), Vector2(-4, 4), Vector2(4, -4)]
 const OUTLINE_SHADER_PATH: String = "res://shaders/silhouette.gdshader"
 const OUTLINE_PULSE: float = 0.25
+## A steady outline (the target of an enemy's intent, T36) does not pulse.
+var outline_pulse: bool = true
 var _outline: Control
 
 
@@ -104,6 +106,13 @@ func advance(delta: float) -> void:
 		queue_redraw()
 
 
+## Vertical stretch of the idle breathing now (1: none).
+func breath_stretch() -> float:
+	if _clip == null or _clip.id != &"idle":
+		return 1.0
+	return 1.0 + BREATH_AMOUNT * sin(TAU * _breath_time / BREATH_PERIOD)
+
+
 ## Screen scale of the frames.
 func pixel_scale() -> float:
 	if frames == null or frames.figure_height <= 0.0:
@@ -151,7 +160,7 @@ func _draw_outline() -> void:
 	var d: Dictionary = current_draw()
 	if d.is_empty():
 		return
-	var pulse: float = 1.0 - OUTLINE_PULSE + OUTLINE_PULSE * sin(_breath_time * 14.0)
+	var pulse: float = 1.0 - OUTLINE_PULSE + OUTLINE_PULSE * sin(_breath_time * 14.0) if outline_pulse else 1.0
 	var tint := Color(outline_color, outline_strength * pulse)
 	var rect: Rect2 = d["rect"]
 	for offset: Vector2 in OUTLINE_OFFSETS:

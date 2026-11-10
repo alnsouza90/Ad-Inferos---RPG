@@ -174,6 +174,38 @@ func test_layout_puts_everyone_on_the_ground_in_slot_order() -> void:
 	assert_lt(BattleScreen.GROUND_Y, BattleScreen.FIELD_HEIGHT, "os pés ficam acima do painel")
 
 
+## Alan's review (D-259): women a little shorter than men, each halo on its
+## saint's head point, a light red outline (no line) on the intent's target,
+## and the portrait inside the window of its frame.
+func test_review_heights_halos_outline_and_portrait() -> void:
+	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
+	var george: CombatantView = screen.view_of(&"saint_george")
+	var therese: CombatantView = screen.view_of(&"saint_therese")
+	assert_lt(therese.player().display_height, george.player().display_height, "Teresinha mais baixa que Jorge")
+	for id: StringName in [&"saint_george", &"saint_benedict", &"saint_therese"]:
+		var view: CombatantView = screen.view_of(id)
+		var frames: CharacterFrames = view.player().frames
+		var idle: FrameClip = frames.clip(&"idle")
+		var head: Vector2 = view.player().position + view.player().feet + (frames.halo_center - idle.anchor) * view.player().pixel_scale()
+		var halo_centre: Vector2 = view.halo().position + view.halo().size * 0.5
+		assert_almost_eq(halo_centre.x, head.x, 0.5, "%s: auréola no ponto da cabeça" % id)
+		assert_almost_eq(halo_centre.y, head.y, view.halo().size.y * 0.05, "%s: auréola na altura da cabeça" % id)
+		assert_almost_eq(view.halo().size.x, frames.halo_diameter * view.player().pixel_scale(), 0.5, "%s: tamanho da auréola" % id)
+	var enemy: Combatant = screen.ctrl.state.enemy_at(1)
+	var intent: Intent = screen.ctrl.state.intent_of(enemy)
+	screen.tap(enemy.id)
+	if intent != null and intent.kind == Intent.KIND_ACTION and intent.target_slot > 0:
+		var target: Combatant = screen.ctrl.state.party_at(intent.target_slot)
+		assert_true(screen.view_of(target.id).is_intent_target(), "o alvo da intenção ganha contorno vermelho")
+		assert_gt(screen.view_of(target.id).player().outline_strength, 0.0)
+	for c: Combatant in screen.ctrl.state.party:
+		if intent == null or intent.target_slot != screen.ctrl.state.party_slot_of(c):
+			assert_false(screen.view_of(c.id).is_intent_target(), "%s sem contorno" % c.id)
+	var frame_rect := Rect2(screen._portrait_frame.position, screen._portrait_frame.size)
+	var window := Rect2(frame_rect.position + BattleScreen.PORTRAIT_WINDOW.position * frame_rect.size, BattleScreen.PORTRAIT_WINDOW.size * frame_rect.size)
+	assert_eq(Rect2(screen._portrait.position, screen._portrait.size), window, "o retrato fica na janela da moldura")
+
+
 ## T36: tapping an enemy opens its sheet on the right (DD), and the Lume
 ## lantern slides down the rod as the light fades (D-257).
 func test_enemy_sheet_and_lume_lantern() -> void:

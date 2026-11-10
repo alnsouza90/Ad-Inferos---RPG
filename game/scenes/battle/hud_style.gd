@@ -8,6 +8,8 @@ extends RefCounted
 const FONT_PATH: String = "res://assets/fonts/PirataOne-Regular.ttf"
 const HUD_DIR: String = "res://assets/ui/hud"
 const ICON_DIR: String = "res://assets/ui/icons"
+## Corner of the button frame texture (pixels of ui_button_frame.png).
+const BUTTON_MARGIN: float = 26.0
 
 const COLOR_INK := Color(0.04, 0.035, 0.035)
 const COLOR_PANEL := Color(0.075, 0.075, 0.08)
@@ -24,7 +26,7 @@ const COLOR_PIP_OFF := Color(0.14, 0.13, 0.13)
 const COLOR_FERVOR := Color(0.94, 0.74, 0.31)
 ## Portrait frame tint by desolation (D-258): grey when calm, red near the
 ## top, gold in Consolation, near black in the Dark Night.
-const COLOR_FRAME_CALM := Color(0.72, 0.72, 0.72)
+const COLOR_FRAME_CALM := Color(1.0, 1.0, 1.0)
 const COLOR_FRAME_TROUBLED := Color(0.62, 0.16, 0.14)
 const COLOR_FRAME_CONSOLATION := Color(0.95, 0.78, 0.4)
 const COLOR_FRAME_DARK_NIGHT := Color(0.3, 0.26, 0.34)
@@ -107,24 +109,25 @@ static func theme(font_size: int) -> Theme:
 	return t
 
 
-## Dark iron button: a dark face with a grey bevel (the drawn button frame
-## is still to come, D-346).
-static func button_box(state: StringName) -> StyleBoxFlat:
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color(0.1, 0.1, 0.105) if state != &"pressed" else Color(0.16, 0.15, 0.13)
-	box.border_color = COLOR_PANEL_EDGE.lightened(0.25) if state == &"hover" else COLOR_PANEL_EDGE
-	if state == &"disabled":
-		box.bg_color = Color(0.07, 0.07, 0.075)
-		box.border_color = Color(0.17, 0.17, 0.18)
+## Wrought iron button (ui_button_frame.png, D-259): the drawn frame in
+## nine parts, lighter on hover, gold when pressed, dim when disabled.
+static func button_box(state: StringName) -> StyleBox:
 	if state == &"focus":
-		box.draw_center = false
-		box.border_color = Color(0, 0, 0, 0)
-	box.set_border_width_all(4)
-	box.set_corner_radius_all(2)
-	box.shadow_color = Color(0, 0, 0, 0.6)
-	box.shadow_size = 3
-	box.content_margin_left = 8
-	box.content_margin_right = 8
+		return StyleBoxEmpty.new()
+	var box := StyleBoxTexture.new()
+	box.texture = hud_texture("ui_button_frame")
+	box.set_texture_margin_all(BUTTON_MARGIN)
+	box.content_margin_left = 16
+	box.content_margin_right = 16
+	box.content_margin_top = 8
+	box.content_margin_bottom = 8
+	match state:
+		&"hover":
+			box.modulate_color = Color(1.2, 1.2, 1.2)
+		&"pressed":
+			box.modulate_color = Color(1.25, 1.05, 0.7)
+		&"disabled":
+			box.modulate_color = Color(0.55, 0.55, 0.57)
 	return box
 
 

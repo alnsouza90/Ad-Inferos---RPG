@@ -11,7 +11,7 @@ Art Source/
   characters/
     saints/                  3 arquivos sem nome descritivo (a identificar)
     portraits/               3 retratos sem nome descritivo (T50 / T44)
-    enemies/                 20 inimigos comuns: enemy_<id>_body_idle_v01.png
+    enemies/                 20 inimigos comuns: enemy_<id>_body_idle_v01.png (Enxame: enemy_swarmling_body_idle_v01, D-348)
                              (7 da Família A → T52; 13 de outros círculos → M3)
     elites/
       elite_minos/           pose de ataque (já no jogo, T35)
@@ -43,7 +43,7 @@ Art Source/
       interiors/                        9 interiores → T49
   splash/                    8 telas de passagem (`prompts-splash.md`) → T44
   ui/icons/                  30 ícones nomeados (icon_intent_*, icon_state_*, icon_condition_*, icon_damage_*, icon_node_*, icon_item_*, D-345, D-346); falta o de Sufrágios → T36, T53
-  ui/hud/                    lamparina do Lume v02, escala vertical, moldura do painel, moldura do retrato, estandarte das chaves (D-258, D-346); falta a moldura de botão → T36
+  ui/hud/                    lamparina do Lume v02, escala vertical, moldura do painel, moldura do retrato, moldura de botão, estandarte das chaves v01 e v02 (D-258, D-346, D-348)
   vfx/halo/                  vfx_halo_disk_v01, vfx_halo_rays_v01 (auréola)
   Prancha/                   vazia
   _vazia_pode_apagar/        pasta vazia, Alan apaga
