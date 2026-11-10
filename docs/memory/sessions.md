@@ -2,13 +2,14 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
-## Sessão 5 · 05/11/2026
+## Sessão 5 · 05 a 10/11/2026
 
 - Godot compilado em segundo plano pelo gancho (D-162).
 - Feito: proposta do backlog do M2 (`docs/backlog/m2.md`, T33 a T57); decisões de Alan D-171 a D-182 (blocos, Santo Antão, recorte das partes pelo agente, Conselho no M3, sons, Prólogo, vila mínima, companhia e tela de novo santo, encontros, animação com esqueleto 2D, áudio, caminhada segurando o dedo).
 - Depois: T33 (PR #42), T34 (PR #43), roteiro do Prólogo (PR #44); esqueleto 2D de Jorge testado e reprovado, trocado por quadros e poses-chave com GIFs do Meta AI (PR #45, D-194 a D-197, D-200); decisão do leito de morte e final único aplicada (D-198, D-199).
 - Arte da prioridade 1 recebida; prévias do cenário montadas para Alan validar (PR #46 com merge).
-- Próximo: T35 com os GIFs de Jorge, quando Alan liberar.
+- 06 a 10/11: ImagineArt conectado (D-221); animações no Wan 3, 480p, 150 créditos cada: santos (D-225), Minos, Vertigem, Asmodeu (D-226); fumaça de Asmodeu escurecida no tratamento (D-227); rabo de Minos reprovado em vídeo, ações de Minos por poses desenhadas de Alan (D-228 a D-230). Saldo do ImagineArt: 185. Google Drive "Art Source" como repositório de mídia (D-230).
+- Próximo: T35 numa sessão nova (troca de pose no motor com os vídeos e poses em `art_source/characters/`).
 
 ## Sessão 4 · 04/11/2026
 
