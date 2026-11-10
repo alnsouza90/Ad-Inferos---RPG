@@ -69,4 +69,5 @@ character_id = &"elite_sin_vertigo"
 figure_height = 494.1
 display_scale = 1
 attack_style = &"melee"
+spell_style = &"outline"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

@@ -39,6 +39,30 @@ looping = false
 anchor = Vector2(317, 450)
 impact_frame = 6
 
+[sub_resource type="Resource" id="clip_melee_windup"]
+script = ExtResource("2_clip")
+id = &"melee_windup"
+sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_melee_windup.webp"
+frame_size = Vector2i(579, 458)
+columns = 6
+count = 6
+fps = 20.25
+looping = false
+anchor = Vector2(247, 450)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_melee_strike"]
+script = ExtResource("2_clip")
+id = &"melee_strike"
+sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_melee_strike.webp"
+frame_size = Vector2i(480, 458)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(167, 450)
+impact_frame = 0
+
 [sub_resource type="Resource" id="clip_defend"]
 script = ExtResource("2_clip")
 id = &"defend"
@@ -80,5 +104,6 @@ script = ExtResource("1_set")
 character_id = &"boss_asmodeus"
 figure_height = 396.9
 display_scale = 1.25
-attack_style = &"ranged"
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])
+attack_style = &"melee"
+spell_style = &"own"
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_melee_windup"), SubResource("clip_melee_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

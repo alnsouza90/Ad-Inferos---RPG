@@ -78,6 +78,16 @@ FRINGE_SOFTNESS = 80
 VEIL_KEY_CHROMA = 20
 VEIL_KEY_DARK = 100
 VEIL_KEY_MARGIN = 20
+# Treatment "protect_head" (Vertigo's face is the background grey): the
+# head box, as shares of the standing figure height above the feet, and the
+# bigger hole size used inside it ("protect_all": the whole frame).
+PROTECT_TOP = 1.06
+PROTECT_BOTTOM = 0.70
+PROTECT_FOLLOW_HEIGHT = 0.34
+PROTECT_FOLLOW_MIN = 0.30
+PROTECT_ROW_PIXELS = 12
+PROTECT_HALF_WIDTH = 0.22
+PROTECT_HOLE_RADIUS = 12
 # Exact background grey left anywhere, even a single pixel.
 SPECK_TOLERANCE = 6
 # Treatment "fade_left": width of the fade at the cut border of the video.
@@ -132,6 +142,7 @@ class Character:
     display_scale: float = 1.0
     attack_style: str = "melee"
     speed: float = 1.0
+    spell_style: str = "orb"
 
 
 def read_clips() -> list[Character]:
@@ -150,6 +161,7 @@ def read_clips() -> list[Character]:
                 chars[row["character"]].display_scale = float(row["display_scale"])
                 chars[row["character"]].attack_style = row["attack_style"].strip()
                 chars[row["character"]].speed = float(row["speed"])
+                chars[row["character"]].spell_style = row["spell_style"].strip()
     return list(chars.values())
 
 
@@ -180,24 +192,49 @@ def video(path: Path) -> np.ndarray:
 
 
 def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
-    treat = clip.treatment.split("+")
-    wisps = "light_wisps" in treat
-    veil = "veil_key" in treat
     """The kept frames of a video clip, cut out. A loop with `blend` mixes
     its last frames with the ones just before its start, so the jump from
     the last frame back to the first does not show. The mix is made after
     the cut, so a part that moves leaves a faint copy, not a grey one."""
+    treat = clip.treatment.split("+")
+    wisps = "light_wisps" in treat
+    veil = "veil_key" in treat
     frames = video(SRC / clip.group / clip.character / clip.source)
+    protect = None
+    if "protect_all" in treat:
+        protect = (0, 0, frames.shape[2], frames.shape[1])
+    elif "protect_head" in treat or "protect_follow" in treat:
+        fx, fy, fh = feet_point(cut_out(frames[0]))
+        protect = (int(fx - fh * PROTECT_HALF_WIDTH), int(fy - fh * PROTECT_TOP),
+                   int(fx + fh * PROTECT_HALF_WIDTH), int(fy - fh * PROTECT_BOTTOM))
+    follow = "protect_follow" in treat
     out: list[np.ndarray] = []
     for i in range(clip.start, clip.end, clip.step):
-        f = cut_out(frames[i], wisps, veil)
+        if follow:
+            protect = head_box(frames[i], fx, fh)
+            # Once the figure has sunk into the smoke there is no face left
+            # to keep, and the box would only keep grey.
+            if protect[1] > fy - fh * PROTECT_FOLLOW_MIN:
+                protect = None
+        f = cut_out(frames[i], wisps, veil, protect)
         if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
             twin = clip.start - (clip.end - i)
             if twin >= 0:
                 t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps, veil), t)
+                f = mix(f, cut_out(frames[twin], wisps, veil, protect), t)
         out.append(f)
     return out
+
+
+def head_box(rgb: np.ndarray, fx: float, fh: float) -> tuple[int, int, int, int]:
+    """"protect_follow": while she sinks (the fall), the head is the top of
+    the figure in the middle columns; the box follows it frame by frame."""
+    x0, x1 = int(fx - fh * PROTECT_HALF_WIDTH), int(fx + fh * PROTECT_HALF_WIDTH)
+    bg = border_colour(rgb)
+    dist = np.abs(rgb[:, max(x0, 0):x1].astype(np.float32) - bg).max(axis=2)
+    rows = np.nonzero((dist > BG_TOLERANCE + EDGE_SOFTNESS).sum(axis=1) > PROTECT_ROW_PIXELS)[0]
+    top = int(rows[0]) if rows.size else 0
+    return (x0, top - 4, x1, top + int(fh * PROTECT_FOLLOW_HEIGHT))
 
 
 def mix(a: np.ndarray, b: np.ndarray, t: float) -> np.ndarray:
@@ -243,7 +280,8 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
     return out
 
 
-def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False) -> np.ndarray:
+def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
+            protect: tuple[int, int, int, int] | None = None) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -263,8 +301,17 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False) -> np.
     border[:, 0] = border[:, -1] = True
     holes = erode(dist <= HOLE_TOLERANCE, HOLE_RADIUS)
     # Specks of the exact grey anywhere (a few pixels between a raven's
-    # feet) go too: the art never uses that flat grey.
+    # feet) go too: the art never uses that flat grey...
     specks = dist <= SPECK_TOLERANCE
+    box = np.zeros_like(flat)
+    if protect is not None:
+        # ...except Vertigo's face, painted in that very grey (D-236): in the
+        # box of the head only big patches go.
+        x0, y0, x1, y1 = protect
+        box[max(y0, 0):max(y1, 0), max(x0, 0):max(x1, 0)] = True
+        big = erode(dist <= HOLE_TOLERANCE, PROTECT_HOLE_RADIUS)
+        holes = np.where(box, big, holes)
+        specks &= ~box
     core = grow(border | holes | specks, flat)
     # The video blurs the step from the grey to the black outline: the
     # pixels a few steps from the cut background are a mix of the two, and
@@ -293,7 +340,7 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False) -> np.
         key = np.clip((bg.mean() - luma) / (bg.mean() - VEIL_KEY_DARK), 0.0, 1.0)
         # Only see-through grey that reaches the background: a light face
         # closed by its dark outline stays.
-        pale = (chroma <= VEIL_KEY_CHROMA) & (luma > VEIL_KEY_DARK + VEIL_KEY_MARGIN)
+        pale = (chroma <= VEIL_KEY_CHROMA) & (luma > VEIL_KEY_DARK + VEIL_KEY_MARGIN) & ~box
         veils = grow(core, core | pale) & ~core
         alpha = np.where(veils, np.minimum(alpha, key), alpha)
     colour = rgb.astype(np.float32)
@@ -446,7 +493,8 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
     for s in sheets:
         sub = f"clip_{s.clip.clip}"
         ids.append(f'SubResource("{sub}")')
-        fps = VIDEO_FPS / s.clip.step * char.speed if s.clip.is_video else 0.0
+        # A clip of one frame is a pose: it holds for its pose time.
+        fps = VIDEO_FPS / s.clip.step * char.speed if s.clip.is_video and s.count > 1 else 0.0
         lines += [
             f'[sub_resource type="Resource" id="{sub}"]',
             'script = ExtResource("2_clip")',
@@ -468,6 +516,7 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
         f"figure_height = {OUTPUT_SCALE * ref_height:.1f}",
         f"display_scale = {char.display_scale:g}",
         f'attack_style = &"{char.attack_style}"',
+        f'spell_style = &"{char.spell_style}"',
         f'clips = Array[ExtResource("2_clip")]([{", ".join(ids)}])',
         "",
     ]

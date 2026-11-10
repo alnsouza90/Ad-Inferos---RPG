@@ -1,7 +1,7 @@
-character,display_scale,attack_style,speed
-saint_george,1.0,melee,1.0
-saint_benedict,1.0,melee,1.0
-saint_therese,1.0,melee,1.0
-elite_minos,1.0,throne,1.0
-elite_sin_vertigo,1.0,melee,1.0
-boss_asmodeus,1.25,ranged,1.35
+character,display_scale,attack_style,speed,spell_style
+saint_george,1.0,melee,1.0,orb
+saint_benedict,1.0,melee,1.0,orb
+saint_therese,1.0,melee,1.0,orb
+elite_minos,1.0,throne,1.0,orb
+elite_sin_vertigo,1.0,melee,1.0,outline
+boss_asmodeus,1.25,melee,1.35,own

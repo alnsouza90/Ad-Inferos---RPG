@@ -26,6 +26,17 @@ var _clip: FrameClip
 var _time: float = 0.0
 var _finished: bool = false
 var _breath_time: float = 0.0
+## Outline of light around the figure (a dark spell on it, D-236); 0: none.
+var outline_strength: float = 0.0:
+	set(value):
+		outline_strength = value
+		queue_redraw()
+var outline_color: Color = Color(0.68, 0.42, 1.0)
+## Offsets of the outline copies, in screen pixels.
+const OUTLINE_OFFSETS: Array[Vector2] = [Vector2(-5, 0), Vector2(5, 0), Vector2(0, -5), Vector2(0, 5), Vector2(-4, -4), Vector2(4, 4), Vector2(-4, 4), Vector2(4, -4)]
+const OUTLINE_SHADER_PATH: String = "res://shaders/silhouette.gdshader"
+const OUTLINE_PULSE: float = 0.25
+var _outline: Control
 
 
 func setup(p_frames: CharacterFrames, p_feet: Vector2, p_display_height: float) -> void:
@@ -33,6 +44,16 @@ func setup(p_frames: CharacterFrames, p_feet: Vector2, p_display_height: float) 
 	feet = p_feet
 	display_height = p_display_height
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# The outline is drawn by a child behind the figure, with its own shader
+	# (a light-coloured silhouette added to what is under it).
+	_outline = Control.new()
+	_outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_outline.show_behind_parent = true
+	var mat := ShaderMaterial.new()
+	mat.shader = load(OUTLINE_SHADER_PATH)
+	_outline.material = mat
+	_outline.draw.connect(_draw_outline)
+	add_child(_outline)
 	play(&"idle")
 
 
@@ -105,7 +126,7 @@ func current_draw() -> Dictionary:
 	var stretch := Vector2(s, s)
 	if _clip.id == &"idle":
 		stretch.y *= 1.0 + BREATH_AMOUNT * sin(TAU * _breath_time / BREATH_PERIOD)
-	if _clip.fps <= 0.0 and _time < POSE_POP_TIME:
+	if _clip.fps <= 0.0 and not _clip.looping and _time < POSE_POP_TIME:
 		stretch *= 1.0 + POSE_POP * (1.0 - _time / POSE_POP_TIME)
 	var rect := Rect2(feet - _clip.anchor * stretch, Vector2(_clip.frame_size) * stretch)
 	return {"texture": texture, "region": _clip.region(frame()), "rect": rect}
@@ -121,7 +142,22 @@ func _process(delta: float) -> void:
 	advance(delta)
 
 
+func _draw_outline() -> void:
+	if outline_strength <= 0.0:
+		return
+	var d: Dictionary = current_draw()
+	if d.is_empty():
+		return
+	var pulse: float = 1.0 - OUTLINE_PULSE + OUTLINE_PULSE * sin(_breath_time * 14.0)
+	var tint := Color(outline_color, outline_strength * pulse)
+	var rect: Rect2 = d["rect"]
+	for offset: Vector2 in OUTLINE_OFFSETS:
+		_outline.draw_texture_rect_region(d["texture"], Rect2(rect.position + offset, rect.size), d["region"], tint)
+
+
 func _draw() -> void:
+	if _outline != null:
+		_outline.queue_redraw()
 	var d: Dictionary = current_draw()
 	if d.is_empty():
 		return

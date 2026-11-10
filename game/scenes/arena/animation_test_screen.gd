@@ -189,9 +189,13 @@ func _make_view(id: StringName) -> CombatantView:
 	return view
 
 
-func _on_impact(at: Vector2, strength: float) -> void:
+func _on_impact(at: Vector2, strength: float, kind: StringName) -> void:
 	camera.punch(at, speed, strength)
-	if opponent != null:
+	if opponent == null:
+		return
+	if kind == &"outline":
+		opponent.play_spirit_hit()
+	else:
 		opponent.play_hit()
 
 
