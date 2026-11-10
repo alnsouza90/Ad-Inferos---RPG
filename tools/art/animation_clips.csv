@@ -33,7 +33,7 @@ elite_sin_vertigo,elites,fall,elite_sin_vertigo_anim_actions_v01.mp4,114,150,3,o
 boss_asmodeus,bosses,idle,boss_asmodeus_anim_idle_v01.mp4,13,133,3,loop,12,,smoke_dark
 boss_asmodeus,bosses,windup,boss_asmodeus_anim_actions_v01.mp4,18,42,2,once,,,smoke_dark
 boss_asmodeus,bosses,spell_windup,boss_asmodeus_anim_breath_v01.mp4,0,30,3,once,,,smoke_dark+smoke_darker
-boss_asmodeus,bosses,strike,boss_asmodeus_anim_breath_v01.mp4,30,84,3,once,,70,smoke_dark+smoke_darker+fade_smoke_tail
+boss_asmodeus,bosses,strike,boss_asmodeus_anim_breath_v01.mp4,30,84,3,once,,70,smoke_dark+smoke_darker+soft_smoke+fade_smoke_tail
 boss_asmodeus,bosses,melee_windup,boss_asmodeus_anim_actions_v01.mp4,28,40,2,once,,,smoke_dark
 boss_asmodeus,bosses,melee_strike,boss_asmodeus_anim_actions_v01.mp4,40,41,1,once,,40,smoke_dark
 boss_asmodeus,bosses,defend,boss_asmodeus_anim_actions_v01.mp4,84,108,2,once,,,smoke_dark+fade_left

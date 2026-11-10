@@ -94,6 +94,13 @@ SPECK_TOLERANCE = 6
 SMOKE_TAIL_FRAMES = 6
 SMOKE_TAIL_MIN_SAT = 40
 SMOKE_RIM_PX = 4
+# Treatment "soft_smoke" (D-243): opacity of the smoke, blur of its edges
+# and colours (pixels), how dark an outline pixel is (HSV value, 0-255), and
+# how far behind the head's left edge in the first frame the smoke starts.
+SOFT_SMOKE_ALPHA = 0.6
+SOFT_SMOKE_BLUR = 3.0
+SOFT_SMOKE_DARK = 70
+SOFT_SMOKE_MARGIN = 20
 # Treatment "smoke_darker": brightness kept on the breath video's violet.
 SMOKE_EXTRA = 0.83
 # Treatment "fade_left": width of the fade at the cut border of the video.
@@ -399,6 +406,39 @@ def darken_violet(rgba: np.ndarray, factor: float) -> np.ndarray:
     return out
 
 
+def soften_smoke(rgba: np.ndarray, limit_x: int) -> np.ndarray:
+    """"soft_smoke": the breath looked too solid and too drawn (Alan,
+    D-243). Ahead of the dragon's head the smoke loses its ink outline, gets
+    see-through and its edges are blurred, like mist."""
+    from PIL import ImageFilter
+    out = rgba.copy()
+    region = np.zeros(rgba.shape[:2], bool)
+    region[:, :max(limit_x, 0)] = True
+    violet = violet_mask(rgba) & region
+    hsv = np.asarray(Image.fromarray(rgba[..., :3]).convert("HSV")).astype(np.float32)
+    # The outline: dark pixels next to the smoke.
+    near = violet.copy()
+    for _ in range(SMOKE_RIM_PX):
+        grown = near.copy()
+        grown[1:, :] |= near[:-1, :]
+        grown[:-1, :] |= near[1:, :]
+        grown[:, 1:] |= near[:, :-1]
+        grown[:, :-1] |= near[:, 1:]
+        near = grown
+    near &= region
+    outline = near & ~violet & (hsv[..., 2] < SOFT_SMOKE_DARK)
+    alpha = out[..., 3].astype(np.float32)
+    alpha[outline] = 0.0
+    alpha[violet] *= SOFT_SMOKE_ALPHA
+    # Light lines inside the clouds: blend them into the smoke colour.
+    rgb = Image.fromarray(out[..., :3]).filter(ImageFilter.GaussianBlur(SOFT_SMOKE_BLUR))
+    out[..., :3] = np.where(near[..., None], np.asarray(rgb), out[..., :3])
+    soft = np.asarray(Image.fromarray(alpha.clip(0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(SOFT_SMOKE_BLUR))).astype(np.float32)
+    alpha = np.where(near, soft, alpha)
+    out[..., 3] = alpha.clip(0, 255).astype(np.uint8)
+    return out
+
+
 def fade_smoke_tail(frames: list[np.ndarray], limit_x: int) -> list[np.ndarray]:
     """The smoke thins out over the last frames of the clip, so the breath
     ends instead of stopping (Asmodeus' breath video, D-242). Only violet
@@ -507,6 +547,9 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
     if "smoke_darker" in clip.treatment.split("+"):
         frames = [darken_violet(f, SMOKE_EXTRA) for f in frames]
+    if "soft_smoke" in clip.treatment.split("+"):
+        head_x = figure_box(first)[0] - SOFT_SMOKE_MARGIN if clip.is_video else 0
+        frames = [soften_smoke(f, head_x) for f in frames]
     if "fade_smoke_tail" in clip.treatment.split("+"):
         # Only the smoke ahead of the dragon's head (its left edge in the
         # first frame of the video) fades; the violet aura on him stays.
