@@ -143,13 +143,15 @@ func test_asmodeus_attacks_from_afar_and_hits_the_target() -> void:
 	var impacts: Array[Vector2] = []
 	screen.actor.impact.connect(func(at: Vector2, _s: float) -> void: impacts.append(at))
 	var seen: Dictionary = {"offset": 0.0}
+	# Where the target stands before it recoils from the blow.
+	var target: Vector2 = screen.opponent.chest_global()
 	var t: float = screen.play(&"attack")
 	var watch := func() -> bool:
 		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
 		return impacts.size() > 0
 	await wait_until(watch, t + 2.0)
 	assert_lte(float(seen["offset"]), CombatantView.STATIONARY_LEAN + 0.1, "ataca de longe, com a fumaça")
-	assert_eq(impacts[0], screen.opponent.chest_global(), "o golpe cai sobre o alvo")
+	assert_eq(impacts[0], target, "o golpe cai sobre o alvo")
 	await wait_seconds(t)
 
 
