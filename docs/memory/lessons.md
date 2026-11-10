@@ -33,6 +33,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - A saída de um gancho `SessionStart` com mais de poucos KB chega ao agente **cortada** (só uma prévia). O gancho deve ser curto e mandar ler os arquivos com a ferramenta de leitura.
 
+- **Drive: arquivo pequeno que o `download_file_content` devolve só no texto (D-346).** O conteúdo em base64 fica gravado no registro da sessão (`~/.claude/projects/<projeto>/<sessão>.jsonl`); basta procurar pelo id do arquivo nesse registro com Python e decodificar. Arquivos grandes vão para `tool-results/*.txt` (JSON com `content` em base64).
+
 ## Arte e animação
 
 - Esqueleto 2D a partir de uma imagem parada gerada por IA (peças recortadas e giradas) ficou "boneco articulado" e foi reprovado (D-195). Para o estilo Darkest Dungeon que Alan quer, use poses desenhadas (quadros e poses-chave) e deixe o motor fazer a ligação entre elas (D-194).

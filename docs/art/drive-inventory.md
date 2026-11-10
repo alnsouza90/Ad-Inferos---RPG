@@ -42,7 +42,8 @@ Art Source/
       buildings/level_1..3/day|night/   62 edifícios → T49 (níveis 2 e 3 no M3)
       interiors/                        9 interiores → T49
   splash/                    8 telas de passagem (`prompts-splash.md`) → T44
-  ui/icons/                  23 ícones nomeados (icon_intent_*, icon_state_*, icon_condition_*, icon_damage_*, icon_node_*, icon_item_*, D-345); 7 ainda numéricos → T36, T53
+  ui/icons/                  30 ícones nomeados (icon_intent_*, icon_state_*, icon_condition_*, icon_damage_*, icon_node_*, icon_item_*, D-345, D-346); falta o de Sufrágios → T36, T53
+  ui/hud/                    lamparina do Lume v02, escala vertical, moldura do painel, moldura do retrato, estandarte das chaves (D-258, D-346); falta a moldura de botão → T36
   vfx/halo/                  vfx_halo_disk_v01, vfx_halo_rays_v01 (auréola)
   Prancha/                   vazia
   _vazia_pode_apagar/        pasta vazia, Alan apaga
