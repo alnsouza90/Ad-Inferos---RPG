@@ -41,9 +41,16 @@ CHARACTERS_CSV = Path(__file__).with_name("animation_characters.csv")
 # Frames are kept a little under the video size (figure ~575 px, D-224):
 # enough for the figure on a 1080 px stage, lighter on the phone.
 OUTPUT_SCALE = 0.9
+# Largest figure kept, in output pixels: the stop-motion drawings are twice
+# the video size, and more than the stage shows only weighs on the phone.
+MAX_FIGURE_PX = 640
 # The Wan 3 videos are 30 frames per second; a clip plays its kept frames
 # at 30 / step, so its timing is the one of the video.
 VIDEO_FPS = 30.0
+# Stop-motion GIFs (Meta AI, a few drawings each, D-247): drawings per
+# second when the clip has no in-betweens; "tween=N" adds N mixed frames
+# between two drawings and plays N + 1 times faster, so the timing holds.
+STOP_MOTION_FPS = 5.0
 # Room around the union of the frames of a clip, in output pixels.
 PAD = 4
 # Largest sheet side (safe on the phones we target).
@@ -60,7 +67,8 @@ LIGHTEN_GAMMA = 0.8
 # another resolution, D-229, D-230): they are scaled and placed by the
 # canvas, through that idle drawing, so a raised tail does not shrink the
 # figure.
-STILL_REFERENCE = {"elite_minos": "elite_minos_body_idle_v01.jpg"}
+STILL_REFERENCE = {"elite_minos": "elite_minos_body_idle_v01.jpg",
+                   "elite_sin_vertigo": "elite_sin_vertigo_body_idle_v02.jpg"}
 
 # Background: grey, connected to the border (same idea as process_art.py,
 # vectorised because a video gives hundreds of frames).
@@ -88,6 +96,14 @@ PROTECT_FOLLOW_MIN = 0.30
 PROTECT_ROW_PIXELS = 12
 PROTECT_HALF_WIDTH = 0.22
 PROTECT_HOLE_RADIUS = 12
+# "protect_all" on clean drawings (Vertigo's stop motion, D-247): the hole
+# size follows the canvas width, between the whites of the eyes (kept) and
+# the gaps between veils (cut).
+DRAWING_HOLE_SHARE = 0.0045
+
+
+def drawing_hole_radius(width: int) -> int:
+    return max(3, round(width * DRAWING_HOLE_SHARE))
 # Exact background grey left anywhere, even a single pixel.
 SPECK_TOLERANCE = 6
 # Treatment "fade_smoke_tail": the smoke fades over the last frames.
@@ -105,6 +121,8 @@ SOFT_SMOKE_MARGIN = 20
 SMOKE_EXTRA = 0.83
 # Treatment "fade_left": width of the fade at the cut border of the video.
 FADE_LEFT_PX = 90
+# Treatment "fade_sides": the same on three sides of a stop-motion drawing.
+FADE_SIDES_PX = 60
 # Treatment "light_wisps" (Vertigo): pale grey streaks also count as
 # background when they touch it.
 WISP_MAX_CHROMA = 14
@@ -137,7 +155,30 @@ class Clip:
 
     @property
     def is_video(self) -> bool:
-        return self.source.endswith(".mp4")
+        """A source of many frames: a Wan 3 video or a stop-motion GIF."""
+        return self.source.endswith((".mp4", ".gif"))
+
+    @property
+    def is_gif(self) -> bool:
+        return self.source.endswith(".gif")
+
+    @property
+    def treatments(self) -> list[str]:
+        return self.treatment.split("+") if self.treatment else []
+
+    @property
+    def tween(self) -> int:
+        """In-betweens per pair of drawings ("tween=N"), 0 without."""
+        for t in self.treatments:
+            if t.startswith("tween="):
+                return int(t.split("=")[1])
+        return 0
+
+    def fps(self, speed: float) -> float:
+        if self.source.endswith(".mp4"):
+            return VIDEO_FPS / self.step * speed
+        # GIFs and lists of drawings ("a.jpg|b.jpg") are stop motion.
+        return STOP_MOTION_FPS * (self.tween + 1) / self.step * speed
 
 
 @dataclass
@@ -183,6 +224,13 @@ def read_clips() -> list[Character]:
 # --- reading ------------------------------------------------------------------
 
 def video_frames(path: Path) -> np.ndarray:
+    if path.suffix == ".gif":
+        with Image.open(path) as img:
+            frames = []
+            for i in range(getattr(img, "n_frames", 1)):
+                img.seek(i)
+                frames.append(np.asarray(img.convert("RGB")))
+        return np.stack(frames)
     probe = subprocess.run(
         ["ffprobe", "-v", "error", "-select_streams", "v", "-show_entries",
          "stream=width,height", "-of", "csv=p=0", str(path)],
@@ -224,20 +272,22 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
         protect = (int(fx - fh * PROTECT_HALF_WIDTH), int(fy - fh * PROTECT_TOP),
                    int(fx + fh * PROTECT_HALF_WIDTH), int(fy - fh * PROTECT_BOTTOM))
     follow = "protect_follow" in treat
+    hr = drawing_hole_radius(frames.shape[2]) if clip.is_gif else PROTECT_HOLE_RADIUS
     out: list[np.ndarray] = []
-    for i in range(clip.start, clip.end, clip.step):
+    end = clip.end if clip.end > 0 else len(frames)
+    for i in range(clip.start, end, clip.step):
         if follow:
             protect = head_box(frames[i], fx, fh)
             # Once the figure has sunk into the smoke there is no face left
             # to keep, and the box would only keep grey.
             if protect[1] > fy - fh * PROTECT_FOLLOW_MIN:
                 protect = None
-        f = cut_out(frames[i], wisps, veil, protect, inner)
-        if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
-            twin = clip.start - (clip.end - i)
+        f = cut_out(frames[i], wisps, veil, protect, inner, hr)
+        if clip.mode == "loop" and clip.blend > 0 and i >= end - clip.blend:
+            twin = clip.start - (end - i)
             if twin >= 0:
-                t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner), t)
+                t = (i - (end - clip.blend) + 1) / (clip.blend + 1)
+                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner, hr), t)
         out.append(f)
     return out
 
@@ -319,7 +369,8 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
 
 
 def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
-            protect: tuple[int, int, int, int] | None = None, inner: bool = True) -> np.ndarray:
+            protect: tuple[int, int, int, int] | None = None, inner: bool = True,
+            hole_radius: int = PROTECT_HOLE_RADIUS) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -352,7 +403,7 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
         # box of the head only big patches go.
         x0, y0, x1, y1 = protect
         box[max(y0, 0):max(y1, 0), max(x0, 0):max(x1, 0)] = True
-        big = erode(dist <= HOLE_TOLERANCE, PROTECT_HOLE_RADIUS)
+        big = erode(dist <= HOLE_TOLERANCE, hole_radius)
         holes = np.where(box, big, holes)
         specks &= ~box
     core = grow(border | holes | specks, flat)
@@ -464,6 +515,34 @@ def fade_smoke_tail(frames: list[np.ndarray], limit_x: int) -> list[np.ndarray]:
     return out
 
 
+def fade_sides(rgba: np.ndarray, width: int) -> np.ndarray:
+    """Fades the left, right and top edges of the canvas: a stop-motion
+    drawing that leans out of its frame (Vertigo's lunge, D-247) dissolves
+    instead of ending in a straight line. The bottom stays: the feet."""
+    out = fade_left(rgba, width)
+    out = fade_left(out[:, ::-1], width)[:, ::-1]
+    # Narrower at the top: the hair's smoke nearly touches it when standing.
+    h = max(1, width // 3)
+    top = np.linspace(0.0, 1.0, h, dtype=np.float32)
+    out[:h, :, 3] = (out[:h, :, 3].astype(np.float32) * top[:, None]).astype(np.uint8)
+    return np.ascontiguousarray(out)
+
+
+def tween(frames: list[np.ndarray], count: int, loop: bool) -> list[np.ndarray]:
+    """Stop motion has few drawings (D-247): between two of them, `count`
+    frames that dissolve one into the other, so a pose melts into the next
+    instead of jumping. A loop also melts its last drawing into the first."""
+    out: list[np.ndarray] = []
+    pairs = len(frames) if loop else len(frames) - 1
+    for i in range(len(frames)):
+        out.append(frames[i])
+        if i < pairs:
+            nxt = frames[(i + 1) % len(frames)]
+            for k in range(1, count + 1):
+                out.append(mix(frames[i], nxt, k / (count + 1)))
+    return out
+
+
 def fade_left(rgba: np.ndarray, width: int) -> np.ndarray:
     """Fades the left edge out: what the video cut at its border (Asmodeus'
     smoke) dissolves instead of ending in a straight line."""
@@ -493,11 +572,26 @@ def darken_smoke(rgba: np.ndarray) -> np.ndarray:
     return np.dstack([rgb, rgba[..., 3]])
 
 
-def image_rgba(path: Path, inner: bool = True) -> np.ndarray:
+def image_rgba(path: Path, inner: bool = True, frame: int = 0, big_holes: bool = False,
+               size: tuple[int, int] | None = None) -> np.ndarray:
+    """A drawing cut out. `frame` picks one drawing of a GIF; `size`
+    (width, height) brings it to the canvas of the reference drawing first.
+    `big_holes`: only big patches of grey go inside the figure, so the
+    whites of the eyes, painted in that grey, stay (Vertigo, D-247)."""
     img = Image.open(path)
+    if frame:
+        img.seek(frame)
     if img.mode == "RGBA" and np.asarray(img)[..., 3].min() < 255:
-        return np.asarray(img).copy()  # already cut (Minos poses, D-229)
-    return cut_out(np.asarray(img.convert("RGB")), inner=inner)
+        # Already cut (Minos poses, D-229).
+        if size is not None and img.size != size:
+            img = img.resize(size, Image.LANCZOS)
+        return np.asarray(img).copy()
+    img = img.convert("RGB")
+    if size is not None and img.size != size:
+        img = img.resize(size, Image.LANCZOS)
+    rgb = np.asarray(img)
+    protect = (0, 0, rgb.shape[1], rgb.shape[0]) if big_holes else None
+    return cut_out(rgb, inner=inner, protect=protect, hole_radius=drawing_hole_radius(rgb.shape[1]))
 
 
 # --- placing ------------------------------------------------------------------
@@ -532,19 +626,27 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         fx, fy, fh = feet_point(first)
         frames = clip_cut_frames(clip)
     else:
-        frames = [image_rgba(SRC / clip.group / clip.character / clip.source, "border_only" not in clip.treatment.split("+"))]
-        fx, fy, fh = feet_point(frames[0])
+        # "a.jpg|b.gif#4": a few drawn poses played in turn, "#k" being one
+        # drawing of a GIF (Vertigo, D-247). Each is brought to the canvas of
+        # the reference drawing, whose figure gives the scale and the feet.
+        inner = "border_only" not in clip.treatments
+        big = "protect_all" in clip.treatments
+        folder = SRC / clip.group / clip.character
         still = STILL_REFERENCE.get(clip.character)
-        if still is not None:
-            ref = image_rgba(SRC / clip.group / clip.character / still, "border_only" not in clip.treatment.split("+"))
-            rx, ry, rh = feet_point(ref)
-            ratio = frames[0].shape[0] / ref.shape[0]
-            fx, fy, fh = rx * ratio, ry * ratio, rh * ratio
+        ref = image_rgba(folder / still, inner, big_holes=big) if still is not None else None
+        size = (ref.shape[1], ref.shape[0]) if ref is not None else None
+        frames = []
+        for item in clip.source.split("|"):
+            name, _, k = item.partition("#")
+            frames.append(image_rgba(folder / name, inner, int(k or 0), big, size))
+        fx, fy, fh = feet_point(ref if ref is not None else frames[0])
     frames = [lighten(f) for f in frames]
     if "smoke_dark" in clip.treatment.split("+"):
         frames = [darken_smoke(f) for f in frames]
     if "fade_left" in clip.treatment.split("+"):
         frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
+    if "fade_sides" in clip.treatments:
+        frames = [fade_sides(f, FADE_SIDES_PX) for f in frames]
     if "smoke_darker" in clip.treatment.split("+"):
         frames = [darken_violet(f, SMOKE_EXTRA) for f in frames]
     if "soft_smoke" in clip.treatment.split("+"):
@@ -555,6 +657,8 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         # first frame of the video) fades; the violet aura on him stays.
         head_x = figure_box(first)[0] if clip.is_video else 0
         frames = fade_smoke_tail(frames, head_x)
+    if clip.tween > 0:
+        frames = tween(frames, clip.tween, clip.mode == "loop")
     k = OUTPUT_SCALE * ref_height / fh
     component = next((t for t in clip.treatment.split("+") if t.startswith("component=")), None)
     if component is not None:
@@ -606,7 +710,11 @@ def write_sheet(clip: Clip, frames: list[Placed]) -> Sheet:
     sheet.save(out, "WEBP", quality=WEBP_QUALITY, method=6)
     impact = -1
     if clip.impact >= 0:
-        impact = (clip.impact - clip.start) // clip.step if clip.is_video else 0
+        if clip.is_video:
+            impact = (clip.impact - clip.start) // clip.step * (clip.tween + 1)
+        else:
+            # A list of drawings: the impact is the index of its drawing.
+            impact = clip.impact * (clip.tween + 1)
     return Sheet(clip, out, (fw, fh), columns, len(frames), (-x0, -y0), impact)
 
 
@@ -627,7 +735,7 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
         sub = f"clip_{s.clip.clip}"
         ids.append(f'SubResource("{sub}")')
         # A clip of one frame is a pose: it holds for its pose time.
-        fps = VIDEO_FPS / s.clip.step * char.speed if s.clip.is_video and s.count > 1 else 0.0
+        fps = s.clip.fps(char.speed) if s.count > 1 else 0.0
         lines += [
             f'[sub_resource type="Resource" id="{sub}"]',
             'script = ExtResource("2_clip")',
@@ -691,6 +799,7 @@ def run(only: list[str], preview_dir: Path | None) -> int:
             _, _, ref_height = feet_point(cut_out(video(SRC / ref.group / ref.character / ref.source)[0]))
         else:
             _, _, ref_height = feet_point(image_rgba(SRC / ref.group / ref.character / ref.source))
+        ref_height = min(ref_height, MAX_FIGURE_PX / OUTPUT_SCALE)
         sheets: list[Sheet] = []
         placed: dict[str, list[Placed]] = {}
         for clip in char.clips:
