@@ -7,9 +7,12 @@ extends Resource
 ## Height of the standing figure in the frames, in pixels: the view scales
 ## the frames so this height fills its figure area.
 @export var figure_height: float = 1.0
-## Characters that never leave their place (Minos never rises from the
-## throne, D-219): the attack is played where they stand.
-@export var stationary: bool = false
+## Size next to the saints (1: same height). A boss is bigger (D-233).
+@export var display_scale: float = 1.0
+## How a physical attack reaches the target: &"melee" slides to it,
+## &"ranged" hits from where it stands (Asmodeus' smoke, D-233), &"throne"
+## only leans (Minos never rises from the throne, D-219).
+@export var attack_style: StringName = &"melee"
 @export var clips: Array[FrameClip] = []
 
 
@@ -18,6 +21,10 @@ func clip(clip_id: StringName) -> FrameClip:
 		if c.id == clip_id:
 			return c
 	return null
+
+
+func slides_to_target() -> bool:
+	return attack_style == &"melee"
 
 
 func has_clip(clip_id: StringName) -> bool:

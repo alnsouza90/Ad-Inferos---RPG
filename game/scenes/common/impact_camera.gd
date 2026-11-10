@@ -26,8 +26,9 @@ func _init(p_field: Control, p_flash: ColorRect) -> void:
 	_home = field.position
 
 
-## `at` is a global position; `speed` 0 skips the effect.
-func punch(at: Vector2, speed: float = 1.0) -> void:
+## `at` is a global position; `speed` 0 skips the effect; `strength` scales
+## the zoom, the shake and the flash (a spell is lighter than a blow).
+func punch(at: Vector2, speed: float = 1.0, strength: float = 1.0) -> void:
 	if speed <= 0.0 or not field.is_inside_tree():
 		return
 	if _tween != null and _tween.is_valid():
@@ -36,12 +37,13 @@ func punch(at: Vector2, speed: float = 1.0) -> void:
 	field.scale = Vector2.ONE
 	field.pivot_offset = field.get_global_transform().affine_inverse() * at
 	_tween = field.create_tween()
-	_tween.tween_property(field, "scale", Vector2(ZOOM, ZOOM), ZOOM_IN_TIME / speed)
+	var zoom: float = 1.0 + (ZOOM - 1.0) * strength
+	_tween.tween_property(field, "scale", Vector2(zoom, zoom), ZOOM_IN_TIME / speed)
 	for offset: Vector2 in SHAKE:
-		_tween.tween_property(field, "position", _home + offset, SHAKE_STEP / speed)
+		_tween.tween_property(field, "position", _home + offset * strength, SHAKE_STEP / speed)
 	_tween.tween_property(field, "position", _home, SHAKE_STEP / speed)
 	_tween.tween_property(field, "scale", Vector2.ONE, ZOOM_OUT_TIME / speed)
 	if flash != null:
-		flash.color.a = FLASH_ALPHA
+		flash.color.a = FLASH_ALPHA * strength
 		var fade := flash.create_tween()
 		fade.tween_property(flash, "color:a", 0.0, FLASH_TIME / speed)

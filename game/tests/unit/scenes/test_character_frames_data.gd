@@ -43,6 +43,19 @@ func test_every_sheet_holds_its_frames() -> void:
 			assert_true(clip.anchor.y > clip.frame_size.y * 0.5 and clip.anchor.y <= clip.frame_size.y, "%s: pés embaixo" % label)
 
 
-func test_only_minos_attacks_where_he_sits() -> void:
+func test_only_saints_and_vertigo_slide_to_their_target() -> void:
+	# Minos never rises from the throne (D-219); Asmodeus hits from afar with
+	# his smoke (D-233).
+	var expected: Dictionary = {&"elite_minos": &"throne", &"boss_asmodeus": &"ranged"}
 	for id: StringName in AnimationTestScreen.list_characters():
-		assert_eq(AnimationTestScreen.frames_of(id).stationary, id == &"elite_minos", String(id))
+		assert_eq(AnimationTestScreen.frames_of(id).attack_style, expected.get(id, &"melee"), String(id))
+
+
+func test_the_boss_is_bigger_than_the_saints() -> void:
+	assert_gt(AnimationTestScreen.frames_of(&"boss_asmodeus").display_scale, 1.0)
+	assert_eq(AnimationTestScreen.frames_of(&"saint_george").display_scale, 1.0)
+
+
+func test_george_stands_sideways_and_only_breathes() -> void:
+	var idle: FrameClip = AnimationTestScreen.frames_of(&"saint_george").clip(&"idle")
+	assert_eq(idle.count, 1, "um quadro lateral; o motor faz a respiração (D-233)")

@@ -6,7 +6,8 @@
 script = ExtResource("1_uitxt")
 texts = {
 "acted": "Já agiu",
-"anim_attack": "Atacar",
+"anim_attack": "Ataque físico",
+"anim_blessing": "Bênção",
 "anim_defend": "Defender",
 "anim_fall": "Queda",
 "anim_hit": "Golpe recebido",
@@ -17,6 +18,7 @@ texts = {
 "anim_name_saint_benedict": "São Bento",
 "anim_name_saint_george": "São Jorge",
 "anim_name_saint_therese": "Santa Teresinha",
+"anim_spell": "Magia",
 "anim_test_title": "Animações (teste)",
 "anim_walk": "Andar",
 "arena_animations": "Animações (teste)",

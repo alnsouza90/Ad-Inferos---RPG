@@ -79,5 +79,6 @@ impact_frame = -1
 script = ExtResource("1_set")
 character_id = &"boss_asmodeus"
 figure_height = 397.8
-stationary = false
+display_scale = 1.25
+attack_style = &"ranged"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

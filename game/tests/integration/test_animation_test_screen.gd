@@ -72,11 +72,17 @@ func test_an_enemy_without_walk_stays_idle() -> void:
 func test_attack_slides_to_the_target_lands_the_blow_and_comes_back() -> void:
 	screen.choose(&"saint_george")
 	var impacts: Array[Vector2] = []
-	screen.actor.impact.connect(func(at: Vector2) -> void: impacts.append(at))
+	screen.actor.impact.connect(func(at: Vector2, _s: float) -> void: impacts.append(at))
 	var home: Vector2 = screen.actor.position
 	var t: float = screen.play(&"attack")
 	assert_gt(t, 0.0)
 	assert_eq(screen.actor.player().clip_id(), &"windup")
+	var peak: Array[float] = [0.0]
+	var watch := func() -> bool:
+		peak[0] = maxf(peak[0], _body_offset(screen.actor))
+		return impacts.size() > 0
+	await wait_until(watch, t + 2.0)
+	assert_gt(peak[0], CombatantView.STATIONARY_LEAN, "Jorge desliza até o alvo")
 	await wait_seconds(t + 0.2)
 	assert_eq(impacts.size(), 1, "um golpe")
 	assert_eq(screen.opponent.player().clip_id(), &"idle", "o alvo reagiu e voltou ao parado")
@@ -130,6 +136,56 @@ func test_every_character_plays_every_move() -> void:
 		for move: StringName in AnimationTestScreen.MOVES:
 			assert_gte(screen.play(move), 0.0, "%s %s" % [id, move])
 		assert_eq(screen.actor.player().clip_id(), &"fall", String(id))
+
+
+func test_asmodeus_attacks_from_afar_and_hits_the_target() -> void:
+	screen.choose(&"boss_asmodeus")
+	var impacts: Array[Vector2] = []
+	screen.actor.impact.connect(func(at: Vector2, _s: float) -> void: impacts.append(at))
+	var seen: Dictionary = {"offset": 0.0}
+	# Where the target stands before it recoils from the blow.
+	var target: Vector2 = screen.opponent.chest_global()
+	var t: float = screen.play(&"attack")
+	var watch := func() -> bool:
+		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
+		return impacts.size() > 0
+	await wait_until(watch, t + 2.0)
+	assert_lte(float(seen["offset"]), CombatantView.STATIONARY_LEAN + 0.1, "ataca de longe, com a fumaça")
+	assert_eq(impacts[0], target, "o golpe cai sobre o alvo")
+	await wait_seconds(t)
+
+
+func test_a_spell_is_cast_in_place_and_lands_lighter_on_the_target() -> void:
+	screen.choose(&"saint_therese")
+	var hits: Array[float] = []
+	screen.actor.impact.connect(func(_at: Vector2, strength: float) -> void: hits.append(strength))
+	var seen: Dictionary = {"offset": 0.0}
+	var t: float = screen.play(&"spell")
+	assert_gt(t, 0.0)
+	var watch := func() -> bool:
+		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
+		return hits.size() > 0
+	await wait_until(watch, t + 2.0)
+	assert_eq(float(seen["offset"]), 0.0, "magia não desliza (D-233)")
+	assert_eq(hits.size(), 1)
+	assert_lt(hits[0], 1.0, "mais leve que um golpe físico")
+	await wait_seconds(t)
+
+
+func test_a_blessing_shows_its_light_and_goes_back_to_idle() -> void:
+	screen.choose(&"saint_benedict")
+	var t: float = screen.play(&"blessing")
+	assert_gt(t, 0.0)
+	var field: Node = screen.actor.get_parent()
+	var has_light := func() -> bool:
+		for child: Node in field.get_children():
+			if child is SpellEffect:
+				return true
+		return false
+	await wait_until(has_light, t + 2.0)
+	assert_true(has_light.call(), "a luz da bênção aparece")
+	await wait_until(func() -> bool: return screen.actor.player().clip_id() == &"idle", t + 2.0)
+	assert_eq(screen.actor.player().clip_id(), &"idle")
 
 
 func _body_offset(view: CombatantView) -> float:

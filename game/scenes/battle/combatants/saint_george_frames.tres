@@ -7,12 +7,12 @@
 script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/characters/saints/saint_george/frames/saint_george_idle.webp"
-frame_size = Vector2i(271, 512)
-columns = 15
-count = 20
-fps = 15
+frame_size = Vector2i(229, 514)
+columns = 1
+count = 1
+fps = 30
 looping = true
-anchor = Vector2(148, 506)
+anchor = Vector2(125, 508)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_walk"]
@@ -55,12 +55,12 @@ impact_frame = 3
 script = ExtResource("2_clip")
 id = &"defend"
 sheet_path = "res://assets/characters/saints/saint_george/frames/saint_george_defend.webp"
-frame_size = Vector2i(507, 457)
-columns = 8
-count = 8
+frame_size = Vector2i(507, 423)
+columns = 5
+count = 5
 fps = 15
 looping = false
-anchor = Vector2(259, 453)
+anchor = Vector2(259, 420)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_hit"]
@@ -91,5 +91,6 @@ impact_frame = -1
 script = ExtResource("1_set")
 character_id = &"saint_george"
 figure_height = 501.3
-stationary = false
+display_scale = 1
+attack_style = &"melee"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

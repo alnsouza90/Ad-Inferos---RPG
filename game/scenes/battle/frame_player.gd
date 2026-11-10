@@ -7,7 +7,7 @@ extends Control
 signal clip_finished(clip_id: StringName)
 
 ## Breathing over the idle loop: a slow stretch of the figure from its feet.
-const BREATH_AMOUNT: float = 0.008
+const BREATH_AMOUNT: float = 0.012
 const BREATH_PERIOD: float = 3.2
 ## A single drawn pose (Minos) pops in: it starts a little bigger.
 const POSE_POP: float = 0.06
@@ -85,6 +85,12 @@ func pixel_scale() -> float:
 	if frames == null or frames.figure_height <= 0.0:
 		return 1.0
 	return display_height / frames.figure_height
+
+
+## Width of the standing figure on screen (its idle frame), in local pixels.
+func figure_width() -> float:
+	var idle: FrameClip = frames.clip(&"idle") if frames != null else null
+	return idle.frame_size.x * pixel_scale() if idle != null else 0.0
 
 
 ## The texture, the area of the sheet and where it lands (local), for the

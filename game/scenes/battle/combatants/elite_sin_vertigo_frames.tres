@@ -7,12 +7,12 @@
 script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_idle.webp"
-frame_size = Vector2i(298, 520)
+frame_size = Vector2i(297, 519)
 columns = 13
 count = 24
 fps = 10
 looping = true
-anchor = Vector2(182, 513)
+anchor = Vector2(181, 512)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_windup"]
@@ -43,19 +43,19 @@ impact_frame = 6
 script = ExtResource("2_clip")
 id = &"defend"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_defend.webp"
-frame_size = Vector2i(472, 529)
-columns = 8
-count = 15
+frame_size = Vector2i(454, 529)
+columns = 9
+count = 10
 fps = 15
 looping = false
-anchor = Vector2(291, 516)
+anchor = Vector2(273, 516)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_fall"]
 script = ExtResource("2_clip")
 id = &"fall"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_fall.webp"
-frame_size = Vector2i(506, 558)
+frame_size = Vector2i(506, 557)
 columns = 8
 count = 12
 fps = 10
@@ -67,5 +67,6 @@ impact_frame = -1
 script = ExtResource("1_set")
 character_id = &"elite_sin_vertigo"
 figure_height = 494.1
-stationary = false
+display_scale = 1
+attack_style = &"melee"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

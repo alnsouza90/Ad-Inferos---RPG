@@ -91,5 +91,6 @@ impact_frame = -1
 script = ExtResource("1_set")
 character_id = &"saint_benedict"
 figure_height = 516.6
-stationary = false
+display_scale = 1
+attack_style = &"melee"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])
