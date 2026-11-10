@@ -19,12 +19,12 @@ impact_frame = -1
 script = ExtResource("2_clip")
 id = &"windup"
 sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_windup.webp"
-frame_size = Vector2i(340, 477)
+frame_size = Vector2i(340, 476)
 columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(173, 471)
+anchor = Vector2(173, 470)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_strike"]
@@ -69,4 +69,6 @@ character_id = &"elite_minos"
 figure_height = 459.9
 display_scale = 1
 attack_style = &"throne"
+spell_style = &"orb"
+blessing_style = &"ring"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

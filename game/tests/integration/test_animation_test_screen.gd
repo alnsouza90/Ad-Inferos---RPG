@@ -72,7 +72,7 @@ func test_an_enemy_without_walk_stays_idle() -> void:
 func test_attack_slides_to_the_target_lands_the_blow_and_comes_back() -> void:
 	screen.choose(&"saint_george")
 	var impacts: Array[Vector2] = []
-	screen.actor.impact.connect(func(at: Vector2, _s: float) -> void: impacts.append(at))
+	screen.actor.impact.connect(func(at: Vector2, _s: float, _k: StringName) -> void: impacts.append(at))
 	var home: Vector2 = screen.actor.position
 	var t: float = screen.play(&"attack")
 	assert_gt(t, 0.0)
@@ -138,27 +138,55 @@ func test_every_character_plays_every_move() -> void:
 		assert_eq(screen.actor.player().clip_id(), &"fall", String(id))
 
 
-func test_asmodeus_attacks_from_afar_and_hits_the_target() -> void:
+func test_asmodeus_lunges_with_his_own_frame_and_breathes_smoke_from_afar() -> void:
 	screen.choose(&"boss_asmodeus")
-	var impacts: Array[Vector2] = []
-	screen.actor.impact.connect(func(at: Vector2, _s: float) -> void: impacts.append(at))
-	var seen: Dictionary = {"offset": 0.0}
-	# Where the target stands before it recoils from the blow.
-	var target: Vector2 = screen.opponent.chest_global()
+	# Physical: the lunge frame slides to the target (D-236).
+	var seen: Dictionary = {"offset": 0.0, "clip": &""}
 	var t: float = screen.play(&"attack")
 	var watch := func() -> bool:
 		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
-		return impacts.size() > 0
+		if screen.actor.player().clip_id() == &"melee_strike":
+			seen["clip"] = &"melee_strike"
+		return screen.actor.player().clip_id() == &"idle" and seen["clip"] != &""
 	await wait_until(watch, t + 2.0)
-	assert_lte(float(seen["offset"]), CombatantView.STATIONARY_LEAN + 0.1, "ataca de longe, com a fumaça")
-	assert_eq(impacts[0], target, "o golpe cai sobre o alvo")
+	assert_eq(seen["clip"], &"melee_strike")
+	assert_gt(float(seen["offset"]), CombatantView.STATIONARY_LEAN, "desliza até o alvo")
+	# Spiritual: his smoke reaches the target from where he stands (once he
+	# is back in his place).
+	await wait_until(func() -> bool: return absf(_body_offset(screen.actor)) < 0.5, 2.0)
+	var target: Vector2 = screen.opponent.chest_global()
+	var impacts: Array[Vector2] = []
+	screen.actor.impact.connect(func(at: Vector2, _s: float, _k: StringName) -> void: impacts.append(at))
+	seen["offset"] = 0.0
+	t = screen.play(&"spell")
+	var watch2 := func() -> bool:
+		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
+		return impacts.size() > 0
+	await wait_until(watch2, t + 2.0)
+	assert_eq(float(seen["offset"]), 0.0, "a fumaça vai de longe")
+	assert_eq(impacts[0], target)
+	await wait_seconds(t)
+
+
+func test_vertigo_spell_makes_the_target_tremble_in_dark_light() -> void:
+	screen.choose(&"elite_sin_vertigo")
+	var kinds: Array[StringName] = []
+	screen.actor.impact.connect(func(_at: Vector2, _s: float, k: StringName) -> void: kinds.append(k))
+	var t: float = screen.play(&"spell")
+	await wait_until(func() -> bool: return kinds.size() > 0, t + 2.0)
+	assert_eq(kinds, [&"outline"] as Array[StringName])
+	var lit: Array[bool] = [false]
+	await wait_until(func() -> bool:
+		lit[0] = lit[0] or screen.opponent.player().outline_strength > 0.0
+		return lit[0], 2.0)
+	assert_true(lit[0], "o santo fica contornado de roxo")
 	await wait_seconds(t)
 
 
 func test_a_spell_is_cast_in_place_and_lands_lighter_on_the_target() -> void:
 	screen.choose(&"saint_therese")
 	var hits: Array[float] = []
-	screen.actor.impact.connect(func(_at: Vector2, strength: float) -> void: hits.append(strength))
+	screen.actor.impact.connect(func(_at: Vector2, strength: float, _k: StringName) -> void: hits.append(strength))
 	var seen: Dictionary = {"offset": 0.0}
 	var t: float = screen.play(&"spell")
 	assert_gt(t, 0.0)
@@ -186,6 +214,56 @@ func test_a_blessing_shows_its_light_and_goes_back_to_idle() -> void:
 	assert_true(has_light.call(), "a luz da bênção aparece")
 	await wait_until(func() -> bool: return screen.actor.player().clip_id() == &"idle", t + 2.0)
 	assert_eq(screen.actor.player().clip_id(), &"idle")
+
+
+func _effects(kind: StringName) -> Array[SpellEffect]:
+	var found: Array[SpellEffect] = []
+	for child: Node in screen.actor.get_parent().get_children():
+		var fx := child as SpellEffect
+		if fx != null and fx.kind() == kind:
+			found.append(fx)
+	return found
+
+
+func test_a_physical_blow_darkens_the_scenery_and_splashes_blood() -> void:
+	# G1 (D-237).
+	screen.choose(&"saint_george")
+	var seen: Dictionary = {"dim": 0.0, "blood": false}
+	var t: float = screen.play(&"attack")
+	await wait_until(func() -> bool:
+		seen["dim"] = maxf(float(seen["dim"]), screen.dim_alpha())
+		seen["blood"] = bool(seen["blood"]) or not _effects(&"splatter").is_empty()
+		return float(seen["dim"]) > 0.3 and bool(seen["blood"]), t + 2.0)
+	assert_gt(float(seen["dim"]), 0.3, "o cenário escurece")
+	assert_true(seen["blood"], "respingo de sangue escuro")
+	await wait_seconds(t)
+
+
+func test_exorcism_crosses_pass_behind_and_in_front_of_the_enemy() -> void:
+	# E1 (D-237): one half is drawn behind the enemy's view, one in front.
+	screen.choose(&"saint_benedict")
+	var t: float = screen.play(&"spell")
+	await wait_until(func() -> bool: return _effects(&"crosses").size() == 2, t + 2.0)
+	var crosses: Array[SpellEffect] = _effects(&"crosses")
+	assert_eq(crosses.size(), 2)
+	var target: int = screen.opponent.get_index()
+	var before: int = 0
+	for fx: SpellEffect in crosses:
+		if fx.get_index() < target:
+			before += 1
+	assert_eq(before, 1, "metade das cruzes passa atrás do inimigo")
+	await wait_seconds(t)
+
+
+func test_each_saint_blesses_with_its_own_sign() -> void:
+	# B1 petals for Teresinha, B2 ring for Bento (D-237), B3 shield for Jorge
+	# (D-238).
+	for case: Array in [[&"saint_therese", &"petals"], [&"saint_benedict", &"ring"], [&"saint_george", &"shield"]]:
+		screen.choose(case[0])
+		var t: float = screen.play(&"blessing")
+		await wait_until(func() -> bool: return not _effects(case[1]).is_empty(), t + 2.0)
+		assert_false(_effects(case[1]).is_empty(), "%s: %s" % [case[0], case[1]])
+		await wait_seconds(t)
 
 
 func _body_offset(view: CombatantView) -> float:

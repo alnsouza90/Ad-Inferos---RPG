@@ -62,3 +62,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Vertigem: fiapos de fundo cinza entre os véus~~ Removidos (D-332) | — | 10/11/2026 |
 | Tamanho dos chefes (2 ou 3 lugares) e de Asmodeu: provisório 1,25× a altura dos santos (D-233, D-332); confirmar com a tela de combate nova | T36/T38 (Alan) | 10/11/2026 |
 | Alcance do ataque de cada inimigo no combate: hoje vem da tabela de arte (`attack_style`); quando `bosses.md` definir as ações de Asmodeu, Minos e Vertigem, conferir se o tipo de dano de cada ação bate com a animação | T38/T52 | 10/11/2026 |
+| ~~Estilo dos efeitos~~ Escolhidos (D-237, D-238) | — | 10/11/2026 |
+| Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto | T36/T52 | 10/11/2026 |
