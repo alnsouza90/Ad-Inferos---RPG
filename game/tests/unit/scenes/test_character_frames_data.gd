@@ -74,7 +74,9 @@ func test_asmodeus_moves_faster_than_the_video() -> void:
 	var frames: CharacterFrames = AnimationTestScreen.frames_of(&"boss_asmodeus")
 	# The breath video is kept one frame in three (10 a second), sped up 1.35×.
 	assert_gt(frames.clip(&"strike").fps, 10.0 * 1.3)
-	assert_gt(frames.clip(&"idle").fps, 10.0 * 1.3)
+	# Standing, he holds a few sharp frames of the video and melts them
+	# (D-254): the video's texture flickered, and its average blurred.
+	assert_gt(frames.clip(&"idle").count, 3)
 
 
 func test_vertigo_moves_by_her_stop_motion_drawings() -> void:
