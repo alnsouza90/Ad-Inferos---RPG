@@ -393,3 +393,49 @@ A sequence of clear key poses by Asmodeus, each one held still for about half a 
 7. collapse: the dragon sinks to the ground, wings drooping;
 8. down: the dragon lying on the ground with its rider slumped, motionless.
 ```
+
+## Asmodeu em stop motion (`boss_asmodeus`, D-253)
+
+O vídeo do Wan 3 redesenha a textura do dragão a cada quadro (pisca) e a média temporal borrou (D-253). Caminho igual ao da Vertigem: GIFs curtos do Meta AI a partir da imagem padrão aprovada, mais imagens soltas das poses principais. O sopro (magia) continua com o vídeo aprovado (D-242, D-244).
+
+Como gerar:
+
+1. **Imagem de partida:** `boss_asmodeus_body_idle` aprovada (de lado, fundo cinza liso). Se o Meta AI pedir formato, use **quadrado (1:1)**: o dragão com asas cabe com folga.
+2. **Confira antes de mandar:** nenhuma ponta (asa, lança, bandeira, cauda) encostando na borda; mesmo tamanho em todos os quadros; as três cabeças e a coroa iguais. Quadro com parte cortada não entra no jogo (D-247).
+3. **Imagens soltas:** se um GIF vier bom mas com um quadro cortado, gere só aquela pose como imagem (mesmo cabeçalho, trocando a última frase pela descrição da pose).
+4. Suba no Drive em `characters/bosses/boss_asmodeus/` e me avise.
+
+**Parado (GIF, 4 a 6 quadros)**
+
+```text
+2D hand-inked gothic comic art, the exact same character as in the reference image: Asmodeus, the three-headed demon king (bull head, crowned bearded human head, ram head) with rooster legs and a serpent tail, holding a lance with a blank white banner, riding a winged infernal dragon with pale scaled skin and dark red wings, violet smoke around the rider, non-sexualized. Same costume, colors, proportions, line style and level of detail in every frame; the lance always in the same hand as in the reference. Strict side view, facing left. Locked static camera, no zoom, no pan: the character keeps exactly the same size and position in every frame. The whole figure, including both wingtips, the lance tip, the banner and the tail tip, always stays fully inside the frame with a wide empty margin of plain background on every side (at least one fifth of the frame); nothing ever touches or crosses the edges. Plain flat solid light grey background, no gradient, no frame border, no scenery, no ground line, no cast shadow, no text, no glow, no particles, no speed lines, no motion blur, no smears. Crisp clean ink lines and stable textures: the scale pattern of the dragon and the details of the heads do not change between frames. Clear distinct poses, no morphing, no extra limbs or heads.
+Calm idle: the dragon stands with wings half spread, the lance held upright, breathing slowly; between frames only small changes: the wings rise and lower a little, the heads turn slightly, the banner moves gently. The last frame matches the first.
+```
+
+**Ataque físico (GIF, 6 quadros)**
+
+```text
+2D hand-inked gothic comic art, the exact same character as in the reference image: Asmodeus, the three-headed demon king (bull head, crowned bearded human head, ram head) with rooster legs and a serpent tail, holding a lance with a blank white banner, riding a winged infernal dragon with pale scaled skin and dark red wings, violet smoke around the rider, non-sexualized. Same costume, colors, proportions, line style and level of detail in every frame; the lance always in the same hand as in the reference. Strict side view, facing left. Locked static camera, no zoom, no pan: the character keeps exactly the same size and position in every frame. The whole figure, including both wingtips, the lance tip, the banner and the tail tip, always stays fully inside the frame with a wide empty margin of plain background on every side (at least one fifth of the frame); nothing ever touches or crosses the edges. Plain flat solid light grey background, no gradient, no frame border, no scenery, no ground line, no cast shadow, no text, no glow, no particles, no speed lines, no motion blur, no smears. Crisp clean ink lines and stable textures: the scale pattern of the dragon and the details of the heads do not change between frames. Clear distinct poses, no morphing, no extra limbs or heads.
+Melee attack in clear key poses: 1. ready stance; 2. the dragon rears up, the rider draws the lance back; 3. the dragon lunges a short step forward to the left and the rider thrusts the lance forward, the lance tip still well inside the frame; 4. impact pose held; 5. pulling back; 6. ready stance again.
+```
+
+**Defesa (GIF, 4 quadros)**
+
+```text
+2D hand-inked gothic comic art, the exact same character as in the reference image: Asmodeus, the three-headed demon king (bull head, crowned bearded human head, ram head) with rooster legs and a serpent tail, holding a lance with a blank white banner, riding a winged infernal dragon with pale scaled skin and dark red wings, violet smoke around the rider, non-sexualized. Same costume, colors, proportions, line style and level of detail in every frame; the lance always in the same hand as in the reference. Strict side view, facing left. Locked static camera, no zoom, no pan: the character keeps exactly the same size and position in every frame. The whole figure, including both wingtips, the lance tip, the banner and the tail tip, always stays fully inside the frame with a wide empty margin of plain background on every side (at least one fifth of the frame); nothing ever touches or crosses the edges. Plain flat solid light grey background, no gradient, no frame border, no scenery, no ground line, no cast shadow, no text, no glow, no particles, no speed lines, no motion blur, no smears. Crisp clean ink lines and stable textures: the scale pattern of the dragon and the details of the heads do not change between frames. Clear distinct poses, no morphing, no extra limbs or heads.
+Defend in clear key poses: 1. ready stance; 2. the dragon starts to fold its wings forward; 3. the wings closed in front, covering the rider and the dragon's chest, the heads peeking over; 4. held.
+```
+
+**Golpe recebido (GIF, 4 quadros)**
+
+```text
+2D hand-inked gothic comic art, the exact same character as in the reference image: Asmodeus, the three-headed demon king (bull head, crowned bearded human head, ram head) with rooster legs and a serpent tail, holding a lance with a blank white banner, riding a winged infernal dragon with pale scaled skin and dark red wings, violet smoke around the rider, non-sexualized. Same costume, colors, proportions, line style and level of detail in every frame; the lance always in the same hand as in the reference. Strict side view, facing left. Locked static camera, no zoom, no pan: the character keeps exactly the same size and position in every frame. The whole figure, including both wingtips, the lance tip, the banner and the tail tip, always stays fully inside the frame with a wide empty margin of plain background on every side (at least one fifth of the frame); nothing ever touches or crosses the edges. Plain flat solid light grey background, no gradient, no frame border, no scenery, no ground line, no cast shadow, no text, no glow, no particles, no speed lines, no motion blur, no smears. Crisp clean ink lines and stable textures: the scale pattern of the dragon and the details of the heads do not change between frames. Clear distinct poses, no morphing, no extra limbs or heads.
+Hit reaction in clear key poses: 1. ready stance; 2. the dragon recoils backward to the right, the three heads roaring in pain, the wings thrown up; 3. staggered; 4. back to the ready stance.
+```
+
+**Queda (GIF, 6 quadros)**
+
+```text
+2D hand-inked gothic comic art, the exact same character as in the reference image: Asmodeus, the three-headed demon king (bull head, crowned bearded human head, ram head) with rooster legs and a serpent tail, holding a lance with a blank white banner, riding a winged infernal dragon with pale scaled skin and dark red wings, violet smoke around the rider, non-sexualized. Same costume, colors, proportions, line style and level of detail in every frame; the lance always in the same hand as in the reference. Strict side view, facing left. Locked static camera, no zoom, no pan: the character keeps exactly the same size and position in every frame. The whole figure, including both wingtips, the lance tip, the banner and the tail tip, always stays fully inside the frame with a wide empty margin of plain background on every side (at least one fifth of the frame); nothing ever touches or crosses the edges. Plain flat solid light grey background, no gradient, no frame border, no scenery, no ground line, no cast shadow, no text, no glow, no particles, no speed lines, no motion blur, no smears. Crisp clean ink lines and stable textures: the scale pattern of the dragon and the details of the heads do not change between frames. Clear distinct poses, no morphing, no extra limbs or heads.
+Defeat in clear key poses: 1. ready stance; 2. the dragon staggers, wings drooping; 3. it sinks to its knees, the rider slumping; 4. the dragon lies on the ground, the lance falling; 5. the body starts to dissolve into dark violet smoke; 6. only a low cloud of dark violet smoke on the ground. Everything stays inside the frame.
+```
