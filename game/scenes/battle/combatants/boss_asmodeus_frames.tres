@@ -63,6 +63,18 @@ looping = false
 anchor = Vector2(167, 450)
 impact_frame = 0
 
+[sub_resource type="Resource" id="clip_smoke_puff"]
+script = ExtResource("2_clip")
+id = &"smoke_puff"
+sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_smoke_puff.webp"
+frame_size = Vector2i(91, 125)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(46, 63)
+impact_frame = -1
+
 [sub_resource type="Resource" id="clip_defend"]
 script = ExtResource("2_clip")
 id = &"defend"
@@ -107,4 +119,4 @@ display_scale = 1.25
 attack_style = &"melee"
 spell_style = &"own"
 blessing_style = &"ring"
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_melee_windup"), SubResource("clip_melee_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_melee_windup"), SubResource("clip_melee_strike"), SubResource("clip_smoke_puff"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

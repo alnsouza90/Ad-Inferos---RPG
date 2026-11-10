@@ -35,6 +35,7 @@ boss_asmodeus,bosses,windup,boss_asmodeus_anim_actions_v01.mp4,18,42,2,once,,,sm
 boss_asmodeus,bosses,strike,boss_asmodeus_anim_actions_v01.mp4,42,78,2,once,,54,smoke_dark+fade_left
 boss_asmodeus,bosses,melee_windup,boss_asmodeus_anim_actions_v01.mp4,28,40,2,once,,,smoke_dark
 boss_asmodeus,bosses,melee_strike,boss_asmodeus_anim_actions_v01.mp4,40,41,1,once,,40,smoke_dark
+boss_asmodeus,bosses,smoke_puff,boss_asmodeus_anim_actions_v01.mp4,80,81,1,once,,,smoke_dark+component=95:120
 boss_asmodeus,bosses,defend,boss_asmodeus_anim_actions_v01.mp4,84,108,2,once,,,smoke_dark+fade_left
 boss_asmodeus,bosses,hit,boss_asmodeus_anim_actions_v01.mp4,105,114,2,once,,,smoke_dark
 boss_asmodeus,bosses,fall,boss_asmodeus_anim_actions_v01.mp4,114,150,3,once,,,smoke_dark

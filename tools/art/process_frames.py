@@ -240,6 +240,28 @@ def head_box(rgb: np.ndarray, fx: float, fh: float) -> tuple[int, int, int, int]
     return (x0, top - 4, x1, top + int(fh * PROTECT_FOLLOW_HEIGHT))
 
 
+def only_component(rgba: np.ndarray, x: int, y: int) -> np.ndarray:
+    """Keeps the opaque piece connected to (x, y); the rest goes clear."""
+    solid = rgba[..., 3] > 40
+    seed = np.zeros_like(solid)
+    seed[y, x] = True
+    keep = grow(seed, solid)
+    # A soft rim: the half-clear pixels right around the piece stay too.
+    rim = keep.copy()
+    rim[1:, :] |= keep[:-1, :]
+    rim[:-1, :] |= keep[1:, :]
+    rim[:, 1:] |= keep[:, :-1]
+    rim[:, :-1] |= keep[:, 1:]
+    out = rgba.copy()
+    out[..., 3] = np.where(rim, out[..., 3], 0)
+    return out
+
+
+def centre_of(rgba: np.ndarray) -> tuple[float, float]:
+    x0, y0, x1, y1 = figure_box(rgba)
+    return (x0 + x1) / 2.0, (y0 + y1) / 2.0
+
+
 def mix(a: np.ndarray, b: np.ndarray, t: float) -> np.ndarray:
     """Premultiplied mix of two RGBA frames."""
     fa, fb = a.astype(np.float32) / 255.0, b.astype(np.float32) / 255.0
@@ -439,6 +461,14 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
     if "fade_left" in clip.treatment.split("+"):
         frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
     k = OUTPUT_SCALE * ref_height / fh
+    component = next((t for t in clip.treatment.split("+") if t.startswith("component=")), None)
+    if component is not None:
+        # "component=x:y": only the piece of the drawing that touches that
+        # point of the video (one cloud of Asmodeus' smoke, D-241), with its
+        # centre as the anchor; scaled like the character.
+        px, py = (int(v) for v in component.split("=")[1].split(":"))
+        frames = [only_component(f, px, py) for f in frames]
+        return [place(f, centre_of(f), k) for f in frames]
     return [place(f, (fx, fy), k) for f in frames]
 
 

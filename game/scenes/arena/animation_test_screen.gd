@@ -15,7 +15,8 @@ const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 const FRAMES_DIR: String = "res://scenes/battle/combatants"
 const FRAMES_SUFFIX: String = "_frames.tres"
 ## Layout of the field (presentation only).
-const GROUND_Y: float = 820.0
+## Low enough for Asmodeus rearing up at 1.25× (D-241).
+const GROUND_Y: float = 890.0
 const VIEW_WIDTH: float = 200.0
 ## 1.7 × 1.2: Alan asked for the figures 20% bigger (D-233).
 const VIEW_SCALE: float = 2.04
@@ -26,8 +27,8 @@ const ENEMY_CENTER_X: float = 1400.0
 const CONTACT_SHARE: float = 0.55
 ## G1: how long the camera holds on a physical blow (seconds at speed 1).
 const BLOW_HOLD: float = 0.45
-const CHAR_BUTTON := Vector2(290, 80)
-const MOVE_BUTTON := Vector2(196, 90)
+const CHAR_BUTTON := Vector2(290, 64)
+const MOVE_BUTTON := Vector2(196, 72)
 ## Who takes the blow (any listed character of the other side if missing).
 const SAINTS_OPPONENT: StringName = &"elite_sin_vertigo"
 const ENEMIES_OPPONENT: StringName = &"saint_george"
@@ -264,7 +265,7 @@ func _build() -> void:
 	var chars := HBoxContainer.new()
 	chars.alignment = BoxContainer.ALIGNMENT_CENTER
 	chars.add_theme_constant_override("separation", 12)
-	chars.position = Vector2(0, GROUND_Y + 135)
+	chars.position = Vector2(0, GROUND_Y + 98)
 	chars.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
 	_stage.add_child(chars)
 	for id: StringName in character_ids:
@@ -275,7 +276,7 @@ func _build() -> void:
 	var moves := HBoxContainer.new()
 	moves.alignment = BoxContainer.ALIGNMENT_CENTER
 	moves.add_theme_constant_override("separation", 10)
-	moves.position = Vector2(0, GROUND_Y + 30)
+	moves.position = Vector2(0, GROUND_Y + 14)
 	moves.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
 	_stage.add_child(moves)
 	for move: StringName in MOVES:

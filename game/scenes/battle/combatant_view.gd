@@ -627,7 +627,15 @@ func _breathe_smoke() -> void:
 		var local := rect.position + rect.size * Vector2(MOUTH.x if not is_saint else 1.0 - MOUTH.x, MOUTH.y)
 		mouth = _player.get_global_transform() * local
 	var target: Vector2 = _target_global if _target_global != Vector2.INF else chest_global()
-	var fx := SpellEffect.smoke(holder, to_local * mouth, to_local * target, _player.scaled(SMOKE_TIME), effect_scale(holder))
+	var puff: FrameClip = _frames.clip(&"smoke_puff")
+	var fx: SpellEffect
+	if puff != null:
+		# Copies of a cloud of his own video, at the size it has in his frames.
+		var relative: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse() * _player.get_global_transform()
+		fx = SpellEffect.smoke(holder, to_local * mouth, to_local * target, _player.scaled(SMOKE_TIME), effect_scale(holder),
+			FramePlayer.sheet(puff.sheet_path), puff.region(0), relative.get_scale().x * _player.pixel_scale())
+	else:
+		fx = SpellEffect.smoke(holder, to_local * mouth, to_local * target, _player.scaled(SMOKE_TIME), effect_scale(holder))
 	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
 
 
