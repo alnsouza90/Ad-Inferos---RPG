@@ -52,6 +52,8 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 7. **Escala e lado:** bosses maiores (`display_scale`), estilo de ataque por personagem (melee/ranged/throne), quem age vai para a frente (`_to_front`). Magias de longe não deslizam até o alvo (D-233, D-240).
 8. **O recorte de desenhos grandes é lento** (~2 min por personagem): rodar em segundo plano e, enquanto isso, preparar testes e o script de prévia.
 9. **Drive:** `download_file_content` salva o arquivo grande num `.txt` JSON com base64; decodificar com Python. Envio ao Drive passa só até ~3 MB.
+11. **Pixels piscando em vídeo do Wan 3:** meça antes de mexer no recorte (picos de brilho de um quadro para o outro, sobre o fundo escuro): no Asmodeu o piscar vinha do vídeo, e a cura foi a média temporal (`temporal=N`), não o recorte (D-342).
+12. **Nunca cortar a saída da ferramenta com `| head`:** o processo morre no meio e deixa `.tres` velho com folha nova (quadros desalinhados). Redirecione para arquivo e leia o fim.
 10. **Git:** `git checkout <commit> --` **sem caminho** troca a branch inteira (HEAD solto) e deixa arquivos LFS como ponteiros; para recuperar um arquivo use sempre `git checkout <commit> -- <caminho>`, e depois de voltar rode `git lfs pull`.
 
 ## Dados

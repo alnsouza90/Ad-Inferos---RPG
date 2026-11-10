@@ -176,15 +176,28 @@ class Clip:
     @property
     def tween(self) -> int:
         """In-betweens per pair of drawings ("tween=N"), 0 without."""
+        return self.option("tween", 0)
+
+    @property
+    def hold(self) -> int:
+        """Frames each drawing stays before it melts into the next
+        ("hold=N"; 1 without): a calm idle (Alan, D-250)."""
+        return self.option("hold", 1)
+
+    def option(self, name: str, default: int) -> int:
         for t in self.treatments:
-            if t.startswith("tween="):
+            if t.startswith(name + "="):
                 return int(t.split("=")[1])
-        return 0
+        return default
 
     def fps(self, speed: float) -> float:
         if self.source.endswith(".mp4"):
             return VIDEO_FPS / self.step * speed
-        # GIFs and lists of drawings ("a.jpg|b.jpg") are stop motion.
+        # GIFs and lists of drawings ("a.jpg|b.jpg") are stop motion; "fps=N"
+        # sets the frame rate of a clip that holds its drawings.
+        rate = self.option("fps", 0)
+        if rate > 0:
+            return rate * speed
         return STOP_MOTION_FPS * (self.tween + 1) / self.step * speed
 
 
@@ -280,6 +293,9 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
                    int(fx + fh * PROTECT_HALF_WIDTH), int(fy - fh * PROTECT_BOTTOM))
     follow = "protect_follow" in treat
     hr = drawing_hole_radius(frames.shape[2]) if clip.is_gif else PROTECT_HOLE_RADIUS
+    radius = clip.option("temporal", 0)
+    if radius > 0:
+        frames = smoothed(frames, radius)
     out: list[np.ndarray] = []
     end = clip.end if clip.end > 0 else len(frames)
     for i in range(clip.start, end, clip.step):
@@ -296,6 +312,19 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
                 t = (i - (end - clip.blend) + 1) / (clip.blend + 1)
                 f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner, hr, clip.is_gif), t)
         out.append(f)
+    return out
+
+
+def smoothed(frames: np.ndarray, radius: int) -> np.ndarray:
+    """Each frame as the mean of itself and `radius` frames on each side.
+    The AI video redraws its fine texture a little differently every frame
+    (the scales of Asmodeus' dragon), which flickers on the phone (Alan,
+    D-250); the mean halves that and only softens what moves fast."""
+    data = frames.astype(np.float32)
+    out = np.empty_like(frames)
+    for i in range(len(frames)):
+        lo, hi = max(0, i - radius), min(len(frames), i + radius + 1)
+        out[i] = data[lo:hi].mean(axis=0).round().astype(np.uint8)
     return out
 
 
@@ -574,14 +603,14 @@ def fade_sides(rgba: np.ndarray, width: int) -> np.ndarray:
     return np.ascontiguousarray(out)
 
 
-def tween(frames: list[np.ndarray], count: int, loop: bool) -> list[np.ndarray]:
+def tween(frames: list[np.ndarray], count: int, loop: bool, hold: int = 1) -> list[np.ndarray]:
     """Stop motion has few drawings (D-247): between two of them, `count`
     frames that dissolve one into the other, so a pose melts into the next
     instead of jumping. A loop also melts its last drawing into the first."""
     out: list[np.ndarray] = []
     pairs = len(frames) if loop else len(frames) - 1
     for i in range(len(frames)):
-        out.append(frames[i])
+        out += [frames[i]] * hold
         if i < pairs:
             nxt = frames[(i + 1) % len(frames)]
             for k in range(1, count + 1):
@@ -704,8 +733,8 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         # first frame of the video) fades; the violet aura on him stays.
         head_x = figure_box(first)[0] if clip.is_video else 0
         frames = fade_smoke_tail(frames, head_x)
-    if clip.tween > 0:
-        frames = tween(frames, clip.tween, clip.mode == "loop")
+    if clip.tween > 0 or clip.hold > 1:
+        frames = tween(frames, clip.tween, clip.mode == "loop", clip.hold)
     k = OUTPUT_SCALE * ref_height / fh
     component = next((t for t in clip.treatment.split("+") if t.startswith("component=")), None)
     if component is not None:
@@ -758,10 +787,10 @@ def write_sheet(clip: Clip, frames: list[Placed]) -> Sheet:
     impact = -1
     if clip.impact >= 0:
         if clip.is_video:
-            impact = (clip.impact - clip.start) // clip.step * (clip.tween + 1)
+            impact = (clip.impact - clip.start) // clip.step * (clip.hold + clip.tween)
         else:
             # A list of drawings: the impact is the index of its drawing.
-            impact = clip.impact * (clip.tween + 1)
+            impact = clip.impact * (clip.hold + clip.tween)
     return Sheet(clip, out, (fw, fh), columns, len(frames), (-x0, -y0), impact)
 
 
@@ -845,7 +874,10 @@ def run(only: list[str], preview_dir: Path | None) -> int:
         if ref.is_video:
             _, _, ref_height = feet_point(cut_out(video(SRC / ref.group / ref.character / ref.source)[0]))
         else:
-            _, _, ref_height = feet_point(image_rgba(SRC / ref.group / ref.character / ref.source))
+            # A list of drawings is scaled by the reference drawing (D-250).
+            name = STILL_REFERENCE.get(ref.character, ref.source.split("|")[0].split("#")[0])
+            _, _, ref_height = feet_point(image_rgba(SRC / ref.group / ref.character / name,
+                                                     big_holes="protect_all" in ref.treatments))
         ref_height = min(ref_height, MAX_FIGURE_PX / OUTPUT_SCALE)
         sheets: list[Sheet] = []
         placed: dict[str, list[Placed]] = {}
