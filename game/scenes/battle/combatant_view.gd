@@ -70,6 +70,11 @@ const COLOR_DARK := Color(0.68, 0.42, 1.0)
 const SPIRIT_HIT_TIME: float = 1.1
 const SPIRIT_SHAKES: int = 8
 const SPIRIT_SHAKE_PX: float = 4.0
+## Halo over animated frames (T36, D-258): its diameter and the height of
+## its centre under the top of the standing figure, as shares of the
+## figure's height on screen.
+const FRAME_HALO_SIZE: float = 0.17
+const FRAME_HALO_DROP: float = 0.07
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -114,6 +119,9 @@ var _trail_clock: float = 0.0
 var _target_global: Vector2 = Vector2.INF
 ## The view of the enemy a spell is cast on (the crosses pass behind it).
 var _target_view: Node
+## Share of the last action's length until its blow lands (T36): the battle
+## lets the target react then, while the attacker goes home.
+var _impact_share: float = 1.0
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -194,6 +202,10 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 		var wanted: StringName = &"fall" if _down else &""
 		if wanted != _pose and (wanted == &"" or _art.pose_texture(wanted) != null):
 			_set_pose(wanted)
+	if _player != null and (c.spirit_state != _spirit_state or c.desolation != _spirit_desolation):
+		_spirit_state = c.spirit_state
+		_spirit_desolation = c.desolation
+		_apply_player_look(false)
 	if _art != null and (c.spirit_state != _spirit_state or c.desolation != _spirit_desolation or _figure.texture == null):
 		_spirit_state = c.spirit_state
 		_spirit_desolation = c.desolation
@@ -222,6 +234,11 @@ func set_spirit_state(state_id: StringName) -> void:
 		return
 	_spirit_state = state_id
 	_apply_spirit(true)
+
+
+## Share of the last action's length until its blow lands (1: at the end).
+func impact_share() -> float:
+	return clampf(_impact_share, 0.0, 1.0)
 
 
 func has_art() -> bool:
@@ -319,6 +336,7 @@ func play_action(_pose_id: StringName = &"", reach_px: float = -1.0, target_glob
 		_to_front()
 		return _play_frame_attack(reach_px if reach_px >= 0.0 else DEFAULT_REACH)
 	var t: float = ACTION_TIME / speed
+	_impact_share = 0.5
 	var home := Vector2(0, INTENT_HEIGHT)
 	var reach := home + Vector2(40.0 if is_saint else -40.0, 0)
 	var posed: bool = _show_pose_briefly(&"attack")
@@ -382,7 +400,9 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 			tw.tween_callback(_breathe_smoke)
 	tw.tween_interval(maxf(strike_time - release, flight) + hold)
 	tw.tween_callback(_back_to_idle)
-	return windup + release + maxf(strike_time - release, flight) + hold
+	var total: float = windup + release + maxf(strike_time - release, flight) + hold
+	_impact_share = (windup + release + flight) / total if total > 0.0 else 1.0
+	return total
 
 
 ## A blessing (support with no damage, D-233): the caster raises its sign in
@@ -402,7 +422,9 @@ func play_blessing(target_global: Vector2 = Vector2.INF) -> float:
 	tw.tween_callback(_spawn_blessing.bind(feet, glow))
 	tw.tween_interval(maxf(strike_time, glow))
 	tw.tween_callback(_back_to_idle)
-	return windup + maxf(strike_time, glow)
+	var total: float = windup + maxf(strike_time, glow)
+	_impact_share = (windup + glow * 0.5) / total if total > 0.0 else 1.0
+	return total
 
 
 ## How big the effects are drawn in `holder` (the field): the models were
@@ -546,6 +568,23 @@ func _build_player(width: float) -> void:
 	# Feet on the bottom of the panel, like the still figure.
 	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y * _frames.display_scale)
 	_body.add_child(_player)
+	if is_saint and _halo_settings != null:
+		_build_frame_halo()
+
+
+## The halo stands behind the head of the idle figure; it hides while an
+## action clip plays (the head moves) and when the saint is down.
+func _build_frame_halo() -> void:
+	if _halo != null or _player == null:
+		return
+	var height: float = _player.display_height
+	_halo = HaloView.new()
+	_halo.setup(_halo_settings, height * FRAME_HALO_SIZE)
+	var centre := _player.feet - Vector2(0.0, height * (1.0 - FRAME_HALO_DROP))
+	_halo.position = centre - _halo.size * 0.5
+	_body.add_child(_halo)
+	_body.move_child(_halo, _player.get_index())
+	_apply_player_look(false)
 
 
 ## The figure loses colour as desolation grows, like the still images; the
@@ -555,6 +594,8 @@ func _apply_player_look(animated: bool) -> void:
 		return
 	var look: HaloLook = HaloLook.of(_halo_settings, _spirit_state, _spirit_desolation)
 	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
+	if _halo != null:
+		_halo.apply(look, duration)
 	if duration > 0.0 and is_inside_tree():
 		create_tween().tween_property(_figure_material, "shader_parameter/saturation", look.saturation, duration)
 	else:
@@ -565,6 +606,8 @@ func _apply_player_look(animated: bool) -> void:
 func set_halo_settings(settings: HaloSettings) -> void:
 	_halo_settings = settings
 	if _player != null:
+		if is_saint:
+			_build_frame_halo()
 		_apply_player_look(false)
 
 
@@ -596,7 +639,9 @@ func _play_frame_attack(reach_px: float) -> float:
 	tw.tween_interval(maxf(strike_time - blow, 0.0) + hold)
 	tw.tween_callback(_back_to_idle)
 	tw.tween_property(_body, "position", home, back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	return windup + maxf(strike_time, dash) + hold + back
+	var total: float = windup + maxf(strike_time, dash) + hold + back
+	_impact_share = (windup + maxf(blow, dash)) / total if total > 0.0 else 1.0
+	return total
 
 
 ## A boss can have its own frames for the blow (Asmodeus' lunge, D-236);
@@ -699,6 +744,8 @@ func _back_to_idle() -> void:
 
 
 func _process(delta: float) -> void:
+	if _player != null and _halo != null:
+		_halo.visible = not _down and _player.clip_id() == &"idle"
 	if _trail_left <= 0.0:
 		return
 	_trail_left -= delta

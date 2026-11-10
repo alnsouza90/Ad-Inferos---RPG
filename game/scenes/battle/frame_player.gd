@@ -5,6 +5,8 @@ extends Control
 ## `display_height` pixels tall. Presentation only.
 
 signal clip_finished(clip_id: StringName)
+## A clip starts (tests follow the moves even when a slow frame skips one).
+signal clip_started(clip_id: StringName)
 
 ## Breathing over the idle loop: a slow stretch of the figure from its feet.
 const BREATH_AMOUNT: float = 0.012
@@ -67,6 +69,7 @@ func play(clip_id: StringName) -> float:
 	_time = 0.0
 	_finished = false
 	queue_redraw()
+	clip_started.emit(clip_id)
 	return scaled(_clip.duration())
 
 

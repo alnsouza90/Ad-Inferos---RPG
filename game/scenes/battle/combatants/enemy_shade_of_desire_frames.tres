@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/characters/enemies/enemy_shade_of_desire/frames/enemy_shade_of_desire_idle.webp"
+frame_size = Vector2i(347, 654)
+columns = 1
+count = 1
+fps = 0
+looping = true
+anchor = Vector2(172, 646)
+impact_frame = -1
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"enemy_shade_of_desire"
+figure_height = 640.0
+display_scale = 0.95
+attack_style = &"melee"
+spell_style = &"outline"
+blessing_style = &"ring"
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])

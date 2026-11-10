@@ -43,6 +43,8 @@ A arena do M0 continua acessível só na versão de desenvolvimento (botão no t
 
 ## 3. Combate (tela principal do jogo)
 
+**Leiaute da T36 (D-257, D-258, D-347), no clima de Darkest Dungeon:** campo nos 720 px de cima com o cenário do círculo e todos os combatentes animados, pés no chão (y = 655); vida e desolação em barras nos pés; intenções numa linha sobre os inimigos e condições sobre a cabeça; Lume como lamparina descendo uma haste no canto esquerdo (só na expedição). Embaixo, painel de ferro forjado: à esquerda o santo escolhido (retrato com a moldura tingida pela desolação, vida, desolação, Fervor, habilidades, Milagre, Trocar, Passar, Provisões e a descrição); à direita a ficha do combatente tocado (figura, vida, intenção, condições) e "Encerrar turno"; estandartes nos lados. Paleta preta e cinza, fonte Pirata One. O desenho abaixo é o esquema antigo das posições.
+
 ```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ [Pausa]   Rodada 3              Fervor ◆◆◆◆◇◇ (4/6)           [Velocidade]│ ← barra superior
@@ -90,7 +92,7 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121; caminhada interativa do M2:
 - **Bifurcação:** as entradas ficam no trecho final do corredor; parado diante de uma, o painel mostra o ícone e o nome do tipo de nó (nunca só o ícone) e o que se sabe do conteúdo; o botão **Entrar** confirma.
 - **Barra superior:** Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo, com a equipe parada.
 - **Luz:** o cenário escurece com o Lume baixo (só aparência).
-- **Mini-mapa:** sobreposto ao corredor, camadas da esquerda para a direita, ícone do tipo de todo nó, ligações, caminho já feito e posição atual. Só consulta; fecha com um toque fora ou no botão.
+- **Mini-mapa:** sobreposto ao corredor, camadas da esquerda para a direita, ícone do tipo de todo nó, ligações, caminho já feito e posição atual. Só consulta; fecha com um toque fora ou no botão. Desde a T36 (D-258, D-347), no estilo Darkest Dungeon: cada nó é uma sala quadrada com o ícone e o nome embaixo, as ligações são corredores de quadradinhos, acesos onde a equipe passou, e a sala atual brilha.
 - **Arte:** cenário em 4 camadas com o chão a y ≈ 900 e a camada do meio emendável (D-159); entradas desenhadas (porta, caverna, escada, tenda...) no pedido de arte da T34. Referência de clima e tamanho dos personagens: `docs/art/reference/` (D-187).
 - Nomes dos caminhos: o reto é "Seguir em frente"; os desvios são Porta, Caverna ou Escada (D-149).
 - **No M1:** a equipe deslizava sozinha até a bifurcação, e as entradas eram retângulos tocados duas vezes (mostrar e confirmar).

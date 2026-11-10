@@ -118,21 +118,80 @@ func test_play_again_starts_a_fresh_battle() -> void:
 	assert_eq(screen.battle_seed, 2)
 
 
-## T16 acceptance: São Jorge's pilot art on screen, halo following desolation.
-func test_george_has_art_and_his_halo_follows_desolation() -> void:
+## T16/T36: every saint animated with its frames, the halo drawn by the
+## engine over the head following desolation (D-258), portraits in the panel.
+func test_saints_are_animated_with_a_halo_that_follows_desolation() -> void:
 	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
 	var view: CombatantView = screen.view_of(&"saint_george")
-	assert_true(view.has_art(), "Jorge aparece com a arte do piloto")
-	assert_not_null(view.figure_texture())
-	assert_false(screen.view_of(&"saint_benedict").has_art(), "os outros continuam retângulos (D-203)")
-	assert_not_null(screen.portrait_texture(), "o retrato de Jorge aparece na barra de ações")
+	assert_not_null(view.player(), "Jorge aparece animado pelos quadros")
+	assert_not_null(view.halo(), "auréola desenhada pelo motor")
+	assert_not_null(screen.view_of(&"saint_benedict").player(), "Bento também")
+	assert_not_null(screen.portrait_texture(), "o retrato de Jorge aparece no painel")
 	screen.tap(&"saint_benedict")
-	assert_null(screen.portrait_texture(), "Bento ainda não tem retrato")
+	assert_not_null(screen.portrait_texture(), "e o de Bento")
 	screen.tap(&"saint_george")
 	var full: float = view.halo().brightness()
+	var calm: Color = screen.portrait_tint()
 	screen.ctrl.state.find(&"saint_george").desolation = 99
 	screen.tap(&"saint_george")
 	assert_lt(view.halo().brightness(), full, "a auréola perde brilho com a desolação")
+	assert_ne(screen.portrait_tint(), calm, "a moldura do retrato muda de cor com a desolação (D-258)")
+
+
+## T36 (D-256, D-258): feet on the ground line, saints left and enemies
+## right in slot order, figures of the agreed height, bars at the feet and
+## intents on one row over the enemies.
+func test_layout_puts_everyone_on_the_ground_in_slot_order() -> void:
+	var screen: BattleScreen = _screen(&"m0_hard_02", SEED)
+	var state: BattleState = screen.ctrl.state
+	var last_x: float = INF
+	for slot: int in range(1, state.party.size() + 1):
+		var feet: Vector2 = screen.feet_of(state.party_at(slot).id)
+		assert_almost_eq(feet.y, BattleScreen.GROUND_Y, 0.01, "santo %d no chão" % slot)
+		assert_lt(feet.x, last_x, "posição %d mais longe do centro" % slot)
+		last_x = feet.x
+	var front_saint: float = screen.feet_of(state.party_at(1).id).x
+	last_x = -INF
+	for c: Combatant in state.enemies:
+		var feet: Vector2 = screen.feet_of(c.id)
+		assert_almost_eq(feet.y, BattleScreen.GROUND_Y, 0.01, "%s no chão" % c.id)
+		assert_gt(feet.x, front_saint, "%s à direita dos santos" % c.id)
+		assert_gt(feet.x, last_x, "%s em ordem de posição" % c.id)
+		assert_lt(feet.x, BattleScreen.STAGE_SIZE.x, "%s dentro da tela" % c.id)
+		last_x = feet.x
+		var view: CombatantView = screen.view_of(c.id)
+		assert_not_null(view.player(), "%s com a arte do Drive" % c.id)
+		var height: float = view.player().display_height * view.scale.y
+		assert_almost_eq(height, BattleScreen.FIGURE_HEIGHT * view.player().frames.display_scale, 0.5, "%s com a altura combinada" % c.id)
+		var badge: CombatantBadge = screen.badge_of(c.id)
+		assert_true(badge.intent_shown(), "%s mostra a intenção" % c.id)
+		assert_not_null(badge.intent_texture(), "%s: intenção com ícone" % c.id)
+	for c: Combatant in state.party + state.enemies:
+		var feet: Vector2 = screen.view_of(c.id).feet_global() - screen.stage_position()
+		assert_almost_eq(feet.y, BattleScreen.GROUND_Y, 0.5, "%s: os pés da figura pisam na linha do chão" % c.id)
+		assert_almost_eq(feet.x, screen.feet_of(c.id).x, 0.5, "%s: barras sob os pés" % c.id)
+	assert_gt(BattleScreen.GROUND_Y - BattleScreen.FIGURE_HEIGHT, 0.0, "a cabeça cabe no campo")
+	assert_lt(BattleScreen.GROUND_Y, BattleScreen.FIELD_HEIGHT, "os pés ficam acima do painel")
+
+
+## T36: tapping an enemy opens its sheet on the right (DD), and the Lume
+## lantern slides down the rod as the light fades (D-257).
+func test_enemy_sheet_and_lume_lantern() -> void:
+	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
+	assert_false(screen.lume_shown(), "na arena não há Lume")
+	var enemy: Combatant = screen.ctrl.state.enemy_at(1)
+	screen.tap(enemy.id)
+	assert_eq(screen.sheet_title(), screen.texts.name_of(enemy), "a ficha mostra o inimigo tocado")
+	var lit := BattleScreen.new()
+	lit.speed_index = BattleScreen.SPEED_INSTANT
+	lit.light = 100
+	lit.setup(data, BattleController.new(data.battle(&"m0_easy_01", SEED)))
+	add_child_autofree(lit)
+	assert_true(lit.lume_shown())
+	var full_y: float = lit.lantern_y()
+	lit.light = 20
+	lit.press_speed()
+	assert_gt(lit.lantern_y(), full_y, "com menos Lume a lamparina desce")
 
 
 ## T17 (D-117): dev buttons drive desolation through the rules and the

@@ -72,7 +72,8 @@ func _notification(what: int) -> void:
 		_center_stage()
 
 
-## Every character with frames: saints first, then the others, by id.
+## Every animated character (with a blow, not just a still figure): saints
+## first, then the others, by id.
 static func list_characters() -> Array[StringName]:
 	# Sorted as text: StringName sorts by identity, not alphabetically.
 	var saints: Array[String] = []
@@ -81,6 +82,9 @@ static func list_characters() -> Array[StringName]:
 		if not file.ends_with(FRAMES_SUFFIX):
 			continue
 		var id: String = file.trim_suffix(FRAMES_SUFFIX)
+		var frames: CharacterFrames = frames_of(StringName(id))
+		if frames == null or not frames.has_clip(&"strike"):
+			continue
 		if id.begins_with("saint_"):
 			saints.append(id)
 		else:
