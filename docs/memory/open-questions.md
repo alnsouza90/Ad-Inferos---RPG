@@ -59,4 +59,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | A cópia do GDD no Claude Docs (fora do repositório) precisa receber as mudanças de D-198 | Alan | 05/11/2026 |
 | Auréola sobre os quadros animados: medir o ponto da cabeça em cada quadro (ou seguir a cabeça de outro jeito) antes de usar os quadros no combate (D-331) | T36/T52 | 10/11/2026 |
 | Memória do celular com os quadros: cada personagem ocupa dezenas de MB descomprimido; comprimir texturas no Android e conferir no Redmi (D-330) | T53 | 10/11/2026 |
-| Vertigem: sobram fiapos de fundo cinza entre véus muito finos em alguns quadros; ver no celular se incomoda | T35 (Alan) | 10/11/2026 |
+| ~~Vertigem: fiapos de fundo cinza entre os véus~~ Removidos (D-332) | — | 10/11/2026 |
+| Tamanho dos chefes (2 ou 3 lugares) e de Asmodeu: provisório 1,25× a altura dos santos (D-233, D-332); confirmar com a tela de combate nova | T36/T38 (Alan) | 10/11/2026 |
+| Alcance do ataque de cada inimigo no combate: hoje vem da tabela de arte (`attack_style`); quando `bosses.md` definir as ações de Asmodeu, Minos e Vertigem, conferir se o tipo de dano de cada ação bate com a animação | T38/T52 | 10/11/2026 |

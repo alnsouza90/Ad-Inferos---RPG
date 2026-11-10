@@ -15,19 +15,21 @@ const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 const FRAMES_DIR: String = "res://scenes/battle/combatants"
 const FRAMES_SUFFIX: String = "_frames.tres"
 ## Layout of the field (presentation only).
-const GROUND_Y: float = 860.0
+const GROUND_Y: float = 820.0
 const VIEW_WIDTH: float = 200.0
-const VIEW_SCALE: float = 1.7
-const SAINT_CENTER_X: float = 600.0
-const ENEMY_CENTER_X: float = 1380.0
-## Room left between the two figures when the attacker arrives.
-const CONTACT_GAP: float = 330.0
+## 1.7 × 1.2: Alan asked for the figures 20% bigger (D-233).
+const VIEW_SCALE: float = 2.04
+const SAINT_CENTER_X: float = 480.0
+const ENEMY_CENTER_X: float = 1400.0
+## Share of the two figures' widths kept apart when the attacker arrives
+## (the frames have room around the figure).
+const CONTACT_SHARE: float = 0.55
 const CHAR_BUTTON := Vector2(290, 80)
-const MOVE_BUTTON := Vector2(250, 90)
+const MOVE_BUTTON := Vector2(196, 90)
 ## Who takes the blow (any listed character of the other side if missing).
 const SAINTS_OPPONENT: StringName = &"elite_sin_vertigo"
 const ENEMIES_OPPONENT: StringName = &"saint_george"
-const MOVES: Array[StringName] = [&"idle", &"walk", &"attack", &"defend", &"hit", &"fall"]
+const MOVES: Array[StringName] = [&"idle", &"walk", &"attack", &"spell", &"blessing", &"defend", &"hit", &"fall"]
 
 var data: GameData
 var character_ids: Array[StringName] = []
@@ -118,7 +120,11 @@ func play(move: StringName) -> float:
 		&"walk":
 			return actor.play_walk()
 		&"attack":
-			return actor.play_action(&"", reach())
+			return actor.play_action(&"", reach(), opponent.chest_global() if opponent != null else Vector2.INF)
+		&"spell":
+			return actor.play_spell(opponent.chest_global() if opponent != null else actor.chest_global())
+		&"blessing":
+			return actor.play_blessing()
 		&"defend":
 			return actor.play_defend()
 		&"hit":
@@ -132,9 +138,13 @@ func press_back() -> void:
 	back_requested.emit()
 
 
-## How far the attacker slides, in its own (unscaled) pixels.
+## How far the attacker slides to stand before its opponent, in its own
+## (unscaled) pixels.
 func reach() -> float:
-	return maxf(0.0, (ENEMY_CENTER_X - SAINT_CENTER_X - CONTACT_GAP) / VIEW_SCALE)
+	if actor == null or opponent == null:
+		return 0.0
+	var gap: float = (actor.player().figure_width() + opponent.player().figure_width()) * 0.5 * CONTACT_SHARE
+	return maxf(0.0, (ENEMY_CENTER_X - SAINT_CENTER_X - gap * VIEW_SCALE) / VIEW_SCALE)
 
 
 func opponent_of(id: StringName) -> StringName:
@@ -179,8 +189,8 @@ func _make_view(id: StringName) -> CombatantView:
 	return view
 
 
-func _on_impact(at: Vector2) -> void:
-	camera.punch(at, speed)
+func _on_impact(at: Vector2, strength: float) -> void:
+	camera.punch(at, speed, strength)
 	if opponent != null:
 		opponent.play_hit()
 
@@ -225,16 +235,16 @@ func _build() -> void:
 	_flash.size = STAGE_SIZE
 	_stage.add_child(_flash)
 	camera = ImpactCamera.new(_field, _flash)
-	var top := VBoxContainer.new()
-	top.position = Vector2(0, 24)
-	top.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
-	top.add_theme_constant_override("separation", 14)
-	_stage.add_child(top)
-	top.add_child(_label(data.ui.text(&"anim_test_title"), 44))
+	var title := _label(data.ui.text(&"anim_test_title"), 36)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	title.position = Vector2(30, 16)
+	_stage.add_child(title)
 	var chars := HBoxContainer.new()
 	chars.alignment = BoxContainer.ALIGNMENT_CENTER
 	chars.add_theme_constant_override("separation", 12)
-	top.add_child(chars)
+	chars.position = Vector2(0, GROUND_Y + 135)
+	chars.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
+	_stage.add_child(chars)
 	for id: StringName in character_ids:
 		var button := _button(data.ui.text(StringName("anim_name_%s" % id)), CHAR_BUTTON)
 		button.pressed.connect(choose.bind(id))
@@ -242,8 +252,8 @@ func _build() -> void:
 		_char_buttons.append(button)
 	var moves := HBoxContainer.new()
 	moves.alignment = BoxContainer.ALIGNMENT_CENTER
-	moves.add_theme_constant_override("separation", 12)
-	moves.position = Vector2(0, GROUND_Y + 60)
+	moves.add_theme_constant_override("separation", 10)
+	moves.position = Vector2(0, GROUND_Y + 30)
 	moves.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
 	_stage.add_child(moves)
 	for move: StringName in MOVES:

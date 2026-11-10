@@ -32,6 +32,11 @@ SRC = ROOT / "art_source" / "characters"
 DST = ROOT / "game" / "assets" / "characters"
 RES_DIR = ROOT / "game" / "scenes" / "battle" / "combatants"
 CLIPS_CSV = Path(__file__).with_name("animation_clips.csv")
+# Per character: size on screen next to the saints (a boss is bigger: Alan,
+# D-233) and how its attack reaches the target: "melee" slides to it,
+# "ranged" stays and hits from afar (Asmodeus' smoke), "throne" leans where
+# it sits (Minos never rises, D-219).
+CHARACTERS_CSV = Path(__file__).with_name("animation_characters.csv")
 
 # Frames are kept a little under the video size (figure ~575 px, D-224):
 # enough for the figure on a 1080 px stage, lighter on the phone.
@@ -47,9 +52,9 @@ MAX_SHEET = 4096
 # the set too heavy for the repository (LFS quota) and the web build.
 WEBP_QUALITY = 88
 
-# Characters that never leave their place: Minos never rises from the
-# throne (D-219), so his attack is played where he sits.
-STATIONARY = {"elite_minos"}
+# The videos came out dark next to the scenery (Alan, D-233): every frame
+# gets a gamma lift (1.0 keeps the original).
+LIGHTEN_GAMMA = 0.8
 
 # Drawn poses share the framing of the drawn idle pose (same canvas at
 # another resolution, D-229, D-230): they are scaled and placed by the
@@ -63,8 +68,12 @@ BG_TOLERANCE = 20
 EDGE_SOFTNESS = 18
 # Enclosed background: pixels this close to the grey, in a patch at least
 # 2 * HOLE_RADIUS + 1 pixels across, go too.
-HOLE_TOLERANCE = 9
-HOLE_RADIUS = 5
+HOLE_TOLERANCE = 8
+HOLE_RADIUS = 2
+# Treatment "light_wisps" (Vertigo): pale grey streaks also count as
+# background when they touch it.
+WISP_MAX_CHROMA = 14
+WISP_BELOW_BG = 12
 # Feet: centre of the figure in its lowest rows, as a share of its height.
 FEET_BAND = 0.06
 
@@ -108,6 +117,8 @@ class Character:
     id: str
     group: str
     clips: list[Clip] = field(default_factory=list)
+    display_scale: float = 1.0
+    attack_style: str = "melee"
 
 
 def read_clips() -> list[Character]:
@@ -120,6 +131,11 @@ def read_clips() -> list[Character]:
                         num("start", 0), num("end", 0), num("step", 1), row["mode"],
                         num("blend", 0), num("impact", -1), row["treatment"].strip())
             chars.setdefault(clip.character, Character(clip.character, clip.group)).clips.append(clip)
+    with CHARACTERS_CSV.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if row["character"] in chars:
+                chars[row["character"]].display_scale = float(row["display_scale"])
+                chars[row["character"]].attack_style = row["attack_style"].strip()
     return list(chars.values())
 
 
@@ -150,6 +166,7 @@ def video(path: Path) -> np.ndarray:
 
 
 def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
+    wisps = clip.treatment == "light_wisps"
     """The kept frames of a video clip, cut out. A loop with `blend` mixes
     its last frames with the ones just before its start, so the jump from
     the last frame back to the first does not show. The mix is made after
@@ -157,12 +174,12 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
     frames = video(SRC / clip.group / clip.character / clip.source)
     out: list[np.ndarray] = []
     for i in range(clip.start, clip.end, clip.step):
-        f = cut_out(frames[i])
+        f = cut_out(frames[i], wisps)
         if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
             twin = clip.start - (clip.end - i)
             if twin >= 0:
                 t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin]), t)
+                f = mix(f, cut_out(frames[twin], wisps), t)
         out.append(f)
     return out
 
@@ -210,7 +227,7 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
     return out
 
 
-def cut_out(rgb: np.ndarray) -> np.ndarray:
+def cut_out(rgb: np.ndarray, wisps: bool = False) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -219,6 +236,12 @@ def cut_out(rgb: np.ndarray) -> np.ndarray:
     dist = np.abs(rgb.astype(np.float32) - bg).max(axis=2)
     soft = dist < BG_TOLERANCE + EDGE_SOFTNESS
     flat = dist <= BG_TOLERANCE
+    if wisps:
+        # Light streaks the video left around fast veils: lighter than the
+        # grey, without colour. Only for figures with nothing white drawn.
+        f = rgb.astype(np.float32)
+        chroma = f.max(axis=2) - f.min(axis=2)
+        flat |= (chroma <= WISP_MAX_CHROMA) & (f.mean(axis=2) >= bg.mean() - WISP_BELOW_BG)
     border = np.zeros_like(flat)
     border[0, :] = border[-1, :] = True
     border[:, 0] = border[:, -1] = True
@@ -238,6 +261,13 @@ def cut_out(rgb: np.ndarray) -> np.ndarray:
     a = np.maximum(alpha, 1e-3)[..., None]
     colour = np.where(alpha[..., None] < 1.0, (colour - (1.0 - a) * bg) / a, colour)
     return np.dstack([colour.clip(0, 255), alpha * 255.0]).astype(np.uint8)
+
+
+def lighten(rgba: np.ndarray) -> np.ndarray:
+    if LIGHTEN_GAMMA == 1.0:
+        return rgba
+    rgb = (rgba[..., :3].astype(np.float32) / 255.0) ** LIGHTEN_GAMMA * 255.0
+    return np.dstack([rgb.clip(0, 255).astype(np.uint8), rgba[..., 3]])
 
 
 def darken_smoke(rgba: np.ndarray) -> np.ndarray:
@@ -300,6 +330,7 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
             rx, ry, rh = feet_point(ref)
             ratio = frames[0].shape[0] / ref.shape[0]
             fx, fy, fh = rx * ratio, ry * ratio, rh * ratio
+    frames = [lighten(f) for f in frames]
     if clip.treatment == "smoke_dark":
         frames = [darken_smoke(f) for f in frames]
     k = OUTPUT_SCALE * ref_height / fh
@@ -385,7 +416,8 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
         'script = ExtResource("1_set")',
         f'character_id = &"{char.id}"',
         f"figure_height = {OUTPUT_SCALE * ref_height:.1f}",
-        f"stationary = {'true' if char.id in STATIONARY else 'false'}",
+        f"display_scale = {char.display_scale:g}",
+        f'attack_style = &"{char.attack_style}"',
         f'clips = Array[ExtResource("2_clip")]([{", ".join(ids)}])',
         "",
     ]

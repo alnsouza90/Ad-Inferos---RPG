@@ -91,7 +91,9 @@ arena_animations,Animações (teste)
 anim_test_title,Animações (teste)
 anim_idle,Parado
 anim_walk,Andar
-anim_attack,Atacar
+anim_attack,Ataque físico
+anim_spell,Magia
+anim_blessing,Bênção
 anim_defend,Defender
 anim_hit,Golpe recebido
 anim_fall,Queda

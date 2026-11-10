@@ -9,8 +9,9 @@ extends Control
 
 signal tapped(combatant_id: StringName)
 ## The blow of an attack lands (T35): the screen shakes, zooms and flashes
-## at `at` (global position), and the target reacts.
-signal impact(at: Vector2)
+## at `at` (global position), and the target reacts. `strength` is 1 for a
+## physical blow and less for a spiritual one (D-233).
+signal impact(at: Vector2, strength: float)
 
 enum Mark { NONE, SELECTED, TARGETABLE, PENDING, INTENT_TARGET }
 
@@ -48,6 +49,13 @@ const TRAIL_EVERY: float = 0.035
 const TRAIL_TIME: float = 0.3
 const TRAIL_ALPHA: float = 0.45
 const STATIONARY_LEAN: float = 18.0
+## Spiritual actions (D-233): the orb's flight, the strength of their
+## impact on the camera, and the colours of the light (saints, enemies).
+const ORB_TIME: float = 0.35
+const SPELL_STRENGTH: float = 0.5
+const BLESSING_TIME: float = 1.1
+const COLOR_HOLY := Color(1.0, 0.86, 0.45)
+const COLOR_DARK := Color(0.68, 0.42, 1.0)
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -88,6 +96,8 @@ var _frames: CharacterFrames
 var _player: FramePlayer
 var _trail_left: float = 0.0
 var _trail_clock: float = 0.0
+## Where a ranged blow or a spell lands (global), or INF.
+var _target_global: Vector2 = Vector2.INF
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -285,10 +295,11 @@ func play_defend() -> float:
 ## A quick lunge toward the other side and back. `pose_id` picks the pose
 ## image once the art exists (unused by the placeholder). With frames,
 ## `reach` is how far the figure slides to its target (negative: default).
-func play_action(_pose_id: StringName = &"", reach_px: float = -1.0) -> float:
+func play_action(_pose_id: StringName = &"", reach_px: float = -1.0, target_global: Vector2 = Vector2.INF) -> float:
 	if speed <= 0.0:
 		return 0.0
 	if _player != null and not _down:
+		_target_global = target_global
 		return _play_frame_attack(reach_px if reach_px >= 0.0 else DEFAULT_REACH)
 	var t: float = ACTION_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
@@ -305,6 +316,59 @@ func play_action(_pose_id: StringName = &"", reach_px: float = -1.0) -> float:
 	if posed:
 		tw.tween_callback(_set_pose.bind(&""))
 	return t
+
+
+## A spiritual action (exorcism or untyped damage, D-233): cast from where
+## the caster stands, a light flies to `target_global` and lands there.
+func play_spell(target_global: Vector2) -> float:
+	if speed <= 0.0 or _player == null or _down:
+		return 0.0
+	_player.speed = speed
+	_target_global = target_global
+	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
+	var strike: FrameClip = _frames.clip(&"strike")
+	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
+	var release: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
+	var flight: float = _player.scaled(ORB_TIME)
+	var hold: float = _player.scaled(HOLD_TIME)
+	var tw := create_tween()
+	tw.tween_interval(windup)
+	tw.tween_callback(_player.play.bind(&"strike"))
+	tw.tween_interval(release)
+	tw.tween_callback(_cast_orb.bind(flight))
+	tw.tween_interval(maxf(strike_time - release, flight) + hold)
+	tw.tween_callback(_back_to_idle)
+	return windup + release + maxf(strike_time - release, flight) + hold
+
+
+## A blessing (support with no damage, D-233): the caster raises its sign in
+## place and a light rises on the one it helps (`target_global`: the feet;
+## INF blesses the caster).
+func play_blessing(target_global: Vector2 = Vector2.INF) -> float:
+	if speed <= 0.0 or _player == null or _down:
+		return 0.0
+	_player.speed = speed
+	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
+	var strike_time: float = _player.scaled(_frames.clip(&"strike").duration()) if _frames.has_clip(&"strike") else 0.0
+	var glow: float = _player.scaled(BLESSING_TIME)
+	var feet: Vector2 = target_global if target_global != Vector2.INF else feet_global()
+	var tw := create_tween()
+	tw.tween_interval(windup)
+	tw.tween_callback(_player.play.bind(&"strike"))
+	tw.tween_callback(_spawn_aura.bind(feet, glow))
+	tw.tween_interval(maxf(strike_time, glow))
+	tw.tween_callback(_back_to_idle)
+	return windup + maxf(strike_time, glow)
+
+
+## Where the feet of the figure stand, in global coordinates.
+func feet_global() -> Vector2:
+	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT))
+
+
+## Where blows and spells land on this combatant (global): its chest.
+func chest_global() -> Vector2:
+	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT * 0.45))
 
 
 ## Red flash, shake and a small recoil.
@@ -408,7 +472,7 @@ func _build_player(width: float) -> void:
 	_player.material = _figure_material
 	_player.speed = speed
 	# Feet on the bottom of the panel, like the still figure.
-	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y)
+	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y * _frames.display_scale)
 	_body.add_child(_player)
 
 
@@ -433,7 +497,8 @@ func set_halo_settings(settings: HaloSettings) -> void:
 
 
 ## Prepare, slide to the target leaving a trail, blow (impact), hold, come
-## back. Minos (stationary) leans instead of sliding (D-219).
+## back. Only a melee attacker slides; Minos on his throne (D-219) and a
+## ranged attacker (Asmodeus' smoke, D-233) lean where they stand.
 func _play_frame_attack(reach_px: float) -> float:
 	_player.speed = speed
 	var home := Vector2(0, INTENT_HEIGHT)
@@ -445,7 +510,7 @@ func _play_frame_attack(reach_px: float) -> float:
 	var dash: float = _player.scaled(DASH_MAX_TIME)
 	if blow > 0.0:
 		dash = minf(dash, blow)
-	var distance: float = STATIONARY_LEAN if _frames.stationary else reach_px
+	var distance: float = reach_px if _frames.slides_to_target() else STATIONARY_LEAN
 	var target := home + Vector2(direction * distance, 0)
 	var hold: float = _player.scaled(HOLD_TIME)
 	var back: float = _player.scaled(RETURN_TIME)
@@ -463,14 +528,33 @@ func _play_frame_attack(reach_px: float) -> float:
 
 func _start_strike() -> void:
 	_player.play(&"strike")
-	if not _frames.stationary:
+	if _frames.slides_to_target():
 		_trail_left = _player.scaled(DASH_MAX_TIME) + TRAIL_EVERY
 		_trail_clock = 0.0
 
 
 func _emit_impact() -> void:
+	if _target_global != Vector2.INF and not _frames.slides_to_target():
+		impact.emit(_target_global, 1.0)
+		return
 	var front: float = 1.0 if is_saint else 0.0
-	impact.emit(get_global_transform() * (_body.position + Vector2(size.x * front, BODY_HEIGHT * 0.5)))
+	impact.emit(get_global_transform() * (_body.position + Vector2(size.x * front, BODY_HEIGHT * 0.5)), 1.0)
+
+
+## The light of a spell leaves the caster's raised hand toward the target.
+func _cast_orb(flight: float) -> void:
+	var holder: Node = get_parent() if get_parent() != null else self
+	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
+	var hand: Vector2 = get_global_transform() * (_body.position + Vector2(size.x * (0.8 if is_saint else 0.2), BODY_HEIGHT * 0.1))
+	var target: Vector2 = _target_global if _target_global != Vector2.INF else hand
+	var fx := SpellEffect.orb(holder, to_local * hand, to_local * target, flight, COLOR_HOLY if is_saint else COLOR_DARK)
+	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH))
+
+
+func _spawn_aura(feet: Vector2, seconds: float) -> void:
+	var holder: Node = get_parent() if get_parent() != null else self
+	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
+	SpellEffect.aura(holder, to_local * feet, seconds, COLOR_HOLY if is_saint else COLOR_DARK)
 
 
 func _back_to_idle() -> void:
