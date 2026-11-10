@@ -55,6 +55,7 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 10. **Git:** `git checkout <commit> --` **sem caminho** troca a branch inteira (HEAD solto) e deixa arquivos LFS como ponteiros; para recuperar um arquivo use sempre `git checkout <commit> -- <caminho>`, e depois de voltar rode `git lfs pull`.
 11. **Pixels piscando em vídeo do Wan 3:** meça antes de mexer no recorte (picos de brilho de um quadro para o outro, sobre o fundo escuro): no Asmodeu o piscar vinha do vídeo, e a cura foi a média temporal (`temporal=N`), não o recorte (D-342).
 12. **Nunca cortar a saída da ferramenta com `| head`:** o processo morre no meio e deixa `.tres` velho com folha nova (quadros desalinhados). Redirecione para arquivo e leia o fim.
+13. **Vídeo que pisca:** a média temporal borra (reprovada, D-253) e a média só no que muda pouco não ajuda. O que funciona: segurar poucos quadros nítidos do próprio vídeo e fundir entre eles (`keys=`, `hold=`, `tween=`, D-344). O Meta AI não serve para poses de personagem complexo (perde a fidelidade e gera vídeo, D-254).
 
 ## Dados
 

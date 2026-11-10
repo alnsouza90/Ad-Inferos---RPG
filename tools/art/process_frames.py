@@ -184,6 +184,16 @@ class Clip:
         ("hold=N"; 1 without): a calm idle (Alan, D-250)."""
         return self.option("hold", 1)
 
+    @property
+    def keys(self) -> list[int]:
+        """Chosen frames of a video, held and melted like drawings
+        ("keys=13.33.103"): the Wan 3 redraws its fine texture every frame,
+        so a few sharp frames held still do not flicker (D-254)."""
+        for t in self.treatments:
+            if t.startswith("keys="):
+                return [int(v) for v in t.split("=")[1].split(".")]
+        return []
+
     def option(self, name: str, default: int) -> int:
         for t in self.treatments:
             if t.startswith(name + "="):
@@ -191,7 +201,7 @@ class Clip:
         return default
 
     def fps(self, speed: float) -> float:
-        if self.source.endswith(".mp4"):
+        if self.source.endswith(".mp4") and not self.keys:
             return VIDEO_FPS / self.step * speed
         # GIFs and lists of drawings ("a.jpg|b.jpg") are stop motion; "fps=N"
         # sets the frame rate of a clip that holds its drawings.
@@ -298,7 +308,7 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
         frames = smoothed(frames, radius)
     out: list[np.ndarray] = []
     end = clip.end if clip.end > 0 else len(frames)
-    for i in range(clip.start, end, clip.step):
+    for i in clip.keys or range(clip.start, end, clip.step):
         if follow:
             protect = head_box(frames[i], fx, fh)
             # Once the figure has sunk into the smoke there is no face left
