@@ -24,6 +24,8 @@ const ENEMY_CENTER_X: float = 1400.0
 ## Share of the two figures' widths kept apart when the attacker arrives
 ## (the frames have room around the figure).
 const CONTACT_SHARE: float = 0.55
+## G1: how long the camera holds on a physical blow (seconds at speed 1).
+const BLOW_HOLD: float = 0.45
 const CHAR_BUTTON := Vector2(290, 80)
 const MOVE_BUTTON := Vector2(196, 90)
 ## Who takes the blow (any listed character of the other side if missing).
@@ -43,6 +45,7 @@ var camera: ImpactCamera
 var _stage: Control
 var _field: Control
 var _flash: ColorRect
+var _dim: ColorRect
 var _char_buttons: Array[Button] = []
 var _halo_settings: HaloSettings
 
@@ -122,7 +125,7 @@ func play(move: StringName) -> float:
 		&"attack":
 			return actor.play_action(&"", reach(), opponent.chest_global() if opponent != null else Vector2.INF)
 		&"spell":
-			return actor.play_spell(opponent.chest_global() if opponent != null else actor.chest_global())
+			return actor.play_spell(opponent.chest_global() if opponent != null else actor.chest_global(), opponent)
 		&"blessing":
 			return actor.play_blessing()
 		&"defend":
@@ -132,6 +135,11 @@ func play(move: StringName) -> float:
 		&"fall":
 			return actor.play_fall()
 	return 0.0
+
+
+## How dark the scenery is right now (G1 darkens it on a blow).
+func dim_alpha() -> float:
+	return _dim.color.a if _dim != null else 0.0
 
 
 func press_back() -> void:
@@ -190,7 +198,10 @@ func _make_view(id: StringName) -> CombatantView:
 
 
 func _on_impact(at: Vector2, strength: float, kind: StringName) -> void:
-	camera.punch(at, speed, strength)
+	if kind == &"physical":
+		camera.blow(at, speed, BLOW_HOLD / speed if speed > 0.0 else 0.0)
+	else:
+		camera.punch(at, speed, strength)
 	if opponent == null:
 		return
 	if kind == &"outline":
@@ -233,12 +244,19 @@ func _build() -> void:
 	ground.position = Vector2(-200, GROUND_Y)
 	ground.size = Vector2(STAGE_SIZE.x + 400, STAGE_SIZE.y - GROUND_Y + 200)
 	_field.add_child(ground)
+	# G1: darkens the scenery (not the fighters, added after it) on a blow.
+	_dim = ColorRect.new()
+	_dim.color = Color(0.02, 0.01, 0.02, 0.0)
+	_dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dim.position = Vector2(-400, -400)
+	_dim.size = STAGE_SIZE + Vector2(800, 800)
+	_field.add_child(_dim)
 	_flash = ColorRect.new()
 	_flash.color = Color(1, 1, 1, 0)
 	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_flash.size = STAGE_SIZE
 	_stage.add_child(_flash)
-	camera = ImpactCamera.new(_field, _flash)
+	camera = ImpactCamera.new(_field, _flash, _dim)
 	var title := _label(data.ui.text(&"anim_test_title"), 36)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	title.position = Vector2(30, 16)

@@ -216,6 +216,55 @@ func test_a_blessing_shows_its_light_and_goes_back_to_idle() -> void:
 	assert_eq(screen.actor.player().clip_id(), &"idle")
 
 
+func _effects(kind: StringName) -> Array[SpellEffect]:
+	var found: Array[SpellEffect] = []
+	for child: Node in screen.actor.get_parent().get_children():
+		var fx := child as SpellEffect
+		if fx != null and fx.kind() == kind:
+			found.append(fx)
+	return found
+
+
+func test_a_physical_blow_darkens_the_scenery_and_splashes_blood() -> void:
+	# G1 (D-237).
+	screen.choose(&"saint_george")
+	var seen: Dictionary = {"dim": 0.0, "blood": false}
+	var t: float = screen.play(&"attack")
+	await wait_until(func() -> bool:
+		seen["dim"] = maxf(float(seen["dim"]), screen.dim_alpha())
+		seen["blood"] = bool(seen["blood"]) or not _effects(&"splatter").is_empty()
+		return float(seen["dim"]) > 0.3 and bool(seen["blood"]), t + 2.0)
+	assert_gt(float(seen["dim"]), 0.3, "o cenário escurece")
+	assert_true(seen["blood"], "respingo de sangue escuro")
+	await wait_seconds(t)
+
+
+func test_exorcism_crosses_pass_behind_and_in_front_of_the_enemy() -> void:
+	# E1 (D-237): one half is drawn behind the enemy's view, one in front.
+	screen.choose(&"saint_benedict")
+	var t: float = screen.play(&"spell")
+	await wait_until(func() -> bool: return _effects(&"crosses").size() == 2, t + 2.0)
+	var crosses: Array[SpellEffect] = _effects(&"crosses")
+	assert_eq(crosses.size(), 2)
+	var target: int = screen.opponent.get_index()
+	var before: int = 0
+	for fx: SpellEffect in crosses:
+		if fx.get_index() < target:
+			before += 1
+	assert_eq(before, 1, "metade das cruzes passa atrás do inimigo")
+	await wait_seconds(t)
+
+
+func test_each_saint_blesses_with_its_own_sign() -> void:
+	# B1 petals for Teresinha, B2 ring for Bento (D-237).
+	for case: Array in [[&"saint_therese", &"petals"], [&"saint_benedict", &"ring"]]:
+		screen.choose(case[0])
+		var t: float = screen.play(&"blessing")
+		await wait_until(func() -> bool: return not _effects(case[1]).is_empty(), t + 2.0)
+		assert_false(_effects(case[1]).is_empty(), "%s: %s" % [case[0], case[1]])
+		await wait_seconds(t)
+
+
 func _body_offset(view: CombatantView) -> float:
 	for child: Node in view.get_children():
 		var panel := child as Panel

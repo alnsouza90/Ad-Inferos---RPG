@@ -106,4 +106,5 @@ figure_height = 396.9
 display_scale = 1.25
 attack_style = &"melee"
 spell_style = &"own"
+blessing_style = &"ring"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_melee_windup"), SubResource("clip_melee_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

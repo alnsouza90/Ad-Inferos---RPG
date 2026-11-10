@@ -93,5 +93,6 @@ character_id = &"saint_george"
 figure_height = 500.4
 display_scale = 1
 attack_style = &"melee"
-spell_style = &"orb"
+spell_style = &"crosses"
+blessing_style = &"ring"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

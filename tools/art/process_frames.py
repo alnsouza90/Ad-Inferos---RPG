@@ -143,6 +143,7 @@ class Character:
     attack_style: str = "melee"
     speed: float = 1.0
     spell_style: str = "orb"
+    blessing_style: str = "ring"
 
 
 def read_clips() -> list[Character]:
@@ -162,6 +163,7 @@ def read_clips() -> list[Character]:
                 chars[row["character"]].attack_style = row["attack_style"].strip()
                 chars[row["character"]].speed = float(row["speed"])
                 chars[row["character"]].spell_style = row["spell_style"].strip()
+                chars[row["character"]].blessing_style = row["blessing_style"].strip()
     return list(chars.values())
 
 
@@ -517,6 +519,7 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
         f"display_scale = {char.display_scale:g}",
         f'attack_style = &"{char.attack_style}"',
         f'spell_style = &"{char.spell_style}"',
+        f'blessing_style = &"{char.blessing_style}"',
         f'clips = Array[ExtResource("2_clip")]([{", ".join(ids)}])',
         "",
     ]

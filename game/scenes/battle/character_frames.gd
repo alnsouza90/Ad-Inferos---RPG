@@ -13,10 +13,14 @@ extends Resource
 ## &"ranged" hits from where it stands (Asmodeus' smoke, D-233), &"throne"
 ## only leans (Minos never rises from the throne, D-219).
 @export var attack_style: StringName = &"melee"
-## How a spiritual attack reaches the target: &"orb" (a light flies to it),
+## How a spiritual attack reaches the target: &"crosses" (exorcism: crosses
+## of light orbit the enemy, D-237), &"orb" (a light flies to it),
 ## &"outline" (the target trembles in a dark light: Vertigo, D-236) or
 ## &"own" (the clip already shows it: Asmodeus' smoke, D-236).
 @export var spell_style: StringName = &"orb"
+## The sign of a blessing (D-237): &"petals" (Teresinha) or &"ring" (Bento,
+## and the others until their own is chosen).
+@export var blessing_style: StringName = &"ring"
 @export var clips: Array[FrameClip] = []
 
 

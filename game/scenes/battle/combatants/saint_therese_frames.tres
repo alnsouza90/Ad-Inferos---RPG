@@ -93,5 +93,6 @@ character_id = &"saint_therese"
 figure_height = 485.1
 display_scale = 1
 attack_style = &"melee"
-spell_style = &"orb"
+spell_style = &"crosses"
+blessing_style = &"petals"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

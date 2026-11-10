@@ -1,100 +1,271 @@
 class_name SpellEffect
 extends Node2D
-## Engine effects of spiritual actions (Alan, D-233): a glowing orb that
-## flies from the caster to the target, and the aura of a blessing (a ring
-## that opens, a column of light and rising sparks). Drawn in code, no art;
-## the sparks follow a fixed pattern (no chance, ADR-0003).
+## Engine effects chosen by Alan from the models (D-237): light that adds to
+## the picture (translucent, with a soft glow), drawn in code, no art.
+## - "crosses": exorcism, four crosses of light orbit the enemy, close in and
+##   burst (E1). Two nodes: the half behind the enemy and the half in front.
+## - "ring": blessing of São Bento, a ring of light opens at the ally's feet,
+##   with a soft column and rising points of light (B2).
+## - "petals": blessing of Santa Teresinha, rose petals fall in soft light (B1).
+## - "splatter": the blow of a physical attack, dark blood flies (G1).
+## - "orb": a light that flies to the target (spells with no style yet).
+## Fixed patterns, no chance (ADR-0003).
 
 signal arrived(at: Vector2)
 
-const ORB_RADIUS: float = 26.0
-const TRAIL_STEPS: int = 6
-const TRAIL_GAP: float = 0.035
-const AURA_RADIUS: float = 150.0
-const AURA_HEIGHT: float = 420.0
-const SPARKS: Array[Vector2] = [Vector2(-0.8, 0.1), Vector2(-0.35, 0.45), Vector2(0.1, 0.0), Vector2(0.5, 0.3), Vector2(0.85, 0.15), Vector2(-0.6, 0.7), Vector2(0.3, 0.75)]
+const GOLD := Color(1.0, 0.84, 0.47)
+const WHITE_GOLD := Color(1.0, 0.97, 0.88)
+const BLOOD := Color(0.36, 0.05, 0.07)
+const PETAL := Color(0.64, 0.15, 0.23)
+const PETAL_LIGHT := Color(1.0, 0.67, 0.67, 0.5)
+## Sizes in pixels of the parent (the battle field), times in seconds.
+const CROSS_SIZE: float = 34.0
+const CROSS_COUNT: int = 4
+const ORBIT_RX: float = 95.0
+const ORBIT_RY: float = 30.0
+const ORBIT_SHRINK: float = 0.55
+const ORBIT_SPIN: float = 2.0
+const ORBIT_SPIN_GAIN: float = 6.0
+const BURST_SHARE: float = 0.3
+const BURST_RADIUS: float = 170.0
+const RING_RADIUS: float = 105.0
+const RING_SQUASH: float = 0.28
+const RING_COLUMN_HEIGHT: float = 330.0
+const MOTES: int = 12
+const PETALS: int = 16
+const PETAL_SPREAD: float = 170.0
+const PETAL_FALL: float = 380.0
+const DROPS: int = 14
+const DROP_REACH: float = 120.0
+const ORB_RADIUS: float = 22.0
 
-var color: Color = Color(1.0, 0.86, 0.45)
+## A soft round light shared by every effect (white centre to transparent).
+static var _glow: Texture2D
+
+var color: Color = GOLD
 var _kind: StringName = &""
 var _from: Vector2
 var _to: Vector2
 var _time: float = 0.0
 var _duration: float = 1.0
 var _done: bool = false
+var _front: bool = true
 
 
-## An orb from `from` to `to` (local to the parent) in `seconds`.
-static func orb(parent: Node, from: Vector2, to: Vector2, seconds: float, p_color: Color) -> SpellEffect:
+static func glow_texture() -> Texture2D:
+	if _glow == null:
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(1, 1, 1, 1))
+		gradient.set_color(1, Color(1, 1, 1, 0))
+		gradient.add_point(0.35, Color(1, 1, 1, 0.45))
+		var tex := GradientTexture2D.new()
+		tex.gradient = gradient
+		tex.width = 128
+		tex.height = 128
+		tex.fill = GradientTexture2D.FILL_RADIAL
+		tex.fill_from = Vector2(0.5, 0.5)
+		tex.fill_to = Vector2(1.0, 0.5)
+		_glow = tex
+	return _glow
+
+
+static func _make(parent: Node, kind: StringName, from: Vector2, to: Vector2, seconds: float, p_color: Color, additive: bool) -> SpellEffect:
 	var fx := SpellEffect.new()
-	fx._kind = &"orb"
+	fx._kind = kind
 	fx._from = from
 	fx._to = to
 	fx._duration = maxf(seconds, 0.01)
 	fx.color = p_color
+	if additive:
+		var mat := CanvasItemMaterial.new()
+		mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		fx.material = mat
 	parent.add_child(fx)
 	return fx
 
 
-## A blessing aura standing on `feet` (local to the parent), `seconds` long.
-static func aura(parent: Node, feet: Vector2, seconds: float, p_color: Color) -> SpellEffect:
-	var fx := SpellEffect.new()
-	fx._kind = &"aura"
-	fx._from = feet
-	fx._duration = maxf(seconds, 0.01)
-	fx.color = p_color
-	parent.add_child(fx)
-	return fx
+## E1: crosses orbiting `center` (local to `parent`). `behind_of` is the
+## node the back half is drawn behind (the enemy's view); without it both
+## halves go on top. Returns the front node, which emits `arrived` at the
+## burst.
+static func crosses(parent: Node, center: Vector2, seconds: float, behind_of: Node = null) -> SpellEffect:
+	var back := _make(parent, &"crosses", center, center, seconds, GOLD, true)
+	back._front = false
+	if behind_of != null and behind_of.get_parent() == parent:
+		parent.move_child(back, behind_of.get_index())
+	var front := _make(parent, &"crosses", center, center, seconds, GOLD, true)
+	return front
+
+
+## B2: ring of light standing on `feet`.
+static func ring(parent: Node, feet: Vector2, seconds: float) -> SpellEffect:
+	return _make(parent, &"ring", feet, feet, seconds, GOLD, true)
+
+
+## B1: petals falling on the one standing on `feet`.
+static func petals(parent: Node, feet: Vector2, seconds: float) -> SpellEffect:
+	# The light is additive; the petals are drawn by a second, normal node.
+	_make(parent, &"petal_light", feet, feet, seconds, GOLD, true)
+	return _make(parent, &"petals", feet, feet, seconds, PETAL, false)
+
+
+## G1: dark blood flying from `at`, away from the attacker (`dir` = ±1).
+static func splatter(parent: Node, at: Vector2, dir: float, seconds: float) -> SpellEffect:
+	return _make(parent, &"splatter", at, at + Vector2(dir, 0), seconds, BLOOD, false)
+
+
+## A light that flies from `from` to `to`; `arrived` fires on landing.
+static func orb(parent: Node, from: Vector2, to: Vector2, seconds: float, p_color: Color) -> SpellEffect:
+	return _make(parent, &"orb", from, to, seconds, p_color, true)
 
 
 func progress() -> float:
 	return clampf(_time / _duration, 0.0, 1.0)
 
 
+func kind() -> StringName:
+	return _kind
+
+
 func _process(delta: float) -> void:
 	_time += delta
-	if _kind == &"orb" and not _done and _time >= _duration:
+	var lands_at: float = _duration * (1.0 - BURST_SHARE) if _kind == &"crosses" else _duration
+	if (_kind == &"orb" or _kind == &"crosses") and _front and not _done and _time >= lands_at:
 		_done = true
 		arrived.emit(_to)
 	queue_redraw()
-	if _time >= _duration + (TRAIL_STEPS * TRAIL_GAP if _kind == &"orb" else 0.0):
+	if _time >= _duration:
 		queue_free()
 
 
 func _draw() -> void:
-	if _kind == &"orb":
-		_draw_orb()
-	else:
-		_draw_aura()
+	match _kind:
+		&"crosses":
+			_draw_crosses()
+		&"ring":
+			_draw_ring()
+		&"petal_light":
+			_draw_petal_light()
+		&"petals":
+			_draw_petals()
+		&"splatter":
+			_draw_splatter()
+		&"orb":
+			_draw_orb()
+
+
+func _light(at: Vector2, radius: float, c: Color, alpha: float, squash: float = 1.0) -> void:
+	if alpha <= 0.0 or radius <= 0.0:
+		return
+	var size := Vector2(radius * 2.0, radius * 2.0 * squash)
+	draw_texture_rect(glow_texture(), Rect2(at - size * 0.5, size), false, Color(c, alpha))
+
+
+static func _bell(t: float) -> float:
+	return sin(clampf(t, 0.0, 1.0) * PI)
+
+
+static func _ease(t: float) -> float:
+	return 1.0 - pow(1.0 - clampf(t, 0.0, 1.0), 3.0)
+
+
+func _draw_cross(at: Vector2, s: float, alpha: float) -> void:
+	_light(at, s * 1.3, color, 0.55 * alpha)
+	draw_set_transform(at)
+	var outer := Color(color, 0.5 * alpha)
+	draw_rect(Rect2(-s * 0.13, -s * 0.5, s * 0.26, s), outer)
+	draw_rect(Rect2(-s * 0.36, -s * 0.24, s * 0.72, s * 0.24), outer)
+	var inner := Color(WHITE_GOLD, 0.75 * alpha)
+	var k: float = 0.62
+	draw_rect(Rect2(-s * 0.13 * k, -s * 0.5 * k, s * 0.26 * k, s * k), inner)
+	draw_rect(Rect2(-s * 0.36 * k, -s * 0.24 * k, s * 0.72 * k, s * 0.24 * k), inner)
+	draw_set_transform(Vector2.ZERO)
+
+
+func _draw_crosses() -> void:
+	var orbit_end: float = 1.0 - BURST_SHARE
+	var k: float = clampf(progress() / orbit_end, 0.0, 1.0)
+	var t: float = _time
+	if progress() < orbit_end:
+		var rx: float = ORBIT_RX * (1.0 - ORBIT_SHRINK * _ease(k))
+		var ry: float = ORBIT_RY * (1.0 - 0.4 * k)
+		var spin: float = t * (ORBIT_SPIN + ORBIT_SPIN_GAIN * k)
+		var fade: float = clampf(k * 4.0, 0.0, 1.0)
+		for i: int in CROSS_COUNT:
+			var a: float = spin + i * TAU / CROSS_COUNT
+			var in_front: bool = sin(a) > 0.0
+			if in_front != _front:
+				continue
+			var p := _from + Vector2(cos(a) * rx, sin(a) * ry)
+			_draw_cross(p, CROSS_SIZE + sin(a) * 6.0, fade * (1.0 if in_front else 0.75))
+	elif _front:
+		var b: float = (progress() - orbit_end) / BURST_SHARE
+		_light(_from, BURST_RADIUS * _ease(b), color, 0.9 * (1.0 - b))
+
+
+func _draw_ring() -> void:
+	var k: float = progress()
+	var a: float = _bell(k)
+	var r: float = RING_RADIUS * (0.48 + 0.52 * _ease(k * 1.5))
+	# Soft column of light over the ally.
+	_light(_from + Vector2(0, -RING_COLUMN_HEIGHT * 0.38), RING_RADIUS * 0.6, color, 0.32 * a, 2.6)
+	# Glow on the ground and the ring itself.
+	_light(_from, r * 1.3, color, 0.5 * a, RING_SQUASH)
+	draw_set_transform(_from, 0.0, Vector2(1.0, RING_SQUASH))
+	draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(color, 0.25 * a), 18.0)
+	draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(color, 0.7 * a), 7.0)
+	draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(WHITE_GOLD, 0.8 * a), 2.0)
+	draw_set_transform(Vector2.ZERO)
+	for i: int in MOTES:
+		var rise: float = fmod(k * 1.6 + _seed(i), 1.0)
+		var x: float = (_seed(i + 9) - 0.5) * 1.6 * r
+		_light(_from + Vector2(x, -10.0 - rise * RING_COLUMN_HEIGHT * 0.8), 9.0, color, 0.9 * a * (1.0 - rise))
+
+
+func _draw_petal_light() -> void:
+	var a: float = _bell(progress())
+	_light(_from + Vector2(0, -130), 130.0, color, 0.35 * a)
+	_light(_from + Vector2(0, -180), 90.0, color, 0.25 * a)
+
+
+func _draw_petals() -> void:
+	var k: float = progress()
+	var a: float = _bell(k)
+	for i: int in PETALS:
+		var fall: float = fmod(k * 1.25 + _seed(i + 5), 1.0)
+		var p := _from + Vector2((_seed(i) - 0.5) * PETAL_SPREAD + sin(_time * 2.0 + i) * 12.0, -PETAL_FALL + fall * PETAL_FALL)
+		draw_set_transform(p, _time * 2.0 + i)
+		_ellipse(Vector2.ZERO, Vector2(6, 9), Color(color, a))
+		_ellipse(Vector2(-1.5, -2), Vector2(2.5, 4), Color(PETAL_LIGHT, PETAL_LIGHT.a * a))
+	draw_set_transform(Vector2.ZERO)
+
+
+func _draw_splatter() -> void:
+	var k: float = progress()
+	var dir: float = signf(_to.x - _from.x)
+	for i: int in DROPS:
+		var ang: float = -0.9 + _seed(i) * 1.8
+		var d: float = 20.0 + DROP_REACH * _ease(k) * (0.4 + _seed(i + 3))
+		var p := _from + Vector2(dir * (cos(ang) * d * 0.9 + 20.0), sin(ang) * d * 0.6 + k * 30.0)
+		draw_circle(p, (3.0 + _seed(i + 7) * 6.0) * (1.0 - k * 0.6), Color(color, 1.0 - k))
 
 
 func _draw_orb() -> void:
-	for i: int in range(TRAIL_STEPS, -1, -1):
-		var t: float = clampf((_time - i * TRAIL_GAP) / _duration, 0.0, 1.0)
-		if _time - i * TRAIL_GAP < 0.0 or (i == 0 and _done):
-			continue
-		var p: Vector2 = _from.lerp(_to, t) + Vector2(0, -sin(t * PI) * 60.0)
-		var fade: float = 1.0 - float(i) / (TRAIL_STEPS + 1)
-		var r: float = ORB_RADIUS * (0.45 + 0.55 * fade)
-		_glow(p, r, fade)
+	var k: float = _ease(progress())
+	var p := _from.lerp(_to, k) + Vector2(0, -sin(k * PI) * 60.0)
+	_light(p, ORB_RADIUS * 2.2, color, 0.6)
+	_light(p, ORB_RADIUS, WHITE_GOLD, 0.9)
 
 
-func _draw_aura() -> void:
-	var t: float = progress()
-	var fade: float = sin(t * PI)
-	# Ring opening on the ground.
-	var ring := Color(color, 0.8 * fade)
-	draw_arc(_from, AURA_RADIUS * (0.4 + 0.6 * t), 0.0, TAU, 48, ring, 6.0)
-	# Column of light.
-	var col := Color(color, 0.22 * fade)
-	draw_rect(Rect2(_from + Vector2(-AURA_RADIUS * 0.55, -AURA_HEIGHT), Vector2(AURA_RADIUS * 1.1, AURA_HEIGHT)), col)
-	# Rising sparks.
-	for s: Vector2 in SPARKS:
-		var y: float = fmod(t + s.y, 1.0)
-		var p: Vector2 = _from + Vector2(s.x * AURA_RADIUS * 0.6, -y * AURA_HEIGHT)
-		_glow(p, 9.0, fade * (1.0 - y))
+func _ellipse(at: Vector2, radii: Vector2, c: Color) -> void:
+	var points := PackedVector2Array()
+	for i: int in 12:
+		var a: float = i * TAU / 12.0
+		points.append(at + Vector2(cos(a) * radii.x, sin(a) * radii.y))
+	draw_colored_polygon(points, c)
 
 
-func _glow(p: Vector2, r: float, alpha: float) -> void:
-	draw_circle(p, r * 2.0, Color(color, 0.15 * alpha))
-	draw_circle(p, r * 1.3, Color(color, 0.35 * alpha))
-	draw_circle(p, r * 0.7, Color(1, 1, 1, 0.9 * alpha))
+## Fixed pseudo-random value in 0..1 for the i-th particle (same every play).
+static func _seed(i: int) -> float:
+	var x: float = sin(i * 127.1 + 311.7) * 43758.5453
+	return x - floor(x)

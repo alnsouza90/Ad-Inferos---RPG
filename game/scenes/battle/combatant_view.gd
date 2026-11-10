@@ -54,6 +54,10 @@ const STATIONARY_LEAN: float = 18.0
 ## Spiritual actions (D-233): the orb's flight, the strength of their
 ## impact on the camera, and the colours of the light (saints, enemies).
 const ORB_TIME: float = 0.35
+## E1: seconds the crosses orbit and burst around the enemy (D-237).
+const CROSSES_TIME: float = 1.4
+## G1: the blow's blood flies for this long (D-237).
+const SPLATTER_TIME: float = 0.6
 const SPELL_STRENGTH: float = 0.5
 const BLESSING_TIME: float = 1.1
 const COLOR_HOLY := Color(1.0, 0.86, 0.45)
@@ -104,6 +108,8 @@ var _trail_left: float = 0.0
 var _trail_clock: float = 0.0
 ## Where a ranged blow or a spell lands (global), or INF.
 var _target_global: Vector2 = Vector2.INF
+## The view of the enemy a spell is cast on (the crosses pass behind it).
+var _target_view: Node
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -326,18 +332,25 @@ func play_action(_pose_id: StringName = &"", reach_px: float = -1.0, target_glob
 
 ## A spiritual action (exorcism or untyped damage, D-233): cast from where
 ## the caster stands, a light flies to `target_global` and lands there.
-func play_spell(target_global: Vector2) -> float:
+func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	if speed <= 0.0 or _player == null or _down:
 		return 0.0
 	_player.speed = speed
 	_target_global = target_global
+	_target_view = target_view
 	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
 	var strike: FrameClip = _frames.clip(&"strike")
 	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
 	var release: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
 	var hold: float = _player.scaled(HOLD_TIME)
-	# Only the orb flies; the boss' own smoke and Vertigo's spell land at once.
-	var flight: float = _player.scaled(ORB_TIME) if _frames.spell_style == &"orb" else 0.0
+	# The orb flies and the crosses orbit before landing; the boss' own smoke
+	# and Vertigo's spell land at once.
+	var flight: float = 0.0
+	match _frames.spell_style:
+		&"orb":
+			flight = _player.scaled(ORB_TIME)
+		&"crosses":
+			flight = _player.scaled(CROSSES_TIME)
 	var tw := create_tween()
 	tw.tween_interval(windup)
 	tw.tween_callback(_player.play.bind(&"strike"))
@@ -345,6 +358,8 @@ func play_spell(target_global: Vector2) -> float:
 	match _frames.spell_style:
 		&"orb":
 			tw.tween_callback(_cast_orb.bind(flight))
+		&"crosses":
+			tw.tween_callback(_cast_crosses.bind(flight))
 		&"outline":
 			tw.tween_callback(func() -> void: impact.emit(_target_global, SPELL_STRENGTH, &"outline"))
 		_:
@@ -368,7 +383,7 @@ func play_blessing(target_global: Vector2 = Vector2.INF) -> float:
 	var tw := create_tween()
 	tw.tween_interval(windup)
 	tw.tween_callback(_player.play.bind(&"strike"))
-	tw.tween_callback(_spawn_aura.bind(feet, glow))
+	tw.tween_callback(_spawn_blessing.bind(feet, glow))
 	tw.tween_interval(maxf(strike_time, glow))
 	tw.tween_callback(_back_to_idle)
 	return windup + maxf(strike_time, glow)
@@ -572,11 +587,24 @@ func _start_strike() -> void:
 
 
 func _emit_impact() -> void:
-	if _target_global != Vector2.INF and not _frames.slides_to_target():
-		impact.emit(_target_global, 1.0, &"physical")
-		return
-	var front: float = 1.0 if is_saint else 0.0
-	impact.emit(get_global_transform() * (_body.position + Vector2(size.x * front, BODY_HEIGHT * 0.5)), 1.0, &"physical")
+	var at: Vector2 = _target_global
+	if at == Vector2.INF or _frames.slides_to_target():
+		var front: float = 1.0 if is_saint else 0.0
+		at = get_global_transform() * (_body.position + Vector2(size.x * front, BODY_HEIGHT * 0.5))
+	# G1: dark blood flies from the blow, away from the attacker.
+	var holder: Node = get_parent() if get_parent() != null else self
+	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
+	SpellEffect.splatter(holder, to_local * at, 1.0 if is_saint else -1.0, _player.scaled(SPLATTER_TIME))
+	impact.emit(at, 1.0, &"physical")
+
+
+## E1: crosses of light orbit the enemy, close in and burst (D-237).
+func _cast_crosses(seconds: float) -> void:
+	var holder: Node = get_parent() if get_parent() != null else self
+	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
+	var target: Vector2 = _target_global if _target_global != Vector2.INF else chest_global()
+	var fx := SpellEffect.crosses(holder, to_local * target, seconds, _target_view)
+	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
 
 
 ## The light of a spell leaves the caster's raised hand toward the target.
@@ -589,10 +617,16 @@ func _cast_orb(flight: float) -> void:
 	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
 
 
-func _spawn_aura(feet: Vector2, seconds: float) -> void:
+## Each saint blesses with its own sign (D-237): Teresinha's petals (B1),
+## Bento's ring of light (B2).
+func _spawn_blessing(feet: Vector2, seconds: float) -> void:
 	var holder: Node = get_parent() if get_parent() != null else self
-	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
-	SpellEffect.aura(holder, to_local * feet, seconds, COLOR_HOLY if is_saint else COLOR_DARK)
+	var at: Vector2 = (holder as CanvasItem).get_global_transform().affine_inverse() * feet
+	match _frames.blessing_style:
+		&"petals":
+			SpellEffect.petals(holder, at, seconds)
+		_:
+			SpellEffect.ring(holder, at, seconds)
 
 
 func _back_to_idle() -> void:
