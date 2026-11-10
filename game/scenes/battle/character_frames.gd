@@ -18,8 +18,8 @@ extends Resource
 ## &"outline" (the target trembles in a dark light: Vertigo, D-236) or
 ## &"own" (the clip already shows it: Asmodeus' smoke, D-236).
 @export var spell_style: StringName = &"orb"
-## The sign of a blessing (D-237): &"petals" (Teresinha) or &"ring" (Bento,
-## and the others until their own is chosen).
+## The sign of a blessing (D-237, D-238): &"petals" (Teresinha), &"shield"
+## (Jorge) or &"ring" (Bento, and the others until their own is chosen).
 @export var blessing_style: StringName = &"ring"
 @export var clips: Array[FrameClip] = []
 

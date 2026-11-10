@@ -256,8 +256,9 @@ func test_exorcism_crosses_pass_behind_and_in_front_of_the_enemy() -> void:
 
 
 func test_each_saint_blesses_with_its_own_sign() -> void:
-	# B1 petals for Teresinha, B2 ring for Bento (D-237).
-	for case: Array in [[&"saint_therese", &"petals"], [&"saint_benedict", &"ring"]]:
+	# B1 petals for Teresinha, B2 ring for Bento (D-237), B3 shield for Jorge
+	# (D-238).
+	for case: Array in [[&"saint_therese", &"petals"], [&"saint_benedict", &"ring"], [&"saint_george", &"shield"]]:
 		screen.choose(case[0])
 		var t: float = screen.play(&"blessing")
 		await wait_until(func() -> bool: return not _effects(case[1]).is_empty(), t + 2.0)

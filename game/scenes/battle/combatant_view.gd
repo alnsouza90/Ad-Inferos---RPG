@@ -389,6 +389,16 @@ func play_blessing(target_global: Vector2 = Vector2.INF) -> float:
 	return windup + maxf(strike_time, glow)
 
 
+## How big the effects are drawn in `holder` (the field): the models were
+## drawn next to figures SpellEffect.REFERENCE_HEIGHT tall.
+func effect_scale(holder: Node) -> float:
+	var item := holder as CanvasItem
+	if item == null or item == self:
+		return 1.0
+	var relative: Transform2D = item.get_global_transform().affine_inverse() * get_global_transform()
+	return relative.get_scale().x * FIGURE_SIZE.y / SpellEffect.REFERENCE_HEIGHT
+
+
 ## Where the feet of the figure stand, in global coordinates.
 func feet_global() -> Vector2:
 	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT))
@@ -594,7 +604,7 @@ func _emit_impact() -> void:
 	# G1: dark blood flies from the blow, away from the attacker.
 	var holder: Node = get_parent() if get_parent() != null else self
 	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
-	SpellEffect.splatter(holder, to_local * at, 1.0 if is_saint else -1.0, _player.scaled(SPLATTER_TIME))
+	SpellEffect.splatter(holder, to_local * at, 1.0 if is_saint else -1.0, _player.scaled(SPLATTER_TIME), effect_scale(holder))
 	impact.emit(at, 1.0, &"physical")
 
 
@@ -603,7 +613,7 @@ func _cast_crosses(seconds: float) -> void:
 	var holder: Node = get_parent() if get_parent() != null else self
 	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
 	var target: Vector2 = _target_global if _target_global != Vector2.INF else chest_global()
-	var fx := SpellEffect.crosses(holder, to_local * target, seconds, _target_view)
+	var fx := SpellEffect.crosses(holder, to_local * target, seconds, _target_view, effect_scale(holder))
 	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
 
 
@@ -613,7 +623,7 @@ func _cast_orb(flight: float) -> void:
 	var to_local: Transform2D = (holder as CanvasItem).get_global_transform().affine_inverse()
 	var hand: Vector2 = get_global_transform() * (_body.position + Vector2(size.x * (0.8 if is_saint else 0.2), BODY_HEIGHT * 0.1))
 	var target: Vector2 = _target_global if _target_global != Vector2.INF else hand
-	var fx := SpellEffect.orb(holder, to_local * hand, to_local * target, flight, COLOR_HOLY if is_saint else COLOR_DARK)
+	var fx := SpellEffect.orb(holder, to_local * hand, to_local * target, flight, COLOR_HOLY if is_saint else COLOR_DARK, effect_scale(holder))
 	fx.arrived.connect(func(_at: Vector2) -> void: impact.emit(target, SPELL_STRENGTH, &"spell"))
 
 
@@ -622,11 +632,14 @@ func _cast_orb(flight: float) -> void:
 func _spawn_blessing(feet: Vector2, seconds: float) -> void:
 	var holder: Node = get_parent() if get_parent() != null else self
 	var at: Vector2 = (holder as CanvasItem).get_global_transform().affine_inverse() * feet
+	var size: float = effect_scale(holder)
 	match _frames.blessing_style:
 		&"petals":
-			SpellEffect.petals(holder, at, seconds)
+			SpellEffect.petals(holder, at, seconds, size)
+		&"shield":
+			SpellEffect.shield(holder, at, seconds, 1.0 if is_saint else -1.0, size)
 		_:
-			SpellEffect.ring(holder, at, seconds)
+			SpellEffect.ring(holder, at, seconds, size)
 
 
 func _back_to_idle() -> void:

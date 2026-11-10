@@ -7,7 +7,12 @@ extends Node2D
 ## - "ring": blessing of São Bento, a ring of light opens at the ally's feet,
 ##   with a soft column and rising points of light (B2).
 ## - "petals": blessing of Santa Teresinha, rose petals fall in soft light (B1).
+## - "shield": blessing of São Jorge (Escudo Erguido), a translucent shield
+##   of white light with a cross of light appears before the ally, shines
+##   and dissolves into rising points of light (B3, version 2).
 ## - "splatter": the blow of a physical attack, dark blood flies (G1).
+## Sizes are those of the models (figures 236 px tall); `scale` fits them to
+## the figures on screen.
 ## - "orb": a light that flies to the target (spells with no style yet).
 ## Fixed patterns, no chance (ADR-0003).
 
@@ -38,6 +43,16 @@ const PETAL_FALL: float = 380.0
 const DROPS: int = 14
 const DROP_REACH: float = 120.0
 const ORB_RADIUS: float = 22.0
+const SHIELD_WHITE := Color(0.92, 0.94, 1.0)
+const SHIELD_HALF: Vector2 = Vector2(50, 62)
+const SHIELD_TIP: float = 78.0
+## Where the shield stands from the ally's feet (toward the enemies).
+const SHIELD_OFFSET: Vector2 = Vector2(55, -143)
+const SHIELD_APPEAR: float = 0.18
+const SHIELD_VANISH: float = 0.62
+const SHIELD_SPARKS: int = 18
+## Height of the figures the sizes above were drawn for.
+const REFERENCE_HEIGHT: float = 236.0
 
 ## A soft round light shared by every effect (white centre to transparent).
 static var _glow: Texture2D
@@ -69,11 +84,14 @@ static func glow_texture() -> Texture2D:
 	return _glow
 
 
-static func _make(parent: Node, kind: StringName, from: Vector2, to: Vector2, seconds: float, p_color: Color, additive: bool) -> SpellEffect:
+static func _make(parent: Node, kind: StringName, from: Vector2, to: Vector2, seconds: float, p_color: Color, additive: bool, size: float = 1.0) -> SpellEffect:
 	var fx := SpellEffect.new()
 	fx._kind = kind
-	fx._from = from
-	fx._to = to
+	# The node stands on `from` and is scaled: drawing is relative to it.
+	fx.position = from
+	fx.scale = Vector2(size, size)
+	fx._from = Vector2.ZERO
+	fx._to = (to - from) / size
 	fx._duration = maxf(seconds, 0.01)
 	fx.color = p_color
 	if additive:
@@ -88,35 +106,41 @@ static func _make(parent: Node, kind: StringName, from: Vector2, to: Vector2, se
 ## node the back half is drawn behind (the enemy's view); without it both
 ## halves go on top. Returns the front node, which emits `arrived` at the
 ## burst.
-static func crosses(parent: Node, center: Vector2, seconds: float, behind_of: Node = null) -> SpellEffect:
-	var back := _make(parent, &"crosses", center, center, seconds, GOLD, true)
+static func crosses(parent: Node, center: Vector2, seconds: float, behind_of: Node = null, size: float = 1.0) -> SpellEffect:
+	var back := _make(parent, &"crosses", center, center, seconds, GOLD, true, size)
 	back._front = false
 	if behind_of != null and behind_of.get_parent() == parent:
 		parent.move_child(back, behind_of.get_index())
-	var front := _make(parent, &"crosses", center, center, seconds, GOLD, true)
+	var front := _make(parent, &"crosses", center, center, seconds, GOLD, true, size)
 	return front
 
 
 ## B2: ring of light standing on `feet`.
-static func ring(parent: Node, feet: Vector2, seconds: float) -> SpellEffect:
-	return _make(parent, &"ring", feet, feet, seconds, GOLD, true)
+static func ring(parent: Node, feet: Vector2, seconds: float, size: float = 1.0) -> SpellEffect:
+	return _make(parent, &"ring", feet, feet, seconds, GOLD, true, size)
+
+
+## B3: a shield of white light before the one standing on `feet`; `facing`
+## is +1 when the enemies are to the right.
+static func shield(parent: Node, feet: Vector2, seconds: float, facing: float = 1.0, size: float = 1.0) -> SpellEffect:
+	return _make(parent, &"shield", feet, feet + Vector2(facing, 0), seconds, SHIELD_WHITE, true, size)
 
 
 ## B1: petals falling on the one standing on `feet`.
-static func petals(parent: Node, feet: Vector2, seconds: float) -> SpellEffect:
+static func petals(parent: Node, feet: Vector2, seconds: float, size: float = 1.0) -> SpellEffect:
 	# The light is additive; the petals are drawn by a second, normal node.
-	_make(parent, &"petal_light", feet, feet, seconds, GOLD, true)
-	return _make(parent, &"petals", feet, feet, seconds, PETAL, false)
+	_make(parent, &"petal_light", feet, feet, seconds, GOLD, true, size)
+	return _make(parent, &"petals", feet, feet, seconds, PETAL, false, size)
 
 
 ## G1: dark blood flying from `at`, away from the attacker (`dir` = ±1).
-static func splatter(parent: Node, at: Vector2, dir: float, seconds: float) -> SpellEffect:
-	return _make(parent, &"splatter", at, at + Vector2(dir, 0), seconds, BLOOD, false)
+static func splatter(parent: Node, at: Vector2, dir: float, seconds: float, size: float = 1.0) -> SpellEffect:
+	return _make(parent, &"splatter", at, at + Vector2(dir * size, 0), seconds, BLOOD, false, size)
 
 
 ## A light that flies from `from` to `to`; `arrived` fires on landing.
-static func orb(parent: Node, from: Vector2, to: Vector2, seconds: float, p_color: Color) -> SpellEffect:
-	return _make(parent, &"orb", from, to, seconds, p_color, true)
+static func orb(parent: Node, from: Vector2, to: Vector2, seconds: float, p_color: Color, size: float = 1.0) -> SpellEffect:
+	return _make(parent, &"orb", from, to, seconds, p_color, true, size)
 
 
 func progress() -> float:
@@ -150,6 +174,8 @@ func _draw() -> void:
 			_draw_petals()
 		&"splatter":
 			_draw_splatter()
+		&"shield":
+			_draw_shield()
 		&"orb":
 			_draw_orb()
 
@@ -238,6 +264,47 @@ func _draw_petals() -> void:
 		_ellipse(Vector2.ZERO, Vector2(6, 9), Color(color, a))
 		_ellipse(Vector2(-1.5, -2), Vector2(2.5, 4), Color(PETAL_LIGHT, PETAL_LIGHT.a * a))
 	draw_set_transform(Vector2.ZERO)
+
+
+func _draw_shield() -> void:
+	var k: float = progress()
+	var appear: float = _ease(k / SHIELD_APPEAR)
+	var vanish: float = clampf((k - SHIELD_VANISH) / (1.0 - SHIELD_VANISH), 0.0, 1.0)
+	var a: float = appear * (1.0 - vanish)
+	var facing: float = signf(_to.x) if _to.x != 0.0 else 1.0
+	var c := _from + Vector2(SHIELD_OFFSET.x * facing, SHIELD_OFFSET.y - vanish * 18.0)
+	_light(c, 120.0, color, 0.16 * a)
+	var sc: float = 0.85 + 0.15 * appear
+	draw_set_transform(c, 0.0, Vector2(sc, sc))
+	var outline := PackedVector2Array([Vector2(-SHIELD_HALF.x, -SHIELD_HALF.y), Vector2(SHIELD_HALF.x, -SHIELD_HALF.y), Vector2(SHIELD_HALF.x, 0)])
+	for i: int in range(1, 9):
+		var u: float = i / 8.0
+		outline.append(Vector2(SHIELD_HALF.x * (1.0 - u * u), SHIELD_TIP * sin(u * PI * 0.5)))
+	for i: int in range(7, 0, -1):
+		var u: float = i / 8.0
+		outline.append(Vector2(-SHIELD_HALF.x * (1.0 - u * u), SHIELD_TIP * sin(u * PI * 0.5)))
+	outline.append(Vector2(-SHIELD_HALF.x, 0))
+	draw_colored_polygon(outline, Color(color, 0.05 * a))
+	var closed := outline.duplicate()
+	closed.append(outline[0])
+	draw_polyline(closed, Color(color, 0.25 * a), 10.0)
+	draw_polyline(closed, Color(color, 0.7 * a), 3.0)
+	# Cross of light inside the shield.
+	_light(Vector2(0, -2), 60.0, color, 0.35 * a, 1.4)
+	draw_rect(Rect2(-7, -48, 14, 108), Color(color, 0.5 * a))
+	draw_rect(Rect2(-36, -16, 72, 14), Color(color, 0.5 * a))
+	draw_rect(Rect2(-3, -44, 6, 100), Color(1, 1, 1, 0.8 * a))
+	draw_rect(Rect2(-32, -12, 64, 6), Color(1, 1, 1, 0.8 * a))
+	# A soft sheen crossing it while it holds.
+	var sweep: float = clampf((k - 0.15) / 0.45, 0.0, 1.0)
+	if sweep > 0.0 and sweep < 1.0:
+		_light(Vector2(-SHIELD_HALF.x + sweep * SHIELD_HALF.x * 2.0, sweep * 30.0 - 15.0), 30.0, Color.WHITE, 0.35 * a, 2.0)
+	draw_set_transform(Vector2.ZERO)
+	# Dissolving into rising points of light.
+	if vanish > 0.0:
+		for i: int in SHIELD_SPARKS:
+			var p := c + Vector2((_seed(i) - 0.5) * 100.0, (_seed(i + 3) - 0.5) * 130.0 - vanish * (40.0 + 80.0 * _seed(i + 6)))
+			_light(p, 7.0, color, 0.9 * (1.0 - vanish) * minf(1.0, vanish * 3.0))
 
 
 func _draw_splatter() -> void:
