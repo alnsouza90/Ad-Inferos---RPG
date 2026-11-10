@@ -19,12 +19,12 @@ impact_frame = -1
 script = ExtResource("2_clip")
 id = &"windup"
 sheet_path = "res://assets/characters/elites/elite_minos/frames/elite_minos_windup.webp"
-frame_size = Vector2i(340, 477)
+frame_size = Vector2i(340, 476)
 columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(173, 471)
+anchor = Vector2(173, 470)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_strike"]

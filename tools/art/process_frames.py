@@ -70,6 +70,18 @@ EDGE_SOFTNESS = 18
 # 2 * HOLE_RADIUS + 1 pixels across, go too.
 HOLE_TOLERANCE = 8
 HOLE_RADIUS = 2
+# Edge of the figure: how many pixels from the cut background are treated
+# as a blend with the grey, and over what distance they become opaque.
+FRINGE_DEPTH = 3
+FRINGE_SOFTNESS = 80
+# Treatment "veil_key" (Vertigo): grey lighter than VEIL_KEY_DARK fades out.
+VEIL_KEY_CHROMA = 20
+VEIL_KEY_DARK = 100
+VEIL_KEY_MARGIN = 20
+# Exact background grey left anywhere, even a single pixel.
+SPECK_TOLERANCE = 6
+# Treatment "fade_left": width of the fade at the cut border of the video.
+FADE_LEFT_PX = 90
 # Treatment "light_wisps" (Vertigo): pale grey streaks also count as
 # background when they touch it.
 WISP_MAX_CHROMA = 14
@@ -119,6 +131,7 @@ class Character:
     clips: list[Clip] = field(default_factory=list)
     display_scale: float = 1.0
     attack_style: str = "melee"
+    speed: float = 1.0
 
 
 def read_clips() -> list[Character]:
@@ -136,6 +149,7 @@ def read_clips() -> list[Character]:
             if row["character"] in chars:
                 chars[row["character"]].display_scale = float(row["display_scale"])
                 chars[row["character"]].attack_style = row["attack_style"].strip()
+                chars[row["character"]].speed = float(row["speed"])
     return list(chars.values())
 
 
@@ -166,7 +180,9 @@ def video(path: Path) -> np.ndarray:
 
 
 def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
-    wisps = clip.treatment == "light_wisps"
+    treat = clip.treatment.split("+")
+    wisps = "light_wisps" in treat
+    veil = "veil_key" in treat
     """The kept frames of a video clip, cut out. A loop with `blend` mixes
     its last frames with the ones just before its start, so the jump from
     the last frame back to the first does not show. The mix is made after
@@ -174,12 +190,12 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
     frames = video(SRC / clip.group / clip.character / clip.source)
     out: list[np.ndarray] = []
     for i in range(clip.start, clip.end, clip.step):
-        f = cut_out(frames[i], wisps)
+        f = cut_out(frames[i], wisps, veil)
         if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
             twin = clip.start - (clip.end - i)
             if twin >= 0:
                 t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps), t)
+                f = mix(f, cut_out(frames[twin], wisps, veil), t)
         out.append(f)
     return out
 
@@ -227,7 +243,7 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
     return out
 
 
-def cut_out(rgb: np.ndarray, wisps: bool = False) -> np.ndarray:
+def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -246,21 +262,53 @@ def cut_out(rgb: np.ndarray, wisps: bool = False) -> np.ndarray:
     border[0, :] = border[-1, :] = True
     border[:, 0] = border[:, -1] = True
     holes = erode(dist <= HOLE_TOLERANCE, HOLE_RADIUS)
-    core = grow(border | holes, flat)
-    # The soft ring counts only next to the cut background.
-    near = np.zeros_like(core)
-    near[1:, :] |= core[:-1, :]
-    near[:-1, :] |= core[1:, :]
-    near[:, 1:] |= core[:, :-1]
-    near[:, :-1] |= core[:, 1:]
-    ring = soft & near & ~core
+    # Specks of the exact grey anywhere (a few pixels between a raven's
+    # feet) go too: the art never uses that flat grey.
+    specks = dist <= SPECK_TOLERANCE
+    core = grow(border | holes | specks, flat)
+    # The video blurs the step from the grey to the black outline: the
+    # pixels a few steps from the cut background are a mix of the two, and
+    # left opaque they draw a grey line around the figure on a dark screen
+    # (Alan, D-235). They get an alpha from their distance to the grey and
+    # are un-mixed from it.
+    ring = np.zeros_like(core)
+    grown = core.copy()
+    for _ in range(FRINGE_DEPTH):
+        nxt = grown.copy()
+        nxt[1:, :] |= grown[:-1, :]
+        nxt[:-1, :] |= grown[1:, :]
+        nxt[:, 1:] |= grown[:, :-1]
+        nxt[:, :-1] |= grown[:, 1:]
+        grown = nxt
+    ring = grown & ~core
     alpha = np.ones(dist.shape, np.float32)
     alpha[core] = 0.0
-    alpha[ring] = np.clip((dist[ring] - BG_TOLERANCE) / EDGE_SOFTNESS, 0.0, 1.0)
+    alpha[ring] = np.clip((dist[ring] - BG_TOLERANCE) / FRINGE_SOFTNESS, 0.0, 1.0)
+    if veil_key:
+        # Veils the video drew see-through over the grey (Vertigo): grey
+        # without colour is as transparent as it is light.
+        f = rgb.astype(np.float32)
+        chroma = f.max(axis=2) - f.min(axis=2)
+        luma = f.mean(axis=2)
+        key = np.clip((bg.mean() - luma) / (bg.mean() - VEIL_KEY_DARK), 0.0, 1.0)
+        # Only see-through grey that reaches the background: a light face
+        # closed by its dark outline stays.
+        pale = (chroma <= VEIL_KEY_CHROMA) & (luma > VEIL_KEY_DARK + VEIL_KEY_MARGIN)
+        veils = grow(core, core | pale) & ~core
+        alpha = np.where(veils, np.minimum(alpha, key), alpha)
     colour = rgb.astype(np.float32)
     a = np.maximum(alpha, 1e-3)[..., None]
     colour = np.where(alpha[..., None] < 1.0, (colour - (1.0 - a) * bg) / a, colour)
     return np.dstack([colour.clip(0, 255), alpha * 255.0]).astype(np.uint8)
+
+
+def fade_left(rgba: np.ndarray, width: int) -> np.ndarray:
+    """Fades the left edge out: what the video cut at its border (Asmodeus'
+    smoke) dissolves instead of ending in a straight line."""
+    out = rgba.copy()
+    ramp = np.linspace(0.0, 1.0, width, dtype=np.float32)
+    out[:, :width, 3] = (out[:, :width, 3].astype(np.float32) * ramp[None, :]).astype(np.uint8)
+    return out
 
 
 def lighten(rgba: np.ndarray) -> np.ndarray:
@@ -331,8 +379,10 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
             ratio = frames[0].shape[0] / ref.shape[0]
             fx, fy, fh = rx * ratio, ry * ratio, rh * ratio
     frames = [lighten(f) for f in frames]
-    if clip.treatment == "smoke_dark":
+    if "smoke_dark" in clip.treatment.split("+"):
         frames = [darken_smoke(f) for f in frames]
+    if "fade_left" in clip.treatment.split("+"):
+        frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
     k = OUTPUT_SCALE * ref_height / fh
     return [place(f, (fx, fy), k) for f in frames]
 
@@ -396,7 +446,7 @@ def write_resource(char: Character, sheets: list[Sheet], ref_height: float) -> P
     for s in sheets:
         sub = f"clip_{s.clip.clip}"
         ids.append(f'SubResource("{sub}")')
-        fps = VIDEO_FPS / s.clip.step if s.clip.is_video else 0.0
+        fps = VIDEO_FPS / s.clip.step * char.speed if s.clip.is_video else 0.0
         lines += [
             f'[sub_resource type="Resource" id="{sub}"]',
             'script = ExtResource("2_clip")',

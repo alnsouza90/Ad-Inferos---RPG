@@ -7,12 +7,12 @@
 script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_idle.webp"
-frame_size = Vector2i(515, 445)
+frame_size = Vector2i(514, 445)
 columns = 7
-count = 30
-fps = 7.5
+count = 40
+fps = 13.5
 looping = true
-anchor = Vector2(217, 425)
+anchor = Vector2(217, 423)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_windup"]
@@ -22,63 +22,63 @@ sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_
 frame_size = Vector2i(636, 458)
 columns = 6
 count = 12
-fps = 15
+fps = 20.25
 looping = false
-anchor = Vector2(280, 451)
+anchor = Vector2(280, 450)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_strike"]
 script = ExtResource("2_clip")
 id = &"strike"
 sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_strike.webp"
-frame_size = Vector2i(674, 458)
+frame_size = Vector2i(673, 458)
 columns = 6
 count = 18
-fps = 15
+fps = 20.25
 looping = false
-anchor = Vector2(318, 451)
+anchor = Vector2(317, 450)
 impact_frame = 6
 
 [sub_resource type="Resource" id="clip_defend"]
 script = ExtResource("2_clip")
 id = &"defend"
 sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_defend.webp"
-frame_size = Vector2i(674, 412)
+frame_size = Vector2i(673, 412)
 columns = 6
 count = 12
-fps = 15
+fps = 20.25
 looping = false
-anchor = Vector2(318, 401)
+anchor = Vector2(317, 400)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_hit"]
 script = ExtResource("2_clip")
 id = &"hit"
 sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_hit.webp"
-frame_size = Vector2i(649, 462)
+frame_size = Vector2i(649, 461)
 columns = 5
 count = 5
-fps = 15
+fps = 20.25
 looping = false
-anchor = Vector2(293, 444)
+anchor = Vector2(293, 442)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_fall"]
 script = ExtResource("2_clip")
 id = &"fall"
 sheet_path = "res://assets/characters/bosses/boss_asmodeus/frames/boss_asmodeus_fall.webp"
-frame_size = Vector2i(629, 474)
+frame_size = Vector2i(629, 472)
 columns = 6
 count = 12
-fps = 10
+fps = 13.5
 looping = false
-anchor = Vector2(273, 451)
+anchor = Vector2(273, 450)
 impact_frame = -1
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"boss_asmodeus"
-figure_height = 397.8
+figure_height = 396.9
 display_scale = 1.25
 attack_style = &"ranged"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

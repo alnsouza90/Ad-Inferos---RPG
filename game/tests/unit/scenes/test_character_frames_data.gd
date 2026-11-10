@@ -59,3 +59,10 @@ func test_the_boss_is_bigger_than_the_saints() -> void:
 func test_george_stands_sideways_and_only_breathes() -> void:
 	var idle: FrameClip = AnimationTestScreen.frames_of(&"saint_george").clip(&"idle")
 	assert_eq(idle.count, 1, "um quadro lateral; o motor faz a respiração (D-233)")
+
+
+func test_asmodeus_moves_faster_than_the_video() -> void:
+	# Alan found him slow and stiff (D-235): his clips play 1.35× faster.
+	var frames: CharacterFrames = AnimationTestScreen.frames_of(&"boss_asmodeus")
+	assert_gt(frames.clip(&"strike").fps, 15.0 * 1.3)
+	assert_gt(frames.clip(&"idle").fps, 10.0 * 1.3)
