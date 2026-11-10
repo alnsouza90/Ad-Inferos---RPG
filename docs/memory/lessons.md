@@ -37,6 +37,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 - Esqueleto 2D a partir de uma imagem parada gerada por IA (peças recortadas e giradas) ficou "boneco articulado" e foi reprovado (D-195). Para o estilo Darkest Dungeon que Alan quer, use poses desenhadas (quadros e poses-chave) e deixe o motor fazer a ligação entre elas (D-194).
 
+- Ao endurecer a limpeza de fundo para um personagem, refaça e confira **todos**: as regras de "buraco" e de "pontos do cinza exato" (D-333) furaram a cauda de Minos e o rosto de Vertigem, pintados no mesmo cinza do fundo. Conferir sempre sobre o fundo escuro do jogo, não sobre verde (T35).
+
 ## Dados
 
 - Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.

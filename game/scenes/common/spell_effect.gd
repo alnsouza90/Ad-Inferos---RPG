@@ -11,6 +11,9 @@ extends Node2D
 ##   of white light with a cross of light appears before the ally, shines
 ##   and dissolves into rising points of light (B3, version 2).
 ## - "splatter": the blow of a physical attack, dark blood flies (G1).
+## - "smoke": Asmodeus' breath carried on to the target, past the edge where
+##   the video cut it (D-240): copies of a cloud cut from his own video
+##   (D-241) roll from his mouth, grow, turn slowly and thin out.
 ## Sizes are those of the models (figures 236 px tall); `scale` fits them to
 ## the figures on screen.
 ## - "orb": a light that flies to the target (spells with no style yet).
@@ -51,6 +54,17 @@ const SHIELD_OFFSET: Vector2 = Vector2(55, -143)
 const SHIELD_APPEAR: float = 0.18
 const SHIELD_VANISH: float = 0.62
 const SHIELD_SPARKS: int = 18
+## Asmodeus' smoke, the dark violet of D-227 (seconds of travel share).
+const SMOKE := Color(0.29, 0.23, 0.36)
+const SMOKE_CORE := Color(0.17, 0.12, 0.22)
+const SMOKE_PUFFS: int = 14
+const SMOKE_TRAVEL: float = 0.55
+const SMOKE_RADIUS: float = 34.0
+## Cloud copies: how much each grows on the way and while it billows.
+const PUFF_GROW: float = 0.9
+const PUFF_BILLOW: float = 0.5
+const PUFF_START: float = 0.6
+const PUFF_TURN: float = 0.5
 ## Height of the figures the sizes above were drawn for.
 const REFERENCE_HEIGHT: float = 236.0
 
@@ -65,6 +79,10 @@ var _time: float = 0.0
 var _duration: float = 1.0
 var _done: bool = false
 var _front: bool = true
+## The cloud drawn by "smoke" (a region of a frame sheet) and its size.
+var _puff: Texture2D
+var _puff_region: Rect2
+var _puff_scale: float = 1.0
 
 
 static func glow_texture() -> Texture2D:
@@ -138,6 +156,18 @@ static func splatter(parent: Node, at: Vector2, dir: float, seconds: float, size
 	return _make(parent, &"splatter", at, at + Vector2(dir * size, 0), seconds, BLOOD, false, size)
 
 
+## Asmodeus' smoke from his mouth (`from`) to the target (`to`); `arrived`
+## fires when it reaches the target.
+## `puff` and `region` are the cloud of his video; `puff_scale` its size in
+## the parent (the field).
+static func smoke(parent: Node, from: Vector2, to: Vector2, seconds: float, size: float = 1.0, puff: Texture2D = null, region: Rect2 = Rect2(), puff_scale: float = 1.0) -> SpellEffect:
+	var fx := _make(parent, &"smoke", from, to, seconds, SMOKE, false, size)
+	fx._puff = puff
+	fx._puff_region = region
+	fx._puff_scale = puff_scale / size
+	return fx
+
+
 ## A light that flies from `from` to `to`; `arrived` fires on landing.
 static func orb(parent: Node, from: Vector2, to: Vector2, seconds: float, p_color: Color, size: float = 1.0) -> SpellEffect:
 	return _make(parent, &"orb", from, to, seconds, p_color, true, size)
@@ -153,8 +183,12 @@ func kind() -> StringName:
 
 func _process(delta: float) -> void:
 	_time += delta
-	var lands_at: float = _duration * (1.0 - BURST_SHARE) if _kind == &"crosses" else _duration
-	if (_kind == &"orb" or _kind == &"crosses") and _front and not _done and _time >= lands_at:
+	var lands_at: float = _duration
+	if _kind == &"crosses":
+		lands_at = _duration * (1.0 - BURST_SHARE)
+	elif _kind == &"smoke":
+		lands_at = _duration * SMOKE_TRAVEL
+	if (_kind == &"orb" or _kind == &"crosses" or _kind == &"smoke") and _front and not _done and _time >= lands_at:
 		_done = true
 		arrived.emit(_to)
 	queue_redraw()
@@ -176,6 +210,8 @@ func _draw() -> void:
 			_draw_splatter()
 		&"shield":
 			_draw_shield()
+		&"smoke":
+			_draw_smoke()
 		&"orb":
 			_draw_orb()
 
@@ -305,6 +341,33 @@ func _draw_shield() -> void:
 		for i: int in SHIELD_SPARKS:
 			var p := c + Vector2((_seed(i) - 0.5) * 100.0, (_seed(i + 3) - 0.5) * 130.0 - vanish * (40.0 + 80.0 * _seed(i + 6)))
 			_light(p, 7.0, color, 0.9 * (1.0 - vanish) * minf(1.0, vanish * 3.0))
+
+
+func _draw_smoke() -> void:
+	var k: float = progress()
+	for i: int in SMOKE_PUFFS:
+		# Each puff leaves the mouth a little after the one before, rolls to
+		# the target and billows there before thinning out.
+		var start: float = float(i) / SMOKE_PUFFS * SMOKE_TRAVEL * 0.6
+		var u: float = clampf((k - start) / SMOKE_TRAVEL, 0.0, 1.0)
+		if u <= 0.0:
+			continue
+		var after: float = clampf((k - start - SMOKE_TRAVEL) / (1.0 - SMOKE_TRAVEL), 0.0, 1.0)
+		var e: float = _ease(u)
+		var wobble := Vector2(sin(i * 2.0 + e * 5.0) * 14.0, cos(i + e * 4.0) * 18.0)
+		var swirl := Vector2(cos(i * 1.7 + after * 3.0), sin(i * 1.3 + after * 3.0)) * 40.0 * after
+		var p := _from.lerp(_to, e) + wobble + swirl
+		var a: float = minf(1.0, u * 4.0) * (1.0 - after)
+		if _puff != null:
+			var grow: float = _puff_scale * (PUFF_START + PUFF_GROW * e + PUFF_BILLOW * after)
+			var flip: float = -1.0 if i % 2 == 1 else 1.0
+			draw_set_transform(p, i * 0.9 + _time * PUFF_TURN * flip, Vector2(grow * flip, grow))
+			draw_texture_rect_region(_puff, Rect2(-_puff_region.size * 0.5, _puff_region.size), _puff_region, Color(1, 1, 1, a))
+			draw_set_transform(Vector2.ZERO)
+			continue
+		var r: float = SMOKE_RADIUS * (0.5 + 0.9 * e + 0.6 * after)
+		_light(p, r * 1.6, color, 0.55 * a)
+		_light(p + Vector2(r * 0.2, r * 0.15), r, SMOKE_CORE, 0.5 * a)
 
 
 func _draw_splatter() -> void:

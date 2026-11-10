@@ -43,12 +43,12 @@ func test_every_sheet_holds_its_frames() -> void:
 			assert_true(clip.anchor.y > clip.frame_size.y * 0.5 and clip.anchor.y <= clip.frame_size.y, "%s: pés embaixo" % label)
 
 
-func test_only_minos_attacks_where_he_sits() -> void:
-	# Minos never rises from the throne (D-219); Asmodeus lunges with his own
-	# frame (D-236).
+func test_who_slides_to_the_target() -> void:
+	# Minos never rises from the throne (D-219); Vertigo's veils reach far
+	# (D-240); Asmodeus lunges with his own frame (D-236).
+	var expected: Dictionary = {&"elite_minos": &"throne", &"elite_sin_vertigo": &"ranged"}
 	for id: StringName in AnimationTestScreen.list_characters():
-		var expected: StringName = &"throne" if id == &"elite_minos" else &"melee"
-		assert_eq(AnimationTestScreen.frames_of(id).attack_style, expected, String(id))
+		assert_eq(AnimationTestScreen.frames_of(id).attack_style, expected.get(id, &"melee"), String(id))
 	assert_true(AnimationTestScreen.frames_of(&"boss_asmodeus").has_clip(&"melee_strike"))
 
 
@@ -72,5 +72,6 @@ func test_george_stands_sideways_and_only_breathes() -> void:
 func test_asmodeus_moves_faster_than_the_video() -> void:
 	# Alan found him slow and stiff (D-235): his clips play 1.35× faster.
 	var frames: CharacterFrames = AnimationTestScreen.frames_of(&"boss_asmodeus")
-	assert_gt(frames.clip(&"strike").fps, 15.0 * 1.3)
+	# The breath video is kept one frame in three (10 a second), sped up 1.35×.
+	assert_gt(frames.clip(&"strike").fps, 10.0 * 1.3)
 	assert_gt(frames.clip(&"idle").fps, 10.0 * 1.3)

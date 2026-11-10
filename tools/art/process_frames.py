@@ -90,6 +90,19 @@ PROTECT_HALF_WIDTH = 0.22
 PROTECT_HOLE_RADIUS = 12
 # Exact background grey left anywhere, even a single pixel.
 SPECK_TOLERANCE = 6
+# Treatment "fade_smoke_tail": the smoke fades over the last frames.
+SMOKE_TAIL_FRAMES = 6
+SMOKE_TAIL_MIN_SAT = 40
+SMOKE_RIM_PX = 4
+# Treatment "soft_smoke" (D-243): opacity of the smoke, blur of its edges
+# and colours (pixels), how dark an outline pixel is (HSV value, 0-255), and
+# how far behind the head's left edge in the first frame the smoke starts.
+SOFT_SMOKE_ALPHA = 0.6
+SOFT_SMOKE_BLUR = 3.0
+SOFT_SMOKE_DARK = 70
+SOFT_SMOKE_MARGIN = 20
+# Treatment "smoke_darker": brightness kept on the breath video's violet.
+SMOKE_EXTRA = 0.83
 # Treatment "fade_left": width of the fade at the cut border of the video.
 FADE_LEFT_PX = 90
 # Treatment "light_wisps" (Vertigo): pale grey streaks also count as
@@ -201,6 +214,7 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
     treat = clip.treatment.split("+")
     wisps = "light_wisps" in treat
     veil = "veil_key" in treat
+    inner = "border_only" not in treat
     frames = video(SRC / clip.group / clip.character / clip.source)
     protect = None
     if "protect_all" in treat:
@@ -218,12 +232,12 @@ def clip_cut_frames(clip: Clip) -> list[np.ndarray]:
             # to keep, and the box would only keep grey.
             if protect[1] > fy - fh * PROTECT_FOLLOW_MIN:
                 protect = None
-        f = cut_out(frames[i], wisps, veil, protect)
+        f = cut_out(frames[i], wisps, veil, protect, inner)
         if clip.mode == "loop" and clip.blend > 0 and i >= clip.end - clip.blend:
             twin = clip.start - (clip.end - i)
             if twin >= 0:
                 t = (i - (clip.end - clip.blend) + 1) / (clip.blend + 1)
-                f = mix(f, cut_out(frames[twin], wisps, veil, protect), t)
+                f = mix(f, cut_out(frames[twin], wisps, veil, protect, inner), t)
         out.append(f)
     return out
 
@@ -237,6 +251,28 @@ def head_box(rgb: np.ndarray, fx: float, fh: float) -> tuple[int, int, int, int]
     rows = np.nonzero((dist > BG_TOLERANCE + EDGE_SOFTNESS).sum(axis=1) > PROTECT_ROW_PIXELS)[0]
     top = int(rows[0]) if rows.size else 0
     return (x0, top - 4, x1, top + int(fh * PROTECT_FOLLOW_HEIGHT))
+
+
+def only_component(rgba: np.ndarray, x: int, y: int) -> np.ndarray:
+    """Keeps the opaque piece connected to (x, y); the rest goes clear."""
+    solid = rgba[..., 3] > 40
+    seed = np.zeros_like(solid)
+    seed[y, x] = True
+    keep = grow(seed, solid)
+    # A soft rim: the half-clear pixels right around the piece stay too.
+    rim = keep.copy()
+    rim[1:, :] |= keep[:-1, :]
+    rim[:-1, :] |= keep[1:, :]
+    rim[:, 1:] |= keep[:, :-1]
+    rim[:, :-1] |= keep[:, 1:]
+    out = rgba.copy()
+    out[..., 3] = np.where(rim, out[..., 3], 0)
+    return out
+
+
+def centre_of(rgba: np.ndarray) -> tuple[float, float]:
+    x0, y0, x1, y1 = figure_box(rgba)
+    return (x0 + x1) / 2.0, (y0 + y1) / 2.0
 
 
 def mix(a: np.ndarray, b: np.ndarray, t: float) -> np.ndarray:
@@ -283,7 +319,7 @@ def erode(mask: np.ndarray, radius: int) -> np.ndarray:
 
 
 def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
-            protect: tuple[int, int, int, int] | None = None) -> np.ndarray:
+            protect: tuple[int, int, int, int] | None = None, inner: bool = True) -> np.ndarray:
     """RGBA with the grey background made transparent: the grey connected to
     the border, and enclosed patches of almost exactly the background grey
     big enough not to be a detail (between veils, under a wing). Edge pixels
@@ -306,6 +342,11 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
     # feet) go too: the art never uses that flat grey...
     specks = dist <= SPECK_TOLERANCE
     box = np.zeros_like(flat)
+    if not inner:
+        # "border_only" (Minos): the light belly of his tail is the grey of
+        # the background; only the grey that reaches the border goes (D-240).
+        holes = np.zeros_like(flat)
+        specks = np.zeros_like(flat)
     if protect is not None:
         # ...except Vertigo's face, painted in that very grey (D-236): in the
         # box of the head only big patches go.
@@ -351,6 +392,78 @@ def cut_out(rgb: np.ndarray, wisps: bool = False, veil_key: bool = False,
     return np.dstack([colour.clip(0, 255), alpha * 255.0]).astype(np.uint8)
 
 
+def violet_mask(rgba: np.ndarray) -> np.ndarray:
+    hsv = np.asarray(Image.fromarray(rgba[..., :3]).convert("HSV")).astype(np.float32)
+    return (hsv[..., 0] >= SMOKE_HUE[0]) & (hsv[..., 0] <= SMOKE_HUE[1]) & (hsv[..., 1] > SMOKE_TAIL_MIN_SAT)
+
+
+def darken_violet(rgba: np.ndarray, factor: float) -> np.ndarray:
+    """"smoke_darker": the breath video came out lighter than the smoke Alan
+    approved (D-227); its violet goes down to the same tone (D-242)."""
+    out = rgba.copy()
+    m = violet_mask(rgba)
+    out[..., :3] = np.where(m[..., None], (rgba[..., :3] * factor).astype(np.uint8), rgba[..., :3])
+    return out
+
+
+def soften_smoke(rgba: np.ndarray, limit_x: int) -> np.ndarray:
+    """"soft_smoke": the breath looked too solid and too drawn (Alan,
+    D-243). Ahead of the dragon's head the smoke loses its ink outline, gets
+    see-through and its edges are blurred, like mist."""
+    from PIL import ImageFilter
+    out = rgba.copy()
+    region = np.zeros(rgba.shape[:2], bool)
+    region[:, :max(limit_x, 0)] = True
+    violet = violet_mask(rgba) & region
+    hsv = np.asarray(Image.fromarray(rgba[..., :3]).convert("HSV")).astype(np.float32)
+    # The outline: dark pixels next to the smoke.
+    near = violet.copy()
+    for _ in range(SMOKE_RIM_PX):
+        grown = near.copy()
+        grown[1:, :] |= near[:-1, :]
+        grown[:-1, :] |= near[1:, :]
+        grown[:, 1:] |= near[:, :-1]
+        grown[:, :-1] |= near[:, 1:]
+        near = grown
+    near &= region
+    outline = near & ~violet & (hsv[..., 2] < SOFT_SMOKE_DARK)
+    alpha = out[..., 3].astype(np.float32)
+    alpha[outline] = 0.0
+    alpha[violet] *= SOFT_SMOKE_ALPHA
+    # Light lines inside the clouds: blend them into the smoke colour.
+    rgb = Image.fromarray(out[..., :3]).filter(ImageFilter.GaussianBlur(SOFT_SMOKE_BLUR))
+    out[..., :3] = np.where(near[..., None], np.asarray(rgb), out[..., :3])
+    soft = np.asarray(Image.fromarray(alpha.clip(0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(SOFT_SMOKE_BLUR))).astype(np.float32)
+    alpha = np.where(near, soft, alpha)
+    out[..., 3] = alpha.clip(0, 255).astype(np.uint8)
+    return out
+
+
+def fade_smoke_tail(frames: list[np.ndarray], limit_x: int) -> list[np.ndarray]:
+    """The smoke thins out over the last frames of the clip, so the breath
+    ends instead of stopping (Asmodeus' breath video, D-242). Only violet
+    pixels fade; the dragon stays."""
+    n = min(SMOKE_TAIL_FRAMES, len(frames))
+    out = list(frames)
+    for j in range(n):
+        i = len(frames) - n + j
+        keep = 1.0 - (j + 1) / (n + 1)
+        f = frames[i].copy()
+        # The ink rim of the clouds fades with them (a dark ring stayed).
+        violet = violet_mask(f)
+        for _ in range(SMOKE_RIM_PX):
+            grown = violet.copy()
+            grown[1:, :] |= violet[:-1, :]
+            grown[:-1, :] |= violet[1:, :]
+            grown[:, 1:] |= violet[:, :-1]
+            grown[:, :-1] |= violet[:, 1:]
+            violet = grown
+        violet[:, limit_x:] = False
+        f[..., 3] = np.where(violet, (f[..., 3] * keep).astype(np.uint8), f[..., 3])
+        out[i] = f
+    return out
+
+
 def fade_left(rgba: np.ndarray, width: int) -> np.ndarray:
     """Fades the left edge out: what the video cut at its border (Asmodeus'
     smoke) dissolves instead of ending in a straight line."""
@@ -380,11 +493,11 @@ def darken_smoke(rgba: np.ndarray) -> np.ndarray:
     return np.dstack([rgb, rgba[..., 3]])
 
 
-def image_rgba(path: Path) -> np.ndarray:
+def image_rgba(path: Path, inner: bool = True) -> np.ndarray:
     img = Image.open(path)
     if img.mode == "RGBA" and np.asarray(img)[..., 3].min() < 255:
         return np.asarray(img).copy()  # already cut (Minos poses, D-229)
-    return cut_out(np.asarray(img.convert("RGB")))
+    return cut_out(np.asarray(img.convert("RGB")), inner=inner)
 
 
 # --- placing ------------------------------------------------------------------
@@ -419,11 +532,11 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         fx, fy, fh = feet_point(first)
         frames = clip_cut_frames(clip)
     else:
-        frames = [image_rgba(SRC / clip.group / clip.character / clip.source)]
+        frames = [image_rgba(SRC / clip.group / clip.character / clip.source, "border_only" not in clip.treatment.split("+"))]
         fx, fy, fh = feet_point(frames[0])
         still = STILL_REFERENCE.get(clip.character)
         if still is not None:
-            ref = image_rgba(SRC / clip.group / clip.character / still)
+            ref = image_rgba(SRC / clip.group / clip.character / still, "border_only" not in clip.treatment.split("+"))
             rx, ry, rh = feet_point(ref)
             ratio = frames[0].shape[0] / ref.shape[0]
             fx, fy, fh = rx * ratio, ry * ratio, rh * ratio
@@ -432,7 +545,25 @@ def clip_frames(clip: Clip, ref_height: float) -> list[Placed]:
         frames = [darken_smoke(f) for f in frames]
     if "fade_left" in clip.treatment.split("+"):
         frames = [fade_left(f, FADE_LEFT_PX) for f in frames]
+    if "smoke_darker" in clip.treatment.split("+"):
+        frames = [darken_violet(f, SMOKE_EXTRA) for f in frames]
+    if "soft_smoke" in clip.treatment.split("+"):
+        head_x = figure_box(first)[0] - SOFT_SMOKE_MARGIN if clip.is_video else 0
+        frames = [soften_smoke(f, head_x) for f in frames]
+    if "fade_smoke_tail" in clip.treatment.split("+"):
+        # Only the smoke ahead of the dragon's head (its left edge in the
+        # first frame of the video) fades; the violet aura on him stays.
+        head_x = figure_box(first)[0] if clip.is_video else 0
+        frames = fade_smoke_tail(frames, head_x)
     k = OUTPUT_SCALE * ref_height / fh
+    component = next((t for t in clip.treatment.split("+") if t.startswith("component=")), None)
+    if component is not None:
+        # "component=x:y": only the piece of the drawing that touches that
+        # point of the video (one cloud of Asmodeus' smoke, D-241), with its
+        # centre as the anchor; scaled like the character.
+        px, py = (int(v) for v in component.split("=")[1].split(":"))
+        frames = [only_component(f, px, py) for f in frames]
+        return [place(f, centre_of(f), k) for f in frames]
     return [place(f, (fx, fy), k) for f in frames]
 
 

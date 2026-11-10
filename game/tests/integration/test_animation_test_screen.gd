@@ -225,6 +225,30 @@ func _effects(kind: StringName) -> Array[SpellEffect]:
 	return found
 
 
+func test_asmodeus_breathes_from_afar_in_front_of_the_others() -> void:
+	# D-240, D-242: his breath video shows the whole smoke; whoever acts is
+	# drawn over the others.
+	screen.choose(&"boss_asmodeus")
+	var kinds: Array[StringName] = []
+	screen.actor.impact.connect(func(_at: Vector2, _s: float, k: StringName) -> void: kinds.append(k))
+	var t: float = screen.play(&"spell")
+	assert_eq(screen.actor.get_index(), screen.actor.get_parent().get_child_count() - 1)
+	await wait_until(func() -> bool: return kinds.size() > 0, t + 2.0)
+	assert_eq(kinds, [&"spell"] as Array[StringName])
+	assert_true(_effects(&"smoke").is_empty(), "a fumaça vem inteira do vídeo")
+	await wait_seconds(t)
+
+
+func test_vertigo_attacks_from_where_she_stands() -> void:
+	screen.choose(&"elite_sin_vertigo")
+	var seen: Dictionary = {"offset": 0.0}
+	var t: float = screen.play(&"attack")
+	await wait_until(func() -> bool:
+		seen["offset"] = maxf(float(seen["offset"]), absf(_body_offset(screen.actor)))
+		return false, t + 0.3)
+	assert_lte(float(seen["offset"]), CombatantView.STATIONARY_LEAN + 0.1, "os véus vão longe; ela não desliza")
+
+
 func test_a_physical_blow_darkens_the_scenery_and_splashes_blood() -> void:
 	# G1 (D-237).
 	screen.choose(&"saint_george")

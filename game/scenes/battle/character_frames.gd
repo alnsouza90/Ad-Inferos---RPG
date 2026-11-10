@@ -10,7 +10,8 @@ extends Resource
 ## Size next to the saints (1: same height). A boss is bigger (D-233).
 @export var display_scale: float = 1.0
 ## How a physical attack reaches the target: &"melee" slides to it,
-## &"ranged" hits from where it stands (Asmodeus' smoke, D-233), &"throne"
+## &"ranged" hits from where it stands (Vertigo's veils reach far, D-240),
+## &"throne"
 ## only leans (Minos never rises from the throne, D-219).
 @export var attack_style: StringName = &"melee"
 ## How a spiritual attack reaches the target: &"crosses" (exorcism: crosses
