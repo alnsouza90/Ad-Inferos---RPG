@@ -75,3 +75,16 @@ func test_asmodeus_moves_faster_than_the_video() -> void:
 	# The breath video is kept one frame in three (10 a second), sped up 1.35×.
 	assert_gt(frames.clip(&"strike").fps, 10.0 * 1.3)
 	assert_gt(frames.clip(&"idle").fps, 10.0 * 1.3)
+
+
+func test_vertigo_moves_by_her_stop_motion_drawings() -> void:
+	# D-247: the drawings of the GIFs, with in-betweens that melt one pose
+	# into the next, and her spell with its own release.
+	var frames: CharacterFrames = AnimationTestScreen.frames_of(&"elite_sin_vertigo")
+	assert_true(frames.has_clip(&"spell_windup"))
+	assert_true(frames.has_clip(&"spell_strike"))
+	assert_gte(frames.clip(&"spell_strike").impact_frame, 0, "a magia tem o momento do impacto")
+	assert_true(frames.has_clip(&"hit"), "golpe recebido com a imagem do salto (D-248)")
+	assert_gt(frames.clip(&"fall").count, 12, "a queda vai até a poça (D-248)")
+	assert_gt(frames.clip(&"defend").count, 1, "a defesa passa por duas poses")
+	assert_gt(frames.clip(&"idle").count, 6, "quadros intermediários entre os desenhos")

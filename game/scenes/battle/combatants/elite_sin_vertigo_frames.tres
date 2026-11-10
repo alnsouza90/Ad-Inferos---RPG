@@ -7,68 +7,104 @@
 script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_idle.webp"
-frame_size = Vector2i(297, 519)
-columns = 13
-count = 24
-fps = 10
+frame_size = Vector2i(405, 661)
+columns = 10
+count = 12
+fps = 15
 looping = true
-anchor = Vector2(181, 512)
+anchor = Vector2(228, 655)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_windup"]
 script = ExtResource("2_clip")
 id = &"windup"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_windup.webp"
-frame_size = Vector2i(342, 524)
-columns = 11
-count = 12
-fps = 10
+frame_size = Vector2i(436, 700)
+columns = 4
+count = 4
+fps = 15
 looping = false
-anchor = Vector2(218, 518)
+anchor = Vector2(241, 655)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_strike"]
 script = ExtResource("2_clip")
 id = &"strike"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_strike.webp"
-frame_size = Vector2i(507, 541)
-columns = 8
-count = 15
+frame_size = Vector2i(480, 678)
+columns = 7
+count = 7
 fps = 15
 looping = false
-anchor = Vector2(291, 534)
-impact_frame = 6
+anchor = Vector2(277, 656)
+impact_frame = 3
+
+[sub_resource type="Resource" id="clip_spell_windup"]
+script = ExtResource("2_clip")
+id = &"spell_windup"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_spell_windup.webp"
+frame_size = Vector2i(414, 692)
+columns = 4
+count = 4
+fps = 15
+looping = false
+anchor = Vector2(234, 657)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_spell_strike"]
+script = ExtResource("2_clip")
+id = &"spell_strike"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_spell_strike.webp"
+frame_size = Vector2i(464, 672)
+columns = 7
+count = 7
+fps = 15
+looping = false
+anchor = Vector2(281, 647)
+impact_frame = 3
 
 [sub_resource type="Resource" id="clip_defend"]
 script = ExtResource("2_clip")
 id = &"defend"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_defend.webp"
-frame_size = Vector2i(452, 529)
-columns = 9
-count = 10
+frame_size = Vector2i(446, 648)
+columns = 4
+count = 4
 fps = 15
 looping = false
-anchor = Vector2(271, 517)
+anchor = Vector2(246, 637)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_hit"]
+script = ExtResource("2_clip")
+id = &"hit"
+sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_hit.webp"
+frame_size = Vector2i(469, 654)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(281, 608)
 impact_frame = -1
 
 [sub_resource type="Resource" id="clip_fall"]
 script = ExtResource("2_clip")
 id = &"fall"
 sheet_path = "res://assets/characters/elites/elite_sin_vertigo/frames/elite_sin_vertigo_fall.webp"
-frame_size = Vector2i(507, 559)
-columns = 8
-count = 12
-fps = 10
+frame_size = Vector2i(449, 658)
+columns = 9
+count = 16
+fps = 15
 looping = false
-anchor = Vector2(291, 521)
+anchor = Vector2(261, 651)
 impact_frame = -1
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"elite_sin_vertigo"
-figure_height = 494.1
+figure_height = 640.0
 display_scale = 1
 attack_style = &"ranged"
 spell_style = &"outline"
 blessing_style = &"ring"
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_windup"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

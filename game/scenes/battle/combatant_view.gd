@@ -348,7 +348,9 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	# video, D-242).
 	var windup_id: StringName = &"spell_windup" if _frames.has_clip(&"spell_windup") else &"windup"
 	var windup: float = _player.play(windup_id) if _frames.has_clip(windup_id) else 0.0
-	var strike: FrameClip = _frames.clip(&"strike")
+	# ...and its own release (Vertigo's shadow claws, D-247).
+	var strike_id: StringName = &"spell_strike" if _frames.has_clip(&"spell_strike") else &"strike"
+	var strike: FrameClip = _frames.clip(strike_id)
 	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
 	var release: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
 	var hold: float = _player.scaled(HOLD_TIME)
@@ -367,7 +369,7 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 				flight = _player.scaled(SMOKE_TIME * SpellEffect.SMOKE_TRAVEL)
 	var tw := create_tween()
 	tw.tween_interval(windup)
-	tw.tween_callback(_player.play.bind(&"strike"))
+	tw.tween_callback(_player.play.bind(strike_id))
 	tw.tween_interval(release)
 	match _frames.spell_style:
 		&"orb":
