@@ -105,6 +105,10 @@ Só os originais em `art_source/` têm sufixo de versão (`_v01`, `_v02`). Em `g
 - A auréola mostra **só o estado espiritual**; o Fervor fica na barra da equipe (Direção de Arte v1.1 prevalece sobre a tabela antiga da seção 12).
 - Valores do shader ficam num Resource de apresentação (`scenes/battle/halo_settings.tres`), não em `docs/balance/`, porque não afetam regras.
 
+## 6b. Repositório × Drive (D-245)
+
+O repositório guarda só a arte que o jogo ou as ferramentas usam agora; o Drive "Art Source" é o arquivo de toda a arte aprovada. Mapa das pastas do Drive e das tarefas em que cada arte entra: `docs/art/drive-inventory.md`.
+
 ## 7. Animação (D-194; ADR-0007)
 
 - **Personagens:** quadros desenhados para parado e andar (ciclos) e poses-chave para as ações (atacar, defender, golpe recebido, queda), entregues por Alan como sprite sheet ou GIF (D-196). O agente tira o fundo, alinha os pés numa mesma linha e escala e corta os quadros (`tools/art/`).
