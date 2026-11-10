@@ -1,0 +1,95 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_idle.webp"
+frame_size = Vector2i(334, 539)
+columns = 12
+count = 20
+fps = 15
+looping = true
+anchor = Vector2(142, 528)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_walk"]
+script = ExtResource("2_clip")
+id = &"walk"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_walk.webp"
+frame_size = Vector2i(308, 542)
+columns = 12
+count = 12
+fps = 15
+looping = true
+anchor = Vector2(127, 533)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_windup.webp"
+frame_size = Vector2i(398, 538)
+columns = 10
+count = 15
+fps = 15
+looping = false
+anchor = Vector2(235, 532)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_strike.webp"
+frame_size = Vector2i(480, 539)
+columns = 8
+count = 12
+fps = 15
+looping = false
+anchor = Vector2(208, 533)
+impact_frame = 3
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_defend.webp"
+frame_size = Vector2i(501, 524)
+columns = 8
+count = 15
+fps = 15
+looping = false
+anchor = Vector2(235, 518)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_hit"]
+script = ExtResource("2_clip")
+id = &"hit"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_hit.webp"
+frame_size = Vector2i(445, 486)
+columns = 6
+count = 6
+fps = 15
+looping = false
+anchor = Vector2(191, 478)
+impact_frame = -1
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/characters/saints/saint_benedict/frames/saint_benedict_fall.webp"
+frame_size = Vector2i(363, 497)
+columns = 10
+count = 10
+fps = 10
+looping = false
+anchor = Vector2(155, 473)
+impact_frame = -1
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"saint_benedict"
+figure_height = 516.6
+stationary = false
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])

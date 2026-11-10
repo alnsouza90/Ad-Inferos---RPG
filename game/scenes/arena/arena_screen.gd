@@ -16,6 +16,8 @@ var chosen: StringName = &""
 var arena_seed: int = DEFAULT_SEED
 ## The running battle, or null while the arena is shown.
 var battle: BattleScreen
+## The animation test screen (T35), or null.
+var animations: AnimationTestScreen
 ## Speed the next battle starts with (tests use the instant one).
 var battle_speed_index: int = 0
 ## Emitted by "Voltar ao título" (the title opens the arena in dev builds).
@@ -74,6 +76,24 @@ func start() -> void:
 	battle.back_requested.connect(back_to_arena)
 	_menu.visible = false
 	add_child(battle)
+
+
+func open_animations() -> void:
+	if battle != null or animations != null:
+		return
+	animations = AnimationTestScreen.new()
+	animations.setup(data)
+	animations.back_requested.connect(close_animations)
+	_menu.visible = false
+	add_child(animations)
+
+
+func close_animations() -> void:
+	if animations == null:
+		return
+	animations.queue_free()
+	animations = null
+	_menu.visible = true
 
 
 func press_title() -> void:
@@ -174,6 +194,9 @@ func _build() -> void:
 	var start_button := _button(data.ui.text(&"arena_start"), Vector2(BUTTON_SIZE.x, 110))
 	start_button.pressed.connect(start)
 	box.add_child(start_button)
+	var animations_button := _button(data.ui.text(&"arena_animations"), Vector2(BUTTON_SIZE.x, 96))
+	animations_button.pressed.connect(open_animations)
+	box.add_child(animations_button)
 	var title_button := _button(data.ui.text(&"back_to_title"), Vector2(BUTTON_SIZE.x, 96))
 	title_button.pressed.connect(press_title)
 	box.add_child(title_button)

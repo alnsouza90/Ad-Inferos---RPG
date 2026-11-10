@@ -87,6 +87,20 @@ arena_seed,Semente {seed}
 arena_seed_minus,-
 arena_seed_plus,+
 arena_start,Começar
+arena_animations,Animações (teste)
+anim_test_title,Animações (teste)
+anim_idle,Parado
+anim_walk,Andar
+anim_attack,Atacar
+anim_defend,Defender
+anim_hit,Golpe recebido
+anim_fall,Queda
+anim_name_saint_george,São Jorge
+anim_name_saint_benedict,São Bento
+anim_name_saint_therese,Santa Teresinha
+anim_name_elite_minos,Minos
+anim_name_elite_sin_vertigo,Vertigem
+anim_name_boss_asmodeus,Asmodeu
 pool_easy,Fácil
 pool_hard,Difícil
 pool_elite,Elite

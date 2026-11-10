@@ -4,8 +4,13 @@ extends Control
 ## rectangle with the name in place of the art; the animation interface
 ## (play_idle, play_action, play_hit, play_fall) stays the same when the art
 ## arrives (ADR-0007). It only shows state; it never decides a rule.
+## With CharacterFrames (T35, D-194) the figure is animated from frame
+## sheets and the engine links the poses (slide, trail, blow, return).
 
 signal tapped(combatant_id: StringName)
+## The blow of an attack lands (T35): the screen shakes, zooms and flashes
+## at `at` (global position), and the target reacts.
+signal impact(at: Vector2)
 
 enum Mark { NONE, SELECTED, TARGETABLE, PENDING, INTENT_TARGET }
 
@@ -32,11 +37,26 @@ const FLOAT_TIME: float = 0.8
 const FIGURE_SIZE := Vector2(200, 300)
 const COLOR_OUTLINE := Color(0, 0, 0, 0.9)
 const SHADER_PATH: String = "res://shaders/halo.gdshader"
+## Frame animation (T35): seconds at speed 1 and distances in pixels of the
+## view (presentation only).
+const DASH_MAX_TIME: float = 0.22
+const HOLD_TIME: float = 0.25
+const RETURN_TIME: float = 0.3
+const DEFEND_HOLD: float = 0.5
+const DEFAULT_REACH: float = 160.0
+const TRAIL_EVERY: float = 0.035
+const TRAIL_TIME: float = 0.3
+const TRAIL_ALPHA: float = 0.45
+const STATIONARY_LEAN: float = 18.0
 
 var combatant_id: StringName
 var is_saint: bool = true
 ## Animation speed factor: 1 normal, 2 fast, 0 instant (no tween at all).
-var speed: float = 1.0
+var speed: float = 1.0:
+	set(value):
+		speed = value
+		if _player != null:
+			_player.speed = value
 var mark: Mark = Mark.NONE
 
 var _intent: Label
@@ -63,12 +83,19 @@ var _spirit_desolation: int = 0
 ## Action pose on screen (&"attack", &"hit", &"fall") or &"" for the body
 ## of the spiritual state.
 var _pose: StringName = &""
+## Frame animation (T35); null: the still images or the rectangle.
+var _frames: CharacterFrames
+var _player: FramePlayer
+var _trail_left: float = 0.0
+var _trail_clock: float = 0.0
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
-## coloured rectangle with its name (T15).
-func setup(p_id: StringName, p_is_saint: bool, width: float, art: CombatantArt = null, halo_settings: HaloSettings = null) -> void:
-	_art = art if halo_settings != null else null
+## coloured rectangle with its name (T15). `frames` (T35) animates the
+## figure from frame sheets instead of the still images.
+func setup(p_id: StringName, p_is_saint: bool, width: float, art: CombatantArt = null, halo_settings: HaloSettings = null, frames: CharacterFrames = null) -> void:
+	_frames = frames
+	_art = art if halo_settings != null and frames == null else null
 	_halo_settings = halo_settings
 	combatant_id = p_id
 	is_saint = p_is_saint
@@ -89,8 +116,10 @@ func setup(p_id: StringName, p_is_saint: bool, width: float, art: CombatantArt =
 	add_child(_body)
 	if _art != null:
 		_build_figure(width)
+	elif _frames != null:
+		_build_player(width)
 	_slot = _label(Vector2(0, 8), Vector2(width, 30), 20, _body)
-	if _art != null:
+	if has_figure():
 		# The figure fills the panel: name and state go at its feet, outlined.
 		_name = _label(Vector2(0, BODY_HEIGHT - 44), Vector2(width, 40), 24, _body)
 		_status = _label(Vector2(0, BODY_HEIGHT - 80), Vector2(width, 36), 22, _body)
@@ -133,6 +162,8 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 	_down = not c.is_standing()
 	_dimmed = c.is_saint() and c.has_acted and c.is_standing()
 	_apply_style()
+	if _player != null and _down and _player.clip_id() != &"fall":
+		_player.play(&"fall")
 	if _art != null:
 		var wanted: StringName = &"fall" if _down else &""
 		if wanted != _pose and (wanted == &"" or _art.pose_texture(wanted) != null):
@@ -145,6 +176,10 @@ func show_state(c: Combatant, display_name: String, slot_text: String, status_te
 
 ## Live update while events play (desolation_changed): the halo follows.
 func set_desolation(value: int) -> void:
+	if _player != null and value != _spirit_desolation:
+		_spirit_desolation = value
+		_apply_player_look(true)
+		return
 	if _art == null or value == _spirit_desolation:
 		return
 	_spirit_desolation = value
@@ -153,6 +188,10 @@ func set_desolation(value: int) -> void:
 
 ## Live update while events play (state_changed): body image and halo.
 func set_spirit_state(state_id: StringName) -> void:
+	if _player != null and state_id != _spirit_state:
+		_spirit_state = state_id
+		_apply_player_look(true)
+		return
 	if _art == null or state_id == _spirit_state:
 		return
 	_spirit_state = state_id
@@ -161,6 +200,23 @@ func set_spirit_state(state_id: StringName) -> void:
 
 func has_art() -> bool:
 	return _art != null
+
+
+## True when a figure (still images or frames) replaces the rectangle.
+func has_figure() -> bool:
+	return _art != null or _frames != null
+
+
+func player() -> FramePlayer:
+	return _player
+
+
+## Labels and bars under the figure; the animation test screen hides them.
+func set_info_visible(on: bool) -> void:
+	for node: Control in [_intent, _slot, _name, _status, _hp_bar, _hp, _desolation, _conditions, _preview]:
+		node.visible = on
+	_style.draw_center = on
+	_style.set_border_width_all(6 if on else 0)
 
 
 func figure_texture() -> Texture2D:
@@ -203,14 +259,37 @@ func center() -> Vector2:
 func play_idle() -> float:
 	_body.position = Vector2(0, INTENT_HEIGHT)
 	_body.rotation = 0.0
+	if _player != null and not _down:
+		_player.play(&"idle")
 	return 0.0
 
 
+## Walking on the spot (the walk itself moves the scenery, T37).
+func play_walk() -> float:
+	if _player != null and not _down and _frames.has_clip(&"walk"):
+		_player.play(&"walk")
+	return 0.0
+
+
+## Guard pose, held a moment, then back to idle.
+func play_defend() -> float:
+	if _player == null or _down or not _frames.has_clip(&"defend") or speed <= 0.0:
+		return 0.0
+	var t: float = _player.play(&"defend") + _player.scaled(DEFEND_HOLD)
+	var tw := create_tween()
+	tw.tween_interval(t)
+	tw.tween_callback(_back_to_idle)
+	return t
+
+
 ## A quick lunge toward the other side and back. `pose_id` picks the pose
-## image once the art exists (unused by the placeholder).
-func play_action(_pose_id: StringName = &"") -> float:
+## image once the art exists (unused by the placeholder). With frames,
+## `reach` is how far the figure slides to its target (negative: default).
+func play_action(_pose_id: StringName = &"", reach_px: float = -1.0) -> float:
 	if speed <= 0.0:
 		return 0.0
+	if _player != null and not _down:
+		return _play_frame_attack(reach_px if reach_px >= 0.0 else DEFAULT_REACH)
 	var t: float = ACTION_TIME / speed
 	var home := Vector2(0, INTENT_HEIGHT)
 	var reach := home + Vector2(40.0 if is_saint else -40.0, 0)
@@ -236,6 +315,15 @@ func play_hit() -> float:
 	var home := Vector2(0, INTENT_HEIGHT)
 	var recoil := home + Vector2(-14.0 if is_saint else 14.0, 0)
 	_body.modulate = Color(1.6, 0.5, 0.5)
+	if _player != null and not _down:
+		var clip_time: float = _player.play(&"hit") if _frames.has_clip(&"hit") else 0.0
+		t = maxf(t, clip_time)
+		var hit_tw := create_tween()
+		hit_tw.tween_property(_body, "position", recoil, t * 0.3)
+		hit_tw.parallel().tween_property(_body, "modulate", Color.WHITE, t)
+		hit_tw.tween_property(_body, "position", home, t * 0.7)
+		hit_tw.tween_callback(_back_to_idle)
+		return t
 	var posed: bool = _show_pose_briefly(&"hit")
 	if posed:
 		t = HIT_TIME * 2.0 / speed
@@ -252,6 +340,11 @@ func play_hit() -> float:
 func play_fall() -> float:
 	_down = true
 	_apply_style()
+	if _player != null:
+		var clip_time: float = _player.play(&"fall")
+		if speed <= 0.0:
+			return 0.0
+		return maxf(clip_time, FALL_TIME / speed)
 	if _art != null and _art.pose_texture(&"fall") != null:
 		_set_pose(&"fall")
 	if speed <= 0.0:
@@ -296,11 +389,127 @@ func _apply_style() -> void:
 	_style.bg_color = base.darkened(0.45) if _dimmed else base
 	_style.border_color = MARK_COLORS[mark]
 	_body.modulate = Color(1, 1, 1, 0.75) if _down else Color.WHITE
+	if _player != null:
+		_style.bg_color = Color(0, 0, 0, 0.25)
+		_player.self_modulate = Color(0.55, 0.55, 0.55) if _dimmed else Color.WHITE
 	if _art != null:
 		# The figure replaces the coloured block; the border still marks it.
 		_style.bg_color = Color(0, 0, 0, 0.25)
 		_figure.self_modulate = Color(0.55, 0.55, 0.55) if (_dimmed or _down) else Color.WHITE
 		_halo.visible = not _down
+
+
+# --- frame animation (T35) --------------------------------------------------------
+
+func _build_player(width: float) -> void:
+	_figure_material = ShaderMaterial.new()
+	_figure_material.shader = load(SHADER_PATH)
+	_player = FramePlayer.new()
+	_player.material = _figure_material
+	_player.speed = speed
+	# Feet on the bottom of the panel, like the still figure.
+	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y)
+	_body.add_child(_player)
+
+
+## The figure loses colour as desolation grows, like the still images; the
+## halo over animated frames waits for head points per frame (T52).
+func _apply_player_look(animated: bool) -> void:
+	if _halo_settings == null:
+		return
+	var look: HaloLook = HaloLook.of(_halo_settings, _spirit_state, _spirit_desolation)
+	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
+	if duration > 0.0 and is_inside_tree():
+		create_tween().tween_property(_figure_material, "shader_parameter/saturation", look.saturation, duration)
+	else:
+		_figure_material.set_shader_parameter("saturation", look.saturation)
+
+
+## Halo settings for the look of the frames (desaturation by state).
+func set_halo_settings(settings: HaloSettings) -> void:
+	_halo_settings = settings
+	if _player != null:
+		_apply_player_look(false)
+
+
+## Prepare, slide to the target leaving a trail, blow (impact), hold, come
+## back. Minos (stationary) leans instead of sliding (D-219).
+func _play_frame_attack(reach_px: float) -> float:
+	_player.speed = speed
+	var home := Vector2(0, INTENT_HEIGHT)
+	var direction: float = 1.0 if is_saint else -1.0
+	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
+	var strike: FrameClip = _frames.clip(&"strike")
+	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
+	var blow: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
+	var dash: float = _player.scaled(DASH_MAX_TIME)
+	if blow > 0.0:
+		dash = minf(dash, blow)
+	var distance: float = STATIONARY_LEAN if _frames.stationary else reach_px
+	var target := home + Vector2(direction * distance, 0)
+	var hold: float = _player.scaled(HOLD_TIME)
+	var back: float = _player.scaled(RETURN_TIME)
+	var tw := create_tween()
+	tw.tween_interval(windup)
+	tw.tween_callback(_start_strike)
+	tw.tween_property(_body, "position", target, dash).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(maxf(blow - dash, 0.0))
+	tw.tween_callback(_emit_impact)
+	tw.tween_interval(maxf(strike_time - blow, 0.0) + hold)
+	tw.tween_callback(_back_to_idle)
+	tw.tween_property(_body, "position", home, back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	return windup + maxf(strike_time, dash) + hold + back
+
+
+func _start_strike() -> void:
+	_player.play(&"strike")
+	if not _frames.stationary:
+		_trail_left = _player.scaled(DASH_MAX_TIME) + TRAIL_EVERY
+		_trail_clock = 0.0
+
+
+func _emit_impact() -> void:
+	var front: float = 1.0 if is_saint else 0.0
+	impact.emit(get_global_transform() * (_body.position + Vector2(size.x * front, BODY_HEIGHT * 0.5)))
+
+
+func _back_to_idle() -> void:
+	if _player != null and not _down:
+		_player.play(&"idle")
+
+
+func _process(delta: float) -> void:
+	if _trail_left <= 0.0:
+		return
+	_trail_left -= delta
+	_trail_clock += delta
+	if _trail_clock >= TRAIL_EVERY:
+		_trail_clock = 0.0
+		_drop_ghost()
+
+
+## A fading copy of the figure where it is now: the trail of the slide.
+func _drop_ghost() -> void:
+	var d: Dictionary = _player.current_draw()
+	if d.is_empty():
+		return
+	var atlas := AtlasTexture.new()
+	atlas.atlas = d["texture"]
+	atlas.region = d["region"]
+	var ghost := TextureRect.new()
+	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.texture = atlas
+	ghost.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ghost.stretch_mode = TextureRect.STRETCH_SCALE
+	var rect: Rect2 = d["rect"]
+	ghost.position = _body.position + rect.position
+	ghost.size = rect.size
+	ghost.modulate = Color(1.0, 0.92, 0.75, TRAIL_ALPHA)
+	add_child(ghost)
+	move_child(ghost, _body.get_index())
+	var tw := ghost.create_tween()
+	tw.tween_property(ghost, "modulate:a", 0.0, TRAIL_TIME)
+	tw.tween_callback(ghost.queue_free)
 
 
 ## A short-lived action pose; false when the art has none (or no animation).

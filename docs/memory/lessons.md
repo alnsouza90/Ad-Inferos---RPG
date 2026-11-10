@@ -24,6 +24,8 @@ Armadilhas que já custaram tempo. Ler antes de mexer nas áreas citadas.
 
 ## GUT e CI
 
+- `Array[StringName].sort()` **não** ordena em ordem alfabética (compara a identidade do nome); ordene como `String` e converta depois (T35).
+- Nos testes de animação, `wait_seconds` com uma fração do tempo do movimento é instável no modo sem tela; use `wait_until` com uma condição (T35).
 - O GUT **ignora em silêncio** um script de teste com erro de sintaxe e ainda diz "All tests passed". O CI falha se aparecer "Ignoring script", "Parse Error" ou "SCRIPT ERROR".
 - Testes nunca dependem de `game/data`; usam `tests/helpers/combat_fixture.gd`. Testes com dados reais leem os CSVs pelo importador (`tests/helpers/real_data.gd`).
 

@@ -57,3 +57,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Roteiro dos flashbacks de antes, por círculo, com as três pessoas da selva (D-198) | Alan | 05/11/2026 |
 | Revisão teológica de toda a sequência final antes do M4 (D-198) | Alan | 05/11/2026 |
 | A cópia do GDD no Claude Docs (fora do repositório) precisa receber as mudanças de D-198 | Alan | 05/11/2026 |
+| Auréola sobre os quadros animados: medir o ponto da cabeça em cada quadro (ou seguir a cabeça de outro jeito) antes de usar os quadros no combate (D-331) | T36/T52 | 10/11/2026 |
+| Memória do celular com os quadros: cada personagem ocupa dezenas de MB descomprimido; comprimir texturas no Android e conferir no Redmi (D-330) | T53 | 10/11/2026 |
+| Vertigem: sobram fiapos de fundo cinza entre véus muito finos em alguns quadros; ver no celular se incomoda | T35 (Alan) | 10/11/2026 |
