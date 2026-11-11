@@ -151,3 +151,17 @@ Relatório em `docs/balance/sim-reports/`, com os números novos só depois da a
 | Na tela do Mapa do Inferno (T49) | A luz pálida, um círculo à frente da lanterna |
 | No M3 | Carismas simples (§2), Forja com os complementos (§3), Livro das Obras na Biblioteca, Narrador nas telas de passagem |
 | Escrita de Alan | As frases do Narrador; os pares obra–feito e obra–santo; o texto da origem das Esmolas |
+
+## 7. Respostas às três perguntas finais (Alan, 11/11/2026)
+
+| Pergunta | Resposta | O que significa |
+| --- | --- | --- |
+| A · Quando abre o segundo Carisma | **a** | No **nível 3**, como hoje. A Purificação **não** abre Carisma; continua com o efeito atual (+25% de experiência). A proposta F-06 (marcas) fica arquivada. |
+| B · Equipamento no nível 3 | **a** | **Só números melhores.** Sem efeito especial por peça na versão 1. Valem os cinco complementos do §3. |
+| C · Origem das Esmolas | **"a"** (as opções eram numeradas de 1 a 4) | Lida como a **primeira opção: restituição** (o que foi negado aos pobres, guardado pelos demônios, restituído pela companhia e consagrado no Pouso). **A confirmar com Alan**, porque a letra não batia com a numeração. A ideia das boas obras esquecidas do Peregrino não foi pedida; fica só anotada no §4. |
+
+**Resumo dos Carismas, como ficou:** o kit atual de cada santo é o primeiro Carisma; o segundo troca o traço e uma habilidade (24 peças no total); abre no nível 3; troca na Casa de Exercícios.
+
+**Resumo do equipamento, como ficou:** Instrumento e Hábito, 3 níveis, só números; Forja no M3, com prévia antes de pagar, nome de cada peça (de Alan), nível na ficha do santo, sugestão em "Planejar a semana" e uma rodada do simulador de economia.
+
+**Texto da origem das Esmolas:** é de Alan, marcado como criação do jogo, com revisão teológica. Palavra-chave sugerida: **restituir**, nunca "saquear" ou "ganhar". Nomes "Despojos" (antes do Pouso) e "Esmolas" (depois) são sugestão para `ui_text.csv`, a aprovar.
