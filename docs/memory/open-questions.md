@@ -66,3 +66,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto | T36/T52 | 10/11/2026 |
 | Arquivos do Drive sem nome descritivo (bosses 5, saints 3, portraits 3, ui/icons 30, vfx 3, props 2, raiz de circle_02): identificar com Alan e renomear ao trazer para o repositório (`drive-inventory.md`) | Tarefa de cada arte | 10/11/2026 |
 | Almas, relicário, redemoinhos do Vendaval e faixa de névoa: pedir a Alan na T39/T53 (ele sobe ao Drive ou manda pelo chat, D-246) | Alan / T39, T53 | 10/11/2026 |
+| Tentação: trocar "o santo peca e perde o controle" por assédio dos inimigos (condições visíveis aplicadas de fora) ou manter só como evento do Peregrino (`analise-referencias-dd.md` §G.1) | Alan | 11/11/2026 |
+| Ordem da abertura: abertura → título → Prólogo na primeira vez? (`analise-referencias-dd.md` §G.11) | Alan | 11/11/2026 |
+| Mecânica de desbloqueio para cada santo de expansões futuras (D-262) | Alan (design) | 11/11/2026 |
+| Qual edifício guarda as conquistas opcionais e a lista de conquistas (D-262) | Alan / M3 | 11/11/2026 |
+| Simulação das variantes do Lume (D-262) | T55 ou antes | 11/11/2026 |
