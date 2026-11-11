@@ -10,6 +10,7 @@ Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. 
 | --- | --- | --- |
 | `01-visao.md` | A tese: o que só este jogo faz, o que é forte e o que preocupa | 5 min |
 | `02-propostas.md` | As propostas F-01 a F-18 (uma retirada), cada uma com problema, impacto, sistemas, custo, risco, simulação e decisões ligadas | 20 min |
+| `01-design.md` | **Etapa 2:** o que faz o jogo ser inesquecível; 7 ideias de identidade (G-1 a G-7) e 3 cortes | 15 min |
 | `04-respostas-de-alan.md` | As respostas de Alan às 14 perguntas e os três estudos pedidos (Carismas simples, equipamento, origem das Esmolas) | 8 min |
 | `03-decisoes-e-ordem.md` | As 13 perguntas que são suas, com a minha recomendação; a ordem sugerida; a lista para o simulador | 5 min |
 
