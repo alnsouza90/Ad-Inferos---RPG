@@ -1,6 +1,6 @@
 # 1 · Visão: o que só este jogo faz
 
-Versão 1.0 · 11/11/2026 · **proposta**, não decisão
+Versão 1.1 · 11/11/2026 · revista depois de ler `decisions.md` inteiro, o Prólogo e as pendências · **proposta**, não decisão
 
 ## 1. A tese em três frases
 
@@ -19,6 +19,8 @@ Você disse: a missão é de **resgate**, e tudo é alegoria da **salvação** e
 | **Os traços dos santos** | Duelo, Clausura, Pequeno Caminho, Bilocação, Ermitão, Causas Impossíveis: cada traço conta a vida do santo com uma regra. |
 | **O ouro reservado ao sagrado** | Na tela, só as auréolas são douradas. É a assinatura visual. |
 | **O leito de morte** | Dá sentido a tudo sem precisar pôr o Peregrino em cena de combate. |
+| **O Peregrino sempre à frente, nunca lá** (D-141) | A tenda, os rastros, a voz que mente: é resgate de verdade, e a ausência dele é o que move a companhia. |
+| **As três luzes do Prólogo** | A luz pálida da alma, a lanterna de Santa Luzia e a vela do leito. O jogo já tem seus símbolos. |
 | **Santos que chegam por marcos, nunca por compra** | Cada chegada é um acontecimento. |
 | **As mecânicas de ambiente por círculo** | Fome, Contrapasso, Túmulos: quase todas já pedem uma resposta ativa do jogador. |
 
@@ -29,7 +31,7 @@ Você disse: a missão é de **resgate**, e tudo é alegoria da **salvação** e
 - Hoje, "ajudar o outro" é **curar** e **tirar desolação**. Isso todo RPG tem.
 - Falta o gesto próprio do tema: **tomar sobre si** o peso do companheiro. O peso muda de ombro; não some.
 - Sem isso, a tela diz "Darkest Dungeon com santos". Com isso, a tela diz outra coisa.
-- Propostas: **F-01, F-02, F-03**.
+- Proposta: **F-01**.
 
 ### 3.2 O momento mais dramático é um sorteio que o jogador só assiste
 
@@ -60,14 +62,17 @@ Você disse: a missão é de **resgate**, e tudo é alegoria da **salvação** e
 - O Lume **passa sozinho**. O jogador não faz nada com ele além de acender uma Vela.
 - A faixa do meio (25 a 74) não faz nada.
 - "Mais Esmolas no escuro" é herança de Darkest Dungeon (cobiça) e combina pouco com santos.
+- A lanterna vem da lâmpada de Santa Luzia, que o Prólogo apresenta como padroeira da visão. O jogo já diz que luz é ver; a regra ainda não.
 - Num jogo sem sorte, **informação é o que mais vale**. A luz deveria ser isso: quanto mais luz, mais você vê.
 - Propostas: **F-12, F-13**.
 
-### 3.6 O resgate não tem objeto visível
+### 3.6 O resgate já tem símbolos; falta usá-los sempre do mesmo jeito
 
-- Sem o Peregrino na jornada (decisão sua), o jogador precisa ver **de outro jeito** que o resgate avança.
-- Hoje o avanço é "venci o chefe, vi uma cena". Falta um símbolo único que apareça no mapa, na vila e no leito.
-- Proposta: **F-03**.
+- **Correção da versão 1.0:** eu disse que o resgate não tinha objeto visível. Estava errado.
+- O seu Prólogo já criou três luzes: a **luz pálida** da alma que desce, a **lanterna** da companhia (acesa por Santa Luzia) e a **vela do leito**.
+- E D-141 já diz como o Peregrino aparece na jornada: **sempre à frente, nunca lá**. Só rastros e a voz que mente.
+- O que falta é pequeno: mostrar essas luzes no Mapa do Inferno e na vila.
+- Proposta: **F-03** (refeita).
 
 ### 3.7 Tamanho
 
@@ -78,10 +83,9 @@ Você disse: a missão é de **resgate**, e tudo é alegoria da **salvação** e
 
 ### 3.8 Leitura no celular
 
-- A fonte gótica (Pirata One) em tamanho pequeno é difícil de ler num Redmi 12.
-- "Lume 64" é um número pequeno num canto.
-- Há botões de teste na tela (+25 desolação, −25, Consolação) que precisam sair antes de qualquer teste com jogador.
-- Proposta: **F-16**.
+- **Correção da versão 1.0:** quase tudo o que apontei aqui já estava decidido ou resolvido (botões de teste só no desenvolvimento, desolação nos pés e no retrato, intenções com destaque, lamparina na escala, fonte escolhida por você em D-258).
+- Sobra só um pedido de teste no Redmi com os textos pequenos.
+- Proposta: **F-16** (reduzida).
 
 ## 4. A direção que eu proponho
 
@@ -89,7 +93,7 @@ Quatro pilares. Cada proposta do arquivo `02-propostas.md` serve a um deles.
 
 | Pilar | Em uma frase | Propostas |
 | --- | --- | --- |
-| **A · Intercessão** | O gesto próprio do jogo é carregar o peso do outro. | F-01, F-02, F-03, F-14 |
+| **A · Intercessão** | O gesto próprio do jogo é carregar o peso do outro. | F-01, F-03, F-14 |
 | **B · Provação** | A Noite Escura se atravessa jogando, e o santo sai dela maior. | F-04, F-05, F-06 |
 | **C · Clareza com profundidade** | Sem sorte, a variedade vem de regras visíveis: relógio, intenções "se… então", provação do círculo. | F-07 a F-11 |
 | **D · Luz** | Luz é ver. A lamparina é uma ferramenta, não um cronômetro. | F-12, F-13 |
