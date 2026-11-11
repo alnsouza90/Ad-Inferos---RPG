@@ -179,3 +179,24 @@ Alan respondeu: **"1, 2, 3 aprovados"**.
 | 3 | G-5 (Vestígios como objetos da vida do Peregrino, compondo a contrição) combina com os flashbacks e as três pessoas da selva | **Aprovado.** |
 
 **Ainda sem resposta explícita:** G-3 (a consolação é dom), G-4 (Laços), G-7 (quem leva a lanterna) e os três cortes (Escalada e retorno decrescente; Afinidades fixas; Jardim). A mensagem também tinha uma lista de cortes numerada de 1 a 3; se "1, 2, 3" se referia a ela, a leitura acima muda.
+
+## 9. Etapa 2 · resposta final de Alan (11/11/2026)
+
+Alan esclareceu: **aprovou todas as ideias, de G-1 a G-7, e também os cortes.** Isto substitui a leitura parcial do §8.
+
+| Item | Aprovado | Condição que continua valendo | O que muda nos documentos (para o agente de implementação) |
+| --- | --- | --- | --- |
+| G-1 · Três descem, os outros rezam (Súplica) | Sim | Simulador antes dos números; revisão teológica; uma Súplica por combate é proposta | `village-economy.md` §4 (Capela), `combat.md` §4.1 (comando novo), tela do combate. Jogável no M3. |
+| G-2 · O domínio cede | Sim | Revisão teológica; números de Asmodeu aprovados por Alan | `bosses.md` (T38): Asmodeu já nasce com o Domínio; o fígado do peixe (GDD P9) vira um dos pontos. `narrative-system.md` (resultado novo: ceder Domínio). |
+| G-3 · A consolação é dom | Sim | Simulador (efeito na meta de Noite Escura) | `desolation.md` §4.1, `combat.md` §4.1. Entra na rodada de simulação. |
+| G-4 · Laços | Sim | Simulador; depende de Interceder | `combat.md` §12 (as Afinidades viram ponto de partida: Laço 1), save, tela. |
+| G-5 · A vida dele pelo caminho | Sim | Escrita de Alan; anda com os Vestígios (M3) e a contrição (M4) | Especificação dos Vestígios (M3), `narrative-system.md` §4.5. |
+| G-6 · O ano que se vive | Sim | Revisão teológica; o conteúdo de cada tempo é de Alan | `village-economy.md` §6; decidir antes da T45, construir no M3. |
+| G-7 · Quem leva a lanterna | Sim | Só depois de Alan escolher a variante do Lume | `expedition.md` §4, `combat.md`. |
+| Corte C-1 · Escalada e retorno decrescente das Esmolas | Sim | Penitências (G-6) no lugar; "revisita paga metade" é proposta para o simulador de economia | `expedition.md` §11, GDD §8 (o GDD só muda com pedido explícito de Alan). |
+| Corte C-2 · Afinidades fixas | Sim | Viram o ponto de partida dos Laços | `combat.md` §12, `constants.csv`. As Afinidades já estão programadas e testadas: a troca precisa de migração de testes. |
+| Corte C-3 · Jardim | Sim | A Capela ganha o descanso forte no nível 3; o papel de São Francisco é decisão de Alan | `village-economy.md` §3 e §4, `facilities.csv`. Arte do Jardim já existente fica sem uso. |
+
+**Não decidido:** o "quarto corte" opcional (os 7 bônus pequenos das Moradas virarem 3 marcos). Alan não o mencionou; fica como está.
+
+**Atenção para quem implementar:** "aprovado" aqui quer dizer **direção aprovada**. Os números continuam sendo propostas até passarem pelo simulador e por Alan, como manda o `CLAUDE.md`. Três aprovações mexem em coisas já programadas e testadas (Afinidades, valor 20 de fim de combate, regras de desolação): cada uma precisa de tarefa própria no backlog, com os testes atualizados.
