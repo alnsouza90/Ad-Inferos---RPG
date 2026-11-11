@@ -1,6 +1,6 @@
 # 2 · Propostas (F-01 a F-18)
 
-Versão 1.1 · 11/11/2026 · revista depois de ler `decisions.md` inteiro, o Prólogo e as pendências · **tudo aqui é proposta**. Números são sugestões para o simulador, nunca valores finais. Nomes de mecânicas são provisórios.
+Versão 1.2 · 11/11/2026 · revista depois de ler as decisões, o Prólogo, as pendências, o GDD, o backlog do M2, o roadmap e as especificações de combate e expedição inteiras · **tudo aqui é proposta**. Números são sugestões para o simulador, nunca valores finais. Nomes de mecânicas são provisórios.
 
 **Como ler cada ficha:** problema → ideia → impacto no jogador → sistemas → custo (baixo, médio, alto) → risco → simulação.
 
@@ -119,6 +119,7 @@ Versão 1.1 · 11/11/2026 · revista depois de ler `decisions.md` inteiro, o Pr�
   - Rapidez vira virtude: arriscar para terminar logo passa a valer.
   - Enrolar passa a custar. O abuso some sem regra especial.
   - O jogador sente que **a desolação é consequência do que ele fez**.
+- **O que eu conferi:** li `combat.md` inteiro. Não há limite de rodadas nem trava contra enrolar; só a Indecisão do Antinferno (+5 de desolação para quem passa a vez), que vale num círculo. A lista da caça a exploits (T56) também não tem esse caso: vale incluir.
 - **Sistemas:** `desolation.md` §2.1, `constants.csv`, tela do combate, simulador.
 - **Custo:** baixo.
 - **Risco:** favorecer demais equipes de dano e punir equipes de proteção (Bento, Sebastião). O simulador precisa comparar os dois estilos.
@@ -153,7 +154,7 @@ Versão 1.1 · 11/11/2026 · revista depois de ler `decisions.md` inteiro, o Pr�
   - o **Pecado Encarnado** (elite) é quem **ensina** a provação, com uma ação própria que a aplica com força (a Vertigem com um "Encanto" que puxa as intenções para um santo, por exemplo: ele sofre o assédio, não peca);
   - o **chefe** é a **prova final** da mesma lição.
 - **Onde a provação ainda não tem resposta ativa (a revisar):**
-  - **Ouro Maldito (Círculo 4):** hoje dá desolação ao receber Esmolas, sem escolha. Sugestão de forma: a companhia pode **recusar** as Esmolas daquele nó. É a única provação em que resistir custa dinheiro, o que é exatamente o tema.
+  - **Ouro Maldito (Círculo 4):** hoje dá desolação ao receber Esmolas, sem escolha. Sugestão de forma: a companhia pode **recusar** as Esmolas daquele nó. Isso já combina com o que o GDD prevê para o chefe: Mamom é "vencido por renúncia" de Esmolas ou relíquia (GDD §8 e P9). O círculo ensinaria a renúncia; o chefe a cobraria.
   - **Vendaval (Círculo 2):** a resposta hoje é quase só a Clausura de Bento. Vale dar uma resposta comum (por exemplo, um santo que não agiu ainda pode "firmar o pé" gastando a ação).
 - **Impacto no jogador:** cada círculo ensina uma virtude pela prática. Ele aprende a lição com o Pecado Encarnado e é cobrado pelo chefe.
 - **Sistemas:** `expedition.md` §10, `combat.md` §14, `conditions.csv` (Firmeza), especificação dos chefes.
@@ -305,7 +306,7 @@ Princípio 3 do GDD: uma ideia só vira mecânica se melhorar uma decisão do jo
 | Afinidades | Um pouco (quem levar) | **Manter.** Já está pronto e é barato. |
 | **Carismas** (24, cerca de 72 variantes) | Sim, mas custa muito conteúdo | **Trocar pelas marcas de Purificação** (F-06), ou reduzir para 1 Carisma por santo. É o maior corte possível. |
 | **Equipamento** (Instrumento e Hábito, 3 níveis) | Quase nada: é só "+10% de dano" e "+8% de vida" | **Fundir em um só espaço**, ou manter como simples destino das Esmolas, sem tela própria elaborada. |
-| **Ferimento leve** (−10% num atributo sorteado, 1 semana) | Não | **Cortar.** Fica só o ferimento grave, que já pesa e gera decisão (leito, banco). |
+| Ferimento leve (−10% num atributo sorteado, 1 semana) | Pouco, mas é a consequência de cair e da retirada de emergência (`combat.md` §8, `expedition.md` §9) | **Manter.** Na versão 1.0 eu propus cortar; estava errado, porque sem ele a primeira queda não custa nada. Sugestão pequena: o jogador ver **antes** qual atributo será atingido. |
 | Capela × Jardim | Parecidos | **Manter**, como a análise anterior concluiu. O Jardim perde importância se F-05 entrar; nesse caso pode virar um nível 3 da Capela. |
 | Moradas (7 bônus pequenos) | Não (são automáticas) | **Manter como cena**: cada Morada acende uma janela e muda algo visível. Os bônus pequenos podem ficar. |
 | Escalada (5 níveis) | Sim, para quem repete | **Adiar** o desenho dos níveis 3 a 5 para depois da campanha completa. |

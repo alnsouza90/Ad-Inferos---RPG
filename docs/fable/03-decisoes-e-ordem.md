@@ -1,6 +1,6 @@
 # 3 · Decisões que são suas, ordem sugerida e lista do simulador
 
-Versão 1.1 · 11/11/2026 · revista depois de ler `decisions.md` inteiro, o Prólogo e as pendências · **proposta**
+Versão 1.2 · 11/11/2026 · revista depois de ler também o GDD, o backlog do M2, o roadmap e as especificações de combate e expedição inteiras · **proposta**
 
 ## 1. Decisões (responda com o número e a letra)
 
@@ -19,7 +19,7 @@ Cada pergunta tem a minha recomendação em **negrito**. Detalhes em `02-propost
 | 9 | **Esmolas ×1,5 no escuro**: mantém? | a) Tirar · b) Trocar por outro prêmio · c) Manter | **a ou b** |
 | 10 | **Conquistas opcionais e santos de expansão** (pendências suas de D-262; F-14): Obras de Misericórdia, sem prêmio de poder, num "Livro das Obras" na Biblioteca? | a) Sim, na Biblioteca · b) Sim, cada obra no seu edifício · c) Outra lista | **a** |
 | 11 | **Voz do jogo** (F-15): o Narrador do Prólogo fala também nos momentos fortes do jogo? | a) Sim, poucas frases · b) Não | **a** |
-| 12 | **Cortes** (F-17): ferimento leve sai? Equipamento vira um espaço só? | a) Os dois · b) Só o ferimento leve · c) Nenhum | **a** (decidir antes da T45) |
+| 12 | **Cortes** (F-17): o equipamento (Instrumento e Hábito) vira um espaço só? O ferimento leve **fica** (retirei o corte: é a consequência de cair). | a) Um espaço · b) Dois, como hoje | **a** (decidir antes da Forja, no M3) |
 | 13 | **Rodada de regras no simulador antes de produzir os Círculos 3 a 5** (F-18)? | a) Sim · b) Não | **a** |
 
 ## 2. Perguntas que continuam sem resposta para mim
@@ -27,7 +27,7 @@ Cada pergunta tem a minha recomendação em **negrito**. Detalhes em `02-propost
 Na versão 1.0 eu fiz cinco perguntas. Três já estavam respondidas nas suas decisões (o Anjo da Guarda espera na Porta, D-190; a tenda é o eco da tentação, D-141; o calendário é cíclico, GDD §6). Sobram duas:
 
 1. **De onde vêm as Esmolas?** Hoje caem dos combates. Não achei uma frase que diga quem dá e por quê. É só tom, sem regra, mas vale ter.
-2. **Trava contra enrolar no combate.** (Deixar um inimigo fraco vivo e curar ou aliviar de graça com habilidades de custo 0.) Procurei em `combat.md`, `expedition.md`, `enemy-ai.md`, `constants.csv` e `testing.md` e **não achei** nenhuma trava; só a Indecisão do Antinferno, que vale para um círculo. Vale o agente de implementação confirmar no código. Se não existir, F-07 resolve; de todo modo, é um caso para a caça a exploits (T56).
+2. ~~Trava contra enrolar no combate~~ **Respondida por mim:** li `combat.md` inteiro e não existe. F-07 resolve; e vale incluir o caso na lista da T56.
 
 ## 3. Ordem sugerida
 
@@ -35,8 +35,7 @@ Na versão 1.0 eu fiz cinco perguntas. Três já estavam respondidas nas suas de
 
 1. F-04, só o item 1: o aviso "→ teste de Fé (chance)" na intenção inimiga.
 2. F-16: o teste de leitura dos textos pequenos no Redmi.
-3. Pergunta 12 (cortes) **antes da T45**, porque a vila mínima do M2 já traz ferimentos (D-173).
-4. Pergunta 7 (assédio) **antes da T38**, porque é em `bosses.md` que Vertigem, Minos e Asmodeu ganham ações e números (D-175, D-219).
+3. Pergunta 7 (assédio) **antes da T38**, porque é em `bosses.md` que Vertigem, Minos e Asmodeu ganham ações e números (D-175, D-219).
 
 ### Na tarefa do simulador (T55) e na caça a exploits (T56)
 
@@ -69,7 +68,7 @@ Todos os números são pontos de partida, não valores finais.
 | F-06 | 1, 2 ou 3 marcas por santo | Poder da equipe no Círculo 9 | Sem tornar o fim trivial |
 | F-09 | Firmeza = +1 de Fervor | Fervor médio por rodada | Aumento menor que 15% |
 | F-12 / F-13 | As 3 faixas de visão; custo de 5, 10 ou 15 para erguer a lamparina | Vitórias e desolação por faixa; Velas compradas por expedição | Diferença sentida entre as faixas; Vela vira compra comum |
-| F-17 | Sem ferimento leve; equipamento em um espaço | Esmolas gastas no essencial | 70% a 80% (meta atual) |
+| F-17 | Equipamento em um espaço | Esmolas gastas no essencial | 70% a 80% (meta atual) |
 
 **Atenção:**
 

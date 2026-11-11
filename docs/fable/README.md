@@ -1,6 +1,6 @@
 # Consultoria de direção criativa · Ad Inferos
 
-Versão 1.1 · 11/11/2026 · autor: consultor convidado (modelo de IA) · **nada aqui é decisão**
+Versão 1.2 · 11/11/2026 · autor: consultor convidado (modelo de IA) · **nada aqui é decisão**
 
 Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. Nenhum código, dado, teste ou documento existente foi alterado.
 
@@ -40,10 +40,15 @@ As propostas F-01, F-04, F-05, F-06, F-08 a F-13 e F-17 não contrariam nenhuma 
 - Especificações: `desolation.md`, `narrative-system.md`, `village-economy.md`, `enemy-ai.md`; `design/saint-kits.md`, `design/analise-referencias-dd.md`, `narrative/writing-guide.md`.
 - Em parte: `specs/expedition.md` (§10 e §11), `specs/combat.md` (§5), `gdd/gdd-v1.1.md` (§7 e §9), e os CSVs de inimigos, ações, encontros e condições.
 
-## O que eu ainda não li
+## Leitura completa (versão 1.2)
 
-- `specs/combat.md` e `specs/expedition.md` inteiros, o backlog do M2, o roadmap, `lessons.md` e o restante do GDD.
-- **Risco que sobra:** detalhes de regra do combate (por exemplo, se já existe trava contra enrolar a luta). Está perguntado em `03-decisoes-e-ordem.md` §2.
+A pedido de Alan, li também `specs/combat.md` e `specs/expedition.md` inteiros, o GDD §1 a §12, `backlog/m2.md`, `roadmap.md` e as metas de `testing.md`. Mudou:
+
+- **Ferimento leve:** retirei o corte da F-17. Ele é a consequência de cair e da retirada de emergência.
+- **Trava contra enrolar:** confirmei que não existe; anotado na F-07.
+- **Ouro Maldito:** a "renúncia" que sugeri na F-09 já é a mecânica de Mamom no GDD; as duas se encaixam.
+
+Não li: `lessons.md` (lições técnicas), os ADRs, a direção de arte e o §13 do GDD (kits, já lidos em `saint-kits.md`).
 
 ## Regras que eu segui
 
