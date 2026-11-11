@@ -208,6 +208,9 @@ Vila (Átrio, fora do tempo) ──semana──► Planejar a semana ──► M
 - **Testes:** 509 automáticos (GUT) passando.
 - **CI:** testes, APK e versão no navegador.
 - **Arte:** gerada por IA (estilo Darkest Dungeon, tinta de quadrinho, Mignola), originais em `art_source/` e no Google Drive.
+  - **Já existe arte de:** 3 santos (os iniciais), os 20 inimigos comuns das 3 famílias, as 16 elites (com 3 variantes das Fúrias), 8 dos 9 chefes, os cenários do Círculo 2 (3 trechos, chefe, Pouso, Vigília), 62 edifícios da vila e a interface.
+  - **Falta:** os outros 9 santos e Lúcifer.
+  - **Pranchas para ver tudo de uma vez:** `docs/handoff/pranchas/` (santos, inimigos comuns, elites, chefes, cenários e capturas do jogo atual).
 - **Animação:** por quadros (stop motion), com o motor ligando as poses.
 
 ## 6. Decisões recentes que mudam o design
@@ -268,3 +271,4 @@ Vila (Átrio, fora do tempo) ──semana──► Planejar a semana ──► M
 | Backlog do M2 | `docs/backlog/m2.md` |
 | Decisões, lições, pendências | `docs/memory/decisions.md`, `lessons.md`, `open-questions.md` |
 | Decisões técnicas | `docs/adr/0001`–`0012` |
+| Toda a arte e o jogo atual, em 6 imagens | `docs/handoff/pranchas/` |
