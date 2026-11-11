@@ -165,3 +165,17 @@ Relatório em `docs/balance/sim-reports/`, com os números novos só depois da a
 **Resumo do equipamento, como ficou:** Instrumento e Hábito, 3 níveis, só números; Forja no M3, com prévia antes de pagar, nome de cada peça (de Alan), nível na ficha do santo, sugestão em "Planejar a semana" e uma rodada do simulador de economia.
 
 **Texto da origem das Esmolas:** é de Alan, marcado como criação do jogo, com revisão teológica. Palavra-chave sugerida: **restituir**, nunca "saquear" ou "ganhar". Nomes "Despojos" (antes do Pouso) e "Esmolas" (depois) são sugestão para `ui_text.csv`, a aprovar.
+
+## 8. Etapa 2 (`01-design.md`) · resposta de Alan (11/11/2026)
+
+Alan respondeu: **"1, 2, 3 aprovados"**.
+
+**Leitura do consultor (a confirmar com Alan):** a resposta se refere à última lista numerada da mensagem, "O que preciso que você confira":
+
+| # | Item conferido | Resultado |
+| --- | --- | --- |
+| 1 | O Domínio (G-2) respeita a orientação de que o Peregrino não entra na luta | **Aprovado.** O Peregrino aparece como o que está em jogo, não como unidade. G-2 pode entrar no desenho de Asmodeu (T38). |
+| 2 | G-1, G-2 e G-6 tocam teologia e pedem a revisão já prevista | **Aprovado**, com a revisão teológica. |
+| 3 | G-5 (Vestígios como objetos da vida do Peregrino, compondo a contrição) combina com os flashbacks e as três pessoas da selva | **Aprovado.** |
+
+**Ainda sem resposta explícita:** G-3 (a consolação é dom), G-4 (Laços), G-7 (quem leva a lanterna) e os três cortes (Escalada e retorno decrescente; Afinidades fixas; Jardim). A mensagem também tinha uma lista de cortes numerada de 1 a 3; se "1, 2, 3" se referia a ela, a leitura acima muda.
