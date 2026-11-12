@@ -1,6 +1,6 @@
 # Especificação · Desolação e Consolação
 
-Versão 1.0 · base: GDD v1.1 §5 · números em `docs/balance/constants.csv`
+Versão 1.1 (12/11/2026: regras aprovadas a simular, §8) · base: GDD v1.1 §5 · números em `docs/balance/constants.csv`
 
 A desolação é a pressão espiritual de cada santo. Nenhum estado representa pecado ou perda de santidade; o santo nunca perde o controle das próprias ações.
 
@@ -31,7 +31,7 @@ Reduções (valores negativos) não passam pelos multiplicadores.
 
 | Fonte | Valor base [constante] | Quando |
 | --- | --- | --- |
-| Fim de combate comum vencido | [desolation_battle_end_common] (20, D-165; era 12) | Em todos os santos que participaram |
+| Fim de combate comum vencido | [desolation_battle_end_common] (20, D-165; era 12); forma por rodadas em simulação (§8, D-269) | Em todos os santos que participaram |
 | Fim de combate de elite | [desolation_battle_end_elite] (20) | Idem |
 | Fim de combate de chefe | [desolation_battle_end_boss] (35) | Idem |
 | Ação inimiga espiritual | Definido no efeito `desolation` do inimigo | No alvo |
@@ -50,7 +50,7 @@ As fontes em combate são **adicionais** às de fim de combate. A calibragem do 
 | Água Benta | −[holy_water_desolation] (15) e remove Corrupção |
 | Habilidades (Teresinha, Bento, João da Cruz...) | Definido em `abilities.csv` |
 | Capela, por semana | −[chapel_desolation_per_week] (15) |
-| Jardim, por semana | −[garden_desolation_per_week] (50) |
+| Jardim, por semana | −[garden_desolation_per_week] (50); o Jardim sai do jogo e o descanso forte passa à Capela nível 3 (D-292, valor a definir) |
 
 O valor nunca fica abaixo de 0.
 
@@ -62,7 +62,7 @@ Quando a desolação de um santo em estado `normal` passa de menos de 100 para 1
 2. Chance de Consolação:
 
 ```text
-chance = mínimo([faith_check_cap] (60%), [faith_check_base] (10%) + [faith_check_per_point] (4%) × faith + bônus de relíquias, traços e Moradas)
+chance = mínimo([faith_check_cap] (60%), [faith_check_base] (10%) + [faith_check_per_point] (4%) × faith + bônus de relíquias, traços, Moradas e preparo (§8, D-270))
 ```
 
 3. Sorteio pelo fluxo `faith` do `RngStream`.
@@ -118,3 +118,18 @@ A tela usa esses eventos para a barra, a auréola (`docs/art/asset-pipeline.md` 
 | D08 | Redução de 40 com Lume 10 | Reduz 40 (multiplicadores não se aplicam) |
 | D09 | Desolação 30 recebe −40 | Fica em 0 |
 | D10 | Noite Escura tenta milagre | Rejeitado (`combat.md` C05) |
+
+## 8. Aprovado, a simular (D-266 (3), D-280)
+
+Direção aprovada por Alan na consultoria do Fable. **Nada aqui está em vigor:** os números saem da rodada de simulação (`docs/backlog/m2.md` T61), uma regra de cada vez, mantendo a meta de Noite Escura (D-164), e só entram em `constants.csv` e nesta especificação com o aprovado de Alan (D-363). A implementação é a T62.
+
+| Regra | Decisão | O que muda | A simular |
+| --- | --- | --- | --- |
+| Desolação de fim de combate por rodadas | D-269 | O valor fixo de §2.1 vira base menor + um tanto por rodada a partir da 3ª; a luta mediana continua perto de 20. A tela mostra o relógio ("Rodada 4 · desolação ao vencer: 14") | Base 6, 8 ou 10; +2, +3 ou +4 por rodada |
+| Interceder | D-268 | Ação comum (`combat.md` §4.1): o santo toma para si parte da desolação de um aliado, ou todas as pilhas de uma condição negativa dele. Move, não apaga. **A transferência não passa pelos multiplicadores de §2** (como as reduções), para a Consolação não virar um jeito de apagar desolação | 10, 15 ou 20 |
+| Preparo do teste de Fé | D-270 | Aviso na intenção inimiga que levará o santo aos 100 (só a chance; a prévia continua sem o resultado, D-307). Bônus pequeno e visível na chance de §3 por aliado que intercedeu por ele ou o aliviou neste combate, e pela Vigília feita no trecho | +5% por companheiro (máx. +10%); Vigília +5%; teto 60% ou 70% com preparo |
+| Fidelidade (segunda saída da Noite Escura) | D-271 | O santo em Noite Escura que termina um combate de pé ganha uma marca; com N marcas, Purificação (§4.3) e desolação a 50, mesmo acima de 50. Proposta junto: em Noite Escura, sem desolação de fim de combate. A saída de §4.2 continua | N = 2, 3 ou 4; meta: metade das Noites terminando pela Fidelidade; Prostração rara |
+| A consolação é dom | D-285 | O santo em Consolação pode, gastando a ação, dar a Consolação a um companheiro: em Noite Escura, ele sai com Purificação; Caído na janela, levanta; nos outros casos, perde parte da desolação. Quem deu volta a `normal` | Parte da desolação: proposta 30 |
+| Laços | D-286 (M3) | Interceder entre santos com Laço move mais desolação (grau 1) | Depois de Interceder |
+
+Casos de teste destas regras são escritos junto com a T62, a partir dos números aprovados.

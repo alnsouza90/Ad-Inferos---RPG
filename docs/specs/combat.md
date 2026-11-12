@@ -81,6 +81,15 @@ O combate começa em `ROUND_START` da rodada 1 com Fervor 0 (portanto a equipe a
 | `EndPartyTurn` | Encerra o turno; santos que não agiram perdem a ação | — |
 | `RetreatBattle` | Retirada de emergência (não disponível contra chefe) | — |
 
+**Comandos aprovados, ainda não especificados** (entram com os números aprovados; nada implementado):
+
+| Comando | Decisão | Ideia | Quando |
+| --- | --- | --- | --- |
+| Interceder | D-268 | Ação comum de todo santo, ao lado de Trocar e Passar; gasta a ação, sem Fervor; toma para si desolação ou uma condição de um aliado (`desolation.md` §8). Na tela, um fio de ouro liga os dois santos | T61 e T62 |
+| Dar a Consolação | D-285 | O santo em Consolação a dá a um companheiro, gastando a ação (`desolation.md` §8) | T61 e T62 |
+| Súplica | D-283 | Um santo que ficou na Capela socorre a companhia uma vez, sem gastar a vez de ninguém nem Fervor (`village-economy.md` §4) | M3 |
+| Firmar o pé (resposta comum ao Vendaval) | D-267 | Resposta ativa à Provação do Círculo 2 (`expedition.md` §10.1) | T38 |
+
 ### 4.2 Validações de `UseAbility` e `UseMiracle`
 
 Rejeitar o comando, sem alterar o estado, se qualquer item falhar:
@@ -223,6 +232,8 @@ Ao fim do combate: Fervor volta a 0; condições de combate são removidas; esta
 
 ## 12. Afinidades
 
+> **Aprovado para o M3 (D-286, D-291):** as Afinidades fixas viram o ponto de partida dos **Laços** (santos da mesma família começam com Laço 1); o Laço nasce entre quaisquer dois santos e cresce com gestos de um pelo outro. Até a especificação nova, as Afinidades abaixo continuam valendo como estão programadas e testadas; a troca precisa de migração dos testes e do save.
+
 Verificadas no `SETUP`. Ativas quando pelo menos dois membros da afinidade estão na equipe (Caídos contam).
 
 | Afinidade | Membros | Bônus [constante] |
@@ -238,12 +249,12 @@ Verificadas no `SETUP`. Ativas quando pelo menos dois membros da afinidade estã
 
 - Traços são gatilhos declarados em dados: `on_battle_start`, `on_round_start`, `on_ability_used`, `on_damage_dealt`, `on_damaged`, `on_ally_fallen`, `on_fallen` etc.
 - Contadores próprios de traço (ex.: pétalas de Teresinha) ficam no `Combatant` como `trait_counters: Dictionary`, não como condições.
-- Carismas trocam até 2 habilidades e o traço por variantes declaradas em dados. No M0 não há Carismas; as variantes de cada santo são definidas antes do M3 (`docs/design/saint-kits.md` §3).
+- Carismas, simplificados (D-272, D-281): o kit atual é o primeiro Carisma; o segundo troca **o traço e uma habilidade** por variantes declaradas em dados e abre no nível 3. No M0 a M2 não há Carismas; as variantes de cada santo são definidas antes do M3 (`docs/design/saint-kits.md` §3).
 - Os kits completos dos 12 santos estão em `docs/balance/abilities.csv` e, em leitura fácil, em `docs/design/saint-kits.md`.
 
 ## 14. Mecânicas de ambiente dos círculos
 
-Executadas na etapa `HAZARD`. O M0 usa uma arena sem ambiente. Regras completas em `docs/specs/expedition.md` §10 (implementação a partir do M2).
+Executadas na etapa `HAZARD`. O M0 usa uma arena sem ambiente. Regras completas em `docs/specs/expedition.md` §10 (implementação a partir do M2). Cada mecânica é também a **Provação do Círculo** (§10.1, D-267): visível, com resposta ativa do santo e prêmio por resistir (ficha Firmeza).
 
 ## 15. Pré-visualização
 

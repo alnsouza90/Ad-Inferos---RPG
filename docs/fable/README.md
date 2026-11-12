@@ -2,6 +2,8 @@
 
 Versão 1.2 · 11/11/2026 · autor: consultor convidado (modelo de IA) · **nada aqui é decisão**
 
+> **Situação (12/11/2026):** o que Alan respondeu e aprovou nesta consultoria virou decisão oficial (D-265) e foi transcrito em `docs/memory/decisions.md` (D-266, D-267 a D-300 e D-350 a D-362). A Bíblia de Arte é a direção de arte oficial (D-266 (6)). O resto continua como proposta.
+
 Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. Nenhum código, dado, teste ou documento existente foi alterado.
 
 ## Ordem de leitura

@@ -26,6 +26,12 @@ Vila ─┬─ Planejar a semana ─► Mapa da expedição ─┬─ Combate �
 Qualquer tela ─► Pausa (Opções, Salvar e sair)
 ```
 
+**Abertura e entrada (D-266, D-300):** na primeira vez, a ordem é **abertura → título → Prólogo**. A abertura é a descida pelo Mapa do Inferno até o Portão, com a inscrição (Dante, *Inf.* III, 9, com a origem), mostrada só na primeira vez e que se pula com um toque (`docs/design/analise-referencias-dd.md` §2.2). O título é a **tela de entrada com a lanterna** (tela preta, lanterna apagada; começar é acender a lanterna, que revela o título e a Porta; `docs/fable/biblia-de-arte.md` §10), e convive com essa abertura. As duas ficam para o M3; o M2 mantém o título atual.
+
+**Mapa do Inferno (D-208, D-276):** nove janelas numa fila que desce; a lanterna marca o círculo da companhia e a **luz pálida** da alma do Peregrino fica um círculo à frente, descendo mais um quando o chefe cai.
+
+**Interface (D-293, D-295, D-297, D-298):** a Bíblia de Arte (`docs/fable/biblia-de-arte.md` §7 a §9) é a direção oficial (D-266 (6)). Regras que valem para todas as telas: seleção em osso, nunca ouro; vermelho só para ataque inimigo, dano e vida; ouro só para a graça; tudo que tem ícone abre detalhe ao primeiro toque; o **alforje** de provisões fica sempre à vista na luta, na caminhada e no Pouso. A aplicação no combate é a T44 (`docs/backlog/m2.md`).
+
 No M0 só existem: **Abertura → Arena de teste → Combate → Resultado**, com um seletor de encontro e semente.
 
 No M1 (protótipo de trecho):

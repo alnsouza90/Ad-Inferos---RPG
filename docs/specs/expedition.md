@@ -1,6 +1,6 @@
 # Especificação · Expedição
 
-Versão 1.1 (04/11/2026: caminhada e bifurcações, §2.3; simplificações do M1, §13) · base: GDD v1.1 §4, §8 e §12 · números em `docs/balance/constants.csv` e `economy.csv`
+Versão 1.2 (12/11/2026: Provação do Círculo, §10.1; Lume, Esmolas e Escalada marcados com as decisões da consultoria) · versão 1.1 (04/11/2026: caminhada e bifurcações, §2.3; simplificações do M1, §13) · base: GDD v1.1 §4, §8 e §12 · números em `docs/balance/constants.csv` e `economy.csv`
 
 ## 1. Estrutura
 
@@ -106,6 +106,8 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 | 25–74 | Neutro |
 | 0–24 | Desolação × 1,3; inimigos causam +10% de dano; Esmolas × 1,5; peso de relíquia oculta × 2 nos nós variáveis gerados a partir daí |
 
+**Aprovado, a simular (D-262, D-273, D-274, D-289; `docs/backlog/m2.md` T61):** as faixas acima continuam em vigor até Alan escolher uma das **cinco variantes** do Lume pelo relatório: (a) desolação ao andar no escuro; (b) faixa de Escuridão; (c) efeito da faixa mostrado na tela; (d) −7 por nó; (e) **"luz é ver"**: a faixa muda o quanto a companhia vê das intenções (alta: as desta rodada e um aviso da próxima; média: como hoje; baixa: um inimigo sem o alvo mostrado). As **Esmolas × 1,5 no escuro saem** (D-274); o prêmio do escuro passa a ser de outro tipo (o simulador testa experiência +25% ou +50%). Se a variante "luz é ver" for a escolhida, entram "Erguer a lamparina" (F-13) e, no M3, o **portador da lanterna** (D-289).
+
 ## 5. Provisões
 
 - Espaços pelo nível do Portão: [gate_slots_l1] (8), [gate_slots_l2] (10), [gate_slots_l3] (12). Cada espaço guarda **uma unidade**.
@@ -153,9 +155,9 @@ Ao chegar ao `node_camp`:
 | Conclusão do círculo (primeira vez) | 200 |
 
 - Multiplicador por faixa de círculo: Círculos 0–3 × 1,0; 4–6 × 2,2; 7–9 × 3,6.
-- Lume 0–24: × 1,5.
+- Lume 0–24: × 1,5 (sai quando a variante do Lume for escolhida, D-274).
 - Revisitas: § 11.
-- Esmolas ganhas ficam "não garantidas" até chegar a um Pouso ou terminar a expedição com o chefe vencido.
+- Esmolas ganhas ficam "não garantidas" até chegar a um Pouso ou terminar a expedição com o chefe vencido. Na história, é o ouro negado aos pobres que a companhia **restitui**; ele só vira Esmola ao ser consagrado no Pouso, e o abismo o toma de volta na derrota (D-266 (1), D-279). Nomes sugeridos na tela: "Despojos" antes do Pouso e "Esmolas" depois (a aprovar em `ui_text.csv`).
 - Experiência: [xp_battle] (10) por combate comum, 20 por elite, 40 por chefe, para cada santo que participou; santos na reserva da vila recebem 50% do total da expedição.
 
 ## 9. Retirada e derrota
@@ -182,7 +184,23 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 | 8 Fraude | Intenções veladas | Uma intenção inimiga por rodada aparece como "?", exceto com Santo Antônio na equipe, Lume ≥ 75 ou Biblioteca nível 3 |
 | 9 Traição | Congelamento | Condição `freeze` |
 
+### 10.1 A Provação do Círculo (D-266, D-267)
+
+Os pecados de cada círculo agem como **assédio dos inimigos**, nunca como pecado dos santos. A mecânica de ambiente da tabela acima e o assédio são **um conceito só**, a Provação do Círculo, com três regras fixas:
+
+1. **É visível antes**, como intenção de ambiente ou condição com contagem.
+2. **Tem uma resposta ativa do santo, com custo** (ex.: o Pão na Fome, trocar de lugar nos Túmulos, Exorcismo no Contrapasso, o milagre no Torpor; no Vendaval, uma resposta comum a definir na T38, além da Clausura de Bento).
+3. **Resistir dá prêmio:** quando a companhia responde à provação, ganha uma ficha de **Firmeza** (proposta: +1 de Fervor na rodada seguinte, dentro do limite de ganho extra; número a aprovar na T38).
+
+- O **Pecado Encarnado** (elite do círculo) aplica a provação com força, numa ação própria. No Círculo 2, o **Encanto** da Vertigem puxa as intenções para um santo: ele sofre o assédio, não peca.
+- O **chefe** cobra a mesma lição como prova final.
+- O santo **nunca** peca nem perde o controle das próprias ações (`desolation.md`, `writing-guide.md`). Tudo vem de fora e é visível.
+- A **tenda da Tentação não muda** (D-141, D-184): continua sendo o eco da tentação do Peregrino, com escolha (`narrative-system.md` §4.1).
+- Ações, números e textos do Círculo 2 em `docs/specs/bosses.md` (T38, aprovados por Alan). Nos outros círculos, cada Provação é revista quando o círculo for especificado (ex.: no Ouro Maldito, recusar as Esmolas do nó como resposta, ligada à renúncia de Mamom).
+
 ## 11. Revisitas e Escalada
+
+> **Corte aprovado (D-290, M3):** a Escalada e o retorno decrescente das Esmolas saem. No lugar: em qualquer revisita, o jogador pode assumir **penitências** por vontade própria (`village-economy.md` §6, D-288), e as Esmolas seguem uma regra só (proposta: revisita paga metade, a simular com a economia). O texto abaixo fica só como referência até a especificação nova, no M3; nada dele foi implementado.
 
 - Revisitar um círculo concluído não altera a narrativa nem as virtudes do Peregrino.
 - Retorno decrescente das Esmolas no mesmo círculo e nível de Escalada, dentro do mesmo tempo litúrgico: 100%, 75%, 50%, 25% (mínimo). Zera quando o tempo litúrgico muda.
