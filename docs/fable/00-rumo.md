@@ -76,12 +76,4 @@ Passos pequenos, um por PR, na ordem. "Novo" é tarefa a acrescentar ao backlog 
 2. Todo número desta pasta é proposta. Nenhum entra em `docs/balance/` sem relatório do simulador e o "aprovado" de Alan.
 3. `docs/gdd/`, `docs/art/art-direction.md` e `docs/narrative/` só mudam com pedido explícito de Alan.
 
-## 6. Onde está cada coisa
-
-| Assunto | Arquivo |
-| --- | --- |
-| Tese e primeira análise | `01-visao.md`, `02-propostas.md`, `03-decisoes-e-ordem.md` |
-| Ideias de identidade (G-1 a G-7) e cortes | `01-design.md` |
-| Arte, interface e efeitos | `02-arte.md`, `03-interface-e-efeitos.md`, `biblia-de-arte.md`, `modelos/` |
-| Animação | `03-animacao.md` |
-| Tudo o que Alan respondeu | `04-respostas-de-alan.md` |
+O índice de todos os arquivos desta pasta está em `README.md`.
