@@ -1,0 +1,372 @@
+<title>Capela às Escuras</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Leiaute: uma coluna de leitura, três blocos de modelos (painel, efeitos, auréola); cada modelo tem um código para responder no chat. */
+:root{
+  color-scheme: dark;
+  --breu:#0d0c10;      /* fundo */
+  --ferro:#1b1a20;     /* painéis */
+  --chumbo:#33313a;    /* linhas e bordas */
+  --cinza:#8a8791;     /* texto secundário */
+  --osso:#e4ddcf;      /* texto */
+  --ouro:#d9a520;      /* graça */
+  --ambar:#e07b1f;     /* fogo */
+  --sangue:#9b1c1c;    /* perigo */
+  --violeta:#3b2a4d;   /* luz do Círculo 2 */
+  --titulo:"Pirata One","Palatino Linotype",Georgia,serif;
+  --texto:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+}
+html,body{background:var(--breu)}
+body{color:var(--osso);font-family:var(--texto);font-size:17px;line-height:1.5}
+.pagina{max-width:900px;margin:0 auto;padding-block:28px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:44px}
+h1{font-family:var(--titulo);font-weight:400;font-size:clamp(34px,7vw,52px);line-height:1.05;margin:0;text-wrap:balance}
+h2{font-family:var(--titulo);font-weight:400;font-size:30px;line-height:1.1;margin:0;text-wrap:balance}
+h3{font-size:17px;font-weight:700;margin:0}
+p{margin:0;max-width:65ch}
+.sub{color:var(--cinza)}
+header{display:flex;flex-direction:column;gap:10px}
+section{display:flex;flex-direction:column;gap:18px}
+.par{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.modelo{display:flex;flex-direction:column;gap:8px;min-width:0}
+.rotulo{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.cod{font-family:var(--titulo);font-size:20px;color:var(--osso);border:1px solid var(--chumbo);padding:0 8px;line-height:1.5}
+.cod.novo{color:var(--breu);background:var(--osso);border-color:var(--osso)}
+.quadro{background:var(--ferro);border:1px solid var(--chumbo);width:100%;display:block}
+svg.quadro{height:auto}
+canvas.quadro{aspect-ratio:16/9;max-width:100%}
+.botoes{display:flex;gap:10px;flex-wrap:wrap}
+button{font-family:var(--texto);font-size:16px;font-weight:500;color:var(--osso);background:var(--ferro);
+  border:1px solid var(--cinza);padding:9px 16px;cursor:pointer;min-height:44px}
+button:hover{border-color:var(--osso)}
+button:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+button.novo{background:var(--osso);color:var(--breu);border-color:var(--osso)}
+.nota{color:var(--cinza);font-size:15px}
+.aureolas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.aureolas figure{margin:0;display:flex;flex-direction:column;gap:6px}
+.aureolas figcaption{font-size:15px}
+.aureolas b{display:block}
+.toca{cursor:pointer}
+ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px;max-width:65ch}
+</style>
+
+<div class="pagina">
+<header>
+  <h1>A capela às escuras</h1>
+  <p>Modelos para escolher a interface e os efeitos dos santos do Ad Inferos. São desenhos simples, feitos em código, só para decidir a direção. A arte final seria gerada depois.</p>
+  <p class="sub">Cada modelo tem um código. Responda no chat com algo como “P2 sim, E1 sim, E3 não”.</p>
+</header>
+
+<section>
+  <h2>1. O painel de combate</h2>
+  <p>As duas versões usam o mesmo ferro, o mesmo preto e cinza, e as mesmas posições. Muda a forma das peças e o jeito de acender. No modelo novo, toque nas janelas, na rosácea e nas velas.</p>
+  <div class="par">
+    <div class="modelo">
+      <div class="rotulo"><span class="cod">P1</span><h3>Como está hoje</h3></div>
+      <svg class="quadro" viewBox="0 0 640 230" role="img" aria-label="Painel atual: molduras e botões retangulares">
+        <rect x="6" y="6" width="628" height="218" fill="#141318" stroke="#33313a" stroke-width="4"/>
+        <rect x="20" y="22" width="78" height="96" fill="#24222a" stroke="#55525d" stroke-width="3"/>
+        <circle cx="59" cy="58" r="17" fill="#6d6a74"/><path d="M34 118 q25 -46 50 0z" fill="#6d6a74"/>
+        <text x="110" y="42" fill="#e4ddcf" font-family="Pirata One,serif" font-size="22">São Jorge</text>
+        <g font-family="Alegreya Sans,sans-serif" font-size="12" fill="#e4ddcf" text-anchor="middle">
+          <rect x="110" y="56" width="78" height="40" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="149" y="80">Estocada</text>
+          <rect x="196" y="56" width="78" height="40" fill="#1d1c22" stroke="#d9a520" stroke-width="2"/><text x="235" y="80">Golpe</text>
+          <rect x="282" y="56" width="78" height="40" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="321" y="80">Escudo</text>
+          <rect x="110" y="104" width="120" height="30" fill="#1d1c22" stroke="#d9a520" stroke-width="2"/><text x="170" y="124" fill="#d9a520">Milagre · 3 Fervor</text>
+          <rect x="238" y="104" width="58" height="30" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="267" y="124">Trocar</text>
+          <rect x="302" y="104" width="58" height="30" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="331" y="124">Passar</text>
+        </g>
+        <text x="20" y="146" fill="#8a8791" font-family="Alegreya Sans,sans-serif" font-size="13">Fervor 4/6</text>
+        <g fill="#e2b93b"><rect x="20" y="154" width="12" height="12"/><rect x="36" y="154" width="12" height="12"/><rect x="52" y="154" width="12" height="12"/><rect x="68" y="154" width="12" height="12"/></g>
+        <g fill="#33313a"><rect x="84" y="154" width="12" height="12"/><rect x="100" y="154" width="12" height="12"/></g>
+        <rect x="392" y="22" width="228" height="150" fill="#1d1c22" stroke="#55525d" stroke-width="3"/>
+        <ellipse cx="436" cy="104" rx="26" ry="38" fill="#6d6a74"/>
+        <text x="474" y="48" fill="#e4ddcf" font-family="Pirata One,serif" font-size="20">Diabo de Lodo</text>
+        <text x="474" y="70" fill="#8a8791" font-family="Alegreya Sans,sans-serif" font-size="13">Vida 36/36</text>
+        <circle cx="490" cy="104" r="17" fill="#2a0c0c" stroke="#9b1c1c" stroke-width="3"/><text x="490" y="110" fill="#e4ddcf" font-size="15" text-anchor="middle" font-family="Alegreya Sans,sans-serif">5</text>
+        <circle cx="534" cy="104" r="17" fill="#2a0c0c" stroke="#9b1c1c" stroke-width="3"/><text x="534" y="110" fill="#e4ddcf" font-size="15" text-anchor="middle" font-family="Alegreya Sans,sans-serif">↔</text>
+        <rect x="474" y="184" width="146" height="28" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="547" y="203" fill="#e4ddcf" font-size="13" text-anchor="middle" font-family="Alegreya Sans,sans-serif">Encerrar turno</text>
+      </svg>
+      <p class="nota">Retângulos. O dourado marca “selecionado” e também o milagre. As duas intenções são vermelhas, mesmo a que só desloca.</p>
+    </div>
+
+    <div class="modelo">
+      <div class="rotulo"><span class="cod novo">P2</span><h3>A capela às escuras</h3></div>
+      <svg class="quadro" id="p2" viewBox="0 0 640 230" role="img" aria-label="Painel proposto: arco, janelas em lanceta, rosácea e porta-velas">
+        <rect x="6" y="6" width="628" height="218" fill="#141318" stroke="#33313a" stroke-width="4"/>
+        <!-- retrato em arco -->
+        <path d="M20 122 V62 Q20 22 59 14 Q98 22 98 62 V122 Z" fill="#24222a" stroke="#55525d" stroke-width="3"/>
+        <circle cx="59" cy="62" r="17" fill="#6d6a74"/><path d="M34 122 q25 -46 50 0z" fill="#6d6a74"/>
+        <text x="110" y="34" fill="#e4ddcf" font-family="Pirata One,serif" font-size="22">São Jorge</text>
+        <!-- lancetas -->
+        <g id="lancetas"></g>
+        <!-- rosácea -->
+        <g id="rosa" class="toca" tabindex="0" role="button" aria-label="Rosácea do milagre">
+          <circle cx="330" cy="76" r="34" fill="#17161b" stroke="#55525d" stroke-width="4"/>
+          <g id="rosaVidro"></g>
+          <circle cx="330" cy="76" r="8" fill="#141318" stroke="#55525d" stroke-width="2"/>
+        </g>
+        <text x="330" y="128" fill="#8a8791" font-family="Alegreya Sans,sans-serif" font-size="12" text-anchor="middle">Milagre</text>
+        <!-- porta-velas -->
+        <g id="velas"></g>
+        <text x="20" y="214" fill="#8a8791" font-family="Alegreya Sans,sans-serif" font-size="12" id="fervorTxt">Fervor 4/6</text>
+        <!-- inimigo: moldura quebrada -->
+        <path d="M396 26 L612 20 L622 60 L616 168 L560 176 L548 166 L400 172 L390 96 Z" fill="#1d1c22" stroke="#55525d" stroke-width="3" stroke-linejoin="bevel"/>
+        <ellipse cx="438" cy="104" rx="26" ry="38" fill="#6d6a74"/>
+        <text x="476" y="52" fill="#e4ddcf" font-family="Pirata One,serif" font-size="20">Diabo de Lodo</text>
+        <text x="476" y="72" fill="#8a8791" font-family="Alegreya Sans,sans-serif" font-size="13">Vida 36/36</text>
+        <circle cx="492" cy="108" r="17" fill="#2a0c0c" stroke="#9b1c1c" stroke-width="4"/><text x="492" y="114" fill="#e4ddcf" font-size="15" text-anchor="middle" font-family="Alegreya Sans,sans-serif">5</text>
+        <circle cx="536" cy="108" r="17" fill="#17161b" stroke="#55525d" stroke-width="4"/><text x="536" y="114" fill="#e4ddcf" font-size="15" text-anchor="middle" font-family="Alegreya Sans,sans-serif">↔</text>
+        <path d="M476 186 H618 V212 H476 Z" fill="#1d1c22" stroke="#55525d" stroke-width="2"/><text x="547" y="204" fill="#e4ddcf" font-size="13" text-anchor="middle" font-family="Alegreya Sans,sans-serif">Encerrar turno</text>
+      </svg>
+      <p class="nota">Arco para o santo, círculo para a graça, moldura quebrada para o inimigo. A janela escolhida acende por trás, sem ouro. Só a rosácea do milagre é dourada. O vermelho fica só no ataque.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>2. Os efeitos dos santos</h2>
+  <p>Em cada quadro, compare os dois botões. “Brilho” imita o tipo de efeito de hoje: luz macia calculada pelo motor. “Estampa” é a proposta: poucos desenhos de borda dura, tocados devagar, como uma gravura de santinho carimbada na cena. No instante do golpe, o alvo vira silhueta contra ouro.</p>
+  <div class="par" id="efeitos"></div>
+  <p class="nota">O “Brilho” é uma aproximação feita a partir da descrição dos efeitos atuais, não uma cópia do jogo. Os personagens aqui são bonecos de teste.</p>
+</section>
+
+<section>
+  <h2>3. A auréola</h2>
+  <p>Na Noite Escura a luz não some: fica escondida, como num eclipse. Na Consolação o santo não faz sombra; faz uma clareira de ouro no chão.</p>
+  <div class="aureolas" id="aureolas"></div>
+</section>
+
+<section>
+  <h2>Como responder</h2>
+  <ol>
+    <li>Painel: P1 ou P2.</li>
+    <li>Efeitos: para cada um (E1 a E4), “brilho” ou “estampa”.</li>
+    <li>Auréola: H1 a H5, o que aprova e o que muda.</li>
+  </ol>
+</section>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const el=(n,a,p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+
+/* ---------- 1. Painel P2 ---------- */
+const nomes=["Estocada","Golpe","Escudo","Desafio"];
+const estado=[1,2,1,0]; // 0 fosco (bloqueada), 1 disponível, 2 escolhida
+const gL=document.getElementById("lancetas");
+function lanceta(i){
+  const x=110+i*46, g=el("g",{class:"toca",tabindex:0,role:"button","aria-label":nomes[i]},gL);
+  const d=`M${x} 110 V66 Q${x} 46 ${x+19} 38 Q${x+38} 46 ${x+38} 66 V110 Z`;
+  const vidro=el("path",{d,stroke:"#55525d","stroke-width":3},g);
+  // linhas de chumbo
+  const cl=el("clipPath",{id:"c"+i},g); el("path",{d},cl);
+  const ch=el("g",{"clip-path":`url(#c${i})`,stroke:"#141318","stroke-width":2,fill:"none"},g);
+  for(let k=-2;k<6;k++){el("path",{d:`M${x-10} ${40+k*18} l60 30`},ch);el("path",{d:`M${x+48} ${40+k*18} l-60 30`},ch);}
+  const t=el("text",{x:x+19,y:124,"font-family":"Alegreya Sans,sans-serif","font-size":10,"text-anchor":"middle"},g); t.textContent=nomes[i];
+  function pinta(){
+    const s=estado[i];
+    vidro.setAttribute("fill",s===2?"#e07b1f":s===1?"#4a4852":"#1a191e");
+    vidro.setAttribute("stroke",s===2?"#e4ddcf":"#55525d");
+    t.setAttribute("fill",s===0?"#55525d":"#e4ddcf");
+  }
+  const toca=()=>{ if(estado[i]===0)return; for(let j=0;j<4;j++){ if(estado[j]===2)estado[j]=1; } estado[i]=2; pintaTudo(); };
+  g.addEventListener("click",toca); g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toca();}});
+  return pinta;
+}
+const pintores=[0,1,2,3].map(lanceta);
+function pintaTudo(){pintores.forEach(f=>f());}
+
+// rosácea
+let fervor=4;
+const rv=document.getElementById("rosaVidro");
+const petalas=[];
+for(let k=0;k<8;k++){
+  const a=k*Math.PI/4, a2=a+Math.PI/4;
+  const p=(r,t)=>`${330+r*Math.cos(t)} ${76+r*Math.sin(t)}`;
+  petalas.push(el("path",{d:`M${p(10,a+.08)} L${p(30,a+.08)} A30 30 0 0 1 ${p(30,a2-.08)} L${p(10,a2-.08)} Z`,stroke:"#141318","stroke-width":2},rv));
+}
+function pintaRosa(){ const on=fervor>=3; petalas.forEach(p=>p.setAttribute("fill",on?"#d9a520":"#24222a")); }
+
+// velas
+const gV=document.getElementById("velas");
+el("path",{d:"M16 196 H190 V200 H16 Z",fill:"#33313a"},gV);
+const chamas=[];
+for(let k=0;k<6;k++){
+  const x=24+k*28, g=el("g",{class:"toca",tabindex:0,role:"button","aria-label":"Vela "+(k+1)},gV);
+  el("rect",{x:x,y:168,width:14,height:28,fill:"#cfc7b6",stroke:"#141318","stroke-width":2},g);
+  el("path",{d:`M${x+7} 168 v-5`,stroke:"#141318","stroke-width":2},g);
+  const c=el("path",{d:`M${x+7} 146 q7 10 0 17 q-7 -7 0 -17z`},g); chamas.push(c);
+  const toca=()=>{ fervor=(fervor===k+1)?k:k+1; pintaVelas(); };
+  g.addEventListener("click",toca); g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toca();}});
+}
+function pintaVelas(){
+  chamas.forEach((c,k)=>{ c.setAttribute("fill",k<fervor?"#e07b1f":"none"); });
+  document.getElementById("fervorTxt").textContent="Fervor "+fervor+"/6";
+  pintaRosa();
+}
+const rosa=document.getElementById("rosa");
+const tocaRosa=()=>{ if(fervor>=3){fervor-=3;pintaVelas();} };
+rosa.addEventListener("click",tocaRosa); rosa.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tocaRosa();}});
+pintaTudo(); pintaVelas();
+
+/* ---------- 2. Efeitos ---------- */
+const W=480,H=270,CHAO=222, AX=150, EX=345;
+const OURO="#d9a520", BRANCO="#f1ece0", ROSA="#8e1c1c";
+function semente(s){ s=s||1; return ()=>((s=(s*16807)%2147483647)/2147483647); }
+
+function santo(c,x,cor){ // boneco de hábito
+  c.fillStyle=cor; c.strokeStyle="#000"; c.lineWidth=4; c.lineJoin="round";
+  c.beginPath(); c.moveTo(x-30,CHAO); c.lineTo(x-16,CHAO-92); c.lineTo(x+16,CHAO-92); c.lineTo(x+34,CHAO); c.closePath(); c.fill(); c.stroke();
+  c.beginPath(); c.arc(x,CHAO-110,17,0,7); c.fill(); c.stroke();
+}
+function demonio(c,x,cor){
+  c.fillStyle=cor; c.strokeStyle="#000"; c.lineWidth=4; c.lineJoin="round";
+  c.beginPath(); c.ellipse(x,CHAO-52,40,54,0,0,7); c.fill(); c.stroke();
+  c.beginPath(); c.arc(x-12,CHAO-116,20,0,7); c.fill(); c.stroke();
+  c.beginPath(); c.moveTo(x-28,CHAO-128); c.lineTo(x-40,CHAO-152); c.lineTo(x-18,CHAO-134); c.closePath(); c.fill(); c.stroke();
+  c.beginPath(); c.moveTo(x-2,CHAO-132); c.lineTo(x+12,CHAO-154); c.lineTo(x+4,CHAO-126); c.closePath(); c.fill(); c.stroke();
+}
+function cena(c,sil,trem){
+  c.setTransform(1,0,0,1,0,0);
+  c.clearRect(0,0,W,H);
+  if(trem) c.translate(trem[0],trem[1]);
+  if(sil){ c.fillStyle=OURO; c.fillRect(-10,-10,W+20,H+20); }
+  else{
+    const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,"#241a30"); g.addColorStop(1,"#0f0d14");
+    c.fillStyle=g; c.fillRect(-10,-10,W+20,H+20);
+    c.fillStyle="#0a090d"; c.fillRect(-10,CHAO,W+20,H);
+  }
+  // auréola
+  if(!sil){ c.fillStyle=OURO; c.beginPath(); c.arc(AX,CHAO-110,25,0,7); c.fill(); }
+  else{ c.fillStyle=BRANCO; c.beginPath(); c.arc(AX,CHAO-110,25,0,7); c.fill(); }
+  santo(c,AX,sil?"#000":"#6f6676");
+  demonio(c,EX,sil?"#000":"#8b8590");
+}
+// formas de borda dura com tremor
+function poli(c,pts,r,amp){ c.beginPath(); pts.forEach((p,i)=>{const x=p[0]+(r()-.5)*amp,y=p[1]+(r()-.5)*amp; i?c.lineTo(x,y):c.moveTo(x,y);}); c.closePath(); c.fill(); }
+function cruzPts(x,y,L,w){ return [[x-w,y-L],[x+w,y-L],[x+w,y-w],[x+L,y-w],[x+L,y+w],[x+w,y+w],[x+w,y+L],[x-w,y+L],[x-w,y+w],[x-L,y+w],[x-L,y-w],[x-w,y-w]]; }
+function falhas(c,r,n,x,y,rw,rh){ c.globalCompositeOperation="destination-out"; for(let i=0;i<n;i++){ c.fillRect(x-rw+r()*rw*2,y-rh+r()*rh*2,2+r()*7,1+r()*3); } c.globalCompositeOperation="source-over"; }
+function raios(c,x,y,r0,r1,n,cor){ c.strokeStyle=cor; c.lineWidth=5; c.lineCap="butt"; for(let i=0;i<n;i++){ const a=i*2*Math.PI/n+.2; c.beginPath(); c.moveTo(x+r0*Math.cos(a),y+r0*Math.sin(a)); c.lineTo(x+r1*Math.cos(a),y+r1*Math.sin(a)); c.stroke(); } }
+const fora=document.createElement("canvas"); fora.width=W; fora.height=H; const f=fora.getContext("2d");
+
+const EFEITOS=[
+ {cod:"E1",nome:"Exorcismo de São Bento",alvo:"inimigo",
+  estampa(c,q){ const r=semente(q*77+3), x=EX-4, y=CHAO-70;
+    f.clearRect(0,0,W,H); f.fillStyle=OURO;
+    if(q===0){ f.globalAlpha=.35; poli(f,cruzPts(x,y,54,9),r,3); f.globalAlpha=1; }
+    else if(q===1){ f.save(); f.beginPath(); f.rect(0,0,W,y+6); f.clip(); poli(f,cruzPts(x,y,60,15),r,4); f.restore(); }
+    else if(q===2||q===3){ f.fillStyle=BRANCO; poli(f,cruzPts(x,y,62,16),r,4); raios(f,x,y,76,100,12,BRANCO); }
+    else if(q===4){ poli(f,cruzPts(x,y,62,16),r,4); f.globalCompositeOperation="destination-out"; f.lineWidth=4; f.beginPath(); f.moveTo(x-40,y-50); f.lineTo(x+6,y-4); f.lineTo(x-10,y+20); f.lineTo(x+30,y+56); f.stroke(); f.globalCompositeOperation="source-over"; }
+    else if(q===5||q===6){ const d=(q-4)*26; for(let i=0;i<9;i++){ const a=i*.7+r(); const px=x+Math.cos(a)*d*(1+r()), py=y+Math.sin(a)*d*(1+r()); poli(f,[[px,py-9],[px+10,py+5],[px-8,py+7]],r,3);} }
+    if(q>=7){ poli(f,cruzPts(EX-12,CHAO-172,11,3),semente(5),1); }
+    if(q<5) falhas(f,r,14,x,y,60,60);
+    c.drawImage(fora,0,0);
+  },
+  brilho(c,t){ const x=EX-4,y=CHAO-70; c.globalCompositeOperation="lighter";
+    const a=Math.sin(Math.PI*t); let g=c.createRadialGradient(x,y,0,x,y,110); g.addColorStop(0,`rgba(255,220,140,${.5*a})`); g.addColorStop(1,"rgba(255,220,140,0)"); c.fillStyle=g; c.fillRect(0,0,W,H);
+    for(let i=0;i<4;i++){ const an=t*6+i*Math.PI/2, px=x+Math.cos(an)*70, py=y+Math.sin(an)*26; c.fillStyle=`rgba(255,235,180,${.55*a})`; c.fillRect(px-3,py-16,6,32); c.fillRect(px-12,py-6,24,6);
+      g=c.createRadialGradient(px,py,0,px,py,26); g.addColorStop(0,`rgba(255,235,180,${.5*a})`); g.addColorStop(1,"rgba(255,235,180,0)"); c.fillStyle=g; c.fillRect(px-30,py-30,60,60); }
+    c.globalCompositeOperation="source-over"; }},
+ {cod:"E2",nome:"Cura de Santa Teresinha",alvo:"santo",
+  estampa(c,q){ const r=semente(q*31+9); f.clearRect(0,0,W,H);
+    const P=[[-30,0],[10,-16],[36,6],[-8,-30],[22,-40],[-40,-22],[48,-28]];
+    if(q<7){ P.forEach((p,i)=>{ const y0=20+p[1]+q*30-i*6, x=AX+p[0]+(i%2?q*2:-q*2); if(y0<-10||y0>CHAO-6)return; const ouro=y0>CHAO-140||q>=5; f.fillStyle=ouro?OURO:ROSA;
+        poli(f,[[x,y0-9],[x+8,y0-2],[x+3,y0+9],[x-6,y0+3]],r,3); }); }
+    if(q===3||q===4){ f.fillStyle=BRANCO; raios(f,AX,CHAO-60,74,96,10,BRANCO); }
+    if(q>=7){ f.fillStyle=OURO; poli(f,[[AX+34,CHAO-130],[AX+42,CHAO-123],[AX+37,CHAO-112],[AX+28,CHAO-118]],semente(2),1); }
+    c.drawImage(fora,0,0); },
+  brilho(c,t){ c.globalCompositeOperation="lighter"; const a=Math.sin(Math.PI*t);
+    for(let i=0;i<9;i++){ const x=AX-50+i*12+Math.sin(t*8+i)*8, y=10+((t*1.3+i*.11)%1)*(CHAO-20);
+      let g=c.createRadialGradient(x,y,0,x,y,16); g.addColorStop(0,`rgba(255,170,170,${.7*a})`); g.addColorStop(1,"rgba(255,170,170,0)"); c.fillStyle=g; c.fillRect(x-18,y-18,36,36); }
+    let g=c.createRadialGradient(AX,CHAO-60,0,AX,CHAO-60,100); g.addColorStop(0,`rgba(255,225,160,${.35*a})`); g.addColorStop(1,"rgba(255,225,160,0)"); c.fillStyle=g; c.fillRect(0,0,W,H);
+    c.globalCompositeOperation="source-over"; }},
+ {cod:"E3",nome:"Escudo Erguido de São Jorge",alvo:"santo",
+  estampa(c,q){ const r=semente(q*13+1), x=AX+62; f.clearRect(0,0,W,H); f.fillStyle=BRANCO;
+    const disco=(cy,R,al)=>{ f.globalAlpha=al; const pts=[]; for(let i=0;i<18;i++){const a=i*2*Math.PI/18; pts.push([x+R*.8*Math.cos(a),cy+R*Math.sin(a)]);} poli(f,pts,r,4);
+      f.globalCompositeOperation="destination-out"; f.fillRect(x-4,cy-R*.7,8,R*1.4); f.fillRect(x-R*.55,cy-4,R*1.1,8); f.globalCompositeOperation="source-over"; f.globalAlpha=1; };
+    if(q===0) disco(40,18,.6);
+    else if(q===1) disco(110,34,.9);
+    else if(q<=4){ disco(CHAO-48,46,1); if(q<=3){ for(let i=0;i<8;i++){ const px=x-60+i*17, py=CHAO-4-r()*14; poli(f,[[px,py],[px+9,py+8],[px-7,py+6]],r,3);} } }
+    else if(q===5){ disco(CHAO-48,46,1); falhas(f,r,40,x,CHAO-48,46,50); }
+    else if(q===6){ disco(CHAO-48,46,.35); falhas(f,r,40,x,CHAO-48,46,50); }
+    if(q>=7){ f.fillStyle=BRANCO; const pts=[]; for(let i=0;i<12;i++){const a=i*2*Math.PI/12; pts.push([AX+44+9*Math.cos(a),CHAO-132+11*Math.sin(a)]);} poli(f,pts,semente(4),1); }
+    c.drawImage(fora,0,0); },
+  brilho(c,t){ const x=AX+62,y=CHAO-52; c.globalCompositeOperation="lighter"; const a=Math.sin(Math.PI*t);
+    let g=c.createRadialGradient(x,y,0,x,y,70); g.addColorStop(0,`rgba(235,240,255,${.75*a})`); g.addColorStop(.6,`rgba(235,240,255,${.25*a})`); g.addColorStop(1,"rgba(235,240,255,0)"); c.fillStyle=g; c.fillRect(0,0,W,H);
+    c.fillStyle=`rgba(255,255,255,${.5*a})`; c.fillRect(x-3,y-34,6,68); c.fillRect(x-26,y-3,52,6);
+    for(let i=0;i<8;i++){ const px=x-30+i*9, py=y+40-t*90-(i%3)*14; c.fillStyle=`rgba(255,255,255,${.6*a})`; c.fillRect(px,py,2,2); }
+    c.globalCompositeOperation="source-over"; }},
+ {cod:"E4",nome:"Bênção de São Bento",alvo:"santo",
+  estampa(c,q){ f.clearRect(0,0,W,H); f.strokeStyle=OURO; f.lineCap="butt";
+    const anel=(cy,rx,lw,tr)=>{ f.lineWidth=lw; f.setLineDash(tr||[]); f.beginPath(); f.ellipse(AX,cy,rx,rx*.28,0,0,7); f.stroke(); f.setLineDash([]); };
+    if(q===0) anel(CHAO-2,60,4,[14,12]);
+    else if(q===1) anel(CHAO-2,60,7,[40,8]);
+    else if(q===2||q===3){ f.strokeStyle=BRANCO; anel(CHAO-2,62,10); for(let i=0;i<9;i++){ const x=AX-56+i*14; f.lineWidth=5; f.beginPath(); f.moveTo(x,CHAO-14); f.lineTo(x,CHAO-34-(i%2)*12); f.stroke(); } }
+    else if(q===4) anel(CHAO-50,50,9);
+    else if(q===5) anel(CHAO-100,36,8);
+    else if(q===6) anel(CHAO-138,24,6);
+    if(q>=7){ f.strokeStyle=OURO; f.lineWidth=4; f.beginPath(); f.ellipse(AX+40,CHAO-126,10,4,0,0,7); f.stroke(); }
+    if(q<7) falhas(f,semente(q*5+2),10,AX,CHAO-60,66,70);
+    c.drawImage(fora,0,0); },
+  brilho(c,t){ c.globalCompositeOperation="lighter"; const a=Math.sin(Math.PI*t);
+    let g=c.createLinearGradient(0,0,0,CHAO); g.addColorStop(0,"rgba(255,220,140,0)"); g.addColorStop(1,`rgba(255,220,140,${.45*a})`); c.fillStyle=g; c.fillRect(AX-46,0,92,CHAO);
+    c.strokeStyle=`rgba(255,225,150,${.8*a})`; c.lineWidth=5; c.shadowColor="rgba(255,220,140,.9)"; c.shadowBlur=18; c.beginPath(); c.ellipse(AX,CHAO-2-t*40,60,16,0,0,7); c.stroke(); c.shadowBlur=0;
+    for(let i=0;i<10;i++){ const px=AX-40+i*9, py=CHAO-((t*1.5+i*.13)%1)*150; c.fillStyle=`rgba(255,235,180,${.7*a})`; c.fillRect(px,py,2,2); }
+    c.globalCompositeOperation="source-over"; }}
+];
+
+const reduz=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const caixa=document.getElementById("efeitos");
+EFEITOS.forEach(e=>{
+  const d=document.createElement("div"); d.className="modelo";
+  d.innerHTML=`<div class="rotulo"><span class="cod novo">${e.cod}</span><h3>${e.nome}</h3></div>`;
+  const cv=document.createElement("canvas"); cv.className="quadro"; cv.width=W; cv.height=H; cv.setAttribute("role","img"); cv.setAttribute("aria-label",e.nome); d.appendChild(cv);
+  const c=cv.getContext("2d"); let anda=0;
+  const bs=document.createElement("div"); bs.className="botoes";
+  const b1=document.createElement("button"); b1.textContent="Brilho (hoje)"; b1.id="b-"+e.cod+"-brilho";
+  const b2=document.createElement("button"); b2.textContent="Estampa (proposta)"; b2.className="novo"; b2.id="b-"+e.cod+"-estampa";
+  bs.append(b1,b2); d.appendChild(bs); caixa.appendChild(d);
+  cena(c,false);
+  b1.addEventListener("click",()=>{ const id=++anda, t0=performance.now();
+    (function passo(now){ if(id!==anda)return; const t=Math.min(1,(now-t0)/1000); cena(c,false); e.brilho(c,t); if(t<1)requestAnimationFrame(passo); else cena(c,false); })(t0); });
+  b2.addEventListener("click",()=>{ const id=++anda; let q=0; const passo=()=>{ if(id!==anda)return;
+      const sil=(q===2||q===3)&&!reduz; const trem=(q===2&&!reduz)?[3,-2]:null;
+      cena(c,sil,trem); e.estampa(c,q); q++; if(q<=12) setTimeout(passo,125); };
+    passo(); });
+});
+
+/* ---------- 3. Auréola ---------- */
+const AUR=[
+ {cod:"H1",t:"Normal",d:"Disco de ouro chapado. Sombra curta."},
+ {cod:"H2",t:"Desolação subindo",d:"O disco é coberto de lado. A sombra cresce."},
+ {cod:"H3",t:"Noite Escura",d:"Disco preto com um anel fino de ouro. O santo vira quase silhueta."},
+ {cod:"H4",t:"Consolação",d:"Disco cheio, raios e uma clareira de ouro no chão. Sem sombra."},
+ {cod:"H5",t:"Purificação",d:"O anel fino se abre de novo em disco, de dentro para fora."}
+];
+const ca=document.getElementById("aureolas");
+AUR.forEach((a,i)=>{
+  const fig=document.createElement("figure");
+  const s=el("svg",{viewBox:"0 0 160 190",class:"quadro",role:"img","aria-label":a.t});
+  el("rect",{x:0,y:0,width:160,height:190,fill:"#17121f"},s);
+  el("rect",{x:0,y:160,width:160,height:30,fill:"#0a090d"},s);
+  const cx=80, cy=58, corpo=i===2?"#1c1a20":i===1?"#57525c":"#6f6676";
+  if(i===3){ el("ellipse",{cx:cx,cy:164,rx:66,ry:11,fill:"#d9a520"},s);
+    for(let k=0;k<12;k++){const t=k*Math.PI/6; el("path",{d:`M${cx+34*Math.cos(t)} ${cy+34*Math.sin(t)} L${cx+48*Math.cos(t)} ${cy+48*Math.sin(t)}`,stroke:"#d9a520","stroke-width":5},s);} }
+  else{ const w=i===1?52:i===2?70:26; el("ellipse",{cx:cx+w*.45,cy:165,rx:w,ry:6,fill:"#000",opacity:.75},s); }
+  if(i===0||i===3) el("circle",{cx,cy,r:28,fill:"#d9a520"},s);
+  if(i===1){ el("circle",{cx,cy,r:28,fill:"#d9a520"},s); const cp=el("clipPath",{id:"ec"},s); el("circle",{cx,cy,r:28},cp); el("circle",{cx:cx+26,cy:cy-4,r:28,fill:"#0b0a0e","clip-path":"url(#ec)"},s); }
+  if(i===2){ el("circle",{cx,cy,r:28,fill:"#d9a520"},s); el("circle",{cx,cy,r:25.5,fill:"#050507"},s); }
+  if(i===4){ el("circle",{cx,cy,r:28,fill:"#d9a520"},s); el("circle",{cx,cy,r:15,fill:"#050507"},s); }
+  el("path",{d:`M${cx-30} 160 L${cx-16} 78 L${cx+16} 78 L${cx+34} 160 Z`,fill:corpo,stroke:"#000","stroke-width":4,"stroke-linejoin":"round"},s);
+  el("circle",{cx,cy,r:16,fill:corpo,stroke:"#000","stroke-width":4},s);
+  if(i===2) el("path",{d:`M${cx-30} 160 L${cx-16} 78`,stroke:"#e07b1f","stroke-width":3,fill:"none"},s);
+  fig.appendChild(s);
+  const cap=document.createElement("figcaption"); cap.innerHTML=`<b><span class="cod novo">${a.cod}</span> ${a.t}</b><span class="sub">${a.d}</span>`;
+  fig.appendChild(cap); ca.appendChild(fig);
+});
+})();
+</script>
