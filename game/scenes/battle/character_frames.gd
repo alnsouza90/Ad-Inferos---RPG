@@ -22,6 +22,8 @@ extends Resource
 ## The sign of a blessing (D-237, D-238): &"petals" (Teresinha), &"shield"
 ## (Jorge) or &"ring" (Bento, and the others until their own is chosen).
 @export var blessing_style: StringName = &"ring"
+## Weight of the blow (D-353, BlowWeight): light, medium, heavy or colossal.
+@export var weight: StringName = &"medium"
 ## Halo behind the head of the idle figure (T36, D-259): centre and
 ## diameter in pixels of the first idle frame (0: no halo).
 @export var halo_center: Vector2 = Vector2.ZERO

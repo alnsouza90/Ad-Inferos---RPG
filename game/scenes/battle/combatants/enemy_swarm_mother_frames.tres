@@ -23,4 +23,5 @@ display_scale = 1.05
 attack_style = &"melee"
 spell_style = &"orb"
 blessing_style = &"ring"
+weight = &"heavy"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])

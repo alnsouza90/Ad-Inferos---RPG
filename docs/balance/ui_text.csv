@@ -89,6 +89,12 @@ arena_seed_plus,+
 arena_start,Começar
 arena_animations,Animações (teste)
 anim_test_title,Animações (teste)
+anim_gesture_freeze,Parada no impacto
+anim_gesture_recoil,Recuo
+anim_gesture_camera_push,Câmera com lado
+anim_gesture_shadow,Sombra no chão
+anim_gesture_anticipation,Antecipação
+anim_gesture_blur,Borrão
 anim_idle,Parado
 anim_walk,Andar
 anim_attack,Ataque físico
