@@ -1,8 +1,31 @@
-# Ad Inferos: A Companhia dos Santos — GDD v1.1
+# Ad Inferos: A Companhia dos Santos — GDD v1.2
 
-Nov 3, 2026 · @Alan
+Nov 3, 2026 · @Alan · revisto em 12/11/2026 (v1.2)
 
-Esta versão substitui o GDD v1.0 e incorpora as decisões tomadas na Revisão Crítica e na Análise de Roteiro e Pipeline de Arte. As recomendações das revisões, aprovadas em bloco, estão na seção 12.
+A v1.1 substituiu o GDD v1.0 e incorporou as decisões da Revisão Crítica e da Análise de Roteiro e Pipeline de Arte (recomendações na seção 12). A **v1.2** incorpora as decisões da consultoria do Fable (`docs/fable/`, D-265 a D-362), atualizadas a pedido de Alan em 12/11/2026. O arquivo mantém o nome `gdd-v1.1.md` porque é citado em todo o repositório.
+
+Este documento é visão e intenção. As regras exatas e os números ficam nas especificações (`docs/specs/`) e nas tabelas (`docs/balance/`); se divergirem, valem elas. Onde aparece **(a simular)**, a direção foi aprovada, mas os números só entram depois do simulador e do aprovado de Alan.
+
+## O que mudou da v1.1 (consultoria do Fable, 12/11/2026)
+
+| Área | Mudança | Decisão |
+| --- | --- | --- |
+| Peregrino | Não entra na luta nem na jornada; missão de resgate, não de escolta; nunca unidade | D-362 |
+| Pecados dos círculos | Agem como **assédio dos inimigos**: a **Provação do Círculo** (visível, com resposta do santo e prêmio por resistir, a ficha Firmeza). A tenda da Tentação não muda | D-266, D-267 |
+| Chefes | **Domínio**: o chefe segura a alma do Peregrino; cada ponto cede quando a companhia alcança o Peregrino no círculo | D-284 |
+| Desolação | Fim de combate por rodadas, Interceder, preparo do teste de Fé, Fidelidade (segunda saída da Noite Escura), a Consolação como dom **(a simular)** | D-268 a D-271, D-285 |
+| Lume | Cinco variantes em simulação (inclui "luz é ver"); sai Esmolas × 1,5 no escuro; portador da lanterna no M3 | D-262, D-273, D-274, D-289 |
+| Esmolas | Origem: **restituição** do que foi negado aos pobres, consagrado no Pouso | D-266, D-279 |
+| Carismas | Simplificados: o kit atual é o primeiro Carisma; o segundo troca o traço e uma habilidade; abre no nível 3 | D-272, D-281 |
+| Equipamento | Fica, só com números melhores, com prévia, nomes por peça e nível na ficha | D-278, D-282 |
+| Afinidades | Viram o ponto de partida dos **Laços** (M3) | D-286, D-291 |
+| Vila | Sai o **Jardim** (descanso forte vai para a Capela nível 3); **Súplica** dos santos na Capela; Carmelo em ruínas e reformado; **Moradas em 3 marcos** | D-262, D-266, D-283, D-292 |
+| Calendário | O ano vivido: cada tempo muda uma regra; prática da Quaresma | D-288 |
+| Revisitas | Sai a **Escalada** e o retorno decrescente; entram as **penitências** e uma regra só para as Esmolas | D-290 |
+| Conquistas | **Livro das Obras** (14 Obras de Misericórdia), sem prêmio de poder; santos de expansão chegam pela obra ligada à vida deles | D-275 |
+| Narrativa | Narrador do Prólogo nos momentos fortes; Vestígios viram lembranças que montam a contrição; luz pálida no Mapa do Inferno | D-276, D-277, D-287 |
+| Abertura | Abertura → título → Prólogo na primeira vez; tela de entrada com a lanterna | D-266, D-300 |
+| Arte | A **Bíblia de Arte** (`docs/fable/biblia-de-arte.md`) é a direção oficial; caminhada fluida e luta em poses, com corte seco; santos todos em vídeo | D-266, D-293 a D-300, D-350 a D-361 |
 
 ## O que mudou da v1.0
 
@@ -138,7 +161,7 @@ Doze santos jogáveis com estrutura comum e habilidades derivadas da vida de cad
 
 - Atributos: Vigor (vida), Proteção, Fé (resistência à desolação) e Vontade (resistência a condições).
 - Rótulos de função: Protetor, Curador, Combatente, Exorcista (controle) e Intercessor (suporte).
-- 6 habilidades (4 básicas, 2 de Fervor), 4 equipadas; milagre-assinatura fixo; 1 traço passivo; 2 Carismas; 1 atividade própria de Pouso; 2 espaços de relíquia.
+- 6 habilidades (4 básicas, 2 de Fervor), 4 equipadas; milagre-assinatura fixo; 1 traço passivo; 2 Carismas (o kit atual é o primeiro; o segundo troca o traço e uma habilidade, D-272); 1 atividade própria de Pouso; 2 espaços de relíquia.
 - Nível de 1 a 5; santos na reserva recebem 50% da experiência.
 
 **Progressão \[Premissa a validar\]**
@@ -146,11 +169,11 @@ Doze santos jogáveis com estrutura comum e habilidades derivadas da vida de cad
 | Nível | Ganho |
 | --- | --- |
 | 2 | +atributos e 1 melhoria de habilidade à escolha |
-| 3 | +atributos, 1 melhoria e acesso aos Carismas |
+| 3 | +atributos, 1 melhoria e acesso ao segundo Carisma |
 | 4 | +atributos, 1 melhoria e segundo espaço de relíquia |
 | 5 | +atributos e versão aprimorada do milagre |
 
-As melhorias vêm do nível, sem custo em Esmolas. A Casa de Exercícios é onde elas são aplicadas e onde se troca de Carisma, por um custo pequeno.
+As melhorias vêm do nível, sem custo em Esmolas. A Casa de Exercícios é onde elas são aplicadas e onde se troca de Carisma, por um custo pequeno. Os dois Carismas são trocas, nunca melhoria; a Purificação não abre Carisma (D-281).
 
 **Elenco**
 
@@ -184,6 +207,10 @@ Os itens marcados *(proposta)* foram aprovados em 03/11/2026.
 
 A Afinidade Agostiniana sai com Nicolau de Tolentino.
 
+**Laços (M3, D-286):** as Afinidades acima viram o ponto de partida dos Laços. Entre quaisquer dois santos nasce um Laço, que cresce com gestos de um pelo outro (interceder, levantar, trocar de lugar para receber o golpe, dar a Consolação), em 3 graus com efeitos iguais para todos os pares **(a simular)**.
+
+**Santos de expansão (D-275):** todo santo além destes 12 chega quando a companhia pratica, no jogo, a Obra de Misericórdia ligada à vida dele. Nunca por compra nem por sorte.
+
 ## 4. Expedição
 
 Cada círculo é uma expedição de 3 trechos num mapa de nós sempre visível; o progresso fica salvo nos Pousos consagrados, e cada círculo se completa em 1 ou 2 expedições.
@@ -202,7 +229,9 @@ Cada círculo é uma expedição de 3 trechos num mapa de nós sempre visível; 
 | --- | --- |
 | 75–100 | Menos emboscadas; desolação −20% |
 | 25–74 | Neutro |
-| 0–24 | Desolação +30%; inimigos +10% de dano; Esmolas +50% e mais relíquias ocultas |
+| 0–24 | Desolação +30%; inimigos +10% de dano; mais relíquias ocultas |
+
+O efeito do Lume está em revisão: cinco variantes vão ao simulador, entre elas **"luz é ver"** (a faixa de Lume muda o quanto a companhia vê das intenções). As Esmolas +50% no escuro saem; o prêmio do escuro passa a ser de outro tipo, como experiência **(a simular)** (D-262, D-273, D-274). No M3, a lanterna fica nas mãos de um santo, o **portador**: se ele cai, a lanterna cai (D-289).
 
 **Provisões:** o Portão define os espaços (8, 10 ou 12); cada espaço guarda uma unidade.
 
@@ -216,7 +245,7 @@ Cada círculo é uma expedição de 3 trechos num mapa de nós sempre visível; 
 
 Sacramentos nunca viram consumíveis.
 
-**Pouso:** descansar custa 1 Pão para a equipe. Cada santo escolhe uma atividade: Vigília (reduz muito a própria desolação), Partilha (cura um aliado), Oração (+1 de Fervor no próximo combate) ou sua atividade própria. Há 25% de chance de emboscada noturna, anulada por Incenso. Esmolas levadas até o Pouso ficam garantidas.
+**Pouso:** descansar custa 1 Pão para a equipe. Cada santo escolhe uma atividade: Vigília (reduz muito a própria desolação), Partilha (cura um aliado), Oração (+1 de Fervor no próximo combate) ou sua atividade própria. Há 25% de chance de emboscada noturna, anulada por Incenso. Esmolas levadas até o Pouso ficam garantidas: na história, é o ouro que os homens negaram aos pobres, guardado pelos demônios; a companhia o **restitui**, e ele só vira Esmola ao ser consagrado no Pouso (D-279; texto de Alan, como criação do jogo).
 
 **Retirada e derrota**
 
@@ -255,7 +284,15 @@ Cada santo tem uma escala de 0 a 200.
 
 **Teste de Fé:** chance de Consolação = 10% + 4% × Fé (Fé de 0 a 10, teto de 60%). A chance aparece na tela quando a desolação passa de 75.
 
-**Recuperação:** João da Cruz e outros intercessores em combate, Vigília no Pouso, Água Benta, Capela e Jardim na vila.
+**Novas regras de desolação (a simular, D-268 a D-271, D-285):**
+
+- **Desolação de fim de combate por rodadas:** base menor e um tanto por rodada a partir da 3ª, para a luta mediana dar o mesmo; fecha o abuso de "enrolar a luta".
+- **Interceder:** ação comum de todo santo; toma para si parte da desolação ou uma condição de um aliado. Move o peso, não apaga.
+- **Preparar o teste de Fé:** aviso na intenção que vai levar um santo aos 100 e um bônus pequeno pela oração da companhia e pela Vigília.
+- **Fidelidade:** segunda saída da Noite Escura, pelos combates terminados de pé.
+- **A Consolação é dom:** quem está em Consolação pode dá-la a um companheiro.
+
+**Recuperação:** João da Cruz e outros intercessores em combate, Interceder (a simular), Vigília no Pouso, Água Benta e a Capela na vila.
 
 ## 6. Vila, calendário e economia
 
@@ -265,25 +302,24 @@ A vila fica no Átrio, um lugar fora do tempo medido pelos dias do Peregrino na 
 
 | Instalação | Guardião | Função | Desbloqueio |
 | --- | --- | --- | --- |
-| Capela | Santo Agostinho e Santa Mônica | 1 a 3 vagas de oração; gera Sufrágios; vitrais | Inicial |
+| Capela | Santo Agostinho e Santa Mônica | 1 a 3 vagas de oração; gera Sufrágios; vitrais; Súplica (M3); descanso forte no nível 3 | Inicial |
 | Enfermaria | São Cosme e São Damião | Cura ferimentos; leitos de tratamento acelerado | Inicial |
 | Despensa | Santa Isabel da Hungria | Provisões | Inicial |
 | Portão | São Cristóvão | Espaços de provisão; conteúdo dos nós | Inicial |
 | Casa de Exercícios | Santo Inácio de Loyola | Aplicar melhorias de nível; trocar Carisma | Após o Limbo |
 | Forja | Santo Elói | Equipamento até o nível 3 | Após o Limbo |
-| Biblioteca | Santo Tomás de Aquino | Bestiário; Arquivo de Santo Tomás | Após o Círculo 3 |
-| **Carmelo** | **Santa Teresa d'Ávila** | Desbloqueia João da Cruz; avança uma Morada por círculo concluído | Após o Círculo 3, por 1.500 Esmolas |
+| Biblioteca | Santo Tomás de Aquino | Bestiário; Arquivo de Santo Tomás; Livro das Obras; Diário do Peregrino | Após o Círculo 3 |
+| **Carmelo** | **Santa Teresa d'Ávila** | Em ruínas desde o início; a reforma desbloqueia João da Cruz; avança uma Morada por círculo concluído | Após o Círculo 3, por 1.500 Esmolas |
 | Relicário | Santa Helena | Espaços e fusão de relíquias | Após o Círculo 4 |
-| Jardim | São Francisco de Assis | 1 a 3 vagas de recuperação de desolação | Após o Círculo 5 |
 | Coro (expansão) | Santa Cecília | — | Fora da versão 1 |
 
-Cada instalação tem 3 níveis, exceto o Carmelo, que tem 7 Moradas.
+Cada instalação tem 3 níveis, exceto o Carmelo, que tem 7 Moradas. O **Jardim** saiu do jogo (D-292): o descanso forte passou para a Capela nível 3, e o papel de São Francisco é uma decisão em aberto.
 
 **As Sete Moradas do Carmelo**
 
-Inspiradas em *O Castelo Interior*, de Santa Teresa; a construção é a Morada 1, e cada círculo concluído depois dela abre a seguinte, até a 7ª no fim da campanha. São uma abstração lúdica, nunca a sugestão de que estágios espirituais se compram. Cada Morada concede um benefício pequeno a toda a companhia, nesta ordem: recolhimento e consolação, resistência à desolação, recuperação, proteção espiritual, fortalecimento da comunidade, preparação para a jornada, intercessão.
+Inspiradas em *O Castelo Interior*, de Santa Teresa; a construção é a Morada 1, e cada círculo concluído depois dela abre a seguinte, até a 7ª no fim da campanha. São uma abstração lúdica, nunca a sugestão de que estágios espirituais se compram. Cada Morada acende uma das sete janelas do Carmelo; o benefício vem em **três marcos visíveis**, nas Moradas 1, 4 e 7, cada um uma mudança que o jogador sente, no lugar de sete bônus pequenos (D-266). O conteúdo dos marcos será definido antes do Carmelo.
 
-**Designação semanal:** um santo na Capela fica fora da expedição, gera Sufrágios e recupera um pouco de desolação; no Jardim, recupera muita desolação. Não há bônus por afinidade com o guardião.
+**Designação semanal:** um santo na Capela fica fora da expedição, gera Sufrágios e recupera um pouco de desolação. No M3, cada santo na Capela dá à expedição uma **Súplica**: a atividade de Pouso dele, usada à distância, uma vez, sem gastar a vez de ninguém nem Fervor **(a simular)** (D-283). Não há bônus por afinidade com o guardião.
 
 **Calendário litúrgico (20 semanas, cíclico; a campanha começa no 1º domingo do Advento)**
 
@@ -297,6 +333,8 @@ Inspiradas em *O Castelo Interior*, de Santa Teresa; a construção é a Morada 
 | Tempo Comum II | 17–20 | Todos os Santos (+experiência) e Finados (Sufrágios em dobro) |
 
 Na semana da festa de um santo jogável, ele recebe +50% de experiência e começa o combate com consolação.
+
+**O ano que se vive (M3, D-288):** cada tempo litúrgico ganha um verbo e muda uma regra, não só um número; na Quaresma o jogador escolhe uma prática (oração, jejum ou esmola), com prêmio que não é poder. O dia e a noite da vila acompanham o tempo litúrgico (D-351).
 
 **Economia**
 
@@ -312,7 +350,9 @@ Na semana da festa de um santo jogável, ele recebe +50% de experiência e come�
 | Leito da Enfermaria por semana | 300 |
 | Carmelo | 1.500 |
 
-Meta: ao fim da campanha, o jogador pagou 70 a 80% do essencial e cerca de 35% de tudo. Revisitas diminuem a recompensa (100%, 75%, 50%, 25%) dentro do mesmo tempo litúrgico.
+Meta: ao fim da campanha, o jogador pagou 70 a 80% do essencial e cerca de 35% de tudo. Nas revisitas, uma regra só para as Esmolas (proposta: a revisita paga metade, a simular); o retorno decrescente saiu (D-290).
+
+**Equipamento (D-278, D-282):** Instrumento e Hábito, 3 níveis na Forja, só com números melhores. A Forja mostra o antes e o depois antes de pagar; cada peça tem nome, tirado do que o santo carrega na arte; o nível aparece na ficha. Equipamento se forja, relíquia se encontra, santo chega: nada sagrado se compra.
 
 **Ferimentos**
 
@@ -321,7 +361,7 @@ Meta: ao fim da campanha, o jogador pagou 70 a 80% do essencial e cerca de 35% d
 | Leve | −10% em um atributo | 1 semana | — |
 | Grave | −20% em dois atributos | 3 semanas | 1 semana |
 
-**Imersão:** vitrais da Capela como tela de conquistas; Conselho da vila ao fim de cada círculo; Martirológio dos santos.
+**Imersão:** vitrais da Capela como capítulos da história; **Livro das Obras** na Biblioteca como conquistas opcionais (as 14 Obras de Misericórdia, sem prêmio de poder, D-275); Conselho da vila ao fim de cada círculo; Martirológio dos santos.
 
 ## 7. Trilha do Purgatório
 
@@ -361,6 +401,8 @@ A estrutura moral de Dante é preservada; os inimigos são demônios, guardiões
 
 **Estrutura de cada círculo**
 
+A mecânica de ambiente de cada círculo é a **Provação do Círculo** (D-267): os pecados agem como assédio dos inimigos, nunca como pecado dos santos. Ela é visível antes, tem uma resposta ativa do santo, com custo, e resistir dá prêmio (a ficha Firmeza). O Pecado Encarnado aplica a provação com força (no Círculo 2, o Encanto da Vertigem puxa as intenções para um santo: ele sofre, não peca); o chefe cobra a mesma lição.
+
 | Círculo | Estrutura (Dante) | Mecânica de ambiente | Guardião | Pecado Encarnado | Chefe |
 | --- | --- | --- | --- | --- | --- |
 | Antinferno e Limbo | Ignavos; Limbo sem tormento físico, só Encontros | Indecisão | — | — | Caronte |
@@ -396,7 +438,9 @@ A estrutura moral de Dante é preservada; os inimigos são demônios, guardiões
 | Azazel | Copia habilidades e se esconde | Levítico 16; 1 Enoque | 1 Enoque não é canônico |
 | Lúcifer | Três faces, seis asas, congelamento; São Miguel na fase final | Isaías 14,12; Lucas 10,18; Apocalipse 12; *Inferno* XXXIV | Aplicação de Isaías 14 a Satanás é leitura patrística |
 
-**Escalada (revisitas sem narrativa):** cinco níveis cumulativos (+15% de vida; Lume −10 por nó; elites em dobro; Pouso intermediário não consagra; chefe com fase extra); recompensa +25% por nível.
+**Domínio (D-284):** cada chefe segura a alma do Peregrino com um Domínio (proposta: 0 a 3). Cada vez que a companhia alcança o Peregrino no círculo (Tentação bem resolvida, Encontro com a alma), o Domínio cede um ponto; cada ponto é uma vantagem visível do chefe, e sempre é possível vencer com o Domínio cheio. Asmodeu é o primeiro: o fígado do peixe é um dos pontos.
+
+**Revisitas sem narrativa (D-290):** a Escalada saiu. Em qualquer revisita, o jogador pode assumir **penitências** por vontade própria, ligadas ao calendário (M3).
 
 ## 9. Narrativa
 
@@ -405,6 +449,7 @@ O Céu envia a companhia de santos para resgatar a alma de um Peregrino vivo, fi
 **Premissa**
 
 - **O Peregrino:** alegoria da condição humana, sem nome e com biografia mínima: só o necessário para os flashbacks e o leito. Não é moralmente superior aos condenados; está diante do que também poderia se tornar.
+- **Missão de resgate, não de escolta (D-362):** o Peregrino não entra na luta nem na jornada e nunca é unidade. Ele aparece como o que está em jogo: a **luz pálida** um círculo à frente no Mapa do Inferno (D-276), o Domínio dos chefes e os Vestígios da vida dele, que viram lembranças no Diário (Biblioteca) e montam o ato de contrição (D-287).
 - **A verdade da história:** o Peregrino está morrendo numa cama. A viagem pelo Inferno é a alegoria das falhas da vida dele; a companhia intercede por uma alma ainda viva. O jogo segue a estrutura da *Comédia*: Inferno, Purgatório e Paraíso.
 - **Quem envia:** Nossa Senhora se compadece e manda Santa Luzia com o recado, como no canto II do *Inferno*. Beatriz é omitida.
 - **Guia:** o Anjo da Guarda do Peregrino, no papel de Virgílio.
@@ -448,6 +493,9 @@ As almas mantêm a função das figuras do poema, mas não os nomes; a inspiraç
 - Chance sempre visível, ao menos uma forma de melhorá-la e uma opção segura de recusar.
 - O custo recai sobre as virtudes do Peregrino, o Lume, a desolação ou os recursos. **O santo nunca peca.**
 - Resistir é sempre apresentado como vitória: ser tentado não é pecar.
+- A tenda da Tentação continua assim (D-267). O assédio dos pecados aos santos acontece no combate, como Provação do Círculo (seção 8); bem resolvida, a Tentação pode ceder um ponto do Domínio do chefe.
+
+**Narrador (M3, D-277):** o Narrador do Prólogo fala também dentro do jogo, com poucas frases, só texto, nos momentos fortes (teste de Fé, Consolação, Noite Escura, Purificação, santo caído, chefe vencido, Lume baixo).
 
 **Intervenções angélicas**
 
@@ -592,7 +640,9 @@ A versão 1 tem 12 santos, 9 círculos e o prólogo, 19 inimigos comuns, 16 elit
 | M3 · Produção por família | Famílias A, B e C em sequência | Cada família aprovada antes da próxima |
 | M4 · Narrativa e acabamento | Contrição, boa morte, Purgatório e Paraíso, Conselhos, Martirológio, revisão teológica | Campanha completa; revisão teológica aprovada |
 
-Em paralelo ao M0: piloto de arte com São Jorge e com a Capela (Direção de Arte).
+Em paralelo ao M0: piloto de arte com São Jorge e com a Capela (Direção de Arte). Desde 12/11/2026, a direção de arte oficial é a **Bíblia de Arte** (`docs/fable/biblia-de-arte.md`, D-266): na caminhada, os santos andam fluidos (vídeo); na luta, todos em poses, com corte seco na passagem (D-359).
+
+**Dentro e fora do M2 (D-266):** no M2 entram a Provação do Círculo, o Domínio de Asmodeu, as regras de desolação que o simulador aprovar e a interface da Bíblia de Arte. Ficam para o M3: Súplica, Laços, calendário vivido e penitências, Carismas, Forja, Livro das Obras, lembranças, portador da lanterna, Narrador, tela de entrada e santos novos em vídeo.
 
 **Questões em aberto**
 
@@ -604,7 +654,9 @@ Em paralelo ao M0: piloto de arte com São Jorge e com a Capela (Direção de Ar
 - [ ] Roteiro dos flashbacks, Encontros, Tentações, Conselhos e Missões de Intercessão
 - [ ] Fichas do Martirológio, com pesquisa
 - [ ] Datas das festas dos santos no ano de 20 semanas
-- [ ] Abordagem de animação (definida pelo piloto)
+- [x] Abordagem de animação: caminhada fluida em vídeo, luta em poses (D-356, D-359)
+- [ ] Os três marcos das Moradas
+- [ ] Papel de São Francisco sem o Jardim
 - [ ] Preço do download
 
 ## 12. Regras complementares (aprovadas em 03/11/2026)
@@ -655,4 +707,4 @@ Cada santo tem 4 básicas, 2 de Fervor e um milagre de custo 3; os números fica
 | São Sebastião | Gládio (0), Escudo da Guarda (0), Tribuno da Guarda (1), Encorajar os Presos (0) | Os Cuidados de Irene, Diante do Imperador | Muralha de Flechas: Provocação e 3 Amparo em si; 1 Amparo nos aliados |
 | Santa Gertrudes | Salmodia (0), Purificar (0), O Arauto (1), Lembrança dos Defuntos (0) | Coro de Helfta, Oração pelas Almas | Sufrágio: cura (cresce com os marcos do Purgatório) e remove todas as condições negativas |
 
-Pendente: as variantes dos Carismas (2 por santo), antes do M3.
+Pendente: o segundo Carisma de cada santo (o kit acima é o primeiro; o segundo troca o traço e uma habilidade, D-272), antes do M3.
