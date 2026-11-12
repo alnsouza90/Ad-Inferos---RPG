@@ -232,3 +232,7 @@ Alan esclareceu: **aprovou todas as ideias, de G-1 a G-7, e também os cortes.**
 | Panorama pronto ou edifícios soltos | **Edifícios soltos.** O panorama é só orientativo; a vila é montada como em Darkest Dungeon |
 
 Aplicado em `biblia-de-arte.md` §10 e §10A (versão 0.3).
+
+## 13. Etapa 4 (animação) · respostas de Alan (12/11/2026)
+
+Registradas com as consequências e as contas em `03-animacao.md` §14. Em resumo: bloco de peso no M2 (sim); inimigos com **quadros de ação gerados**, todas as poses para todos, e o motor fazendo efeitos e transição; intenção no corpo aprovada junto com as poses; **santos todos em vídeo** (custo estimado: cerca de 5.000 créditos para os 9 que faltam); deformações do motor "aos pulos" só nos inimigos; teste direto no APK, sem página.

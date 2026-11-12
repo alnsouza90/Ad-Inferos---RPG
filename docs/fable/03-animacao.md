@@ -267,3 +267,49 @@ Liga com a auréola em eclipse, já aprovada. Sem desenho novo:
 5. **Os 9 santos por poses** (9 imagens cada), sem vídeo, se o teste do andar com dois desenhos passar?
 6. **Animar aos pulos** (12 por segundo) as deformações do motor: testar lado a lado?
 7. Quer uma **página de teste** como as outras, com os gestos ligando e desligando sobre um personagem do jogo, antes de alguém programar no Godot?
+
+---
+
+## 14. Decisões de Alan (12/11/2026) e o que elas mudam neste documento
+
+| # | Pergunta | Resposta de Alan | O que muda |
+| --- | --- | --- | --- |
+| 1 | Bloco de peso no M2 | **Sim** | Parada no impacto, recuo, câmera com direção, sombra, poeira, antecipação e borrão entram no M2 |
+| 2 | Inimigos com uma imagem só | **Não.** Prefere **gerar os quadros de ação dos inimigos**; o motor faz os efeitos e a transição | O §6 continua valendo para o **jeito** de cada função (tempos, peso, parado), mas as ações usam poses desenhadas. O §7 muda: ver a conta abaixo |
+| 3 | Pose de ataque só para alguns | **Todas as poses para todos** | Cada inimigo tem o mesmo conjunto dos atuais: parado, preparar, golpear, defender, golpe recebido, queda |
+| 4 | A intenção no corpo | **Aprovada, junto com as poses** | O motor inclina e muda a respiração; quando a pose de "preparar" existir, ela pode aparecer já no turno do jogador para quem vai atacar |
+| 5 | Os 9 santos por poses | **Não.** Prefere **vídeo**; pediu o custo no ImagineArt | O §8.2 (andar com dois desenhos) fica arquivado. Conta abaixo |
+| 6 | Animar aos pulos | **Sim para os inimigos**; os santos ficam todos com vídeo | As deformações do motor em passos valem para os inimigos (que são poses). Nos santos, o vídeo já tem o seu ritmo; a respiração do motor fica como está |
+| 7 | Página de teste | Só se for necessária; o que custar menos | **Testar direto no APK**, na tela "Animações (teste)" que já existe, com um interruptor por gesto. Uma página seria feita duas vezes (em código de página e depois no Godot) |
+
+### A conta dos santos em vídeo
+
+Preço conhecido pelo histórico do projeto: **Wan 3, 480p, 150 créditos por clipe** (D-224, D-225). Cada santo tem 3 clipes (parado, andar, ações).
+
+| Item | Clipes | Créditos |
+| --- | --- | --- |
+| 1 santo | 3 | 450 |
+| Os 9 santos que faltam | 27 | **4.050** |
+| Margem para refazer (no histórico, cerca de 1 em cada 5 clipes precisou de nova tentativa) | ~6 | ~900 |
+| **Total estimado** | ~33 | **~5.000** |
+
+- Saldo em 12/11/2026: **10 créditos**. O saldo inicial do projeto foi 3.100 (D-221).
+- **Não sei o preço em reais** de cada crédito; depende do seu plano.
+- Para gastar menos: gerar **um santo inteiro primeiro** (450) e aprovar no celular antes dos outros oito; usar sempre a imagem de partida **com margem em 3:4**, que evitou os pés cortados (D-222, D-224).
+- **Atenção à memória do celular:** os quadros de vídeo de cada santo ocupam dezenas de megabytes (D-330). Com 12 santos em vídeo, a compressão de textura prevista para a T53 deixa de ser opcional. Em combate só 3 santos estão na tela, então o jogo pode carregar só os três da equipe.
+
+### A conta das poses dos inimigos
+
+Cinco poses de ação por inimigo (preparar, golpear, defender, golpe recebido, queda), além da imagem parada que já existe.
+
+| Grupo | Quantos | Poses a gerar |
+| --- | --- | --- |
+| Família A (o que o M2 precisa) | 7 | **35** |
+| Famílias B e C e o Caído das Muralhas | 13 | 65 |
+| Elites (fora Minos e Vertigem, já feitos) | 14 | 70 |
+| Chefes (fora Asmodeu), mais o efeito próprio de cada um | 8 | 40 |
+| **Total** | 42 | **210** |
+
+- **Custo:** se forem geradas onde você gerou os personagens (o Meta AI serviu para a Vertigem), não gastam créditos. No ImagineArt, o único preço que medi foi **25 créditos por imagem** no modelo mais barato (o teste de Lúcifer): 35 poses seriam cerca de 875 créditos; as 210, cerca de 5.250. Outros modelos têm outro preço, que eu não medi.
+- **Cuidado que o histórico ensina:** o Meta AI perdeu a fidelidade em personagem complexo (Asmodeu, D-254). Para os simples (a maioria dos comuns) tende a funcionar; para os complexos, usar a mesma ferramenta que fez o personagem, com a imagem parada como referência.
+- **Para render mais:** pedir as 5 poses de um inimigo **numa folha só**, com a mesma escala e a mesma linha de chão. Uma geração por inimigo em vez de cinco, e as poses saem coerentes entre si.
