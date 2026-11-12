@@ -221,3 +221,14 @@ Alan esclareceu: **aprovou todas as ideias, de G-1 a G-7, e também os cortes.**
 | Ícones de ação: IA ou motor? | **Gerados por IA, como os outros** |
 | Tela de entrada com a lanterna | **Convive** com a abertura pelo Mapa do Inferno |
 | "Você viu os arquivos da vila que já estão prontos no Drive?" | O consultor **não tinha visto**. Abriu 14 das cerca de 71 imagens (amostra em `previas/vila_amostra_drive.jpg`) e ajustou a Bíblia (§10 e §10A) |
+
+## 12. Vila · respostas de Alan (12/11/2026)
+
+| Pergunta | Resposta |
+| --- | --- |
+| Ver as outras 57 imagens da vila | **Não** |
+| Noite em cinza-violeta em vez de azul | **Sim** |
+| Dia e noite ligados ao tempo litúrgico | **Sim** |
+| Panorama pronto ou edifícios soltos | **Edifícios soltos.** O panorama é só orientativo; a vila é montada como em Darkest Dungeon |
+
+Aplicado em `biblia-de-arte.md` §10 e §10A (versão 0.3).

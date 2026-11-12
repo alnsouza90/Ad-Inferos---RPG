@@ -1,6 +1,6 @@
 # Bíblia de Arte · Ad Inferos
 
-Versão 0.2 · 12/11/2026 · consultor convidado · **proposta de guia**
+Versão 0.3 · 12/11/2026 · consultor convidado · **proposta de guia**
 
 **O que é:** um só lugar com as regras visuais do jogo, da tela de entrada ao final. Junta o que Alan aprovou nas Etapas 3 e 3b (`02-arte.md`, `03-interface-e-efeitos.md`, página de modelos) e estende para inimigos, ícones, inventário, vila, mapa e narrativa.
 
@@ -355,7 +355,7 @@ A ideia que amarra tudo: **a interface também faz a viagem.** Ela começa como 
 | --- | --- | --- | --- |
 | 1 | **Entrada (título)** | Breu e âmbar | Tela preta. No centro, **uma lanterna apagada**. O botão de começar é **acender a lanterna**: a luz revela o título e, atrás, a Porta |
 | 2 | **Prólogo** | Tinta | Pranchas, como no roteiro. Texto numa faixa de ferro fina. Os cortes do leito, só em âmbar |
-| 3 | **Vila (Átrio)** | Tinta e âmbar | **A arte que já existe manda:** o panorama do mosteiro à beira do abismo, com os edifícios desenhados e as janelas em âmbar. A interface entra só como uma faixa de ferro à luz de vela, com o pano do tempo litúrgico. Ao tocar num edifício, abre o **interior** dele (já pintado), com os painéis em arco por cima |
+| 3 | **Vila (Átrio)** | Tinta e âmbar | **Montada como em Darkest Dungeon** (decisão de Alan): céu e fundo em camadas, e os **edifícios soltos** por cima, cada um tocável e mudando com o nível. O panorama pintado é só referência. A interface é uma faixa de ferro à luz de vela, com o pano do tempo litúrgico. Tocar num edifício abre o interior dele, com os painéis em arco por cima. Regras de montagem no §10A |
 | 4 | **Planejar a semana** | Ferro e arcos | Um **tríptico**: quem desce (centro), quem reza (esquerda), quem descansa (direita) |
 | 5 | **Mapa do Inferno** | Vidro apagado | **Nove janelas** em fila que desce. As vencidas, acesas; a atual, com a lanterna; a **luz pálida** um círculo à frente |
 | 6 | **Caminhada** | Tinta e as duas luzes | Quase sem interface: a lanterna, o alforje e uma faixa fina. É hora de olhar o cenário |
@@ -394,16 +394,36 @@ Vi 14 das cerca de 71 imagens da pasta `environments/village` do Drive (folha em
 2. **A noite azul.** As versões de noite têm fundo azul-marinho. Este guia reserva o azul (o ultramar é de Nossa Senhora; o primeiro céu azul do jogo é o das estrelas, no fim). Sugestão: no motor, puxar a noite da vila para **cinza-violeta escuro**, sem azul vivo.
 3. **Dia e noite precisam de um sentido.** O Átrio está fora do tempo. Em vez de relógio, proposta: **noite** no Advento e na Quaresma, **dia** no Natal, na Páscoa e no Tempo Comum. Assim o tempo litúrgico se vê na vila inteira, não só no pano.
 
-**Cuidados para montar a vila**
+**Decisões de Alan (12/11/2026)**
+
+- A vila usa os **edifícios soltos, montados pelo motor, como em Darkest Dungeon**. O panorama é só orientativo.
+- A **noite** vai para **cinza-violeta escuro**, sem azul vivo.
+- **Dia e noite seguem o tempo litúrgico:** noite no Advento e na Quaresma; dia no Natal, na Páscoa e no Tempo Comum.
+- Alan dispensou a revisão das outras 57 imagens.
+
+**Como montar (para a vila parecer um lugar, e não uma colagem)**
+
+| Regra | Por quê |
+| --- | --- |
+| **Lugares fixos.** Cada instalação tem um ponto de apoio marcado no chão da vila; o edifício de nível 1, 2 ou 3 troca **no mesmo ponto** | O jogador aprende onde fica cada coisa, e vê a vila crescer sem nada mudar de lugar |
+| **Três fileiras de profundidade.** Fundo (menor e mais escuro), meio, frente (maior). O panorama serve para decidir quem fica em qual fileira | Dá profundidade com peças vistas todas do mesmo ângulo |
+| **Todos assentados no mesmo chão.** Cortar o pedaço de chão de cada edifício e pintar um chão único por baixo; uma sombra igual para todos, feita pelo motor | É o chão diferente em cada peça que denuncia a colagem. Resolve também a sombra clara do edifício de nível 3 |
+| **Uma luz só.** Janelas em âmbar; a luz geral vem da esquerda (já é a regra da Direção de Arte). De noite, o motor escurece tudo para cinza-violeta e deixa as janelas | Dia e noite com a mesma arte de dia: as versões de noite em azul podem nem ser necessárias |
+| **O céu em camada própria**, andando devagar | A imagem do céu já existe |
+| **O abismo sempre visível** numa borda da tela, escuro | Lembra onde a vila está |
+| **Edifício fechado = ruína ou silhueta escura** no lugar dele (o Carmelo já é assim) | O jogador vê o que ainda vai chegar |
+| **Aviso de novidade em osso**, um pequeno sino ou vela acesa sobre o edifício; some ao abrir | Sem ouro e sem ponto de exclamação colorido |
+| **A praça com a estátua no centro**, sem toque e sem efeito | Cena, como decidido em D-262 |
+| **Os santos que ficaram** aparecem como retratos em arco na faixa de ferro, não andando pela vila | Menos arte, e liga com "Planejar a semana" |
+
+**Cuidados com os arquivos**
 
 | Ponto | O que vi | Sugestão |
 | --- | --- | --- |
-| Perspectiva | Os edifícios soltos são vistos **de cima, em três-quartos**; o resto do jogo é de lado; o panorama é de longe | Não misturar na mesma tela. Usar o **panorama** como tela da vila, com áreas de toque, e os edifícios soltos só se o motor os assentar todos no mesmo chão |
-| Sombras | Um edifício de nível 3 tem **sombra projetada clara no fundo**; os outros têm sombra preta | Tirar a sombra projetada no recorte; o motor põe uma igual para todos |
-| Fundo das noites | Azul-marinho com textura, não cinza liso | Recorte mais difícil; conferir as bordas |
-| Estátua de Nossa Senhora | Com auréola desenhada, de dia e de noite | Está certo como cena (D-262). Nenhum efeito, nenhum toque que dê bônus |
-| Nomes | Todos os arquivos têm nome numérico do Meta AI | Identificar e renomear antes da T49 (já previsto no inventário) |
-| Jardim | Existe arte de um claustro com jardim | Com o corte do Jardim aprovado, essa arte pode servir à **Capela nível 3** ou ao **Carmelo** |
+| Sombras | Um edifício de nível 3 tem sombra projetada clara no fundo | Tirar no recorte |
+| Noites | Fundo azul-marinho com textura | Preferir a arte de dia escurecida pelo motor; usar a de noite só se o recorte ficar limpo |
+| Nomes | Todos numéricos (Meta AI) | Identificar e renomear antes da T49 |
+| Jardim | Existe arte de um claustro com jardim | Pode servir à Capela nível 3 ou ao Carmelo |
 
 ## 11. Movimento e som (em uma página)
 
