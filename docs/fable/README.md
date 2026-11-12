@@ -12,6 +12,7 @@ Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. 
 | `02-propostas.md` | As propostas F-01 a F-18 (uma retirada), cada uma com problema, impacto, sistemas, custo, risco, simulação e decisões ligadas | 20 min |
 | `01-design.md` | **Etapa 2:** o que faz o jogo ser inesquecível; 7 ideias de identidade (G-1 a G-7) e 3 cortes | 15 min |
 | `02-arte.md` | **Etapa 3:** coerência da arte, linguagem visual própria, o que corrigir, HUD, efeitos e 7 prompts de teste | 20 min |
+| `03-interface-e-efeitos.md` | **Etapa 3b:** uma interface própria ("a capela às escuras"), efeitos dos santos em xilogravura de ouro, e o teste de Lúcifer (`previas/`) | 12 min |
 | `04-respostas-de-alan.md` | As respostas de Alan às 14 perguntas e os três estudos pedidos (Carismas simples, equipamento, origem das Esmolas) | 8 min |
 | `03-decisoes-e-ordem.md` | As 13 perguntas que são suas, com a minha recomendação; a ordem sugerida; a lista para o simulador | 5 min |
 
