@@ -82,6 +82,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Frases do Narrador nos momentos fortes (D-277) | Alan (M3) | 12/11/2026 |
 | Nomes das peças de equipamento de cada santo (D-278) | Alan (M3, Forja) | 12/11/2026 |
 | Papel de São Francisco sem o Jardim (D-292) | Alan | 12/11/2026 |
-| O GDD ainda descreve o que mudou (Jardim, 7 bônus das Moradas, Escalada e retorno decrescente, Afinidades fixas, Carismas com 2 habilidades, Esmolas × 1,5 no escuro). Ele só muda com pedido explícito de Alan: atualizar o GDD agora ou deixar as specs valerem? | Alan | 12/11/2026 |
+| ~~O GDD ainda descreve o que mudou: atualizar ou deixar as specs valerem?~~ Atualizar: GDD v1.2 (D-364), 12/11/2026 | — | 12/11/2026 |
 | Arte para o M2 vinda da consultoria: poses sentadas dos 3 santos e a fogueira (prompts em `docs/fable/03-animacao.md` §16.2, D-361); 35 poses de ação dos 7 inimigos (D-354); peças da interface "capela às escuras", 10 ícones de ação e 3 peças da auréola (`biblia-de-arte.md` §13, lotes 1 a 3) | Alan (T44, T52, T53) | 12/11/2026 |
 | Santo piloto em vídeo (Santo Antão, cerca de 450 créditos no Wan 3; saldo atual 10) no começo do M3 (D-266 (7), D-356) | Alan (M3) | 12/11/2026 |
