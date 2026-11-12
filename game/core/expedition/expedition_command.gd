@@ -18,6 +18,12 @@ const REST: StringName = &"Rest"
 const LEAVE_CAMP: StringName = &"LeaveCamp"
 ## Gives the found relic to a saint (target_id) or keeps it in the pack (empty).
 const PLACE_RELIC: StringName = &"PlaceRelic"
+## Starts the content the party reached in the corridor (expedition §2.3
+## item 4): the battle, Entrar in the tent, Abrir the relic, Falar to the soul.
+const ENGAGE_NODE: StringName = &"EngageNode"
+## Passar ao largo of the tent: applies the first `safe: true` option of the
+## Temptation without opening the event (narrative-system §4.1).
+const PASS_BY: StringName = &"PassBy"
 const MODE_CONTINUE: StringName = &"continue"
 const MODE_RETREAT: StringName = &"retreat"
 
@@ -79,6 +85,18 @@ static func place_relic(p_saint: StringName = &"") -> ExpeditionCommand:
 	var cmd := ExpeditionCommand.new()
 	cmd.type = PLACE_RELIC
 	cmd.target_id = p_saint
+	return cmd
+
+
+static func engage_node() -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = ENGAGE_NODE
+	return cmd
+
+
+static func pass_by() -> ExpeditionCommand:
+	var cmd := ExpeditionCommand.new()
+	cmd.type = PASS_BY
 	return cmd
 
 

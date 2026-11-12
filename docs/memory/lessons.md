@@ -82,4 +82,5 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 - Se o ambiente reiniciar no meio da compilação do Godot, sobra a trava `~/.cache/godot-4.7.2/building` e o `setup_godot.sh` diz "em andamento" para sempre (o log para sem `PRONTO` nem `FALHOU`). Conferir com `pgrep -f scons`; se não houver processo, apagar a trava e rodar o script de novo: a compilação continua de onde parou (05/11/2026).
 - Nunca usar `git push -f`: é bloqueado pelas permissões, com razão.
 - Na nuvem, downloads de `github.com` são bloqueados e `git clone` funciona: o Godot é compilado do código-fonte (comando em `progress.md`).
+- Quando o pypi também está bloqueado (12/11/2026), o `scons` sai do código: `git clone --depth 1 https://github.com/SCons/scons.git` e `python3 scons/scripts/scons.py` (o `setup_godot.sh` já faz isso sozinho, D-365). Com 2 núcleos a compilação do Godot passa de uma hora.
 - Depois do merge de um PR, recriar a branch de trabalho a partir da `main` (`git fetch origin main && git checkout -B <branch> origin/main`).

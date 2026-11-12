@@ -7,8 +7,8 @@ var store: SaveStore = SaveStore.new("user://saves")
 var settings: SettingsStore = SettingsStore.new("user://settings.json")
 
 
-func save_expedition(ctrl: ExpeditionController, campaign_seed: int) -> bool:
-	var ok: bool = store.write(ExpeditionSave.build(ctrl, campaign_seed))
+func save_expedition(ctrl: ExpeditionController, campaign_seed: int, corridor_place: Dictionary = {}) -> bool:
+	var ok: bool = store.write(ExpeditionSave.build(ctrl, campaign_seed, &"expedition", corridor_place))
 	# By path, not by the autoload name: scripts are also checked one by one,
 	# where autoload names are unknown.
 	var bus: Node = get_node_or_null("/root/EventBus")

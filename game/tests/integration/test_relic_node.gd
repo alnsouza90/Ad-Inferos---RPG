@@ -100,6 +100,7 @@ func test_about_30_percent_of_relic_nodes_are_guarded() -> void:
 		var n: MapNode = ctrl.map.node(1, 0)
 		n.type = MapNode.TYPE_RELIC
 		ctrl.execute(ExpeditionCommand.choose_path(n.id))
+		ctrl.execute(ExpeditionCommand.engage_node())
 		if ctrl.phase == ExpeditionController.Phase.IN_BATTLE:
 			guarded += 1
 		else:
@@ -113,6 +114,7 @@ func test_winning_the_guard_battle_gives_the_relic() -> void:
 		var n: MapNode = ctrl.map.node(1, 0)
 		n.type = MapNode.TYPE_RELIC
 		ctrl.execute(ExpeditionCommand.choose_path(n.id))
+		ctrl.execute(ExpeditionCommand.engage_node())
 		if ctrl.phase != ExpeditionController.Phase.IN_BATTLE:
 			continue
 		while ctrl.phase == ExpeditionController.Phase.IN_BATTLE:
@@ -133,6 +135,8 @@ func test_relic_choices_replay_exactly() -> void:
 		match ctrl.phase:
 			ExpeditionController.Phase.AT_FORK:
 				ctrl.execute(ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
+			ExpeditionController.Phase.PENDING:
+				ctrl.execute(ExpeditionCommand.engage_node())
 			ExpeditionController.Phase.IN_NODE:
 				ctrl.execute(ExpeditionCommand.complete_node())
 			ExpeditionController.Phase.IN_EVENT:

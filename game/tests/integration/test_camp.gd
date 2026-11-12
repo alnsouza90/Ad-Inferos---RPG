@@ -190,6 +190,8 @@ func test_a_whole_leg_with_rest_replays_exactly() -> void:
 		match ctrl.phase:
 			ExpeditionController.Phase.AT_FORK:
 				ctrl.execute(ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
+			ExpeditionController.Phase.PENDING:
+				ctrl.execute(ExpeditionCommand.engage_node())
 			ExpeditionController.Phase.IN_NODE:
 				ctrl.execute(ExpeditionCommand.complete_node())
 			ExpeditionController.Phase.IN_EVENT:
