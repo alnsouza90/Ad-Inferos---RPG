@@ -1,0 +1,290 @@
+<title>Bíblia de Arte</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Leiaute: guia de consulta em uma coluna; cada capítulo mostra a regra em uma frase e um exemplo que se vê ou se toca. */
+:root{
+  color-scheme: dark;
+  --breu:#0d0c10; --ferro:#1b1a20; --chumbo:#33313a; --cinza:#8a8791; --osso:#e4ddcf;
+  --sangue:#9b1c1c; --ouro:#d9a520; --ambar:#e07b1f; --branco:#f1ece0; --ultramar:#1f3a8a; --cinabrio:#b5362a;
+  --titulo:"Pirata One","Palatino Linotype",Georgia,serif;
+  --texto:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+}
+html,body{background:var(--breu)}
+body{color:var(--osso);font-family:var(--texto);font-size:17px;line-height:1.5}
+.pagina{max-width:920px;margin:0 auto;padding-block:28px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:46px}
+h1{font-family:var(--titulo);font-weight:400;font-size:clamp(36px,8vw,56px);line-height:1.05;margin:0}
+h2{font-family:var(--titulo);font-weight:400;font-size:30px;line-height:1.1;margin:0;text-wrap:balance}
+h3{font-size:17px;font-weight:700;margin:0}
+p{margin:0;max-width:65ch}
+.sub{color:var(--cinza)}
+.pequeno{font-size:15px;color:var(--cinza)}
+header,section{display:flex;flex-direction:column;gap:16px}
+.lema{font-family:var(--titulo);font-size:24px;line-height:1.25;color:var(--osso);border-left:3px solid var(--ambar);padding-left:14px;max-width:30ch}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.grade.fina{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.ficha{display:flex;flex-direction:column;gap:6px;min-width:0}
+.amostra{height:92px;border:1px solid var(--chumbo);display:block;width:100%}
+.cor{height:54px;border:1px solid var(--chumbo)}
+.hex{font-variant-numeric:tabular-nums;font-size:14px;color:var(--cinza)}
+.descida{display:flex;height:46px;border:1px solid var(--chumbo)}
+.descida span{flex:1}
+.legenda{display:flex;justify-content:space-between;font-size:13px;color:var(--cinza);gap:8px}
+svg{display:block;max-width:100%;height:auto}
+.icones{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:10px}
+.lanceta{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--osso);font-family:var(--texto);font-size:13px;min-height:44px}
+.lanceta:focus-visible{outline:2px solid var(--osso);outline-offset:3px}
+.painel{background:var(--ferro);border:1px solid var(--chumbo);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-height:96px}
+.painel b{font-family:var(--titulo);font-weight:400;font-size:22px}
+.alforje{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.saco{position:relative;width:74px;min-height:84px;padding:22px 6px 8px;background:var(--ferro);border:2px solid var(--cinza);border-radius:6px 6px 26px 26px;color:var(--osso);
+  font-family:var(--texto);font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.saco::before{content:"";position:absolute;top:-12px;left:50%;width:2px;height:12px;background:var(--cinza)}
+.saco b{font-size:22px;font-family:var(--titulo);font-weight:400}
+.saco[aria-pressed="true"]{border-color:var(--osso);background:#2a2830}
+.saco.apagado{opacity:.38}
+.saco:focus-visible,.acao:focus-visible{outline:2px solid var(--osso);outline-offset:3px}
+.acao{font-family:var(--texto);font-size:16px;font-weight:500;color:var(--osso);background:var(--ferro);border:1px solid var(--cinza);padding:9px 16px;cursor:pointer;min-height:44px}
+.acao.forte{background:var(--osso);color:var(--breu);border-color:var(--osso)}
+.acao[disabled]{opacity:.4;cursor:default}
+.linha{display:flex;gap:10px;flex-wrap:wrap}
+canvas{aspect-ratio:16/9;width:100%;max-width:100%;background:var(--ferro);border:1px solid var(--chumbo);display:block}
+.telas{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px;counter-reset:t}
+.tela{display:flex;flex-direction:column;gap:4px;font-size:14px;min-width:0}
+.tela i{display:block;height:58px;border:1px solid var(--chumbo);position:relative;overflow:hidden}
+.tela span{color:var(--cinza);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--chumbo);vertical-align:top}
+th{color:var(--cinza);font-weight:500}
+.rola{overflow-x:auto}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;max-width:65ch}
+</style>
+
+<div class="pagina">
+<header>
+  <h1>Bíblia de Arte</h1>
+  <p class="lema">Uma capela às escuras, no fundo do abismo, e uma luz que desce.</p>
+  <p>O guia visual do Ad Inferos, da tela de entrada ao final. Esta página mostra o que dá para ver e tocar; o texto completo, com os prompts e a lista de produção, está em <b>docs/fable/biblia-de-arte.md</b>.</p>
+  <p class="pequeno">Tudo aqui é desenho simples feito em código, para decidir a direção. Não é arte final.</p>
+</header>
+
+<section>
+  <h2>1. Quatro matérias</h2>
+  <p>Tudo na tela é feito de uma destas quatro coisas. Cada uma tem dono.</p>
+  <div class="grade">
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92" preserveAspectRatio="none"><rect width="200" height="92" fill="#8b8590"/><path d="M0 0 H120 L80 92 H0Z" fill="#050507"/><path d="M118 0 L78 92" stroke="#000" stroke-width="7"/><circle cx="150" cy="30" r="3" fill="#000"/><circle cx="166" cy="52" r="5" fill="#000"/><circle cx="140" cy="70" r="2" fill="#000"/></svg><h3>Tinta</h3><span class="pequeno">O mundo e o abismo. Contorno grosso, sombra que engole, respingo.</span></div>
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92" preserveAspectRatio="none"><rect width="200" height="92" fill="#1b1a20"/><g stroke="#0d0c10" stroke-width="4" fill="#33313a"><path d="M20 92 V40 Q20 14 50 8 Q80 14 80 40 V92Z"/><path d="M110 92 V40 Q110 14 140 8 Q170 14 170 40 V92Z" fill="#4a4852"/></g><g fill="#8a8791"><circle cx="10" cy="10" r="3"/><circle cx="96" cy="10" r="3"/><circle cx="190" cy="10" r="3"/></g></svg><h3>Ferro e vidro</h3><span class="pequeno">A interface. Preto e cinza, rebites, chumbo, vidro fosco.</span></div>
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92" preserveAspectRatio="none"><rect width="200" height="92" fill="#0d0c10"/><ellipse cx="100" cy="62" rx="90" ry="46" fill="#3a1d08"/><ellipse cx="100" cy="62" rx="52" ry="28" fill="#7a3d10"/><path d="M100 26 q14 20 0 36 q-14 -16 0 -36z" fill="#e07b1f"/><rect x="96" y="60" width="8" height="26" fill="#cfc7b6"/></svg><h3>Âmbar</h3><span class="pequeno">O fogo humano: lanterna, velas, Pouso, o leito. Treme e se gasta.</span></div>
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92" preserveAspectRatio="none"><rect width="200" height="92" fill="#17121f"/><circle cx="62" cy="46" r="30" fill="#d9a520"/><path d="M128 78 L140 18 L152 18 L164 78Z M146 6 a8 8 0 1 0 .1 0Z" fill="#f1ece0"/></svg><h3>Ouro e branco</h3><span class="pequeno">A graça. Chapado, sem contorno, sem sombra. Nunca se gasta.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>2. Cor</h2>
+  <h3>A base</h3>
+  <div class="grade fina" id="base"></div>
+  <h3>As cores com dono</h3>
+  <div class="grade fina" id="dono"></div>
+  <h3>A descida: a cor de cada círculo</h3>
+  <p>A cor do círculo é luz, nunca tinta das pedras. Do Círculo 2 ao 9 a tela esfria, até quase o preto e branco.</p>
+  <div><div class="descida" id="descida"></div><div class="legenda" id="descidaLeg"></div></div>
+  <div class="rola"><table>
+    <tr><th>Vejo no santo</th><th>Significa</th></tr>
+    <tr><td><b style="color:var(--ouro)">Ouro</b></td><td>Graça: Consolação, milagre, intercessão</td></tr>
+    <tr><td><b style="color:var(--cinza)">Sem cor</b></td><td>Provação: desolação, Noite Escura</td></tr>
+    <tr><td><b style="color:#a17bd0">A cor do círculo</b></td><td>Assédio: a Provação do Círculo</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>3. Forma</h2>
+  <div class="grade">
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92"><rect width="200" height="92" fill="#141318"/><path d="M70 86 V42 Q70 14 100 6 Q130 14 130 42 V86Z" fill="#24222a" stroke="#8a8791" stroke-width="4"/></svg><h3>Arco</h3><span class="pequeno">Santo e refúgio: retrato, habilidades, portas da vila.</span></div>
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92"><rect width="200" height="92" fill="#141318"/><circle cx="100" cy="46" r="34" fill="#24222a" stroke="#d9a520" stroke-width="4"/></svg><h3>Círculo</h3><span class="pequeno">Graça: auréola, rosácea do milagre, clareira.</span></div>
+    <div class="ficha"><svg class="amostra" viewBox="0 0 200 92"><rect width="200" height="92" fill="#141318"/><path d="M52 14 L150 8 L158 36 L150 82 L112 86 L104 78 L56 82 L46 46Z" fill="#24222a" stroke="#8a8791" stroke-width="4" stroke-linejoin="bevel"/></svg><h3>Quebrado</h3><span class="pequeno">Inimigo e abismo: ficha do inimigo, garras do Domínio.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>4. Ícones das ações dos santos</h2>
+  <p>Um ícone por tipo de habilidade, igual para os 12 santos. É gravura clara no vidro escuro. O que distingue cada santo é o milagre, na rosácea. Toque num ícone para ver o detalhe, como seria no jogo.</p>
+  <div class="icones" id="icones"></div>
+  <div class="painel" id="detalhe" aria-live="polite"></div>
+  <p class="pequeno">As velinhas embaixo mostram o custo em Fervor. Os exemplos são habilidades reais dos kits.</p>
+</section>
+
+<section>
+  <h2>5. O alforje: o inventário na luta</h2>
+  <p>Sempre à vista no painel. Um gancho por tipo de provisão, com a quantidade. O que não serve em combate aparece apagado. Toque para ver o detalhe; depois de usar uma, as outras apagam até o próximo turno.</p>
+  <div class="alforje" id="alforje"></div>
+  <div class="painel" id="item" aria-live="polite"></div>
+  <div class="linha"><button class="acao forte" id="usar">Usar</button><button class="acao" id="turno">Próximo turno</button></div>
+</section>
+
+<section>
+  <h2>6. Os efeitos dos inimigos: a tinta</h2>
+  <p>O contrário da estampa dos santos. A graça é folha de ouro de borda dura, que carimba de cima. O abismo é tinta preta de borda escorrida, que sobe de baixo e gruda.</p>
+  <div class="grade" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))" id="tinta"></div>
+</section>
+
+<section>
+  <h2>7. Do começo ao fim</h2>
+  <p>A interface também faz a viagem: começa no breu, acende aos poucos e, no final, o ferro some. Postas em fila, as telas contam a história só pelas cores.</p>
+  <div class="telas" id="telas"></div>
+</section>
+
+<section>
+  <h2>Nunca</h2>
+  <ul>
+    <li>Ouro em inimigo, em moeda, em seleção ou em cenário.</li>
+    <li>Contorno preto em anjo ou em efeito de graça.</li>
+    <li>Brilho borrado ou partícula de luz em efeito de santo.</li>
+    <li>Borda limpa e geométrica em efeito de inimigo.</li>
+    <li>Vermelho na interface para algo que não é dano.</li>
+    <li>Santo ou figura sagrada desenhado dentro de botão ou ícone.</li>
+    <li>Texto pequeno para caber: corta-se o texto.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const el=(n,a,p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const h=(tag,cls,html,p)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(p)p.appendChild(e);return e;};
+
+/* 2. cores */
+const BASE=[["Breu","#0D0C10","Fundo, sombra"],["Ferro","#1B1A20","Painéis"],["Chumbo","#33313A","Linhas, vidro apagado"],["Cinza","#8A8791","Texto secundário"],["Osso","#E4DDCF","Texto, seleção"],["Sangue","#9B1C1C","Só perigo"]];
+const DONO=[["Ouro","#D9A520","Graça"],["Branco angélico","#F1ECE0","Anjos"],["Âmbar","#E07B1F","Fogo humano"],["Ultramar","#1F3A8A","Nossa Senhora"],["Cinábrio","#B5362A","Esmolas, rubricas"]];
+function cores(id,lista){const g=document.getElementById(id);lista.forEach(c=>{const f=h("div","ficha",null,g);const s=h("div","cor",null,f);s.style.background=c[1];h("h3",null,c[0],f);h("span","hex",c[1]+" · "+c[2],f);});}
+cores("base",BASE);cores("dono",DONO);
+const CIRC=[["Limbo","#B9B7C2"],["2","#5B3F7A"],["3","#6F7A3A"],["4","#7F7A45"],["5","#6E2A25"],["6","#B8401A"],["7","#8C1220"],["8","#4F9A4A"],["9","#9FC3D6"]];
+const dd=document.getElementById("descida"),dl=document.getElementById("descidaLeg");
+CIRC.forEach(c=>{const s=h("span",null,null,dd);s.style.background=c[1];s.title="Círculo "+c[0]+" "+c[1];h("span",null,c[0],dl);});
+
+/* 4. ícones */
+const IC=[
+ {n:"Golpe",c:0,ex:"Estocada (São Jorge)",t:"Dano físico",d:"Usa das posições 1 e 2 · atinge o inimigo 1 ou 2 · 7 de Golpe",p:"M12 38 L34 14 M34 14 l-11 1 M34 14 l-1 11 M14 30 l6 6"},
+ {n:"Exorcismo",c:0,ex:"Cruz de São Bento",t:"Dano espiritual",d:"Usa de qualquer posição · atinge o inimigo 1, 2 ou 3 · 6 de Exorcismo",p:"M24 8 V40 M13 19 H35 M9 9 l5 5 M39 9 l-5 5 M9 39 l5 -5 M39 39 l-5 -5"},
+ {n:"Cura",c:0,ex:"Pétala de Rosa (Santa Teresinha)",t:"Devolve vida",d:"Usa das posições 2 e 3 · um aliado · cura 7",p:"M24 8 q11 14 0 22 q-11 -8 0 -22z M9 34 q15 10 30 0"},
+ {n:"Alívio",c:0,ex:"Confiança (Santa Teresinha)",t:"Tira desolação",d:"Usa das posições 2 e 3 · um aliado · −12 de desolação",p:"M20 13 a11 11 0 1 0 0 22 a11 11 0 1 0 0 -22z M31 14 a11 11 0 0 1 0 20"},
+ {n:"Amparo",c:0,ex:"Escudo Erguido (São Jorge)",t:"Protege",d:"Usa de qualquer posição · um aliado · +1 Amparo (o próximo golpe cai pela metade)",p:"M24 8 L38 13 V25 Q38 36 24 42 Q10 36 10 25 V13Z"},
+ {n:"Força",c:2,ex:"Ordem de Batalha (Santa Joana)",t:"Fortalece",d:"Usa de qualquer posição · todos os aliados · +1 Força",p:"M24 6 q13 14 7 26 q-3 8 -8 8 q-9 -1 -8 -11 q1 -5 4 -8 q1 6 4 5 q-3 -9 1 -20z"},
+ {n:"Limpeza",c:0,ex:"Purificar (Santa Gertrudes)",t:"Tira condições",d:"Usa das posições 2 e 3 · um aliado · remove 2 pilhas de condições negativas",p:"M24 6 q7 9 0 14 q-7 -5 0 -14z M9 34 q4 -6 9 -2 q5 -6 10 0 q6 -5 11 2 q-4 8 -15 7 q-12 1 -15 -7z"},
+ {n:"Levantar",c:2,ex:"Abandono (Santa Teresinha)",t:"Ergue um Caído",d:"Usa das posições 2 e 3 · um aliado Caído · levanta com 30% da vida",p:"M24 36 V12 M14 22 L24 12 L34 22 M10 42 H38"},
+ {n:"Deslocar",c:1,ex:"Fuga de Toledo (São João da Cruz)",t:"Troca de lugar",d:"Usa das posições 2 e 3 · um aliado · troca de lugar com ele e dá 1 Amparo",p:"M8 17 H38 M38 17 l-7 -6 M38 17 l-7 6 M40 32 H10 M10 32 l7 -6 M10 32 l7 6"},
+ {n:"Retirar",c:2,ex:"O Cálice Partido (São Bento)",t:"Tira fichas do inimigo",d:"Usa de qualquer posição · um inimigo · retira as fichas positivas e causa 8 de Exorcismo",p:"M24 8 L38 13 V25 Q38 36 24 42 Q10 36 10 25 V13Z M25 9 L20 21 L28 25 L22 41"}
+];
+const gi=document.getElementById("icones"), det=document.getElementById("detalhe"); let escolhido=0; const svgs=[];
+function mostra(i){ escolhido=i; const k=IC[i];
+  det.innerHTML=`<b>${k.n}</b><span class="sub">${k.t} · custo ${k.c} de Fervor</span><span>Exemplo: ${k.ex}</span><span class="pequeno">${k.d}</span>`;
+  svgs.forEach((s,j)=>{ s.vidro.setAttribute("fill",j===i?"#e07b1f":"#33313a"); s.vidro.setAttribute("stroke",j===i?"#e4ddcf":"#55525d"); s.tr.setAttribute("stroke",j===i?"#0d0c10":"#e4ddcf"); s.b.setAttribute("aria-pressed",j===i); }); }
+IC.forEach((k,i)=>{
+  const b=h("button","lanceta",null,gi); b.type="button"; b.id="ic-"+i;
+  const s=el("svg",{viewBox:"0 0 64 96",width:64,height:96,"aria-hidden":"true"}); b.appendChild(s);
+  const vidro=el("path",{d:"M6 78 V34 Q6 12 32 4 Q58 12 58 34 V78Z","stroke-width":3},s);
+  const g=el("g",{transform:"translate(8 22)"},s);
+  const tr=el("path",{d:k.p,fill:"none","stroke-width":3.2,"stroke-linecap":"round","stroke-linejoin":"round"},g);
+  for(let v=0;v<k.c;v++){ const x=32-(k.c-1)*7+v*14; el("rect",{x:x-3,y:84,width:6,height:10,fill:"#cfc7b6"},s); el("path",{d:`M${x} 78 q4 4 0 7 q-4 -3 0 -7z`,fill:"#e07b1f"},s); }
+  h("span",null,k.n,b); svgs.push({vidro,tr,b});
+  b.addEventListener("click",()=>mostra(i));
+});
+mostra(0);
+
+/* 5. alforje */
+const ITENS=[
+ {n:"Pão",q:2,luta:true,d:"Cura 5 de vida de um santo de pé. No Círculo 3, suspende a Fome neste combate."},
+ {n:"Vela",q:1,luta:false,d:"+25 de Lume. Só fora do combate."},
+ {n:"Água Benta",q:2,luta:true,d:"Remove a Corrupção e tira 15 de desolação de um santo."},
+ {n:"Ataduras",q:1,luta:true,d:"Remove o Sangramento de um santo."},
+ {n:"Incenso",q:1,luta:false,d:"Revela mais uma camada do mapa ou anula a emboscada do Pouso. Só fora do combate."}
+];
+const ga=document.getElementById("alforje"), pi=document.getElementById("item"), bu=document.getElementById("usar"), bt=document.getElementById("turno");
+let sel=0, usou=false; const sacos=[];
+ITENS.forEach((it,i)=>{ const b=h("button","saco",null,ga); b.type="button"; b.id="saco-"+i; b.addEventListener("click",()=>{sel=i;pinta();}); sacos.push(b); });
+function pinta(){
+  ITENS.forEach((it,i)=>{ const b=sacos[i]; b.innerHTML=`<b>${it.q}</b>${it.n}`; b.setAttribute("aria-pressed",i===sel);
+    b.classList.toggle("apagado",!it.luta||it.q===0||(usou)); });
+  const it=ITENS[sel]; let aviso="";
+  if(!it.luta) aviso="Não pode ser usado em combate."; else if(it.q===0) aviso="Acabou."; else if(usou) aviso="Já foi usada uma provisão neste turno.";
+  pi.innerHTML=`<b>${it.n}</b><span>${it.d}</span><span class="pequeno">${aviso||"Toque num santo para ver a prévia; o segundo toque confirma."}</span>`;
+  bu.disabled=!!aviso;
+}
+bu.addEventListener("click",()=>{ const it=ITENS[sel]; if(!it.luta||it.q===0||usou)return; it.q--; usou=true; pinta(); });
+bt.addEventListener("click",()=>{ usou=false; pinta(); });
+pinta();
+
+/* 6. tinta dos inimigos */
+const W=480,H=270,CHAO=222,AX=160,EX=350, VIOL="#7a55a8";
+const reduz=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function semente(s){ s=s||1; return ()=>((s=(s*16807)%2147483647)/2147483647); }
+function santo(c,x,cor,borda){ c.fillStyle=cor; c.strokeStyle=borda||"#000"; c.lineWidth=borda?6:4; c.lineJoin="round";
+  c.beginPath(); c.moveTo(x-30,CHAO); c.lineTo(x-16,CHAO-92); c.lineTo(x+16,CHAO-92); c.lineTo(x+34,CHAO); c.closePath(); c.fill(); c.stroke();
+  c.beginPath(); c.arc(x,CHAO-110,17,0,7); c.fill(); c.stroke(); }
+function demonio(c,x,y,e,cor){ c.save(); c.translate(x,y); c.scale(e,e); c.fillStyle=cor; c.strokeStyle="#000"; c.lineWidth=4/e; c.lineJoin="round";
+  c.beginPath(); c.ellipse(0,-52,40,54,0,0,7); c.fill(); c.stroke();
+  c.beginPath(); c.arc(-12,-116,20,0,7); c.fill(); c.stroke();
+  c.beginPath(); c.moveTo(-28,-128); c.lineTo(-40,-152); c.lineTo(-18,-134); c.closePath(); c.fill(); c.stroke();
+  c.beginPath(); c.moveTo(-2,-132); c.lineTo(12,-154); c.lineTo(4,-126); c.closePath(); c.fill(); c.stroke(); c.restore(); }
+function fundo(c){ c.setTransform(1,0,0,1,0,0); const g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,"#241a30"); g.addColorStop(1,"#0f0d14"); c.fillStyle=g; c.fillRect(0,0,W,H); c.fillStyle="#0a090d"; c.fillRect(0,CHAO,W,H); }
+function aureola(c,cob){ c.fillStyle="#d9a520"; c.beginPath(); c.arc(AX,CHAO-110,25,0,7); c.fill();
+  if(cob){ c.save(); c.beginPath(); c.arc(AX,CHAO-110,25,0,7); c.clip(); c.fillStyle="#0b0a0e"; c.beginPath(); c.arc(AX+50-cob*34,CHAO-114,25,0,7); c.fill(); c.restore(); } }
+function mancha(c,r,x,y,rx,ry,cor,pingos){ c.fillStyle=cor; c.beginPath(); const n=16; for(let i=0;i<n;i++){ const a=i*2*Math.PI/n, k=.75+r()*.5; const px=x+Math.cos(a)*rx*k, py=y+Math.sin(a)*ry*k; i?c.lineTo(px,py):c.moveTo(px,py);} c.closePath(); c.fill();
+  for(let i=0;i<(pingos||0);i++){ const px=x-rx+r()*rx*2; c.fillRect(px,y,3+r()*4,ry+r()*40); } }
+const TINTA=[
+ {cod:"T1",nome:"Golpe de Corpóreo: o corte",leg:"Um corte de tinta preta e vermelha atravessa o santo, e escorre.",
+  quadro(c,q){ const r=semente(q*17+5); fundo(c); aureola(c,0); santo(c,AX,"#6f6676"); demonio(c,q<3?AX+78:EX,CHAO,1,"#8b8590");
+    if(q>=1&&q<=6){ const a=q===1?.5:1; c.globalAlpha=a; c.strokeStyle="#000"; c.lineCap="butt"; c.lineWidth=q===1?5:16; c.beginPath(); c.moveTo(AX-46,CHAO-140); c.lineTo(AX+44,CHAO-30); c.stroke();
+      if(q>=2){ c.strokeStyle="#9b1c1c"; c.lineWidth=5; c.beginPath(); c.moveTo(AX-40,CHAO-133); c.lineTo(AX+40,CHAO-35); c.stroke();
+        c.fillStyle="#000"; for(let i=0;i<12;i++){ c.beginPath(); c.arc(AX-50+r()*110,CHAO-150+r()*130,1.5+r()*4,0,7); c.fill(); }
+        const esc=(q-2)*14; for(let i=0;i<6;i++){ const px=AX-36+i*14; c.fillRect(px,CHAO-124+i*17,4,10+esc*(.5+r())); } }
+      c.globalAlpha=1; } }},
+ {cod:"T2",nome:"Ação de Espiritual: a mancha que sobe",leg:"A tinta nasce aos pés e sobe pela figura. O contorno fica na cor do círculo: é assédio. A auréola começa a ser coberta.",
+  quadro(c,q){ const r=semente(q*23+7); fundo(c); const sobe=Math.min(q,6); aureola(c,q>=4?Math.min(1,(q-3)/4):0);
+    santo(c,AX,"#6f6676",q>=2&&q<=9?VIOL:null); demonio(c,EX,CHAO,1,"#b9b3c2");
+    if(q>=1){ mancha(c,r,AX,CHAO+4,34+sobe*5,7,"#000",0);
+      c.save(); c.beginPath(); c.moveTo(AX-30,CHAO); c.lineTo(AX-16,CHAO-92); c.lineTo(AX+16,CHAO-92); c.lineTo(AX+34,CHAO); c.closePath(); c.clip();
+      const topo=CHAO-sobe*13; c.fillStyle="#000"; c.beginPath(); c.moveTo(AX-40,CHAO+4); for(let x=AX-40;x<=AX+44;x+=7){ c.lineTo(x,topo-r()*16); } c.lineTo(AX+44,CHAO+4); c.closePath(); c.fill(); c.restore(); } }},
+ {cod:"T3",nome:"Invocação: a poça",leg:"Uma poça de tinta se abre no lugar vazio e a criatura sai dela.",
+  quadro(c,q){ const r=semente(q*29+3); fundo(c); aureola(c,0); santo(c,AX,"#6f6676"); demonio(c,EX+50,CHAO,1,"#8b8590");
+    const px=EX-50; if(q>=1){ mancha(c,r,px,CHAO+4,Math.min(46,10+q*9),8,"#000",0); }
+    if(q>=3){ const k=Math.min(1,(q-2)/5); c.save(); c.beginPath(); c.rect(0,0,W,CHAO+2); c.clip(); demonio(c,px,CHAO+70*(1-k),.62,q<8?"#1a181d":"#8b8590"); c.restore();
+      if(q<8){ c.fillStyle="#000"; for(let i=0;i<5;i++){ c.fillRect(px-26+i*12,CHAO-70*k+r()*20,3,14+r()*18); } } } }}
+];
+const gt=document.getElementById("tinta");
+TINTA.forEach(e=>{ const d=h("div","ficha",null,gt); h("h3",null,e.cod+" · "+e.nome,d);
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H; cv.setAttribute("role","img"); cv.setAttribute("aria-label",e.nome); d.appendChild(cv); const c=cv.getContext("2d");
+  const b=h("button","acao forte","Ver",d); b.type="button"; b.id="b-"+e.cod; h("span","pequeno",e.leg,d);
+  let anda=0; e.quadro(c,reduz?6:0);
+  b.addEventListener("click",()=>{ const id=++anda; let q=0; (function passo(){ if(id!==anda)return; e.quadro(c,q); q++; if(q<=11) setTimeout(passo,125); })(); });
+});
+
+/* 7. telas */
+const TELAS=[
+ ["Entrada","Uma lanterna apagada. Começar é acendê-la","radial-gradient(circle at 50% 60%,#e07b1f 0 6%,#3a1d08 7% 22%,#0d0c10 40%)"],
+ ["Prólogo","Pranchas de tinta; o leito em âmbar","linear-gradient(90deg,#0d0c10,#4a4650 60%,#7a3d10)"],
+ ["Vila","O mesmo ferro, à luz de vela","linear-gradient(180deg,#1b1a20,#5a3413)"],
+ ["Planejar a semana","Tríptico: desce, reza, descansa","linear-gradient(90deg,#1b1a20 0 32%,#33313a 33% 66%,#1b1a20 67%)"],
+ ["Mapa do Inferno","Nove janelas que descem","linear-gradient(90deg,#5B3F7A,#6F7A3A,#7F7A45,#6E2A25,#B8401A,#8C1220,#4F9A4A,#9FC3D6)"],
+ ["Caminhada","Quase sem interface","linear-gradient(90deg,#7a3d10 0 18%,#241a30 40%,#5B3F7A)"],
+ ["Combate","A capela às escuras","linear-gradient(90deg,#7a3d10 0 12%,#1b1a20 30% 70%,#5B3F7A)"],
+ ["Pouso","Três arcos, velas acesas","radial-gradient(circle at 50% 70%,#e07b1f,#3a1d08 45%,#0d0c10 80%)"],
+ ["Tentação","Cor do círculo; a voz sem rosto","linear-gradient(180deg,#0d0c10,#5B3F7A)"],
+ ["Encontro com a alma","Sem ferro; a tela mais silenciosa","linear-gradient(180deg,#3a3942,#B9B7C2)"],
+ ["Chefe","Moldura quebrada, garras","linear-gradient(135deg,#0d0c10 55%,#8C1220)"],
+ ["Milagre","O instante de ícone","#d9a520"],
+ ["Noite Escura","Preto total, anel fino","radial-gradient(circle,#050507 0 30%,#d9a520 31% 34%,#050507 35%)"],
+ ["Flashback","Memória: sépia e osso, sem preto puro","linear-gradient(90deg,#6b5a45,#cdbfa3)"],
+ ["O leito","Nenhuma interface. A vela","radial-gradient(circle at 70% 55%,#e07b1f 0 5%,#3a1d08 6% 30%,#0d0c10 60%)"],
+ ["Lúcifer","Quase preto e branco","linear-gradient(90deg,#050507,#8a8791 50%,#9FC3D6 96%)"],
+ ["Rever as estrelas","A cor volta","radial-gradient(circle at 30% 30%,#f1ece0 0 2%,#16224a 3%)"],
+ ["Contrição","O leito; um botão só","linear-gradient(180deg,#3a1d08,#a8731c)"],
+ ["Purgatório","Amanhecer; o ferro some","linear-gradient(0deg,#e9c98a,#6b7fa8)"],
+ ["Paraíso","Ouro e branco, sem contorno","linear-gradient(180deg,#f1ece0,#d9a520)"]
+];
+const tg=document.getElementById("telas");
+TELAS.forEach((t,i)=>{ const d=h("div","tela",null,tg); const s=h("i",null,null,d); s.style.background=t[2]; h("b",null,(i+1)+". "+t[0],d); h("span",null,t[1],d); });
+})();
+</script>
