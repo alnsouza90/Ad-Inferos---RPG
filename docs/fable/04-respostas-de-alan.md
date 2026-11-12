@@ -200,3 +200,16 @@ Alan esclareceu: **aprovou todas as ideias, de G-1 a G-7, e também os cortes.**
 **Não decidido:** o "quarto corte" opcional (os 7 bônus pequenos das Moradas virarem 3 marcos). Alan não o mencionou; fica como está.
 
 **Atenção para quem implementar:** "aprovado" aqui quer dizer **direção aprovada**. Os números continuam sendo propostas até passarem pelo simulador e por Alan, como manda o `CLAUDE.md`. Três aprovações mexem em coisas já programadas e testadas (Afinidades, valor 20 de fim de combate, regras de desolação): cada uma precisa de tarefa própria no backlog, com os testes atualizados.
+
+## 10. Etapa 3 (arte, interface e efeitos) · respostas de Alan (12/11/2026)
+
+| Assunto | Resposta de Alan |
+| --- | --- |
+| As 8 sugestões de `02-arte.md` §10 (duas luzes; ouro × âmbar; sagrado sem contorno; auréola em eclipse e clareira; telas de passagem em ouro e em preto; regenerar 4 peças e diferenciar os pares; bloco novo dos prompts de santos; Lúcifer como cenário) | **"Gostei de todas as sugestões"**: aprovadas |
+| Teste de Lúcifer no ImagineArt | Pedido por Alan; gerado (25 créditos; saldo 10). Direção validada; composição e traço a refazer (`03-interface-e-efeitos.md` §3) |
+| Página de modelos (P2, E1 a E4, H1 a H5) | **"Gostei de todas as propostas, estão aprovadas"**: painel "capela às escuras", os quatro efeitos em estampa e os cinco estados da auréola |
+| Pedidos novos | Estender a linguagem aos **inimigos** e às ações na **vila, mapa etc.**; **ícones nas habilidades** dos santos (mesmo genéricos: exorcismo, bênção, ataque físico), com **detalhe ao tocar**; **inventário visível na luta**; uma **bíblia de arte** da tela de entrada ao fim |
+
+**Entregue em resposta:** `biblia-de-arte.md` (guia completo, com blocos de prompt e lista de produção) e a página `modelos/biblia-de-arte.html`.
+
+**Para o agente de implementação:** estas aprovações mudam a interface decidida em D-257, D-258 e D-347 (formas das molduras, cor da seleção, intenções só em vermelho no ataque, alforje sempre visível, ícones nas habilidades) e os efeitos de D-237, D-238 e D-335 (saem os brilhos gerados em código; entram folhas de quadros desenhados). `docs/art/art-direction.md` só muda com pedido explícito de Alan. Cores em hex e tamanhos da bíblia são pontos de partida para testar no aparelho.
