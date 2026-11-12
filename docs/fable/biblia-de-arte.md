@@ -1,6 +1,6 @@
 # Bíblia de Arte · Ad Inferos
 
-Versão 0.1 · 12/11/2026 · consultor convidado · **proposta de guia**
+Versão 0.2 · 12/11/2026 · consultor convidado · **proposta de guia**
 
 **O que é:** um só lugar com as regras visuais do jogo, da tela de entrada ao final. Junta o que Alan aprovou nas Etapas 3 e 3b (`02-arte.md`, `03-interface-e-efeitos.md`, página de modelos) e estende para inimigos, ícones, inventário, vila, mapa e narrativa.
 
@@ -355,7 +355,7 @@ A ideia que amarra tudo: **a interface também faz a viagem.** Ela começa como 
 | --- | --- | --- | --- |
 | 1 | **Entrada (título)** | Breu e âmbar | Tela preta. No centro, **uma lanterna apagada**. O botão de começar é **acender a lanterna**: a luz revela o título e, atrás, a Porta |
 | 2 | **Prólogo** | Tinta | Pranchas, como no roteiro. Texto numa faixa de ferro fina. Os cortes do leito, só em âmbar |
-| 3 | **Vila (Átrio)** | Ferro à luz de vela | O mesmo ferro do combate, com luz âmbar. Cada instalação é uma **porta em arco**. O pano do tempo litúrgico pendurado no alto |
+| 3 | **Vila (Átrio)** | Tinta e âmbar | **A arte que já existe manda:** o panorama do mosteiro à beira do abismo, com os edifícios desenhados e as janelas em âmbar. A interface entra só como uma faixa de ferro à luz de vela, com o pano do tempo litúrgico. Ao tocar num edifício, abre o **interior** dele (já pintado), com os painéis em arco por cima |
 | 4 | **Planejar a semana** | Ferro e arcos | Um **tríptico**: quem desce (centro), quem reza (esquerda), quem descansa (direita) |
 | 5 | **Mapa do Inferno** | Vidro apagado | **Nove janelas** em fila que desce. As vencidas, acesas; a atual, com a lanterna; a **luz pálida** um círculo à frente |
 | 6 | **Caminhada** | Tinta e as duas luzes | Quase sem interface: a lanterna, o alforje e uma faixa fina. É hora de olhar o cenário |
@@ -377,6 +377,33 @@ A ideia que amarra tudo: **a interface também faz a viagem.** Ela começa como 
 **O arco de luz da campanha:** entrada no breu → âmbar pequeno → nove círculos esfriando até o gelo → estrelas → amanhecer → ouro. Se o jogador puser as telas em fila, vê a história só pelas cores.
 
 ---
+
+## 10A. A vila que já existe (amostra do Drive, 12/11/2026)
+
+Vi 14 das cerca de 71 imagens da pasta `environments/village` do Drive (folha em `previas/vila_amostra_drive.jpg`): o panorama, o céu, 5 edifícios de nível 1 de dia, 2 de noite, 2 de nível 3 e 3 interiores. **Não vi as outras**; o que segue vale para a amostra.
+
+**O que está muito bom e vira regra**
+
+- Os **interiores** (despensa, claustro com o poço, a cela com o livro e a vela) são a melhor arte de ambiente do projeto. Luz âmbar, tinta pesada, nada de ouro. São exatamente "o refúgio é quente".
+- As **janelas em âmbar** em todo edifício. É a mesma luz da lanterna e do Pouso.
+- O **panorama** do mosteiro na beira do abismo, com o escuro embaixo e a aurora em cima, resume o jogo numa imagem.
+
+**Três ajustes neste guia por causa da vila**
+
+1. **A aurora do Átrio é uma exceção permitida.** O §14 diz "nenhum ouro em cenário". O céu do Átrio tem uma aurora pálida, entre o âmbar e o ouro. Fica: o Prólogo chama o Átrio de lugar "que a graça deixou de pé". É o único cenário com essa luz antes do Purgatório, e a anuncia. Regra: aurora **pálida e pintada**, nunca ouro chapado.
+2. **A noite azul.** As versões de noite têm fundo azul-marinho. Este guia reserva o azul (o ultramar é de Nossa Senhora; o primeiro céu azul do jogo é o das estrelas, no fim). Sugestão: no motor, puxar a noite da vila para **cinza-violeta escuro**, sem azul vivo.
+3. **Dia e noite precisam de um sentido.** O Átrio está fora do tempo. Em vez de relógio, proposta: **noite** no Advento e na Quaresma, **dia** no Natal, na Páscoa e no Tempo Comum. Assim o tempo litúrgico se vê na vila inteira, não só no pano.
+
+**Cuidados para montar a vila**
+
+| Ponto | O que vi | Sugestão |
+| --- | --- | --- |
+| Perspectiva | Os edifícios soltos são vistos **de cima, em três-quartos**; o resto do jogo é de lado; o panorama é de longe | Não misturar na mesma tela. Usar o **panorama** como tela da vila, com áreas de toque, e os edifícios soltos só se o motor os assentar todos no mesmo chão |
+| Sombras | Um edifício de nível 3 tem **sombra projetada clara no fundo**; os outros têm sombra preta | Tirar a sombra projetada no recorte; o motor põe uma igual para todos |
+| Fundo das noites | Azul-marinho com textura, não cinza liso | Recorte mais difícil; conferir as bordas |
+| Estátua de Nossa Senhora | Com auréola desenhada, de dia e de noite | Está certo como cena (D-262). Nenhum efeito, nenhum toque que dê bônus |
+| Nomes | Todos os arquivos têm nome numérico do Meta AI | Identificar e renomear antes da T49 (já previsto no inventário) |
+| Jardim | Existe arte de um claustro com jardim | Com o corte do Jardim aprovado, essa arte pode servir à **Capela nível 3** ou ao **Carmelo** |
 
 ## 11. Movimento e som (em uma página)
 
@@ -473,7 +500,7 @@ Darkest Dungeon style 2D side-view dungeon background, hand-painted gothic horro
 
 ## 14. Nunca
 
-- Ouro em inimigo, em moeda, em seleção ou em cenário.
+- Ouro em inimigo, em moeda, em seleção ou em cenário (exceção: a aurora pálida do Átrio, §10A).
 - Contorno preto em anjo ou em efeito de graça.
 - Brilho borrado, partícula de luz, degradê macio em efeito de santo.
 - Borda limpa e geométrica em efeito de inimigo.
@@ -492,6 +519,6 @@ Darkest Dungeon style 2D side-view dungeon background, hand-painted gothic horro
 1. **Latão do Círculo 4 e brasa do Círculo 6:** conferir no aparelho se não se confundem com ouro e âmbar.
 2. **Carmesim do Círculo 7:** conferir se o vermelho de perigo da interface ainda se lê.
 3. **Flashbacks em sépia:** é sugestão de matéria; o roteiro e as pranchas são seus.
-4. **A tela de entrada com a lanterna** substitui ou convive com a abertura pelo Mapa do Inferno que você ainda não decidiu (pendência de D-262).
-5. **Os ícones de ação:** gerar por IA ou o motor desenhar em linha a partir de formas simples (mais consistente, sem créditos).
+4. ~~Tela de entrada~~ **Decidido por Alan (12/11/2026):** a lanterna **convive** com a abertura pelo Mapa do Inferno.
+5. ~~Ícones de ação~~ **Decidido por Alan (12/11/2026):** gerados por IA, como os outros ícones (prompt no §12).
 6. **Tamanhos de letra e de toque:** só o Redmi responde.

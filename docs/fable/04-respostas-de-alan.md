@@ -213,3 +213,11 @@ Alan esclareceu: **aprovou todas as ideias, de G-1 a G-7, e também os cortes.**
 **Entregue em resposta:** `biblia-de-arte.md` (guia completo, com blocos de prompt e lista de produção) e a página `modelos/biblia-de-arte.html`.
 
 **Para o agente de implementação:** estas aprovações mudam a interface decidida em D-257, D-258 e D-347 (formas das molduras, cor da seleção, intenções só em vermelho no ataque, alforje sempre visível, ícones nas habilidades) e os efeitos de D-237, D-238 e D-335 (saem os brilhos gerados em código; entram folhas de quadros desenhados). `docs/art/art-direction.md` só muda com pedido explícito de Alan. Cores em hex e tamanhos da bíblia são pontos de partida para testar no aparelho.
+
+## 11. Bíblia de Arte · respostas de Alan (12/11/2026)
+
+| Pergunta | Resposta |
+| --- | --- |
+| Ícones de ação: IA ou motor? | **Gerados por IA, como os outros** |
+| Tela de entrada com a lanterna | **Convive** com a abertura pelo Mapa do Inferno |
+| "Você viu os arquivos da vila que já estão prontos no Drive?" | O consultor **não tinha visto**. Abriu 14 das cerca de 71 imagens (amostra em `previas/vila_amostra_drive.jpg`) e ajustou a Bíblia (§10 e §10A) |
