@@ -313,3 +313,72 @@ Cinco poses de ação por inimigo (preparar, golpear, defender, golpe recebido, 
 - **Custo:** se forem geradas onde você gerou os personagens (o Meta AI serviu para a Vertigem), não gastam créditos. No ImagineArt, o único preço que medi foi **25 créditos por imagem** no modelo mais barato (o teste de Lúcifer): 35 poses seriam cerca de 875 créditos; as 210, cerca de 5.250. Outros modelos têm outro preço, que eu não medi.
 - **Cuidado que o histórico ensina:** o Meta AI perdeu a fidelidade em personagem complexo (Asmodeu, D-254). Para os simples (a maioria dos comuns) tende a funcionar; para os complexos, usar a mesma ferramenta que fez o personagem, com a imagem parada como referência.
 - **Para render mais:** pedir as 5 poses de um inimigo **numa folha só**, com a mesma escala e a mesma linha de chão. Uma geração por inimigo em vez de cinco, e as poses saem coerentes entre si.
+
+---
+
+## 15. Dois modos de animar: caminhada fluida, luta em poses (pergunta de Alan, 12/11/2026)
+
+**A pergunta:** na luta, para não haver diferença entre santos (vídeo) e inimigos (poses), dá para fazer igual, usando quadros do vídeo como posições e a mesma transição? E na caminhada, manter fluido como no vídeo?
+
+**Resposta: sim, e é a melhor solução.** A ferramenta de quadros já sabe fazer isso: a opção `keys=` escolhe poucos quadros nítidos de um vídeo e os segura (foi assim que o Asmodeu parado foi resolvido, D-344).
+
+### 15.1 A regra
+
+| Momento | Santos | Inimigos | Linguagem |
+| --- | --- | --- | --- |
+| **Caminhada** | Vídeo de andar e de parado, **fluidos**, inteiros | Não aparecem (chegam no começo da luta) | Fluida |
+| **Luta** | **Poses-chave tiradas do vídeo de ações**: preparar, golpear, defender, golpe recebido, ajoelhar, caído | Poses desenhadas, as mesmas seis | **Pose, segura, pose**, com a mesma frase do golpe (§3) para todos |
+
+- Na luta, santo e inimigo passam a se mexer **do mesmo jeito**: mesma antecipação, mesma parada no impacto, mesmo recuo. O que os distingue é o peso e o temperamento, não a técnica.
+- Os três santos atuais não precisam de arte nova: é só marcar, no arquivo de cortes, quais quadros do vídeo de ações são as poses.
+
+### 15.2 O parado dentro da luta
+
+É o único ponto em que ainda haveria diferença: o santo respirando em vídeo fluido ao lado de um inimigo parado que só o motor mexe. Duas saídas:
+
+| Opção | Como fica | Recomendo? |
+| --- | --- | --- |
+| **A · Tudo igual** | Na luta, o parado do santo também vira 2 ou 3 quadros do vídeo, seguros, com a respiração do motor "aos pulos", como os inimigos | **Sim.** Fica um mundo só, e gasta menos memória durante a luta |
+| B · Santo fluido | O santo mantém o vídeo de parado na luta | Os santos parecem "mais vivos" que os inimigos; pode ser lido como de propósito, mas é a diferença que você quer evitar |
+
+### 15.3 A passagem de um modo para o outro
+
+A troca de linguagem vira um momento do jogo, em vez de um defeito:
+
+1. A companhia caminha, fluida.
+2. Os inimigos chegam (D-185). A companhia para.
+3. **Um corte seco:** todos assumem a pose de guarda, a câmera aproxima um pouco, o fundo escurece. A partir daí, tudo é pose.
+4. Fim da luta: a pose de guarda se desfaz e o vídeo de parado volta.
+
+O jogador sente a luta "travar o tempo". É barato e dá identidade.
+
+### 15.4 O que isso muda na conta dos vídeos
+
+Nada: continuam 3 clipes por santo. O vídeo de **ações** deixa de ser tocado inteiro e passa a ser a **fonte das poses** (garante que as poses são do mesmo desenho do santo). Os de **andar** e **parado** são usados inteiros na caminhada.
+
+## 16. O Pouso: sentados em volta da fogueira (pedido de Alan, 12/11/2026)
+
+**O pedido:** no Pouso, os santos sentados em volta de uma fogueira, mexendo de leve, respirando.
+
+É a cena certa: o Pouso é o lugar do âmbar, e hoje a tela mostra só retratos. Proposta de como fazer com pouco:
+
+| Peça | Como |
+| --- | --- |
+| **Uma pose sentada por santo** | Uma imagem, de lado ou em três-quartos, virada para o fogo. O motor faz o resto. Não precisa de vídeo: figura sentada quase não se move, e a respiração do motor funciona melhor aqui do que em qualquer outro lugar |
+| **Respirar e mexer de leve** | Respiração lenta, um balanço mínimo do tronco, a barra da roupa ondulando (gestos 7 e 8). De tempos em tempos, um gesto pequeno: inclinar para o fogo, levantar a cabeça |
+| **A luz do fogo** | O fio âmbar no lado de cada santo que dá para a fogueira, **tremendo** junto com a chama. É a regra das duas luzes, com uma luz só: aqui o abismo fica de fora |
+| **A fogueira** | Poucos desenhos de chama em ciclo, faíscas desenhadas subindo, sombras compridas atrás dos santos que balançam com o fogo |
+| **As auréolas** | Presentes e calmas. Quem está em Noite Escura mantém o eclipse; sugestão: essa figura senta **um pouco afastada**, de cabeça baixa (uma segunda pose só para esse estado, se você quiser) |
+| **As atividades** | Tocar num santo abre as opções dele (Vigília, Partilha, Oração, a atividade própria). A Partilha pode mostrar um inclinando-se para o outro; a Vigília, o santo de joelhos, de costas para o fogo |
+
+**Isto substitui** a ideia dos "três arcos como retábulo" que estava na Bíblia de Arte para o Pouso. Os arcos ficam só nos painéis que abrem ao tocar.
+
+**Custo:** 1 imagem sentada por santo (12 no total; 3 para o M2). Se preferir vídeo também aqui, são 150 créditos por santo, mas eu não recomendo: o ganho é pequeno para uma figura parada.
+
+**A mesma cena serve à Vigília** antes do chefe, sem a fogueira: os santos de joelhos, só com a lanterna.
+
+**Perguntas:**
+
+1. No parado da luta: opção A (tudo igual) ou B (santo fluido)?
+2. As poses sentadas do Pouso **já existem** ou ainda vão ser geradas? Eu não as vi.
+3. Pouso com imagem e motor, ou com vídeo?

@@ -360,7 +360,7 @@ A ideia que amarra tudo: **a interface também faz a viagem.** Ela começa como 
 | 5 | **Mapa do Inferno** | Vidro apagado | **Nove janelas** em fila que desce. As vencidas, acesas; a atual, com a lanterna; a **luz pálida** um círculo à frente |
 | 6 | **Caminhada** | Tinta e as duas luzes | Quase sem interface: a lanterna, o alforje e uma faixa fina. É hora de olhar o cenário |
 | 7 | **Combate** | Tudo | A capela às escuras inteira |
-| 8 | **Pouso e Vigília** | Âmbar | Os três santos em **três arcos**, como retábulo. As atividades são velas acesas diante de cada um |
+| 8 | **Pouso e Vigília** | Âmbar | Os santos **sentados em volta da fogueira**, respirando e mexendo de leve (pedido de Alan; detalhe em `03-animacao.md` §16). A luz do fogo treme no lado de cada um. Tocar num santo abre as atividades dele. Na Vigília, de joelhos, só com a lanterna |
 | 9 | **Tentação** | Tinta, cor do círculo | A tenda. As opções em lancetas; a opção segura sempre a primeira. A voz do tentador **sem retrato**, só o contorno na cor do círculo |
 | 10 | **Encontro com a alma** | Cinza perolado | Sem ferro. Só a alma, a companhia e o texto. É a tela mais silenciosa do jogo |
 | 11 | **Chefe** | Tinta, garras | A moldura quebrada cresce; as garras do Domínio junto da vida |
