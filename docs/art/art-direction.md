@@ -2,6 +2,20 @@
 
 Oct 29, 2026 · @Alan
 
+## Direção oficial a partir de 12/11/2026: a Bíblia de Arte (D-266)
+
+Por decisão de Alan (D-266 (6), com pedido explícito para atualizar este documento), a **Bíblia de Arte** (`docs/fable/biblia-de-arte.md`, com as páginas de `docs/fable/modelos/`) passa a ser a **direção de arte oficial** do jogo.
+
+| Regra | Como fica |
+| --- | --- |
+| Precedência | Onde a Bíblia e este documento divergem, **vale a Bíblia**. O que a Bíblia não trata continua valendo daqui (prompts por personagem e por cenário, seções 2 a 11, e as folhas de produção de `docs/art/`) |
+| Condição | As cores que podem se confundir são testadas no Redmi: latão do Círculo 4 e brasa do Círculo 6 contra ouro e âmbar; carmesim do Círculo 7 contra o vermelho de perigo (Bíblia §15). Se uma falhar, só aquela cor é revista |
+| Cores e tamanhos | Os valores em hex e os tamanhos da Bíblia são pontos de partida, confirmados no aparelho |
+| O que muda de cara | Quatro matérias com dono (tinta, ferro e vidro, âmbar, ouro e branco); ouro só para a graça; o sagrado sem contorno de tinta; as duas luzes; auréola em eclipse e clareira; interface "capela às escuras" (substitui o pergaminho e ouro da seção 12, que D-257 e D-258 já tinham deixado); efeitos dos santos em estampa e dos inimigos em tinta; ícones de ação nas habilidades; alforje à vista; Pouso em volta da fogueira; vila montada com edifícios soltos |
+| Decisões ligadas | D-293 a D-300, D-350 a D-361 (`docs/memory/decisions.md`) |
+
+O texto abaixo continua como estava; leia-o com esta precedência.
+
 ## Atualização v1.1 (03/11/2026)
 
 Esta versão corrige os prompts para produção no Godot e incorpora o novo elenco; as regras abaixo prevalecem sobre qualquer trecho antigo deste documento.

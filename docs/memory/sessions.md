@@ -2,6 +2,12 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
+## Sessão 8 · 12/11/2026
+
+- PR #60 (D-266) conferido (CI verde) e com merge, como Alan aprovou.
+- Feito: T58 · Passo 1 do rumo do Fable (só documentos): D-267 a D-300 e D-350 a D-362 (uma decisão por resposta de `docs/fable/04-respostas-de-alan.md`), D-363 (numeração única); `open-questions.md`; backlog do M2 com T58 a T62 e a ordem do rumo; specs de desolação, expedição, vila, combate, narrativa, IA e telas marcadas; `art-direction.md` aponta para a Bíblia de Arte.
+- Próximo: T37, depois do "Aprovado" de Alan.
+
 ## Sessão 6 · 10/11/2026
 
 - Godot compilado em segundo plano (a compilação foi interrompida por um reinício e retomada; lição em `lessons.md`).
