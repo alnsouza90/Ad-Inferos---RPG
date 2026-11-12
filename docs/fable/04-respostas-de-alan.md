@@ -236,3 +236,13 @@ Aplicado em `biblia-de-arte.md` §10 e §10A (versão 0.3).
 ## 13. Etapa 4 (animação) · respostas de Alan (12/11/2026)
 
 Registradas com as consequências e as contas em `03-animacao.md` §14. Em resumo: bloco de peso no M2 (sim); inimigos com **quadros de ação gerados**, todas as poses para todos, e o motor fazendo efeitos e transição; intenção no corpo aprovada junto com as poses; **santos todos em vídeo** (custo estimado: cerca de 5.000 créditos para os 9 que faltam); deformações do motor "aos pulos" só nos inimigos; teste direto no APK, sem página.
+
+## 14. Luta, caminhada e Pouso · respostas de Alan (12/11/2026)
+
+| Assunto | Resposta |
+| --- | --- |
+| Luta em poses para santos e inimigos, com quadros do vídeo servindo de pose; caminhada fluida em vídeo | Pedido de Alan; detalhado em `03-animacao.md` §15 |
+| Parado dentro da luta | **Tudo em pose** |
+| Pouso: santos sentados em volta da fogueira, respirando e mexendo de leve | Pedido de Alan; `03-animacao.md` §16 |
+| As poses sentadas | **Não existem; precisam ser geradas** (prompts dos três santos do M2 em §16.2) |
+| Pouso com imagem e motor, ou vídeo | **Motor mexendo** |

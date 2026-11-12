@@ -382,3 +382,46 @@ Nada: continuam 3 clipes por santo. O vídeo de **ações** deixa de ser tocado 
 1. No parado da luta: opção A (tudo igual) ou B (santo fluido)?
 2. As poses sentadas do Pouso **já existem** ou ainda vão ser geradas? Eu não as vi.
 3. Pouso com imagem e motor, ou com vídeo?
+
+### 16.1 Decisões de Alan (12/11/2026)
+
+| Pergunta | Resposta |
+| --- | --- |
+| Parado dentro da luta | **Tudo em pose** (opção A): o parado do santo na luta são 2 ou 3 quadros do vídeo, seguros |
+| As poses sentadas do Pouso | **Não existem; precisam ser geradas** |
+| Pouso: imagem com motor ou vídeo | **Motor mexendo** |
+
+### 16.2 Prompts das poses sentadas (os três santos do M2)
+
+Mesmo formato de `prompts-saints.md`, com o bloco novo aprovado na Etapa 3. Diferença para a luta: aqui a luz vem **da frente** (o fogo), e as costas ficam no escuro.
+
+- Use o `body_idle` aprovado de cada santo como referência de personagem e a âncora de estilo como referência de estilo.
+- Gere todos **virados para a direita**; o motor espelha quem senta do outro lado do fogo.
+- Nome sugerido: `<id>_body_camp_v01`. Proporção 2:3; a figura sentada ocupa a metade de baixo do quadro, com o chão na mesma linha das outras poses.
+- Nada de fogueira na imagem: o fogo é uma peça à parte.
+
+**São Jorge**
+
+```text
+2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, entire figure fully inside the frame, Saint George as a young Roman military officer of the late 3rd century, beardless with short curly hair, bronze muscle cuirass with pteruges, red paludamentum cloak pooled on the ground around him, sitting on a low flat stone with one knee raised, forearms resting on the knee, long spear leaning against his shoulder, round shield bearing a cross laid on the ground beside him, head slightly bowed toward a fire in front of him, calm tired watchful expression, thick irregular black ink outlines, heavy black shadows engulfing the back half of the figure, angular blocky shading, muted desaturated colors with painterly flat fills, bone and ash grey, dark red only on the cloak, sparse black ink splatter on the figure only, no red splatter, no blood stains, warm amber firelight on the front of the figure from a low fire out of frame on the right, the back in deep shadow, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no fire, no text, facing right --ar 2:3 --no halo, gold, campfire, flames, blood on clothes, glowing eyes, standing, parchment background, vignette, cartoon, anime, smile, glossy, 3D, photorealistic, white background, facing left
+```
+
+**São Bento**
+
+```text
+2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, entire figure fully inside the frame, Saint Benedict of Nursia as an elderly abbot with a long white beard, black Benedictine habit with the hood down, sitting on a low flat stone with his back straight, an open book resting on his knees, both hands on the book, his crozier planted upright in the ground beside him, a raven perched on the top of the crozier, eyes lowered to the book, serene firm expression, thick irregular black ink outlines, heavy black shadows engulfing the back half of the figure, angular blocky shading, muted desaturated colors with painterly flat fills, bone and ash grey, sparse black ink splatter on the figure only, no red splatter, no blood stains, warm amber firelight on the front of the figure from a low fire out of frame on the right, the back in deep shadow, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no fire, no text, facing right --ar 2:3 --no halo, gold, campfire, flames, readable text, letters, blood on clothes, glowing eyes, standing, parchment background, vignette, cartoon, anime, smile, glossy, 3D, photorealistic, white background, facing left
+```
+
+**Santa Teresinha**
+
+```text
+2D gothic horror game character art in the style of Darkest Dungeon, hand-inked comic art, Mike Mignola influence, full body side view, entire figure fully inside the frame, Saint Therese of Lisieux as a young Carmelite nun with a gentle round face, brown habit, white mantle and black veil, sitting on the ground with her legs folded to one side and her habit spread around her, holding a crucifix wrapped in roses in her lap with both hands, a few rose petals on the ground beside her, looking toward a fire in front of her, simple confident peaceful expression, thick irregular black ink outlines, heavy black shadows engulfing the back half of the figure, angular blocky shading, muted desaturated colors with painterly flat fills, bone and ash grey, dark red only on the roses, sparse black ink splatter on the figure only, no red splatter, no blood stains, warm amber firelight on the front of the figure from a low fire out of frame on the right, the back in deep shadow, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal, no scenery, no fire, no text, facing right --ar 2:3 --no halo, gold, campfire, flames, blood on clothes, glowing eyes, standing, parchment background, vignette, cartoon, anime, glossy, 3D, photorealistic, white background, facing left
+```
+
+**A fogueira (peça à parte), 4 quadros numa folha**
+
+```text
+2D game sprite sheet, four frames in a single horizontal row, hand-inked comic art in the style of Darkest Dungeon, a small low campfire of a few crossed logs on a ring of stones, the flames drawn as flat warm amber shapes with thick irregular black ink outlines, each frame with the flames in a slightly different shape as in a hand-drawn loop, a few sparks, same logs and stones in every frame, same size and position in every frame, isolated on a plain flat solid light grey background --ar 4:1 --no gold, people, smoke cloud, glow, gradient, blur, text, 3D, photorealistic
+```
+
+A descrição de cada santo aqui repete só o que já está nos prompts do projeto (a folha de santos e o Prólogo). O que cada um segura e como senta é sugestão; ajuste à vontade.
