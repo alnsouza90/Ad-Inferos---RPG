@@ -6,6 +6,8 @@ Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. 
 
 ## Ordem de leitura
 
+**Comece por `00-rumo.md`:** a visão, o que fazer no M2, o que fica para o M3, as decisões pendentes e o plano para o agente de implementação. Os outros arquivos são o detalhe.
+
 | Arquivo | O que tem | Tempo |
 | --- | --- | --- |
 | `01-visao.md` | A tese: o que só este jogo faz, o que é forte e o que preocupa | 5 min |
