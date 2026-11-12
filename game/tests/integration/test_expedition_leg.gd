@@ -26,6 +26,8 @@ func _step(ctrl: ExpeditionController) -> void:
 	match ctrl.phase:
 		ExpeditionController.Phase.AT_FORK:
 			_ok(ctrl, ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
+		ExpeditionController.Phase.PENDING:
+			_ok(ctrl, ExpeditionCommand.engage_node())
 		ExpeditionController.Phase.IN_NODE:
 			_ok(ctrl, ExpeditionCommand.complete_node())
 		ExpeditionController.Phase.IN_EVENT:
@@ -48,6 +50,9 @@ func _go_to_battle(ctrl: ExpeditionController) -> void:
 	for i: int in 10:
 		if ctrl.phase == ExpeditionController.Phase.IN_BATTLE:
 			return
+		if ctrl.phase == ExpeditionController.Phase.PENDING:
+			_ok(ctrl, ExpeditionCommand.engage_node())
+			continue
 		if ctrl.phase == ExpeditionController.Phase.IN_NODE:
 			_ok(ctrl, ExpeditionCommand.complete_node())
 			continue

@@ -66,7 +66,7 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 | `node_relic` | Baú ou relicário fechado | Botão **Abrir**. Relíquia guardada (§3): os guardiões chegam e o combate começa; a relíquia vem depois da vitória |
 | `node_soul` | A alma parada no caminho | Botão **Falar** (abre o Encontro); não há como passar sem falar |
 
-   Começar o conteúdo é um comando registrado no log (`EngageNode`: combate, Entrar, Abrir, Falar), e Passar ao largo também (`PassBy`). Entre `ChoosePath` e esse comando, o nó fica **entrado, com conteúdo pendente**: o Lume já caiu, e o conteúdo e a semente do combate não mudam se o jogador andar, voltar ou fechar o app.
+   Começar o conteúdo é um comando registrado no log (`EngageNode`: combate, Entrar, Abrir, Falar), e Passar ao largo também (`PassBy`). No código, esse estado é a fase `PENDING` do controlador da expedição; as provisões de campo podem ser usadas nele (item 8). Saves da versão 1 (M1), em que `ChoosePath` já começava o conteúdo, são migrados para a versão 2 com um `EngageNode` depois de cada `ChoosePath` de nó com conteúdo (`save-load.md` §7, D-365). Entre `ChoosePath` e esse comando, o nó fica **entrado, com conteúdo pendente**: o Lume já caiu, e o conteúdo e a semente do combate não mudam se o jogador andar, voltar ou fechar o app.
 
 5. **Bifurcação no fim do corredor.** As **entradas** da próxima camada ficam espalhadas no trecho final: uma para cada nó ligado ao nó atual. O caminho que **segue reto** fica no fim do corredor; os **desvios** (porta, caverna, escada...) ficam nas paredes antes dele. Quando só há uma ligação, aparece só o caminho reto.
 6. **O que se vê de cada entrada.** O ícone e o nome do tipo de nó, sempre (§2.2); o conteúdo segue a regra do Portão e o Incenso.

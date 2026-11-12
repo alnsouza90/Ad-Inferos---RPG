@@ -6,7 +6,10 @@ Resumo curto de cada sessão. A mais recente no topo.
 
 - PR #60 (D-266) conferido (CI verde) e com merge, como Alan aprovou.
 - Feito: T58 · Passo 1 do rumo do Fable (só documentos): D-267 a D-300 e D-350 a D-362 (uma decisão por resposta de `docs/fable/04-respostas-de-alan.md`), D-363 (numeração única); `open-questions.md`; backlog do M2 com T58 a T62 e a ordem do rumo; specs de desolação, expedição, vila, combate, narrativa, IA e telas marcadas; `art-direction.md` aponta para a Bíblia de Arte.
-- Próximo: T37, depois do "Aprovado" de Alan.
+- Alan aprovou o PR #61 e pediu o GDD atualizado: GDD v1.2 (D-364, PR #62, com merge).
+- Godot: pypi bloqueado na sessão; SCons rodado do código clonado do GitHub (D-365, lição em `lessons.md`).
+- Feito: T37 · caminhada interativa (fase `PENDING`, `EngageNode`, `PassBy`, save versão 2, posição no corredor, corte seco), D-365.
+- Próximo: Alan testa a caminhada no celular; depois T59.
 
 ## Sessão 6 · 10/11/2026
 

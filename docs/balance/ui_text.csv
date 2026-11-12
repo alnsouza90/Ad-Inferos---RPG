@@ -130,6 +130,14 @@ minimap_gate,Portão
 minimap_camp,Pouso
 walk_hint_choose,Escolha o caminho.
 walk_hint_confirm,Toque de novo para seguir por aqui.
+walk_hint_walk,"Segure à direita para andar; à esquerda, para voltar."
+walk_enter,Entrar
+walk_pass_by,Passar ao largo
+walk_open,Abrir
+walk_talk,Falar
+walk_cost_light,Lume {amount}
+walk_cost_desolation,Desolação {amount}
+walk_cost_alms,Esmolas {amount}
 walk_content_hidden,Conteúdo oculto
 walk_content_enemies,{pool}: {enemies}
 walk_provisions,Provisões ({count})
@@ -143,6 +151,8 @@ walk_reason_needs_target,Escolha um santo
 walk_reason_nothing_to_reveal,Nada a revelar
 walk_reason_wrong_phase,Agora não
 walk_reason_not_an_entrance,Caminho fechado
+walk_reason_cannot_pass_by,Não dá para passar ao largo
+walk_reason_requirement_not_met,Falta o que é preciso
 walk_end_leg_complete,trecho concluído
 walk_end_defeated,derrota
 walk_end_retreated,retirada de emergência

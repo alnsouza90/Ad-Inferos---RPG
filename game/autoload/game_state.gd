@@ -6,12 +6,16 @@ extends Node
 var catalog: ExpeditionCatalog
 var expedition: ExpeditionController
 var campaign_seed: int = 0
+## Where the party stands in the corridor: {"node": id, "x": 0..1}
+## (save-load §3.1). Presentation only: outside the command log.
+var corridor_place: Dictionary = {}
 
 
 func start_expedition(p_catalog: ExpeditionCatalog, ctrl: ExpeditionController, p_seed: int) -> void:
 	catalog = p_catalog
 	expedition = ctrl
 	campaign_seed = p_seed
+	corridor_place = {}
 	save_now()
 
 
@@ -21,7 +25,9 @@ func continue_saved(p_catalog: ExpeditionCatalog) -> StringName:
 	var result: Dictionary = _service().call("load_expedition", p_catalog)
 	expedition = result["controller"]
 	if expedition != null:
-		campaign_seed = int((result["data"] as Dictionary).get("campaign", {}).get("seed", 0))
+		var data: Dictionary = result["data"]
+		campaign_seed = int(data.get("campaign", {}).get("seed", 0))
+		corridor_place = ExpeditionSave.corridor_place(data)
 	return result["status"]
 
 
@@ -38,7 +44,13 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 
 func save_now() -> void:
 	if expedition != null:
-		_service().call("save_expedition", expedition, campaign_seed)
+		_service().call("save_expedition", expedition, campaign_seed, corridor_place)
+
+
+## The party stopped walking: keep the place and save it (§3.1, §4).
+func keep_corridor_place(place: Dictionary) -> void:
+	corridor_place = place.duplicate()
+	save_now()
 
 
 func _notification(what: int) -> void:

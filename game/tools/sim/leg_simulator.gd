@@ -135,6 +135,8 @@ func _next(ctrl: ExpeditionController, policy: SimPolicy, rng: RngStream, path_p
 			if incense_policy == INCENSE_REVEAL and ctrl.field_provision_problem(&"incense") == &"":
 				return ExpeditionCommand.use_provision(&"incense")
 			return ExpeditionCommand.choose_path(_path(ctrl, rng, path_policy))
+		ExpeditionController.Phase.PENDING:
+			return ExpeditionCommand.engage_node()
 		ExpeditionController.Phase.IN_BATTLE:
 			if ctrl.battle.state.round_number > BattleSimulator.MAX_ROUNDS:
 				return ExpeditionCommand.battle(BattleCommand.retreat())

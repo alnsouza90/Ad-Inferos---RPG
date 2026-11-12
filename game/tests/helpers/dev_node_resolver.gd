@@ -24,6 +24,8 @@ static func resolve(ctrl: ExpeditionController, run: Callable) -> void:
 
 static func next_command(ctrl: ExpeditionController) -> ExpeditionCommand:
 	match ctrl.phase:
+		ExpeditionController.Phase.PENDING:
+			return ExpeditionCommand.engage_node()
 		ExpeditionController.Phase.IN_BATTLE:
 			return ExpeditionCommand.battle(battle_command(ctrl.battle))
 		ExpeditionController.Phase.IN_NODE:

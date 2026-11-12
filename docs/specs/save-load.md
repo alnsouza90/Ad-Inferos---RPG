@@ -75,7 +75,7 @@ Ao carregar, os comandos são reaplicados e o resultado precisa bater com `check
 }
 ```
 
-A partir do M2, o save guarda também a **posição da equipe no corredor** (`expedition.md` §2.3, regra 11) num bloco de apresentação, fora do log e fora da conferência do retrato: `"presentation": { "corridor_x": 0.42 }` (fração do corredor, de 0 a 1). Ela é gravada quando a equipe para de andar e nos salvamentos de §4; se faltar ou vier inválida, a equipe aparece no começo do corredor (ou diante do conteúdo pendente), sem contar como save corrompido.
+A partir do M2, o save guarda também a **posição da equipe no corredor** (`expedition.md` §2.3, regra 11) num bloco de apresentação, fora do log e fora da conferência do retrato: `"presentation": { "corridor_node": "l1_n2", "corridor_x": 0.42 }` (o nó do corredor e a fração do corredor, de 0 a 1; D-365). Uma posição de outro nó é ignorada. Ela é gravada quando a equipe para de andar e nos salvamentos de §4; se faltar ou vier inválida, a equipe aparece no começo do corredor (ou diante do conteúdo pendente), sem contar como save corrompido.
 
 ### 3.2 Combate em andamento
 
