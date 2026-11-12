@@ -71,3 +71,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Mecânica de desbloqueio para cada santo de expansões futuras (D-262) | Alan (design) | 11/11/2026 |
 | Qual edifício guarda as conquistas opcionais e a lista de conquistas (D-262) | Alan / M3 | 11/11/2026 |
 | Simulação das variantes do Lume (D-262) | T55 ou antes | 11/11/2026 |
+| Nove decisões da consultoria do Fable (origem das Esmolas, o que entra no M2, números das regras novas, variante do Lume, Moradas, Bíblia de Arte como direção oficial, créditos dos santos em vídeo, revisão teológica, números de Asmodeu/Minos/Vertigem): ver `docs/fable/00-rumo.md` §4 | Alan | 12/11/2026 |
+| Transcrever `docs/fable/04-respostas-de-alan.md` em `decisions.md` (Passo 1 do rumo) | Agente, próxima sessão | 12/11/2026 |
