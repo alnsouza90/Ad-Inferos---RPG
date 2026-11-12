@@ -33,6 +33,7 @@ const MOVE_BUTTON := Vector2(196, 72)
 const SAINTS_OPPONENT: StringName = &"elite_sin_vertigo"
 const ENEMIES_OPPONENT: StringName = &"saint_george"
 const MOVES: Array[StringName] = [&"idle", &"walk", &"attack", &"spell", &"blessing", &"defend", &"hit", &"fall"]
+const GESTURE_BUTTON := Vector2(250, 60)
 
 var data: GameData
 var character_ids: Array[StringName] = []
@@ -42,12 +43,15 @@ var speed: float = 1.0
 var actor: CombatantView
 var opponent: CombatantView
 var camera: ImpactCamera
+## T59 (D-358): one switch per gesture of the weight of the blow.
+var gestures: BlowGestures = BlowGestures.new()
 
 var _stage: Control
 var _field: Control
 var _flash: ColorRect
 var _dim: ColorRect
 var _char_buttons: Array[Button] = []
+var _gesture_buttons: Dictionary = {}
 var _halo_settings: HaloSettings
 
 
@@ -147,6 +151,14 @@ func dim_alpha() -> float:
 	return _dim.color.a if _dim != null else 0.0
 
 
+## Turns one gesture on or off; the next move shows the difference.
+func toggle_gesture(gesture: StringName) -> void:
+	gestures.toggle(gesture)
+	var button: Button = _gesture_buttons.get(gesture)
+	if button != null:
+		button.set_pressed_no_signal(gestures.is_on(gesture))
+
+
 func press_back() -> void:
 	back_requested.emit()
 
@@ -190,6 +202,7 @@ func _make_view(id: StringName) -> CombatantView:
 		return null
 	var saint: bool = is_saint_id(id)
 	var view := CombatantView.new()
+	view.gestures = gestures
 	view.setup(id, saint, VIEW_WIDTH, null, null, frames)
 	view.set_halo_settings(_halo_settings)
 	view.set_info_visible(false)
@@ -204,13 +217,18 @@ func _make_view(id: StringName) -> CombatantView:
 
 func _on_impact(at: Vector2, strength: float, kind: StringName) -> void:
 	if kind == &"physical":
-		camera.blow(at, speed, BLOW_HOLD / speed if speed > 0.0 else 0.0)
+		camera.blow(at, speed, BLOW_HOLD / speed if speed > 0.0 else 0.0, actor.blow_push(), actor.blow_shake())
 	else:
 		camera.punch(at, speed, strength)
 	if opponent == null:
 		return
 	if kind == &"outline":
 		opponent.play_spirit_hit()
+		return
+	# The target reacts when the freeze of the blow ends (gesture 1).
+	var freeze: float = actor.blow_freeze() if kind == &"physical" else 0.0
+	if freeze > 0.0 and is_inside_tree():
+		get_tree().create_timer(freeze).timeout.connect(opponent.play_hit)
 	else:
 		opponent.play_hit()
 
@@ -287,6 +305,19 @@ func _build() -> void:
 		var button := _button(data.ui.text(StringName("anim_%s" % move)), MOVE_BUTTON)
 		button.pressed.connect(func() -> void: play(move))
 		moves.add_child(button)
+	var switches := HBoxContainer.new()
+	switches.alignment = BoxContainer.ALIGNMENT_CENTER
+	switches.add_theme_constant_override("separation", 10)
+	switches.position = Vector2(0, 80)
+	switches.custom_minimum_size = Vector2(STAGE_SIZE.x, 0)
+	_stage.add_child(switches)
+	for gesture: StringName in BlowGestures.ALL:
+		var button := _button(data.ui.text(StringName("anim_gesture_%s" % gesture)), GESTURE_BUTTON)
+		button.toggle_mode = true
+		button.button_pressed = gestures.is_on(gesture)
+		button.toggled.connect(func(_on: bool) -> void: toggle_gesture(gesture))
+		switches.add_child(button)
+		_gesture_buttons[gesture] = button
 	var back := _button(data.ui.text(&"back_to_arena"), MOVE_BUTTON)
 	back.pressed.connect(press_back)
 	moves.add_child(back)

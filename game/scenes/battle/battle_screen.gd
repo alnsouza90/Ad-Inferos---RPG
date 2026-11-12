@@ -576,12 +576,14 @@ func _reach(actor: CombatantView, target: CombatantView) -> float:
 	return maxf(0.0, distance / view_scale)
 
 
-func _on_impact(at: Vector2, strength: float, kind: StringName) -> void:
+func _on_impact(at: Vector2, strength: float, kind: StringName, attacker: CombatantView = null) -> void:
 	var factor: float = SPEEDS[speed_index]
 	if factor <= 0.0 or _camera == null:
 		return
 	if kind == &"physical":
-		_camera.blow(at, factor, BLOW_HOLD / factor)
+		var push: Vector2 = attacker.blow_push() if attacker != null else Vector2.ZERO
+		var shake: float = attacker.blow_shake() if attacker != null else 1.0
+		_camera.blow(at, factor, BLOW_HOLD / factor, push, shake)
 	else:
 		_camera.punch(at, factor, strength)
 
@@ -919,7 +921,7 @@ func _ensure_view(c: Combatant) -> CombatantView:
 	view.speed = SPEEDS[speed_index]
 	view.scale = Vector2.ONE * view_scale()
 	view.tapped.connect(tap)
-	view.impact.connect(_on_impact)
+	view.impact.connect(_on_impact.bind(view))
 	_fighters.add_child(view)
 	_views[c.id] = view
 	var badge := CombatantBadge.new()

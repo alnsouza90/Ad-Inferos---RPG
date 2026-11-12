@@ -107,4 +107,5 @@ display_scale = 1
 attack_style = &"ranged"
 spell_style = &"outline"
 blessing_style = &"ring"
+weight = &"medium"
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_windup"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_hit"), SubResource("clip_fall")])
