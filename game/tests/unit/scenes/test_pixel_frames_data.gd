@@ -75,9 +75,10 @@ func test_benedict_has_his_approved_clips() -> void:
 	assert_gte(frames.clip(&"strike").impact_frame, 0)
 
 
-func test_therese_is_smaller_than_the_men() -> void:
-	# D-259, D-368: the women are smaller, by the engine.
-	assert_lt(_frames("saint_therese").display_scale, _frames("saint_george").display_scale)
+func test_the_women_have_the_same_size_as_the_men_for_now() -> void:
+	# D-376: Teresinha and the other women at the size of the saints, for
+	# now (an engine scale would break the pixel grid, ADR-0013).
+	assert_eq(_frames("saint_therese").display_scale, _frames("saint_george").display_scale)
 
 
 func test_the_elites_and_the_boss_fight_with_their_clips() -> void:
