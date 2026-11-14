@@ -6,9 +6,12 @@ O que aprendi lendo a documentação da ferramenta, a ajuda embutida dela e gera
 
 ## 1. Acesso
 
-- Servidor para agentes: `https://api.pixellab.ai/mcp` (HTTP), com `Authorization: Bearer <chave>`. A mesma chave serve à API em `https://api.pixellab.ai/v2`.
-- **A chave não entra no repositório nem em documento.** Guarde como segredo do ambiente (por exemplo `PIXELLAB_API_KEY`) e leia de lá. A chave usada no piloto ficou escrita no chat: **peça a Alan que gere outra** em pixellab.ai/account.
-- Saldo: ferramenta `get_balance`. Galeria de Alan: `list_images` e `get_image("gallery:<id>")`.
+- **A chave está guardada no ambiente das sessões** (segredo de rede para `api.pixellab.ai`, salvo por Alan em 14/11/2026, D-273). O intermediário de rede da sessão põe a chave sozinho em todo pedido a esse endereço. **Você nunca vê nem escreve a chave**, e ela não fica no repositório, que é público.
+- Como chamar: mande o pedido normalmente, com um valor de enfeite no cabeçalho. Exemplo que funcionou: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance`.
+- Não existe variável de ambiente com a chave. Se um programa exigir uma, dê a ela o valor `proxy-injected` só naquele comando.
+- Vale para toda sessão que rodar no **mesmo ambiente** ("Padrão"). Numa sessão de outro ambiente, peça a chave de novo pelo formulário seguro (nunca pelo chat).
+- Dois caminhos de uso: a API em `https://api.pixellab.ai/v2` e o servidor para agentes em `https://api.pixellab.ai/mcp` (HTTP, mesmas ferramentas). No piloto, as chamadas foram feitas por programa direto ao servidor de agentes (`tools/call`), sem instalar nada.
+- Saldo: `get_balance`. Galeria de Alan: `list_images` e `get_image("gallery:<id>")`.
 - Todo resultado tem um endereço de baixar **sem senha**: `https://api.pixellab.ai/mcp/images/<job>/download` (com `?index=N` para o quadro N de uma animação). Sem o índice vem só o primeiro quadro.
 - Referência completa de uma ferramenta, grátis: `search_help(tool="<nome>")`. Dúvida em texto: `search_help(question="...")`.
 
