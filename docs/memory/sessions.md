@@ -49,3 +49,11 @@ Resumo curto de cada sessão. A mais recente no topo.
 - Feitas as tarefas T00 a T14 do M0 (PRs #1 a #14), mais o documento de continuidade (PR #15) e a arte do piloto de São Jorge com o ADR-0007 decidido (PR #16).
 - Decisões de Alan: D-001 a D-008, D-101 a D-113 e D-201 (`decisions.md`).
 - Estado ao fim: 249 testes passando; simulador com 7 de 9 metas; próxima tarefa é a T15 (tela de combate), numa sessão nova.
+
+## Consultoria de direção (11 a 14/11/2026)
+
+- Consultor convidado (Fable), só documentos, tudo em `docs/fable/`. Nenhum código, dado ou teste alterado.
+- Etapas: primeira análise e propostas; game design (G-1 a G-7 e cortes); arte e Bíblia de Arte; animação; rumo final (`00-rumo.md`).
+- Mudança de rumo no fim: **arte em pixel pelo PixelLab** (D-271). Piloto gerado e aprovado em parte (D-272); guia e plano em `guia-pixellab.md` e `06-rumo-pixel.md`.
+- Decisões de Alan: D-264 a D-273. Gasto no PixelLab até o fim da sessão: ver `06-rumo-pixel.md` §2.
+- Próxima sessão (agente de implementação): passo 1 de `06-rumo-pixel.md` §4.

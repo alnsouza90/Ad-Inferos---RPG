@@ -66,8 +66,19 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto | T36/T52 | 10/11/2026 |
 | Arquivos do Drive sem nome descritivo (bosses 5, saints 3, portraits 3, ui/icons 30, vfx 3, props 2, raiz de circle_02): identificar com Alan e renomear ao trazer para o repositório (`drive-inventory.md`) | Tarefa de cada arte | 10/11/2026 |
 | Almas, relicário, redemoinhos do Vendaval e faixa de névoa: pedir a Alan na T39/T53 (ele sobe ao Drive ou manda pelo chat, D-246) | Alan / T39, T53 | 10/11/2026 |
-| Tentação: trocar "o santo peca e perde o controle" por assédio dos inimigos (condições visíveis aplicadas de fora) ou manter só como evento do Peregrino (`analise-referencias-dd.md` §G.1) | Alan | 11/11/2026 |
-| Ordem da abertura: abertura → título → Prólogo na primeira vez? (`analise-referencias-dd.md` §G.11) | Alan | 11/11/2026 |
-| Mecânica de desbloqueio para cada santo de expansões futuras (D-262) | Alan (design) | 11/11/2026 |
-| Qual edifício guarda as conquistas opcionais e a lista de conquistas (D-262) | Alan / M3 | 11/11/2026 |
+| ~~Tentação: assédio dos inimigos ou só evento do Peregrino~~ Assédio como a Provação do Círculo; a tenda não muda (D-265) | — | 11/11/2026 |
+| Ordem da abertura: a tela de entrada com a lanterna convive com a abertura pelo Mapa do Inferno (D-268); falta a ordem exata | Alan | 11/11/2026 |
+| ~~Mecânica de desbloqueio dos santos de expansão~~ Pela Obra de Misericórdia ligada à vida de cada um (D-265); falta Alan escolher os pares | Alan | 11/11/2026 |
+| ~~Edifício e lista das conquistas opcionais~~ Livro das Obras na Biblioteca, com as 14 Obras de Misericórdia (D-265) | — | 11/11/2026 |
 | Simulação das variantes do Lume (D-262) | T55 ou antes | 11/11/2026 |
+| Origem das Esmolas: confirmar a restituição (Alan respondeu "a" a opções numeradas, D-266) | Alan | 14/11/2026 |
+| Reescrever `docs/backlog/m2.md` com o rumo novo (`docs/fable/06-rumo-pixel.md` §4 e `00-rumo.md` §5) | Agente | 14/11/2026 |
+| ADR da apresentação em pixel art: tela interna de 960 × 540, ampliação inteira, paleta única, quadros do PixelLab (D-271) | Agente, com aprovação de Alan | 14/11/2026 |
+| Rodada de simulação das regras novas: desolação por rodadas, Interceder, Fidelidade, preparo do teste de Fé, Consolação dada, variantes do Lume (D-265, D-267) | T55 ou antes | 14/11/2026 |
+| Fundo de 960 de largura: o PixelLab gera no máximo 688 × 384; decidir entre dois painéis emendados ou peças soltas montadas pelo motor | Alan / agente | 14/11/2026 |
+| Chefes maiores que 256 pixels (limite da animação): por partes ou ampliados | Alan, em Asmodeu | 14/11/2026 |
+| Fonte retrô (D-271): escolher a fonte de pixel, com acentos do português e licença livre | Agente propõe; Alan aprova | 14/11/2026 |
+| Moradas: 7 bônus pequenos ou 3 marcos visíveis (`docs/fable/00-rumo.md` §4) | Alan, antes do Carmelo | 14/11/2026 |
+| Revisão teológica de Súplica, Domínio, penitências e origem das Esmolas, antes dos textos do M3 | Alan | 14/11/2026 |
+| `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-271; só mudam com pedido de Alan | Alan | 14/11/2026 |
+| Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348) | Ferramenta de entrada dos quadros | 14/11/2026 |
