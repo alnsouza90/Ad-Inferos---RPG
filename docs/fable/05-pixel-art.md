@@ -264,3 +264,29 @@ Para o agente de implementação registrar, se você seguir adiante:
 - Parâmetros de personagem (página de terceiros, não oficial): [skillsmp.com](https://skillsmp.com/skills/pmarashian-cursor-agent-skills-pixellab-mcp-skill-md)
 
 As páginas se contradizem sobre o tamanho máximo da animação por esqueleto (128 ou 256) e não deixam claro o tamanho máximo de imagem. Não achei descrição de um sistema de créditos; os preços aparecem como estimativa em dólar por chamada.
+
+---
+
+## 10. Piloto: o que há na galeria de Alan no PixelLab (14/11/2026)
+
+A conta passou a "Tier 1: Pixel Apprentice", com 2.000 gerações. A galeria do Creator tem 7 itens (folha em `previas/pixellab_galeria_alan.png`). Medidas feitas por programa.
+
+| Item | O que é | Medidas | Serve? |
+| --- | --- | --- | --- |
+| Jorge parado | 256 × 256, figura de 230 de altura | 54 cores, grade real, sem meio-tom | **Sim**, como base |
+| Teresinha parada | 256 × 256, figura de 233 | 46 cores, grade real | **Sim**; poucos pixels de pétala soltos perto da mão |
+| Jorge, ações (9 quadros) | Guarda, lança em pé, preparar, golpe (2), volta (2), defesa, joelho | Alturas de 135 a 238 | **Em parte.** Preparar, defesa e joelho são boas poses. No golpe, **o escudo some** |
+| Jorge, parado animado (9) | Respiração | De 39% a 68% dos pixels mudam de um quadro para o outro | Personagem estável, mas a textura "ferve" |
+| Jorge, andar (9) | Passo curto, quase no lugar | De 48% a 82% | Para testar em movimento |
+| Teresinha, parada animada (9) | Respiração | De 19% a 40% | **A melhor das cinco** |
+| Teresinha, andar (9) | O hábito se move | De 43% a 53% | Boa |
+
+**Três conclusões:**
+
+1. **O personagem continua o mesmo de um quadro para o outro.** Era o primeiro critério do piloto, e passa.
+2. **A textura muda muito entre quadros**, mesmo no parado. Em movimento isso pode parecer "fervura". A decisão já tomada de **luta em poses seguras** (2 ou 3 quadros parados) esconde o problema na luta; na caminhada, o movimento disfarça. Precisa ser visto no aparelho.
+3. **O tamanho é outro.** Estas figuras têm 230 pixels, o dobro dos 112 que eu propus no §3. Para usá-las como estão, a tela interna passa a ser **960 × 540, ampliada 2 vezes**, e não 640 × 360. Fica mais detalhe (o que agradou a Alan) e pixels menores na tela do celular. O limite de 256 da animação ainda cabe.
+
+**Custos medidos nas descrições das ferramentas:** imagem simples, 1 geração; imagem a partir de um estilo, de 10 a 25 por chamada (vem um conjunto de candidatos); animação por texto, de 1 a 3; tirar fundo e reduzir cores, 1 cada. O piloto inteiro deve ficar abaixo de 200 das 2.000 gerações.
+
+**Regra combinada com Alan:** nenhuma peça é gerada sem a aprovação dele, uma por uma.
