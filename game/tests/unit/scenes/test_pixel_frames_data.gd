@@ -6,7 +6,8 @@ const DIR: String = "res://scenes/battle/combatants/pixel"
 const SUFFIX: String = "_frames.tres"
 const FRAME: int = 256
 const PILOT: Array[String] = [
-	"enemy_mud_devil", "enemy_shade_of_desire", "saint_benedict", "saint_george", "saint_therese",
+	"boss_asmodeus", "elite_minos", "elite_sin_vertigo", "enemy_mud_devil", "enemy_shade_of_desire",
+	"saint_benedict", "saint_george", "saint_therese",
 ]
 
 
@@ -77,3 +78,15 @@ func test_benedict_has_his_approved_clips() -> void:
 func test_therese_is_smaller_than_the_men() -> void:
 	# D-259, D-368: the women are smaller, by the engine.
 	assert_lt(_frames("saint_therese").display_scale, _frames("saint_george").display_scale)
+
+
+func test_the_elites_and_the_boss_fight_with_their_clips() -> void:
+	# Alan's PixelLab clips (D-374): each blow has its moment of impact.
+	for id: String in ["boss_asmodeus", "elite_minos", "elite_sin_vertigo"]:
+		var frames: CharacterFrames = _frames(id)
+		for clip_id: StringName in [&"idle", &"windup", &"strike"]:
+			assert_true(frames.has_clip(clip_id), "%s tem %s" % [id, clip_id])
+		assert_between(frames.clip(&"strike").impact_frame, 0, frames.clip(&"strike").count - 1, id)
+	# Minos never rises from the throne (D-219); Vertigo's veils reach far (D-240).
+	assert_eq(_frames("elite_minos").attack_style, &"throne")
+	assert_eq(_frames("elite_sin_vertigo").attack_style, &"ranged")

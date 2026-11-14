@@ -25,6 +25,6 @@ attack_style = &"melee"
 spell_style = &"crosses"
 blessing_style = &"petals"
 weight = &"light"
-halo_center = Vector2(118, 34)
+halo_center = Vector2(125, 34)
 halo_diameter = 44
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])
