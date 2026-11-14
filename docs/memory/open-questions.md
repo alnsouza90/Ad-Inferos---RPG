@@ -82,3 +82,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Revisão teológica de Súplica, Domínio, penitências e origem das Esmolas, antes dos textos do M3 | Alan | 14/11/2026 |
 | `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-271; só mudam com pedido de Alan | Alan | 14/11/2026 |
 | Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348) | Ferramenta de entrada dos quadros | 14/11/2026 |
+| Chave do PixelLab salva como segredo do ambiente (D-273), mas o valor salvo é recusado ("Invalid API token"); Alan corrige nas configurações do ambiente. Teste: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance` deve devolver o saldo | Alan | 14/11/2026 |

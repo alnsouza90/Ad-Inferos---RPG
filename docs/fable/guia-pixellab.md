@@ -7,7 +7,8 @@ O que aprendi lendo a documentação da ferramenta, a ajuda embutida dela e gera
 ## 1. Acesso
 
 - **A chave está guardada no ambiente das sessões** (segredo de rede para `api.pixellab.ai`, salvo por Alan em 14/11/2026, D-273). O intermediário de rede da sessão põe a chave sozinho em todo pedido a esse endereço. **Você nunca vê nem escreve a chave**, e ela não fica no repositório, que é público.
-- Como chamar: mande o pedido normalmente, com um valor de enfeite no cabeçalho. Exemplo que funcionou: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance`.
+- Como chamar: mande o pedido normalmente, com um valor de enfeite no cabeçalho: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance`.
+- **Atenção (14/11/2026): ainda não funcionou.** Depois de salvo o segredo, todo pedido a `api.pixellab.ai` voltou "Invalid API token", inclusive com a chave antiga escrita à mão. O intermediário passou a trocar o cabeçalho pelo valor salvo, então **o valor salvo está errado** (chave digitada com erro, com a palavra "Bearer" repetida, ou uma chave já trocada). Alan precisa corrigir o segredo nas configurações do ambiente. **Primeiro teste de toda sessão:** o comando acima tem de devolver o saldo.
 - Não existe variável de ambiente com a chave. Se um programa exigir uma, dê a ela o valor `proxy-injected` só naquele comando.
 - Vale para toda sessão que rodar no **mesmo ambiente** ("Padrão"). Numa sessão de outro ambiente, peça a chave de novo pelo formulário seguro (nunca pelo chat).
 - Dois caminhos de uso: a API em `https://api.pixellab.ai/v2` e o servidor para agentes em `https://api.pixellab.ai/mcp` (HTTP, mesmas ferramentas). No piloto, as chamadas foram feitas por programa direto ao servidor de agentes (`tools/call`), sem instalar nada.
