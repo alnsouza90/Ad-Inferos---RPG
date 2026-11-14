@@ -85,3 +85,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~O GDD ainda descreve o que mudou: atualizar ou deixar as specs valerem?~~ Atualizar: GDD v1.2 (D-364), 12/11/2026 | — | 12/11/2026 |
 | Arte para o M2 vinda da consultoria: poses sentadas dos 3 santos e a fogueira (prompts em `docs/fable/03-animacao.md` §16.2, D-361); 35 poses de ação dos 7 inimigos (D-354); peças da interface "capela às escuras", 10 ícones de ação e 3 peças da auréola (`biblia-de-arte.md` §13, lotes 1 a 3) | Alan (T44, T52, T53) | 12/11/2026 |
 | Santo piloto em vídeo (Santo Antão, cerca de 450 créditos no Wan 3; saldo atual 10) no começo do M3 (D-266 (7), D-356) | Alan (M3) | 12/11/2026 |
+| Fundo de 960 de largura: o PixelLab gera no máximo 688 × 384; dois painéis emendados ou peças soltas montadas pelo motor (D-367) | Alan, na T65 | 14/11/2026 |
+| Chefes maiores que 256 pixels (limite da animação no PixelLab): por partes ou ampliados (D-367) | Alan, em Asmodeu | 14/11/2026 |
+| Fonte retrô (D-367): escolher a fonte de pixel, com acentos do português e licença livre | Agente propõe na T65; Alan aprova | 14/11/2026 |
+| `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-367; só mudam com pedido de Alan | Alan | 14/11/2026 |
+| Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348; os três santos já medidos em `docs/fable/06-rumo-pixel.md` §9) | T64 | 14/11/2026 |
