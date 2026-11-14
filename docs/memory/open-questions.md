@@ -90,3 +90,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Fonte retrô (D-367): escolher a fonte de pixel, com acentos do português e licença livre | Agente propõe na T65; Alan aprova | 14/11/2026 |
 | `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-367; só mudam com pedido de Alan | Alan | 14/11/2026 |
 | Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348; os três santos já medidos em `docs/fable/06-rumo-pixel.md` §9) | T64 | 14/11/2026 |
+| Escala de exibição em pixel: Teresinha a 0,93 (D-368) e qualquer chefe ampliado deixam os pixels de tamanhos diferentes; na T65, propor a Alan gerar Teresinha numa tela menor (`guia-pixellab.md`, lote 2, item 3) e o chefe por partes ou 2× inteiro | Alan, na T65 | 14/11/2026 |
+| Asmodeu sem clipe de sopro em pixel: a magia dele usa a luz genérica (`orb`) até Alan gerar o sopro | Alan (arte) | 14/11/2026 |
+| Minos sem clipe de queda em pixel: usa o desvanecer do motor | Alan (arte) | 14/11/2026 |
