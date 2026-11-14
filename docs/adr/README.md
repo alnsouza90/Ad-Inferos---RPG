@@ -15,3 +15,5 @@ Uma página por decisão técnica relevante. Novas decisões recebem o próximo 
 | 0009 | [Código em inglês, jogo em português](0009-idiomas.md) | Aceita |
 | 0010 | [Textos da interface em `ui_text.csv`](0010-textos-da-interface.md) | Aceita |
 | 0011 | [Tratamento de arte com Python e Pillow](0011-ferramenta-de-arte-em-python.md) | Aceita |
+| 0012 | [Eventos em YAML simples](0012-eventos-em-yaml-simples.md) | Aceita |
+| 0013 | [Apresentação em pixel art](0013-apresentacao-em-pixel-art.md) | Proposta (T63, D-367) |
