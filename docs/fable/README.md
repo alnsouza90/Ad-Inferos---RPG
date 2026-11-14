@@ -6,6 +6,8 @@ Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. 
 
 ## Ordem de leitura
 
+**Mudança de rumo na arte (14/11/2026):** Alan decidiu trocar toda a arte por pixel art gerada no PixelLab. Quem implementa começa por **`06-rumo-pixel.md`** e **`guia-pixellab.md`**; as peças do piloto estão em `piloto-pixel/`. O rumo de design abaixo continua valendo.
+
 **Comece por `00-rumo.md`:** a visão, o que fazer no M2, o que fica para o M3, as decisões pendentes e o plano para o agente de implementação. Os outros arquivos são o detalhe.
 
 | Arquivo | O que tem | Tempo |
