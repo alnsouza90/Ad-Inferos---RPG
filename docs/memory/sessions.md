@@ -2,6 +2,17 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
+## Sessão 8 · 12/11/2026
+
+- PR #60 (D-266) conferido (CI verde) e com merge, como Alan aprovou.
+- Feito: T58 · Passo 1 do rumo do Fable (só documentos): D-267 a D-300 e D-350 a D-362 (uma decisão por resposta de `docs/fable/04-respostas-de-alan.md`), D-363 (numeração única); `open-questions.md`; backlog do M2 com T58 a T62 e a ordem do rumo; specs de desolação, expedição, vila, combate, narrativa, IA e telas marcadas; `art-direction.md` aponta para a Bíblia de Arte.
+- Alan aprovou o PR #61 e pediu o GDD atualizado: GDD v1.2 (D-364, PR #62, com merge).
+- Godot: pypi bloqueado na sessão; SCons rodado do código clonado do GitHub (D-365, lição em `lessons.md`).
+- Feito: T37 · caminhada interativa (fase `PENDING`, `EngageNode`, `PassBy`, save versão 2, posição no corredor, corte seco), D-365.
+- Alan aprovou a T37 (PR #63, com merge).
+- Feito: T59 · peso do golpe (seis gestos com interruptores, quatro pesos), D-366.
+- Próximo: Alan testa os gestos no APK; depois T60.
+
 ## Sessão 6 · 10/11/2026
 
 - Godot compilado em segundo plano (a compilação foi interrompida por um reinício e retomada; lição em `lessons.md`).
@@ -54,6 +65,6 @@ Resumo curto de cada sessão. A mais recente no topo.
 
 - Consultor convidado (Fable), só documentos, tudo em `docs/fable/`. Nenhum código, dado ou teste alterado.
 - Etapas: primeira análise e propostas; game design (G-1 a G-7 e cortes); arte e Bíblia de Arte; animação; rumo final (`00-rumo.md`).
-- Mudança de rumo no fim: **arte em pixel pelo PixelLab** (D-271). Piloto gerado e aprovado em parte (D-272); guia e plano em `guia-pixellab.md` e `06-rumo-pixel.md`.
-- Decisões de Alan: D-264 a D-273. Gasto no PixelLab até o fim da sessão: ver `06-rumo-pixel.md` §2.
-- Próxima sessão (agente de implementação): passo 1 de `06-rumo-pixel.md` §4.
+- Mudança de rumo no fim: **arte em pixel pelo PixelLab** (D-367). Piloto gerado e aprovado (D-368); guia e plano em `guia-pixellab.md` e `06-rumo-pixel.md`.
+- Decisões de Alan: D-367 a D-369 (as anteriores já estavam em D-264 a D-300 e D-350 a D-362); encaixe na `main`: D-370. Gasto no PixelLab até o fim da sessão: ver `06-rumo-pixel.md` §2.
+- Próxima sessão (agente de implementação): merge da T59, depois T63, T64, T65 e T60 (`backlog/m2.md`).

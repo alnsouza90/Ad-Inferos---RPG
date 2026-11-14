@@ -82,9 +82,10 @@ func test_provision_not_carried_is_refused() -> void:
 	assert_eq(ctrl.execute(ExpeditionCommand.use_provision(&"candle")), FieldProvisions.REJECT_NOT_CARRIED)
 
 
-func test_field_provisions_only_at_a_bifurcation() -> void:
+func test_field_provisions_only_in_the_corridor() -> void:
 	var ctrl := _new()
 	ctrl.execute(ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
+	ctrl.execute(ExpeditionCommand.engage_node())
 	assert_eq(ctrl.execute(ExpeditionCommand.use_provision(&"candle")), ExpeditionController.REJECT_WRONG_PHASE)
 
 

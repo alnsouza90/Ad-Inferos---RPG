@@ -10,7 +10,7 @@ extends RefCounted
 const GAME_VERSION_SETTING: String = "application/config/version"
 
 
-static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: StringName = &"expedition") -> Dictionary:
+static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: StringName = &"expedition", corridor_place: Dictionary = {}) -> Dictionary:
 	var snap: Dictionary = ctrl.snapshot()
 	return {
 		"save_version": SaveMigrations.CURRENT_VERSION,
@@ -25,7 +25,21 @@ static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: St
 		},
 		"battle": {"in_progress": ctrl.phase == ExpeditionController.Phase.IN_BATTLE},
 		"scene": {"kind": String(scene_kind), "id": String(ctrl.state.current_node)},
+		# Presentation (save-load §3.1): outside the log and the check.
+		"presentation": {"corridor_node": str(corridor_place.get("node", "")), "corridor_x": float(corridor_place.get("x", 0.0))},
 	}
+
+
+## The corridor place kept in a save, or {} when missing or invalid (then
+## the party appears at the start or before pending content, §3.1).
+static func corridor_place(data: Dictionary) -> Dictionary:
+	var p: Variant = data.get("presentation")
+	if not p is Dictionary:
+		return {}
+	var x: Variant = (p as Dictionary).get("corridor_x")
+	if not (x is float or x is int) or float(x) < 0.0 or float(x) > 1.0:
+		return {}
+	return {"node": str((p as Dictionary).get("corridor_node", "")), "x": float(x)}
 
 
 ## Rebuilds the controller, or null if the save does not replay exactly.

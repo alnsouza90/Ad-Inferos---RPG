@@ -2,7 +2,7 @@
 
 Versão 1.0 · 14/11/2026 · consultor convidado · **para o agente que implementa (Opus 5.5) e para Alan**
 
-**Decisão de Alan (14/11/2026, no chat):** toda a arte do jogo passa a ser **pixel art gerada no PixelLab**. Motivo dado por ele: "fica muito mais simples". Esta decisão ainda **não está** em `docs/memory/decisions.md`; registrar é o passo 1 abaixo.
+**Decisão de Alan (14/11/2026, no chat):** toda a arte do jogo passa a ser **pixel art gerada no PixelLab**. Motivo dado por ele: "fica muito mais simples". Registrada em `docs/memory/decisions.md` como **D-367 a D-369** (encaixe na `main`: D-370). O passo 1 abaixo já foi feito; o backlog ganhou as tarefas T63 a T65 antes da T60.
 
 Leia junto: `guia-pixellab.md` (como gerar), `05-pixel-art.md` (análise e impacto), `prompts-pixel-m2.md` (descrições de cada peça), `00-rumo.md` (o rumo de design, que **continua valendo**), `04-respostas-de-alan.md` (tudo o que Alan aprovou).
 
@@ -139,6 +139,6 @@ Pedido por Alan: refazer as ações em clipes curtos, tentar de novo a interface
 
 1. **A interface sai certa quando é pedida como folha de peças**, com cada peça descrita e a lista de proibições (sem texto, sem figuras). Receita em `guia-pixellab.md` §7.
 2. **O arco branco aparece nos quadros de movimento rápido**, mesmo proibido no texto. Como a luta usa poses seguras, aproveita-se o **último quadro** de cada clipe. O arco é branco puro, cor que não existe na paleta: dá para apagá-lo por programa.
-3. **Pedir "menor" no texto não muda a altura.** A ferramenta mantém a escala da imagem de estilo. Para a regra das mulheres menores (D-259, D-271), o caminho a testar é gerar numa **tela menor** (por exemplo 236 × 236) e centralizar na de 256.
+3. **Pedir "menor" no texto não muda a altura.** A ferramenta mantém a escala da imagem de estilo. Para a regra das mulheres menores (D-259, D-367), o caminho a testar é gerar numa **tela menor** (por exemplo 236 × 236) e centralizar na de 256.
 4. **O golpe recebido** pode dispensar pose própria: o recuo é do motor (o "peso do golpe"). Fica a decidir com Alan.
 5. **Ponto da auréola por santo** (em pixels, a partir do canto de cima à esquerda da figura recortada): Teresinha (48, 22), Bento (62, 26), Jorge (84, 22); raio 22. Cada personagem novo precisa dessa medida.

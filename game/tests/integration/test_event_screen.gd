@@ -34,6 +34,8 @@ func _at_temptation(seed: int) -> ExpeditionController:
 			if n.type == MapNode.TYPE_TEMPTATION:
 				pick = n
 		assert_eq(c.execute(ExpeditionCommand.choose_path(pick.id)), &"")
+		if c.phase == ExpeditionController.Phase.PENDING and pick.type == MapNode.TYPE_TEMPTATION:
+			assert_eq(c.execute(ExpeditionCommand.engage_node()), &"")
 	return c if c.phase == ExpeditionController.Phase.IN_EVENT else null
 
 

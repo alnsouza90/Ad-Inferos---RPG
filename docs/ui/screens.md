@@ -26,6 +26,12 @@ Vila ─┬─ Planejar a semana ─► Mapa da expedição ─┬─ Combate �
 Qualquer tela ─► Pausa (Opções, Salvar e sair)
 ```
 
+**Abertura e entrada (D-266, D-300):** na primeira vez, a ordem é **abertura → título → Prólogo**. A abertura é a descida pelo Mapa do Inferno até o Portão, com a inscrição (Dante, *Inf.* III, 9, com a origem), mostrada só na primeira vez e que se pula com um toque (`docs/design/analise-referencias-dd.md` §2.2). O título é a **tela de entrada com a lanterna** (tela preta, lanterna apagada; começar é acender a lanterna, que revela o título e a Porta; `docs/fable/biblia-de-arte.md` §10), e convive com essa abertura. As duas ficam para o M3; o M2 mantém o título atual.
+
+**Mapa do Inferno (D-208, D-276):** nove janelas numa fila que desce; a lanterna marca o círculo da companhia e a **luz pálida** da alma do Peregrino fica um círculo à frente, descendo mais um quando o chefe cai.
+
+**Interface (D-293, D-295, D-297, D-298):** a Bíblia de Arte (`docs/fable/biblia-de-arte.md` §7 a §9) é a direção oficial (D-266 (6)). Regras que valem para todas as telas: seleção em osso, nunca ouro; vermelho só para ataque inimigo, dano e vida; ouro só para a graça; tudo que tem ícone abre detalhe ao primeiro toque; o **alforje** de provisões fica sempre à vista na luta, na caminhada e no Pouso. A aplicação no combate é a T44 (`docs/backlog/m2.md`).
+
 No M0 só existem: **Abertura → Arena de teste → Combate → Resultado**, com um seletor de encontro e semente.
 
 No M1 (protótipo de trecho):
@@ -87,8 +93,8 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121; caminhada interativa do M2:
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Andar:** segurar o dedo na metade direita do corredor anda para a frente; na esquerda, para trás; soltar para (D-178). A câmera acompanha a equipe; as camadas do cenário se movem em velocidades diferentes (parallax). Animação de andar dos santos com esqueleto 2D (D-176). A velocidade segue a preferência de animação.
-- **Conteúdo do nó no caminho:** ao chegar, a equipe para e aparecem os botões do conteúdo, perto dele: tenda com **Entrar** e **Passar ao largo** (com o custo à vista), baú ou relicário com **Abrir** (animação por quadros, fechado e aberto), alma com **Falar**. Inimigos chegam sozinhos e o combate começa, com a animação de chegada (D-185).
+- **Andar:** segurar o dedo na metade direita do corredor anda para a frente; na esquerda, para trás; soltar para (D-178). A câmera acompanha a equipe; as camadas do cenário se movem em velocidades diferentes (parallax). Os santos andam com o vídeo de andar e param com o vídeo de parado; andando para trás, viram-se (D-359). Tocar numa entrada leva a equipe até ela. A velocidade segue a preferência de animação.
+- **Conteúdo do nó no caminho:** ao chegar, a equipe para e aparecem os botões do conteúdo, perto dele: tenda com **Entrar** e **Passar ao largo** (com o custo à vista), baú ou relicário com **Abrir** (animação por quadros, fechado e aberto), alma com **Falar**. Inimigos chegam sozinhos e o combate começa, com um **corte seco** (D-359): todos em guarda, a câmera aproxima um pouco e o fundo escurece; depois da luta, a equipe reaparece onde estavam os inimigos, a guarda se desfaz e volta o parado.
 - **Bifurcação:** as entradas ficam no trecho final do corredor; parado diante de uma, o painel mostra o ícone e o nome do tipo de nó (nunca só o ícone) e o que se sabe do conteúdo; o botão **Entrar** confirma.
 - **Barra superior:** Lume (barra e número), Esmolas garantidas e não garantidas, botão do mini-mapa. Botão de provisões no canto inferior esquerdo, com a equipe parada.
 - **Luz:** o cenário escurece com o Lume baixo (só aparência).

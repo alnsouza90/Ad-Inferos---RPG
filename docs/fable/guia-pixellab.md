@@ -6,9 +6,9 @@ O que aprendi lendo a documentação da ferramenta, a ajuda embutida dela e gera
 
 ## 1. Acesso
 
-- **A chave está guardada no ambiente das sessões** (segredo de rede para `api.pixellab.ai`, salvo por Alan em 14/11/2026, D-273). O intermediário de rede da sessão põe a chave sozinho em todo pedido a esse endereço. **Você nunca vê nem escreve a chave**, e ela não fica no repositório, que é público.
+- **A chave está guardada no ambiente das sessões** (segredo de rede para `api.pixellab.ai`, salvo por Alan em 14/11/2026, D-369). O intermediário de rede da sessão põe a chave sozinho em todo pedido a esse endereço. **Você nunca vê nem escreve a chave**, e ela não fica no repositório, que é público.
 - Como chamar: mande o pedido normalmente, com um valor de enfeite no cabeçalho: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance`.
-- **Atenção (14/11/2026): ainda não funcionou.** Depois de salvo o segredo, todo pedido a `api.pixellab.ai` voltou "Invalid API token", inclusive com a chave antiga escrita à mão. O intermediário passou a trocar o cabeçalho pelo valor salvo, então **o valor salvo está errado** (chave digitada com erro, com a palavra "Bearer" repetida, ou uma chave já trocada). Alan precisa corrigir o segredo nas configurações do ambiente. **Primeiro teste de toda sessão:** o comando acima tem de devolver o saldo.
+- **Conferido em 14/11/2026:** depois de Alan salvar de novo o segredo (só a chave, sem "Bearer"), o comando acima devolveu o saldo (1.896 de 2.000). **Primeiro teste de toda sessão:** esse comando. Se voltar "Invalid API token", o segredo salvo está errado e só Alan corrige, nas configurações do ambiente (Network secrets); nunca peça a chave no chat. Uma chave escrita à mão no cabeçalho não adianta: o intermediário troca pelo valor salvo.
 - Não existe variável de ambiente com a chave. Se um programa exigir uma, dê a ela o valor `proxy-injected` só naquele comando.
 - Vale para toda sessão que rodar no **mesmo ambiente** ("Padrão"). Numa sessão de outro ambiente, peça a chave de novo pelo formulário seguro (nunca pelo chat).
 - Dois caminhos de uso: a API em `https://api.pixellab.ai/v2` e o servidor para agentes em `https://api.pixellab.ai/mcp` (HTTP, mesmas ferramentas). No piloto, as chamadas foram feitas por programa direto ao servidor de agentes (`tools/call`), sem instalar nada.
@@ -119,7 +119,7 @@ description: UI sprite sheet. <peça 1, com cada estado descrito>; <peça 2>; ..
 
 - No máximo 4 ou 5 peças por folha, para cada uma ter tamanho útil (as lancetas saíram com 65 × 153; a rosácea, 79 × 78; o arco, 103 × 169).
 - Recorte as peças por programa (cada uma é uma ilha de pixels opacos).
-- **Texto e números são sempre do motor.** Fonte: estilo de jogo retrô (D-271), com acentos do português.
+- **Texto e números são sempre do motor.** Fonte: estilo de jogo retrô (D-367), com acentos do português.
 - O centro do arco e da moldura quebrada vem **opaco**: o retrato entra por cima, não por baixo.
 - Peças que precisam esticar (painel, botão) pedem versão em nove partes; não testei.
 

@@ -28,6 +28,9 @@ var use_game_state: bool = true
 var current: Control
 ## Relic waiting for a carrier: the saint (or &"pack") tapped once.
 var relic_choice: StringName = &""
+## The party's place in the corridor (save-load §3.1), when GameState is not
+## in use (tests). In the game it lives in GameState and goes to the save.
+var corridor_place: Dictionary = {}
 
 var _panel_label: Label
 
@@ -68,7 +71,7 @@ func run_battle(cmd: BattleCommand) -> CommandResult:
 ## Opens the screen of the current phase (called after every screen ends).
 func show_phase() -> void:
 	match ctrl.phase:
-		ExpeditionController.Phase.AT_FORK:
+		ExpeditionController.Phase.AT_FORK, ExpeditionController.Phase.PENDING:
 			_show_walk()
 		ExpeditionController.Phase.IN_BATTLE:
 			_show_battle()
@@ -141,8 +144,23 @@ func _show_walk() -> void:
 	var walk := WalkScreen.new()
 	walk.speed_index = speed_index
 	walk.setup(data, ctrl, run_command)
+	walk.saved_place = _place()
 	walk.node_entered.connect(func(_id: StringName) -> void: show_phase())
+	walk.position_changed.connect(_keep_place)
 	_replace(walk)
+
+
+func _place() -> Dictionary:
+	var state: Node = _game_state()
+	return (state.get("corridor_place") as Dictionary).duplicate() if state != null else corridor_place.duplicate()
+
+
+## Kept when the party stops; GameState also saves it (save-load §3.1).
+func _keep_place(node_id: StringName, fraction: float) -> void:
+	corridor_place = {"node": String(node_id), "x": fraction}
+	var state: Node = _game_state()
+	if state != null:
+		state.call("keep_corridor_place", corridor_place)
 
 
 func _show_battle() -> void:

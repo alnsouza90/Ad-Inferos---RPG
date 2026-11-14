@@ -28,7 +28,14 @@ touch "$ROOT/building"
 (
   {
     [ -d "$ROOT/src" ] || git clone --depth 1 --branch "$VERSION-stable" https://github.com/godotengine/godot.git "$ROOT/src"
-    command -v scons >/dev/null 2>&1 || pip install -q scons
+    # pip may be blocked in the session (pypi unreachable) while git clone works:
+    # then run SCons straight from its source (pure Python, D-365).
+    command -v scons >/dev/null 2>&1 || pip install -q scons || {
+      [ -d "$HOME/.cache/tools/scons" ] || git clone -q --depth 1 https://github.com/SCons/scons.git "$HOME/.cache/tools/scons"
+      printf '#!/usr/bin/env bash\nexec python3 %s/.cache/tools/scons/scripts/scons.py "$@"\n' "$HOME" > "$HOME/.local/bin/scons"
+      chmod +x "$HOME/.local/bin/scons"
+      export PATH="$HOME/.local/bin:$PATH"
+    }
     cd "$ROOT/src" && scons platform=linuxbsd target=editor x11=no wayland=no vulkan=no opengl3=no \
       alsa=no pulseaudio=no dbus=no speechd=no fontconfig=no udev=no sdl=no accesskit=no -j"$(nproc)"
     status=$?

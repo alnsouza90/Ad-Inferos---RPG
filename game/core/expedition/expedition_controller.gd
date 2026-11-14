@@ -5,10 +5,14 @@ extends RefCounted
 ## ExpeditionCommand; every accepted command is logged, so replaying the log
 ## on the same starting snapshot rebuilds the expedition exactly.
 ##
-##   AT_FORK → (ChoosePath) → IN_BATTLE | IN_NODE → AT_FORK … → AT_CAMP
+##   AT_FORK → (ChoosePath) → PENDING → (EngageNode | PassBy)
+##     → IN_BATTLE | IN_EVENT | IN_RELIC | IN_NODE → AT_FORK … → AT_CAMP
 ##   IN_BATTLE → (defeat or emergency retreat) → ENDED
+## PENDING: the node is entered (Light spent, saved) and its content waits
+## in the corridor until the party reaches it (§2.3 item 4, D-185).
 
-enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT, IN_RELIC }
+## New values only at the end: the phase is saved as a number.
+enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT, IN_RELIC, PENDING }
 
 const END_DEFEATED: StringName = &"defeated"
 const END_RETREATED: StringName = &"retreated"
@@ -30,8 +34,11 @@ const REJECT_NO_BREAD: StringName = &"no_bread"
 const REJECT_ALREADY_RESTED: StringName = &"already_rested"
 const REJECT_BAD_ACTIVITY: StringName = &"bad_activity"
 const REJECT_NO_SLOT: StringName = &"no_relic_slot"
+const REJECT_CANNOT_PASS_BY: StringName = &"cannot_pass_by"
 
 const EV_NODE_ENTERED: StringName = &"node_entered"
+const EV_NODE_ENGAGED: StringName = &"node_engaged"
+const EV_PASSED_BY: StringName = &"passed_by"
 const EV_BATTLE_RESOLVED: StringName = &"battle_resolved"
 const EV_NODE_COMPLETED: StringName = &"node_completed"
 const EV_CAMP_REACHED: StringName = &"camp_reached"
@@ -199,7 +206,50 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 			return _leave_camp(cmd)
 		ExpeditionCommand.PLACE_RELIC:
 			return _place_relic(cmd)
+		ExpeditionCommand.ENGAGE_NODE:
+			return _engage_node(cmd)
+		ExpeditionCommand.PASS_BY:
+			return _pass_by(cmd)
 	return REJECT_UNKNOWN_COMMAND
+
+
+## Nodes whose content stands in the corridor and waits for the party
+## (§2.3 item 4). Others open as soon as they are entered.
+static func has_corridor_content(n: MapNode) -> bool:
+	return n != null and (n.is_battle_like() or [MapNode.TYPE_TEMPTATION, MapNode.TYPE_RELIC, MapNode.TYPE_SOUL].has(n.type))
+
+
+## The node entered and not yet engaged, else null.
+func pending_node() -> MapNode:
+	return current_node() if phase == Phase.PENDING else null
+
+
+## The option Passar ao largo would apply (to show its cost), or {}.
+func pass_by_option() -> Dictionary:
+	var n: MapNode = pending_node()
+	if n == null or n.type != MapNode.TYPE_TEMPTATION:
+		return {}
+	var picked: EventDef = _pick_event()
+	return picked.option(_first_safe_option(picked)) if picked != null else {}
+
+
+## Reason PassBy is refused now, or &"" (only a Temptation, with a safe option
+## whose requirements are met).
+func pass_by_problem() -> StringName:
+	var n: MapNode = pending_node()
+	if n == null:
+		return REJECT_WRONG_PHASE
+	if n.type != MapNode.TYPE_TEMPTATION:
+		return REJECT_CANNOT_PASS_BY
+	var picked: EventDef = _pick_event()
+	if picked == null:
+		return &""
+	var safe_id: StringName = _first_safe_option(picked)
+	if safe_id == &"":
+		return REJECT_CANNOT_PASS_BY
+	if not EventRules.unmet_requirements(picked.option(safe_id), event_context()).is_empty():
+		return REJECT_REQUIREMENT
+	return &""
 
 
 ## Content of a node is known when the gate reaches it (§2.2) or Incense
@@ -208,9 +258,10 @@ func content_visible(n: MapNode) -> bool:
 	return LegMap.content_visible(n.layer, current_layer(), state.gate_level) or state.revealed_nodes.has(n.id)
 
 
-## Reason a provision cannot be used at this bifurcation, or &"" if it can.
+## Reason a provision cannot be used in the corridor, or &"" if it can: at a
+## bifurcation or before content still waiting (§2.3 item 8).
 func field_provision_problem(provision_id: StringName, target_id: StringName = &"") -> StringName:
-	if phase != Phase.AT_FORK:
+	if phase != Phase.AT_FORK and phase != Phase.PENDING:
 		return REJECT_WRONG_PHASE
 	if not state.provisions.has(provision_id):
 		return FieldProvisions.REJECT_NOT_CARRIED
@@ -239,6 +290,43 @@ func _choose_path(cmd: ExpeditionCommand) -> StringName:
 	command_log.append(cmd.to_dict())
 	state.enter_node(target.id, catalog.constants, RelicEffects.light_per_node(carried_relics(), catalog.constants))
 	_emit(EV_NODE_ENTERED, {"node": target.id, "type": target.type, "light": state.light})
+	if has_corridor_content(target):
+		phase = Phase.PENDING
+	else:
+		_open_content(target)
+	return &""
+
+
+func _engage_node(cmd: ExpeditionCommand) -> StringName:
+	var n: MapNode = pending_node()
+	if n == null:
+		return REJECT_WRONG_PHASE
+	command_log.append(cmd.to_dict())
+	_emit(EV_NODE_ENGAGED, {"node": n.id, "type": n.type})
+	_open_content(n)
+	return &""
+
+
+## Passar ao largo: the same outcomes as choosing the first safe option, with
+## the same event the tent would have opened (same stream, D-184).
+func _pass_by(cmd: ExpeditionCommand) -> StringName:
+	var problem: StringName = pass_by_problem()
+	if problem != &"":
+		return problem
+	command_log.append(cmd.to_dict())
+	var picked: EventDef = _pick_event()
+	_emit(EV_PASSED_BY, {"node": state.current_node, "event": picked.id if picked != null else &""})
+	if picked == null:
+		_after_node()
+		return &""
+	event = picked
+	phase = Phase.IN_EVENT
+	_resolve_option(_first_safe_option(picked))
+	return &""
+
+
+## What entering used to start at once (M1); now also what EngageNode starts.
+func _open_content(target: MapNode) -> void:
 	if target.is_battle_like():
 		_start_battle(target.encounter_id, target.id)
 	elif target.type == MapNode.TYPE_TEMPTATION and _start_event(target):
@@ -247,6 +335,12 @@ func _choose_path(cmd: ExpeditionCommand) -> StringName:
 		pass
 	else:
 		phase = Phase.IN_NODE
+
+
+static func _first_safe_option(def: EventDef) -> StringName:
+	for o: Variant in def.options:
+		if o is Dictionary and (o as Dictionary).get("safe", false) == true:
+			return StringName(str((o as Dictionary).get("id", "")))
 	return &""
 
 
@@ -337,13 +431,21 @@ func _change_desolation(saint_id: StringName, amount: int, source: StringName) -
 ## stream of its own (node seed, `events`). Without any, the node is a plain
 ## pass-through.
 func _start_event(n: MapNode) -> bool:
-	var pool: Array[EventDef] = catalog.events_for(&"temptation", circle_number())
-	if pool.is_empty():
+	var picked: EventDef = _pick_event()
+	if picked == null:
 		return false
-	event = pool[_event_rng().pick_index(pool.size())]
+	event = picked
 	phase = Phase.IN_EVENT
 	_emit(EV_EVENT_STARTED, {"event": event.id, "node": n.id})
 	return true
+
+
+## The Temptation the current node holds (null when the circle has none).
+func _pick_event() -> EventDef:
+	var pool: Array[EventDef] = catalog.events_for(&"temptation", circle_number())
+	if pool.is_empty():
+		return null
+	return pool[_event_rng().pick_index(pool.size())]
 
 
 ## Draw 1 picks the event, draw 2 rolls the chance; derived from the node so
@@ -384,7 +486,13 @@ func _choose_option(cmd: ExpeditionCommand) -> StringName:
 	if problem != &"":
 		return problem
 	command_log.append(cmd.to_dict())
-	var option: Dictionary = event.option(cmd.node_id)
+	_resolve_option(cmd.node_id)
+	return &""
+
+
+## Applies one option of the event in progress (ChooseOption and PassBy).
+func _resolve_option(option_id: StringName) -> void:
+	var option: Dictionary = event.option(option_id)
 	var ctx: EventContext = event_context()
 	var outcomes: Array = option.get("outcomes", [])
 	var success := true
@@ -405,12 +513,11 @@ func _choose_option(cmd: ExpeditionCommand) -> StringName:
 		var started: StringName = _apply_outcome(out)
 		if battle_id == &"":
 			battle_id = started
-	_emit(EV_EVENT_RESOLVED, {"event": finished.id, "option": cmd.node_id, "success": success})
+	_emit(EV_EVENT_RESOLVED, {"event": finished.id, "option": option_id, "success": success})
 	if battle_id != &"":
 		_start_battle(battle_id, StringName(String(state.current_node) + "_event_battle"))
 	else:
 		_after_node()
-	return &""
 
 
 ## Applies one outcome (narrative-system §3.2). Returns the encounter id of

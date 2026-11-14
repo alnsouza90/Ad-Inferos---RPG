@@ -29,6 +29,8 @@ func _go_to_temptation(ctrl: ExpeditionController) -> void:
 					if n.type == MapNode.TYPE_TEMPTATION:
 						pick = n
 				_ok(ctrl, ExpeditionCommand.choose_path(pick.id))
+			ExpeditionController.Phase.PENDING:
+				_ok(ctrl, ExpeditionCommand.engage_node())
 			ExpeditionController.Phase.IN_NODE:
 				_ok(ctrl, ExpeditionCommand.complete_node())
 			ExpeditionController.Phase.IN_RELIC:

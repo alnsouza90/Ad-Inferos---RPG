@@ -1,6 +1,6 @@
 # Rumo · Ad Inferos daqui para a frente
 
-Versão 1.0 · 12/11/2026 · consultor convidado · fecha a consultoria. Detalhes nos outros arquivos de `docs/fable/`; as respostas de Alan estão em `04-respostas-de-alan.md`. **Nada aqui vale como decisão até entrar em `docs/memory/decisions.md`.**
+Versão 1.0 · 12/11/2026 · consultor convidado · fecha a consultoria. Detalhes nos outros arquivos de `docs/fable/`; as respostas de Alan estão em `04-respostas-de-alan.md`. **Nada aqui vale como decisão até entrar em `docs/memory/decisions.md`.** *(Situação em 12/11/2026: as respostas de Alan e as 9 decisões do §4 já estão no registro: D-265, D-266, D-267 a D-300 e D-350 a D-362; Passo 1 feito na T58.)*
 
 ## 1. A visão
 

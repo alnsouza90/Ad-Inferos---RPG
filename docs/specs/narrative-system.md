@@ -1,6 +1,6 @@
 # Especificação · Sistema narrativo
 
-Versão 1.0 · base: GDD v1.1 §9 e §10 · regras de escrita em `docs/narrative/writing-guide.md`
+Versão 1.1 (12/11/2026: orientação, Narrador, Tentação e assédio, Domínio, lembranças; D-266 e D-267 a D-362) · base: GDD v1.1 §9 e §10 · regras de escrita em `docs/narrative/writing-guide.md`
 
 Este documento define **como** os eventos narrativos funcionam. **O que** eles dizem é escrito pelo responsável (com apoio) seguindo o guia de roteiro. O agente nunca escreve textos narrativos finais por conta própria.
 
@@ -18,6 +18,10 @@ Este documento define **como** os eventos narrativos funcionam. **O que** eles d
 | Vinheta do leito | `deathbed` | Depois do flashback pós-chefe, na primeira conclusão de cada círculo |
 | Ato de contrição | `contrition` | Depois da vitória sobre Lúcifer |
 | Epílogo | `epilogue` | Depois da contrição: unção, boa morte, Purgatório e Paraíso |
+
+**Orientação (D-362):** o Peregrino não entra na luta nem na jornada; a companhia está numa missão de resgate, não de escolta, e tudo é alegoria da salvação e da intercessão dos santos. Ele aparece só como o que está em jogo (rastros, Domínio do chefe, lembranças), nunca como unidade.
+
+**Aprovado para o M3 (D-277):** o **Narrador** do Prólogo fala também dentro do jogo, com poucas frases, só texto, nos momentos fortes (teste de Fé, Consolação, Noite Escura, Purificação, santo caído, chefe vencido, Lume baixo). A escrita é toda de Alan, com a origem marcada.
 
 ## 2. Virtudes do Peregrino
 
@@ -96,6 +100,8 @@ No M1, `relic`, `suffrages` e `unlock` ainda não têm sistema: ficam só regist
 - Pelo menos uma opção `safe: true`, com custo pequeno. Na caminhada interativa, **Passar ao largo** da tenda aplica a primeira opção `safe: true` do evento, sem abrir o evento (`expedition.md` §2.3, D-184).
 - Toda chance é visível e pode ser melhorada por pelo menos um santo, provisão ou relíquia.
 - Consequências ficam na expedição ou nas virtudes do Peregrino. **Nunca** ferimento permanente além do sistema normal, e **nunca** o santo comete pecado.
+- A tenda **não muda** com o assédio (D-267): ela continua sendo o eco da tentação do Peregrino (D-141). O assédio dos pecados aos santos é outra coisa, acontece **no combate**, aplicado de fora pelos inimigos, e está em `expedition.md` §10.1 (Provação do Círculo).
+- **Aprovado, a especificar na T38 (D-284):** resolver bem uma Tentação (ou o Encontro com alma) pode **ceder um ponto do Domínio** do chefe do círculo, além de mudar a virtude. O resultado novo entra em §3.2 com `bosses.md`.
 
 ### 4.2 Encontro com alma
 
@@ -123,6 +129,8 @@ testimony:
 - `contrition` tem uma única opção ("Arrepender-se"), sem chance e sem opção de recusa; o texto da opção e das falas vem da versão definida pela soma das virtudes. A liberdade do Peregrino está no caminho inteiro (as escolhas que formaram as virtudes); o botão é o gesto final dessa conversão (D-198).
 - `epilogue` lê o número de marcos da Trilha do Purgatório: 8–10 `purgatory_brief`, 4–7 `purgatory_middle`, 0–3 `purgatory_long`. A diferença é o número de pranchas e falas da subida da montanha; o fim é sempre o Paraíso.
 - Sacramentos e figuras sagradas aparecem só como cena; nenhum deles concede bônus.
+
+**Aprovado para o M3 e M4 (D-287):** os Vestígios do corredor são objetos da vida do Peregrino; recolhidos, viram lembranças no Diário do Peregrino (Biblioteca), e o ato de contrição é **montado com as lembranças recolhidas**. A versão do ato continua definida pela soma das virtudes (§2). Escrita de Alan.
 
 ### 4.6 Vinheta do leito (`deathbed`)
 

@@ -9,14 +9,14 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126. Feito na T31 (D-164, D-165); o difícil volta a ser medido no M2 | M2 | 03/11/2026 |
 | ~~Criar `docs/backlog/m1.md`~~ Proposta feita e perguntas respondidas por Alan em 04/11/2026 (D-121 a D-126) | Alan | 03/11/2026 |
 | Datas das festas dos santos (`feasts.csv`) | Pesquisa do Martirológio (Alan) | 03/11/2026 |
-| Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números) | T14+ / M1 | 03/11/2026 |
+| Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números); entra no passo 0 da rodada de simulação (D-280) | `m2.md` T61 | 03/11/2026 |
 | Fundos "xadrez" pintados na imagem (JPG não tem transparência): Diabo de Lodo, Sopro Errante, Sombra, Mãe-Enxame, Moscardo, Enxame e camada da frente do cenário. Ideal: PNG com transparência real ou fundo liso cinza; senão, recorte na T16 | Alan / T16 | 03/11/2026 |
 | Consolação de São Bento veio com auréola desenhada (a Direção de Arte pede sem); conferir no motor ou pedir versão sem | T16 / Alan | 03/11/2026 |
 | ~~Confirmar qual imagem de Teresinha é o padrão e qual é a Consolação~~ Confirmado por Alan em 03/11/2026: muitas pétalas = Consolação; poucas = padrão | Alan | 03/11/2026 |
 | Cenário do Círculo 2 veio sem a camada do meio (só fundo e frente); os redemoinhos (`vfx_hazard_gale`) podem servir de camada animada | T16 | 03/11/2026 |
 | ~~Revisar os textos da tela de combate em `docs/balance/ui_text.csv`~~ Revisados e aprovados por Alan em 03/11/2026 (D-114) | Alan | 03/11/2026 |
 | ~~Salvar a preferência de velocidade das animações em `settings.json` (screens §3)~~ Feito na T26 | `SaveService` (M1) | 03/11/2026 |
-| Ícones de intenção e de condição: hoje são palavras (`Ataque 6 na posição 1`) | `m2.md` T44 | 03/11/2026 |
+| Ícones de intenção e de condição: hoje são palavras (`Ataque 6 na posição 1`); a T44 também põe ícones de ação nas habilidades, com detalhe ao tocar (D-297, D-299) | `m2.md` T44 | 03/11/2026 |
 | Consolação de São Jorge: o brilho atrás da cabeça saiu quase todo no recorte, mas sobra uma faixa clara colada ao rosto; Alan julga no jogo se precisa de versão sem brilho | Alan | 03/11/2026 |
 | Compressão VRAM (ETC2/ASTC) das texturas de personagem: hoje importação padrão sem perda | T17 | 03/11/2026 |
 | Animação de combate "como Darkest Dungeon" (santo vai até o inimigo e ataca; defesa com reação): Alan achou a atual simples demais. Planejada na trava "abordagem de animação" do roadmap (arte final do M2, ADR-0007); ~~proposta de antecipar~~ Alan decidiu manter no M2 (D-116) | M2 (`m2.md` T35, T52; D-176) | 04/11/2026 |
@@ -63,23 +63,30 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Tamanho dos chefes (2 ou 3 lugares) e de Asmodeu: provisório 1,25× a altura dos santos (D-233, D-332); confirmar com a tela de combate nova | T36/T38 (Alan) | 10/11/2026 |
 | Alcance do ataque de cada inimigo no combate: hoje vem da tabela de arte (`attack_style`); quando `bosses.md` definir as ações de Asmodeu, Minos e Vertigem, conferir se o tipo de dano de cada ação bate com a animação | T38/T52 | 10/11/2026 |
 | ~~Estilo dos efeitos~~ Escolhidos (D-237, D-238) | — | 10/11/2026 |
-| Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto | T36/T52 | 10/11/2026 |
+| Usar no combate de verdade o estilo de cada ação (`AnimationStyle`: golpe, exorcismo, bênção) e a câmera de impacto; os efeitos em código saem e entram folhas de quadros desenhados (D-295) | `m2.md` T59, T52 | 10/11/2026 |
 | Arquivos do Drive sem nome descritivo (bosses 5, saints 3, portraits 3, ui/icons 30, vfx 3, props 2, raiz de circle_02): identificar com Alan e renomear ao trazer para o repositório (`drive-inventory.md`) | Tarefa de cada arte | 10/11/2026 |
 | Almas, relicário, redemoinhos do Vendaval e faixa de névoa: pedir a Alan na T39/T53 (ele sobe ao Drive ou manda pelo chat, D-246) | Alan / T39, T53 | 10/11/2026 |
-| ~~Tentação: assédio dos inimigos ou só evento do Peregrino~~ Assédio como a Provação do Círculo; a tenda não muda (D-265) | — | 11/11/2026 |
-| Ordem da abertura: a tela de entrada com a lanterna convive com a abertura pelo Mapa do Inferno (D-268); falta a ordem exata | Alan | 11/11/2026 |
-| ~~Mecânica de desbloqueio dos santos de expansão~~ Pela Obra de Misericórdia ligada à vida de cada um (D-265); falta Alan escolher os pares | Alan | 11/11/2026 |
-| ~~Edifício e lista das conquistas opcionais~~ Livro das Obras na Biblioteca, com as 14 Obras de Misericórdia (D-265) | — | 11/11/2026 |
-| Simulação das variantes do Lume (D-262) | T55 ou antes | 11/11/2026 |
-| Origem das Esmolas: confirmar a restituição (Alan respondeu "a" a opções numeradas, D-266) | Alan | 14/11/2026 |
-| Reescrever `docs/backlog/m2.md` com o rumo novo (`docs/fable/06-rumo-pixel.md` §4 e `00-rumo.md` §5) | Agente | 14/11/2026 |
-| ADR da apresentação em pixel art: tela interna de 960 × 540, ampliação inteira, paleta única, quadros do PixelLab (D-271) | Agente, com aprovação de Alan | 14/11/2026 |
-| Rodada de simulação das regras novas: desolação por rodadas, Interceder, Fidelidade, preparo do teste de Fé, Consolação dada, variantes do Lume (D-265, D-267) | T55 ou antes | 14/11/2026 |
-| Fundo de 960 de largura: o PixelLab gera no máximo 688 × 384; decidir entre dois painéis emendados ou peças soltas montadas pelo motor | Alan / agente | 14/11/2026 |
-| Chefes maiores que 256 pixels (limite da animação): por partes ou ampliados | Alan, em Asmodeu | 14/11/2026 |
-| Fonte retrô (D-271): escolher a fonte de pixel, com acentos do português e licença livre | Agente propõe; Alan aprova | 14/11/2026 |
-| Moradas: 7 bônus pequenos ou 3 marcos visíveis (`docs/fable/00-rumo.md` §4) | Alan, antes do Carmelo | 14/11/2026 |
-| Revisão teológica de Súplica, Domínio, penitências e origem das Esmolas, antes dos textos do M3 | Alan | 14/11/2026 |
-| `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-271; só mudam com pedido de Alan | Alan | 14/11/2026 |
-| Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348) | Ferramenta de entrada dos quadros | 14/11/2026 |
-| Chave do PixelLab salva como segredo do ambiente (D-273), mas o valor salvo é recusado ("Invalid API token"); Alan corrige nas configurações do ambiente. Teste: `curl -H "Authorization: Bearer proxy-injected" https://api.pixellab.ai/v2/balance` deve devolver o saldo | Alan | 14/11/2026 |
+| ~~Tentação: trocar "o santo peca e perde o controle" por assédio dos inimigos ou manter só como evento do Peregrino~~ Assédio dos inimigos, como Provação do Círculo; a tenda não muda (D-266, D-267), 12/11/2026 | — | 11/11/2026 |
+| ~~Ordem da abertura: abertura → título → Prólogo na primeira vez?~~ Sim (D-266); a tela de entrada com a lanterna convive com essa abertura (D-300), 12/11/2026 | — | 11/11/2026 |
+| ~~Mecânica de desbloqueio para cada santo de expansões futuras~~ Pela Obra de Misericórdia ligada à vida do santo (D-275), 12/11/2026. **Falta:** Alan escolher os pares obra–santo | Alan (M3) | 11/11/2026 |
+| ~~Qual edifício guarda as conquistas opcionais e a lista~~ Livro das Obras, na Biblioteca; as 14 Obras de Misericórdia (D-275), 12/11/2026. **Falta:** Alan escolher os pares obra–feito, com a fonte | Alan (M3) | 11/11/2026 |
+| Simulação das variantes do Lume: as quatro de D-262 e "luz é ver" (D-273), com o prêmio do escuro em experiência (D-274) | `m2.md` T61 | 11/11/2026 |
+| ~~Nove decisões da consultoria do Fable~~ Respondidas por Alan (D-266), 12/11/2026 | — | 12/11/2026 |
+| ~~Transcrever `docs/fable/04-respostas-de-alan.md` em `decisions.md` (Passo 1 do rumo)~~ Feito: D-267 a D-300 e D-350 a D-362 (`m2.md` T58), 12/11/2026 | — | 12/11/2026 |
+| ~~Nove decisões do rumo do Fable, Tentação e ordem da abertura~~ Respondidas (D-266) | — | 12/11/2026 |
+| Revisão teológica de Súplica, Domínio, penitências e Esmolas: agente prepara o material com fontes para Alan revisar (D-266) | Agente + Alan, antes dos textos do M3 | 12/11/2026 |
+| Números das regras novas (Interceder, desolação por rodadas, Fidelidade, preparo do teste de Fé, dar a Consolação, variante do Lume): só depois do relatório, uma regra de cada vez, mantendo a meta de Noite Escura (D-266 (3) e (4)) | `m2.md` T61 (Alan escolhe) | 12/11/2026 |
+| Testar no Redmi as cores da Bíblia de Arte que podem confundir: latão do Círculo 4 e brasa do Círculo 6 contra ouro e âmbar; carmesim do Círculo 7 contra o vermelho de perigo; tamanhos de letra e de toque (D-266 (6), `biblia-de-arte.md` §15) | Alan (APK da T44) | 12/11/2026 |
+| Moradas em 3 marcos (D-266 (5)): o que cada marco (Moradas 1, 4 e 7) muda de forma visível para o jogador; decidir antes do Carmelo (`village-economy.md` §5) | Alan + simulador (M3) | 12/11/2026 |
+| Texto da origem das Esmolas (restituição, D-279), como criação do jogo, e os nomes "Despojos" e "Esmolas" em `ui_text.csv` | Alan (antes da T42) | 12/11/2026 |
+| Frases do Narrador nos momentos fortes (D-277) | Alan (M3) | 12/11/2026 |
+| Nomes das peças de equipamento de cada santo (D-278) | Alan (M3, Forja) | 12/11/2026 |
+| Papel de São Francisco sem o Jardim (D-292) | Alan | 12/11/2026 |
+| ~~O GDD ainda descreve o que mudou: atualizar ou deixar as specs valerem?~~ Atualizar: GDD v1.2 (D-364), 12/11/2026 | — | 12/11/2026 |
+| Arte para o M2 vinda da consultoria: poses sentadas dos 3 santos e a fogueira (prompts em `docs/fable/03-animacao.md` §16.2, D-361); 35 poses de ação dos 7 inimigos (D-354); peças da interface "capela às escuras", 10 ícones de ação e 3 peças da auréola (`biblia-de-arte.md` §13, lotes 1 a 3) | Alan (T44, T52, T53) | 12/11/2026 |
+| Santo piloto em vídeo (Santo Antão, cerca de 450 créditos no Wan 3; saldo atual 10) no começo do M3 (D-266 (7), D-356) | Alan (M3) | 12/11/2026 |
+| Fundo de 960 de largura: o PixelLab gera no máximo 688 × 384; dois painéis emendados ou peças soltas montadas pelo motor (D-367) | Alan, na T65 | 14/11/2026 |
+| Chefes maiores que 256 pixels (limite da animação no PixelLab): por partes ou ampliados (D-367) | Alan, em Asmodeu | 14/11/2026 |
+| Fonte retrô (D-367): escolher a fonte de pixel, com acentos do português e licença livre | Agente propõe na T65; Alan aprova | 14/11/2026 |
+| `docs/art/art-direction.md`, `asset-pipeline.md`, `ui/screens.md` e as folhas de prompts estão desatualizados com D-367; só mudam com pedido de Alan | Alan | 14/11/2026 |
+| Ponto da auréola por personagem nos sprites em pixel (medir a cabeça, como em D-348; os três santos já medidos em `docs/fable/06-rumo-pixel.md` §9) | T64 | 14/11/2026 |

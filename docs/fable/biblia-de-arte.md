@@ -4,7 +4,9 @@ Versão 0.3 · 12/11/2026 · consultor convidado · **proposta de guia**
 
 **O que é:** um só lugar com as regras visuais do jogo, da tela de entrada ao final. Junta o que Alan aprovou nas Etapas 3 e 3b (`02-arte.md`, `03-interface-e-efeitos.md`, página de modelos) e estende para inimigos, ícones, inventário, vila, mapa e narrativa.
 
-**O que não é:** não substitui `docs/art/art-direction.md` enquanto Alan não mandar. Onde este guia muda algo de lá, está dito. Cores em código (hex) e tamanhos são **pontos de partida** para testar no aparelho.
+**Situação (12/11/2026):** Alan mandou: esta Bíblia é a **direção de arte oficial** (D-266 (6)), e `docs/art/art-direction.md` aponta para cá.
+
+**O que não era:** não substituía `docs/art/art-direction.md` enquanto Alan não mandasse. Onde este guia muda algo de lá, está dito. Cores em código (hex) e tamanhos são **pontos de partida** para testar no aparelho.
 
 **Versão para ver:** a página "Bíblia de Arte" (link no resumo do chat; fonte em `modelos/biblia-de-arte.html`) mostra a paleta, as formas, os ícones e os efeitos dos inimigos.
 

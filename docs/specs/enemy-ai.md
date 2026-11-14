@@ -79,6 +79,9 @@ Empates (exceto `random`) são decididos pela menor posição.
 - Fases definidas por limiares de vida (`phase_thresholds`, ex.: [0.66, 0.33]); cada fase tem sua lista de ações.
 - Chefes podem ter `actions_per_round` > 1; cada ação é uma intenção separada.
 - Mecânicas próprias (contador da Judeca, olhar da Medusa) são ganchos nomeados, especificados por chefe em `docs/specs/bosses.md` (a criar no M2).
+- **Domínio (D-284):** todo chefe segura a alma do Peregrino com um Domínio (proposta: 0 a 3), visível na tela; cada ponto é uma vantagem concreta do chefe (ação a mais, escolta, fase extra) e cede quando a companhia alcança o Peregrino no círculo. A companhia sempre pode vencer com o Domínio cheio. Asmodeu é o primeiro, e o fígado do peixe é um dos pontos (T38).
+- **Pecado Encarnado e Provação (D-267):** o elite do círculo tem uma ação própria que aplica a Provação do Círculo com força (`expedition.md` §10.1); o chefe a cobra.
+- **Intenção no corpo (D-355):** a apresentação pode mostrar, pela pose e pela respiração, quem vai atacar; a regra da intenção não muda.
 
 ## 7. Casos de teste obrigatórios
 

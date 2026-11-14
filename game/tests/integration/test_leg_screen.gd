@@ -34,11 +34,7 @@ func _leg(ctrl: ExpeditionController) -> LegScreen:
 func _touch(leg: LegScreen) -> bool:
 	match leg.screen_kind():
 		&"walk":
-			var walk: WalkScreen = leg.current
-			var ids: Array[StringName] = walk.entrance_ids()
-			var pick: StringName = ids[ids.size() - 1]
-			walk.tap_entrance(pick)
-			walk.tap_entrance(pick)
+			_walk_touch(leg.current as WalkScreen, leg.ctrl)
 		&"battle":
 			_battle_touch(leg.current as BattleScreen, leg.ctrl)
 		&"event":
@@ -58,6 +54,22 @@ func _touch(leg: LegScreen) -> bool:
 		&"summary":
 			return false
 	return true
+
+
+## In the corridor: walk up to content still waiting and engage it (enemies
+## engage by themselves), else walk to the last entrance and tap Entrar.
+func _walk_touch(walk: WalkScreen, ctrl: ExpeditionController, pick: StringName = &"") -> void:
+	if ctrl.phase == ExpeditionController.Phase.PENDING:
+		if not walk.corridor.at_pending_content():
+			walk.walk_by(1.0)
+		elif walk.is_inside_tree():
+			walk.press_engage()
+		return
+	var ids: Array[StringName] = walk.entrance_ids()
+	if pick == &"":
+		pick = ids[ids.size() - 1]
+	walk.tap_entrance(pick)
+	walk.press_enter()
 
 
 func _battle_touch(battle: BattleScreen, ctrl: ExpeditionController) -> void:
@@ -189,12 +201,14 @@ func test_relic_carrier_is_chosen_with_a_second_tap() -> void:
 				break
 			if leg.screen_kind() == &"walk":
 				var walk: WalkScreen = leg.current
+				if ctrl.phase == ExpeditionController.Phase.PENDING:
+					_walk_touch(walk, ctrl)
+					continue
 				var pick: StringName = walk.entrance_ids()[0]
 				for id: StringName in walk.entrance_ids():
 					if ctrl.map.find(id).type == MapNode.TYPE_RELIC:
 						pick = id
-				walk.tap_entrance(pick)
-				walk.tap_entrance(pick)
+				_walk_touch(walk, ctrl, pick)
 			else:
 				_touch(leg)
 		if leg.screen_kind() != &"relic":
