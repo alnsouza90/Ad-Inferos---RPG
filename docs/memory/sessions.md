@@ -68,3 +68,11 @@ Resumo curto de cada sessão. A mais recente no topo.
 - Mudança de rumo no fim: **arte em pixel pelo PixelLab** (D-367). Piloto gerado e aprovado (D-368); guia e plano em `guia-pixellab.md` e `06-rumo-pixel.md`.
 - Decisões de Alan: D-367 a D-369 (as anteriores já estavam em D-264 a D-300 e D-350 a D-362); encaixe na `main`: D-370. Gasto no PixelLab até o fim da sessão: ver `06-rumo-pixel.md` §2.
 - Próxima sessão (agente de implementação): merge da T59, depois T63, T64, T65 e T60 (`backlog/m2.md`).
+
+## Sessão 9 (14/11/2026) · rumo em pixel na `main`, T63, T64 e cenários do Círculo 2
+
+- PRs com merge, todos com o CI verde e o "aprovado" de Alan: #64 (T59, D-371), #65 (rumo em pixel do consultor, D-373), #66 (T63, ADR-0013, D-372), #67 (T64, entrada dos clipes do PixelLab, D-374 a D-376).
+- Arte: Asmodeu, Vertigem e Minos da galeria de Alan entraram pela ferramenta; fontes **Jacquard 12** (títulos) e **Jersey 10** (texto) escolhidas (D-377); peças do fundo aprovadas: chão, arcada, pináculo, muro (céu e montanhas reprovados, D-378); **cenários pintados do Círculo 2 convertidos para pixel** (trecho 1, trechos 2 e 3, chefe, camadas comuns), aprovados, com o **filtro B do círculo** no motor (D-379, D-380). Originais em `art_source/environments/circles/circle_02/pixel/`.
+- PixelLab: 1.896 → 1.749 gerações (147, das quais cerca de 47 do Minos gerado por Alan no site).
+- Godot local: compila sozinho pelo gancho; numa sessão retomada a compilação morre e precisa de nova chamada (`lessons.md`).
+- Próxima sessão: **T65** (tela de 960 × 540), no ramo novo a partir da `main` (os commits de arte e memória desta sessão estão no ramo de trabalho e entram no PR da T65).
