@@ -17,6 +17,8 @@ Esta pasta guarda a análise pedida por Alan antes do M3. Tudo é **proposta**. 
 | `03-interface-e-efeitos.md` | **Etapa 3b:** uma interface própria ("a capela às escuras"), efeitos dos santos em xilogravura de ouro, e o teste de Lúcifer (`previas/`) | 12 min |
 | `biblia-de-arte.md` | **A Bíblia de Arte:** matérias, cor, forma, luz, personagens, efeitos (santos e inimigos), interface, ícones, inventário na luta, as 20 telas do começo ao fim, blocos de prompt e lista de produção. Páginas para ver: `modelos/` | 20 min |
 | `03-animacao.md` | **Etapa 4:** o núcleo de animação (12 gestos do motor, a frase do golpe, ficha de temperamento, inimigos por função e matéria, santos por poses) e a ordem por efeito na sensação | 15 min |
+| `05-pixel-art.md` | **Depois do encerramento:** análise da ideia de trocar toda a arte por pixel art (PixelLab), impacto em cada parte e o piloto recomendado | 12 min |
+| `prompts-pixel-m2.md` | Os prompts para testar o M2 em pixel art (Meta AI e PixelLab) | consulta |
 | `04-respostas-de-alan.md` | As respostas de Alan às 14 perguntas e os três estudos pedidos (Carismas simples, equipamento, origem das Esmolas) | 8 min |
 | `03-decisoes-e-ordem.md` | As 13 perguntas que são suas, com a minha recomendação; a ordem sugerida; a lista para o simulador | 5 min |
 
