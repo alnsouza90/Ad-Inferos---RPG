@@ -104,13 +104,20 @@ description: <só o movimento>. The exact same character in every frame, same co
 
 **O que deu errado no piloto:** pedi "lanceta, rosácea, arco" em texto, com elementos genéricos (`panel`, `button`, `icon_button`, `avatar`). Veio um painel comum, com a palavra "QUEST", uma chave e um retrato de cavaleiro. O material (ferro com rebites) acertou; a forma, não.
 
-**Como pedir da próxima vez:**
+**O que funcionou (lote 2):** pedir uma **folha de peças** como imagem, com `create_image_pro` em 256 × 256 (10 gerações), o Jorge como estilo e a paleta. As duas folhas saíram certas de primeira (`piloto-pixel/ui_a.png` e `ui_b.png`).
 
-- Use `pieces`, que aceita formas com posição: `rounded_rect`, `circle` e `polygon`. Um arco ogival não é uma forma pronta; peça a peça mais próxima e corte o arco por programa, ou gere cada peça como **imagem** (`create_image_pro_from_style`, 10 cada, com a descrição de `prompts-pixel-m2.md` §6).
-- Diga sempre: `no text, no letters, no icons, no portrait, empty glass`.
-- Estados (apagado, disponível, aceso): `create_ui_states`, depois de dividir o painel com `update_ui_asset(split=True)`. Não testei.
-- Texto e números são **sempre do motor**, nunca da imagem.
-- Alternativa barata e fiel: as peças da "capela às escuras" são formas simples; o motor pode desenhá-las, como na prévia. A arte entra só como textura de ferro.
+```text
+description: UI sprite sheet. <peça 1, com cada estado descrito>; <peça 2>; ...
+  Dark gothic cathedral game UI pieces, rough black forged iron with rivets, thick lead lines,
+  dark smoked glass. Flat front view, each piece separate with space between them, transparent
+  background. No text, no letters, no numbers, no figures, no faces, no symbols inside the glass.
+```
+
+- No máximo 4 ou 5 peças por folha, para cada uma ter tamanho útil (as lancetas saíram com 65 × 153; a rosácea, 79 × 78; o arco, 103 × 169).
+- Recorte as peças por programa (cada uma é uma ilha de pixels opacos).
+- **Texto e números são sempre do motor.** Fonte: estilo de jogo retrô (D-271), com acentos do português.
+- O centro do arco e da moldura quebrada vem **opaco**: o retrato entra por cima, não por baixo.
+- Peças que precisam esticar (painel, botão) pedem versão em nove partes; não testei.
 
 ## 8. Efeitos
 

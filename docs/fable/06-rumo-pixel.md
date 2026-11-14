@@ -116,3 +116,29 @@ Execute o passo 1 de 06-rumo-pixel.md §4 (só documentos): registre as decisõe
 atualize a memória e reescreva o backlog do M2. Antes de escrever, me diga em
 5 linhas o que vai fazer. Não gere nenhuma arte sem me mandar o custo e pedir permissão.
 ```
+
+## 9. Lote 2 do piloto (14/11/2026)
+
+Pedido por Alan: refazer as ações em clipes curtos, tentar de novo a interface no conceito de catedral gótica, mulheres menores, acertar as auréolas.
+
+| Peça | Arquivo em `piloto-pixel/` | Custo | Estado |
+| --- | --- | --- | --- |
+| Interface A: lanceta em 3 estados e rosácea em 2 | `ui_a.png` | 10 | **Muito boa.** Aguarda Alan |
+| Interface B: arco do retrato, moldura quebrada, porta-velas, gancho com saquinho | `ui_b.png` | 10 | **Muito boa.** Aguarda Alan |
+| Bento · preparar (5 quadros) | `bento_prep.png` | 1 | Boa |
+| Bento · defender | `bento_def.png` | 1 | Boa; um risco fino solto no 3º quadro |
+| Bento · golpe recebido | `bento_hit.png` | 1 | **Fraca:** quase não se move e traz um arco branco |
+| Bento · queda | `bento_fall.png` | 1 | Boa |
+| Bento · golpear (a partir do preparar) | `bento_strike.png` | 1 | A pose final é boa (mão erguida em comando); os quadros do meio trazem um **arco branco grande** |
+| Teresinha menor | `tere_menor.png` | 10 | **Não ficou menor** (233 de altura, igual). Saiu mais limpa, sem pétalas soltas |
+| Tela de combate v2 | `previas/pixellab_piloto_combate_v2_x2.png` | 0 | Montada por programa com as peças novas de interface e as auréolas no lugar |
+
+**Custo do lote 2:** 35 gerações. **Total do piloto:** 104. **Saldo:** cerca de 1.896 de 2.000.
+
+**O que este lote ensinou:**
+
+1. **A interface sai certa quando é pedida como folha de peças**, com cada peça descrita e a lista de proibições (sem texto, sem figuras). Receita em `guia-pixellab.md` §7.
+2. **O arco branco aparece nos quadros de movimento rápido**, mesmo proibido no texto. Como a luta usa poses seguras, aproveita-se o **último quadro** de cada clipe. O arco é branco puro, cor que não existe na paleta: dá para apagá-lo por programa.
+3. **Pedir "menor" no texto não muda a altura.** A ferramenta mantém a escala da imagem de estilo. Para a regra das mulheres menores (D-259, D-271), o caminho a testar é gerar numa **tela menor** (por exemplo 236 × 236) e centralizar na de 256.
+4. **O golpe recebido** pode dispensar pose própria: o recuo é do motor (o "peso do golpe"). Fica a decidir com Alan.
+5. **Ponto da auréola por santo** (em pixels, a partir do canto de cima à esquerda da figura recortada): Teresinha (48, 22), Bento (62, 26), Jorge (84, 22); raio 22. Cada personagem novo precisa dessa medida.
