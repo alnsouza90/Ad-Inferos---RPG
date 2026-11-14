@@ -73,6 +73,14 @@ const SPIRIT_SHAKE_PX: float = 4.0
 ## Light red outline on the saint an enemy's intent aims at (T36, D-259).
 const COLOR_INTENT_TARGET := Color(1.0, 0.25, 0.2)
 const INTENT_TARGET_OUTLINE: float = 0.55
+## Weight of the blow (T59, D-353): lean back in the anticipation, stretch
+## of the blur along the slide, shadow on the ground (share of the figure
+## width; height share of its width), all in the view's own pixels.
+const ANTICIPATION_LEAN_DEG: float = 3.0
+const BLUR_STRETCH: float = 0.12
+const SHADOW_WIDTH: float = 0.55
+const SHADOW_FLAT: float = 0.16
+const COLOR_SHADOW := Color(0, 0, 0, 0.38)
 
 var combatant_id: StringName
 var is_saint: bool = true
@@ -121,6 +129,9 @@ var _target_view: Node
 ## lets the target react then, while the attacker goes home.
 var _impact_share: float = 1.0
 var _intent_target: bool = false
+## Which gestures of the weight of the blow are on (all, in the battle).
+var gestures: BlowGestures = BlowGestures.new()
+var _shadow: Control
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -492,9 +503,20 @@ func play_hit() -> float:
 		var clip_time: float = _player.play(&"hit") if _frames.has_clip(&"hit") else 0.0
 		t = maxf(t, clip_time)
 		var hit_tw := create_tween()
-		hit_tw.tween_property(_body, "position", recoil, t * 0.3)
-		hit_tw.parallel().tween_property(_body, "modulate", Color.WHITE, t)
-		hit_tw.tween_property(_body, "position", home, t * 0.7)
+		# The colour comes back on its own clock: joined to the first step it
+		# would stretch that step to the whole reaction.
+		create_tween().tween_property(_body, "modulate", Color.WHITE, t)
+		if gestures.is_on(BlowGestures.RECOIL):
+			# Pushed back by its own weight, swings past its place, settles (gesture 1).
+			var back_dir: float = -1.0 if is_saint else 1.0
+			var distance: float = BlowWeight.value(weight(), "recoil")
+			var past := home + Vector2(-back_dir * distance * BlowWeight.value(weight(), "overshoot"), 0)
+			hit_tw.tween_property(_body, "position", home + Vector2(back_dir * distance, 0), t * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			hit_tw.tween_property(_body, "position", past, t * 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			hit_tw.tween_property(_body, "position", home, t * 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		else:
+			hit_tw.tween_property(_body, "position", recoil, t * 0.3)
+			hit_tw.tween_property(_body, "position", home, t * 0.7)
 		hit_tw.tween_callback(_back_to_idle)
 		return t
 	var posed: bool = _show_pose_briefly(&"hit")
@@ -582,6 +604,13 @@ func _build_player(width: float) -> void:
 	_player.speed = speed
 	# Feet on the bottom of the panel, like the still figure.
 	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y * _frames.display_scale)
+	# Crouch, stretch and lean are anchored on the feet (03-animacao §2).
+	_body.pivot_offset = Vector2(width * 0.5, BODY_HEIGHT)
+	_shadow = Control.new()
+	_shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_shadow.position = Vector2(width * 0.5, BODY_HEIGHT)
+	_shadow.draw.connect(_draw_shadow)
+	_body.add_child(_shadow)
 	_body.add_child(_player)
 	if is_saint and _halo_settings != null:
 		_build_frame_halo()
@@ -644,6 +673,10 @@ func _play_frame_attack(reach_px: float) -> float:
 	var direction: float = 1.0 if is_saint else -1.0
 	var windup_id: StringName = &"melee_windup" if _frames.has_clip(&"melee_windup") else &"windup"
 	var windup: float = _player.play(windup_id) if _frames.has_clip(windup_id) else 0.0
+	var anticipating: bool = gestures.is_on(BlowGestures.ANTICIPATION)
+	if anticipating:
+		windup = maxf(windup, _player.scaled(BlowWeight.value(weight(), "anticipation")))
+	var freeze: float = blow_freeze()
 	var strike: FrameClip = _frames.clip(_melee_strike_id())
 	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
 	var blow: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
@@ -654,18 +687,78 @@ func _play_frame_attack(reach_px: float) -> float:
 	var target := home + Vector2(direction * distance, 0)
 	var hold: float = _player.scaled(HOLD_TIME)
 	var back: float = _player.scaled(RETURN_TIME)
+	var squash: float = BlowWeight.value(weight(), "squash")
+	var blur: bool = gestures.is_on(BlowGestures.BLUR) and _frames.slides_to_target()
 	var tw := create_tween()
-	tw.tween_interval(windup)
+	if anticipating and windup > 0.0:
+		# Crouch and widen, leaning back, held by the feet (gesture 3).
+		tw.tween_property(_body, "scale", Vector2(1.0 + squash, 1.0 - squash), windup).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(_body, "rotation", deg_to_rad(-direction * ANTICIPATION_LEAN_DEG), windup)
+	else:
+		tw.tween_interval(windup)
 	tw.tween_callback(_start_strike)
+	var stretched := Vector2(1.0 + BLUR_STRETCH, 1.0 - BLUR_STRETCH * 0.5) if blur else Vector2.ONE
 	tw.tween_property(_body, "position", target, dash).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw.tween_interval(maxf(blow - dash, 0.0))
+	tw.parallel().tween_property(_body, "scale", stretched, dash * 0.3)
+	tw.parallel().tween_property(_body, "rotation", 0.0, dash * 0.3)
+	tw.tween_property(_body, "scale", Vector2.ONE, maxf(blow - dash, 0.0) + 0.001)
 	tw.tween_callback(_emit_impact)
+	if freeze > 0.0:
+		# Everything stops on the impact (gesture 1).
+		tw.tween_callback(_freeze_player.bind(true))
+		tw.tween_interval(freeze)
+		tw.tween_callback(_freeze_player.bind(false))
 	tw.tween_interval(maxf(strike_time - blow, 0.0) + hold)
 	tw.tween_callback(_back_to_idle)
 	tw.tween_property(_body, "position", home, back).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	var total: float = windup + maxf(strike_time, dash) + hold + back
-	_impact_share = (windup + maxf(blow, dash)) / total if total > 0.0 else 1.0
+	var total: float = windup + maxf(strike_time, dash) + freeze + hold + back
+	# The target reacts when the freeze ends.
+	_impact_share = (windup + maxf(blow, dash) + freeze) / total if total > 0.0 else 1.0
 	return total
+
+
+## Weight of this character's blow (BlowWeight); medium without frames.
+func weight() -> StringName:
+	return _frames.weight if _frames != null else BlowWeight.MEDIUM
+
+
+## Seconds everything stops on this character's blow (0 with the gesture
+## off or no animation).
+func blow_freeze() -> float:
+	if not gestures.is_on(BlowGestures.FREEZE) or speed <= 0.0:
+		return 0.0
+	return BlowWeight.value(weight(), "freeze") / speed
+
+
+## Push of the camera toward the side of this character's blow (gesture 6).
+func blow_push() -> Vector2:
+	if not gestures.is_on(BlowGestures.CAMERA_PUSH):
+		return Vector2.ZERO
+	return Vector2((1.0 if is_saint else -1.0) * BlowWeight.value(weight(), "push"), 0.0)
+
+
+## Strength of the shake of this character's blow (1 with the gesture off).
+func blow_shake() -> float:
+	return BlowWeight.value(weight(), "shake") if gestures.is_on(BlowGestures.CAMERA_PUSH) else 1.0
+
+
+func shadow_visible() -> bool:
+	return _shadow != null and _shadow.visible
+
+
+## A dark ellipse under the feet (gesture 2): the figure stands on the ground.
+func _draw_shadow() -> void:
+	if _player == null:
+		return
+	var w: float = _player.figure_width() * SHADOW_WIDTH
+	_shadow.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, SHADOW_FLAT))
+	_shadow.draw_circle(Vector2.ZERO, w * 0.5, COLOR_SHADOW)
+	_shadow.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _freeze_player(on: bool) -> void:
+	if _player != null:
+		_player.speed = 0.0 if on else speed
 
 
 ## A boss can have its own frames for the blow (Asmodeus' lunge, D-236);
@@ -676,7 +769,8 @@ func _melee_strike_id() -> StringName:
 
 func _start_strike() -> void:
 	_player.play(_melee_strike_id())
-	if _frames.slides_to_target():
+	# The blur (gesture 5) takes the place of the trail of ghosts.
+	if _frames.slides_to_target() and not gestures.is_on(BlowGestures.BLUR):
 		_trail_left = _player.scaled(DASH_MAX_TIME) + TRAIL_EVERY
 		_trail_clock = 0.0
 
@@ -768,6 +862,8 @@ func _back_to_idle() -> void:
 
 
 func _process(delta: float) -> void:
+	if _shadow != null:
+		_shadow.visible = gestures.is_on(BlowGestures.SHADOW) and not _down
 	if _player != null and _halo != null:
 		_halo.visible = not _down and _player.clip_id() == &"idle"
 		if _halo.visible:

@@ -9,7 +9,9 @@ Resumo curto de cada sessão. A mais recente no topo.
 - Alan aprovou o PR #61 e pediu o GDD atualizado: GDD v1.2 (D-364, PR #62, com merge).
 - Godot: pypi bloqueado na sessão; SCons rodado do código clonado do GitHub (D-365, lição em `lessons.md`).
 - Feito: T37 · caminhada interativa (fase `PENDING`, `EngageNode`, `PassBy`, save versão 2, posição no corredor, corte seco), D-365.
-- Próximo: Alan testa a caminhada no celular; depois T59.
+- Alan aprovou a T37 (PR #63, com merge).
+- Feito: T59 · peso do golpe (seis gestos com interruptores, quatro pesos), D-366.
+- Próximo: Alan testa os gestos no APK; depois T60.
 
 ## Sessão 6 · 10/11/2026
 

@@ -61,7 +61,9 @@ func punch(at: Vector2, speed: float = 1.0, strength: float = 1.0) -> void:
 
 ## G1: closes in on `at` (global), darkens the scenery, flashes and shakes
 ## a little, holds for `hold` seconds (already scaled) and comes back.
-func blow(at: Vector2, speed: float, hold: float) -> void:
+## T59 (D-353): `push` moves the field toward the side of the blow while it
+## holds (the blow has a side), `shake` scales the shake by the weight.
+func blow(at: Vector2, speed: float, hold: float, push: Vector2 = Vector2.ZERO, shake: float = 1.0) -> void:
 	if speed <= 0.0 or not field.is_inside_tree():
 		return
 	if _tween != null and _tween.is_valid():
@@ -71,11 +73,13 @@ func blow(at: Vector2, speed: float, hold: float) -> void:
 	field.pivot_offset = field.get_global_transform().affine_inverse() * at
 	_tween = field.create_tween()
 	_tween.tween_property(field, "scale", Vector2(BLOW_ZOOM, BLOW_ZOOM), BLOW_IN_TIME / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_tween.parallel().tween_property(field, "position", _home + push, BLOW_IN_TIME / speed)
 	for offset: Vector2 in SHAKE:
-		_tween.tween_property(field, "position", _home + offset * BLOW_SHAKE, SHAKE_STEP / speed)
-	_tween.tween_property(field, "position", _home, SHAKE_STEP / speed)
+		_tween.tween_property(field, "position", _home + push + offset * BLOW_SHAKE * shake, SHAKE_STEP / speed)
+	_tween.tween_property(field, "position", _home + push, SHAKE_STEP / speed)
 	_tween.tween_interval(maxf(hold - SHAKE_STEP * (SHAKE.size() + 1) / speed, 0.0))
 	_tween.tween_property(field, "scale", Vector2.ONE, BLOW_OUT_TIME / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_tween.parallel().tween_property(field, "position", _home, BLOW_OUT_TIME / speed)
 	if dim != null:
 		var shade := dim.create_tween()
 		shade.tween_property(dim, "color:a", BLOW_DIM, BLOW_IN_TIME / speed)
