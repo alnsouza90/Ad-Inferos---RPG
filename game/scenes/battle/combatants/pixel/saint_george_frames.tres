@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/pixel/characters/saint_george/saint_george_idle.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = true
+anchor = Vector2(128, 245)
+impact_frame = -1
+pose_time = 0.4
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"saint_george"
+figure_height = 230.0
+display_scale = 1
+attack_style = &"melee"
+spell_style = &"crosses"
+blessing_style = &"shield"
+weight = &"medium"
+halo_center = Vector2(134, 37)
+halo_diameter = 44
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])

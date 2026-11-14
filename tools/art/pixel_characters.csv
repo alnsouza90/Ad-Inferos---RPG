@@ -1,0 +1,9 @@
+character,display_scale,attack_style,spell_style,blessing_style,halo_x,halo_y,halo_size,weight,palette
+saint_benedict,1.0,melee,crosses,ring,62,26,44,heavy,snap
+saint_george,1.0,melee,crosses,shield,84,22,44,medium,snap
+saint_therese,1.0,melee,crosses,petals,48,22,44,light,snap
+enemy_mud_devil,1.0,melee,orb,ring,,,,heavy,snap
+enemy_shade_of_desire,1.0,melee,outline,ring,,,,light,snap
+boss_asmodeus,1.0,melee,orb,ring,,,,colossal,snap
+elite_sin_vertigo,1.0,ranged,outline,ring,,,,medium,snap
+elite_minos,1.0,throne,orb,ring,,,,heavy,snap

@@ -64,6 +64,9 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 12. **Nunca cortar a saída da ferramenta com `| head`:** o processo morre no meio e deixa `.tres` velho com folha nova (quadros desalinhados). Redirecione para arquivo e leia o fim.
 13. **Vídeo que pisca:** a média temporal borra (reprovada, D-253) e a média só no que muda pouco não ajuda. O que funciona: segurar poucos quadros nítidos do próprio vídeo e fundir entre eles (`keys=`, `hold=`, `tween=`, D-344). O Meta AI não serve para poses de personagem complexo (perde a fidelidade e gera vídeo, D-254).
 
+- **PixelLab (T64):** a galeria se lê de graça pelo servidor de agentes (`tools/call` de `list_images` e `get_image` em `https://api.pixellab.ai/mcp`, cabeçalho `Authorization: Bearer proxy-injected`); o `get_image` devolve um link assinado da folha inteira (grade de 256). As peças que Alan gera no site não vêm na paleta: a entrada as leva para ela. O arco branco dos golpes rápidos deixa pontinhos na cor da barba, que não saem por cor: use a pose final.
+- **Sessão retomada mata a compilação do Godot:** o `setup_godot.sh` fica preso na trava. Apague `~/.cache/godot-4.7.2/building` e rode o script de novo.
+
 ## Dados
 
 - Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.
