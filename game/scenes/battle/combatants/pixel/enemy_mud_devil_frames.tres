@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_idle.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = true
+anchor = Vector2(190, 256)
+impact_frame = -1
+pose_time = 0.4
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"enemy_mud_devil"
+figure_height = 243.0
+display_scale = 1
+attack_style = &"melee"
+spell_style = &"orb"
+blessing_style = &"ring"
+weight = &"heavy"
+halo_center = Vector2(0, 0)
+halo_diameter = 0
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])

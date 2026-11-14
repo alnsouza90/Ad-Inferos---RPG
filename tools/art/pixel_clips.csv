@@ -1,0 +1,11 @@
+character,clip,source,frames,fps,mode,impact,cleanup
+saint_benedict,idle,docs/fable/piloto-pixel/bento_idle.png,0-8,8,loop,,specks=12
+saint_benedict,walk,docs/fable/piloto-pixel/bento_walk.png,0-8,8,loop,,specks=12
+saint_benedict,windup,docs/fable/piloto-pixel/bento_prep.png,all,8,once,,specks=12
+saint_benedict,strike,docs/fable/piloto-pixel/bento_strike.png,4,0,once,0,white_arc+specks=40
+saint_benedict,defend,docs/fable/piloto-pixel/bento_def.png,all,8,once,,specks=12
+saint_benedict,fall,docs/fable/piloto-pixel/bento_fall.png,all,8,once,,specks=12
+saint_george,idle,docs/fable/piloto-pixel/jorge_parado.png,0,0,loop,,specks=12
+saint_therese,idle,docs/fable/piloto-pixel/teresinha_parada.png,0,0,loop,,specks=12
+enemy_mud_devil,idle,docs/fable/piloto-pixel/mud_devil.png,0,0,loop,,specks=12
+enemy_shade_of_desire,idle,docs/fable/piloto-pixel/shade.png,0,0,loop,,specks=12
