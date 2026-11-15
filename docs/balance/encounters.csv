@@ -13,5 +13,5 @@ c02_hard_02,2,hard,enemy_infernal_scarab,enemy_mud_devil,enemy_swarm_mother,enem
 c02_hard_03,2,hard,enemy_mud_devil,enemy_mud_devil,enemy_gadfly,enemy_shade_of_desire,common,gale
 c02_hard_04,2,hard,enemy_infernal_scarab,enemy_shade_of_desire,enemy_wandering_breath,enemy_swarm_mother,common,gale
 c02_hard_05,2,hard,enemy_mud_devil,enemy_infernal_scarab,enemy_gadfly,enemy_gadfly,common,gale
-c02_elite_minos,2,elite,enemy_mud_devil,enemy_infernal_scarab,elite_minos,,elite,gale
+c02_elite_minos,2,guardian,enemy_mud_devil,enemy_infernal_scarab,elite_minos,,elite,gale
 c02_elite_vertigo,2,elite,enemy_shade_of_desire,elite_sin_vertigo,enemy_wandering_breath,,elite,gale

@@ -48,7 +48,9 @@ func _enchant(c: BattleController, id: StringName, rounds: int = 2) -> Combatant
 func test_the_elite_encounters_of_bosses_md() -> void:
 	assert_eq(cat.encounter(&"c02_elite_minos").slots, [&"enemy_mud_devil", &"enemy_infernal_scarab", &"elite_minos"] as Array[StringName])
 	assert_eq(cat.encounter(&"c02_elite_vertigo").slots, [&"enemy_shade_of_desire", &"elite_sin_vertigo", &"enemy_wandering_breath"] as Array[StringName])
-	for id: StringName in cat.encounter_pool(2, &"elite"):
+	assert_eq(cat.encounter_pool(2, &"guardian"), [&"c02_elite_minos"] as Array[StringName], "Minos é o Guardião")
+	assert_eq(cat.encounter_pool(2, &"elite"), [&"c02_elite_vertigo"] as Array[StringName], "a Vertigem é o Pecado")
+	for id: StringName in cat.encounter_pool(2, &"elite") + cat.encounter_pool(2, &"guardian"):
 		assert_eq(cat.encounter(id).type, &"elite")
 		assert_eq(cat.encounter(id).hazard, &"gale")
 	var minos: EnemyDef = cat.battle_catalog.enemies[&"elite_minos"]
@@ -194,10 +196,50 @@ func test_E01_elites_appear_in_the_variable_node_at_most_one_per_path() -> void:
 		assert_true(MapGenerator.is_valid(ctrl.map), "semente %d" % seed)
 		for layer: Array in ctrl.map.layers:
 			for n: MapNode in layer:
-				if n.type == MapNode.TYPE_ELITE:
+				if n.type == MapNode.TYPE_ELITE and n.role == MapNode.ROLE_VARIABLE:
 					elites += 1
-					assert_true(cat.encounter_pool(2, &"elite").has(n.encounter_id), "elite com encontro de elite")
+					assert_eq(n.encounter_id, &"c02_elite_vertigo", "no nó variável, só o Pecado Encarnado (D-406)")
 	assert_gt(elites, 0, "o nó variável sorteia elites")
+
+
+func test_D407_leg_1_always_ends_with_minos_before_the_camp() -> void:
+	for seed: int in 200:
+		var ctrl := ExpeditionController.start_new(cat, &"circle_02", seed, RealData.m0_party_ids(), cat.kit_provisions(&"m1_kit"), GameData.EXPEDITION_ENCOUNTER_CIRCLE)
+		assert_true(MapGenerator.has_guardian(ctrl.map), "semente %d" % seed)
+		var last: Array[MapNode] = ctrl.map.layer_nodes(ctrl.map.layer_count())
+		assert_eq(last[0].encounter_id, &"c02_elite_minos")
+		for path: Array in ctrl.map.paths():
+			assert_eq((path.back() as MapNode).role, MapNode.ROLE_GUARDIAN, "todo caminho passa por Minos")
+
+
+func test_D407_the_party_reaches_the_camp_only_after_minos() -> void:
+	var ctrl := ExpeditionController.start_new(cat, &"circle_02", 21, RealData.m0_party_ids(), cat.kit_provisions(&"m1_kit"), GameData.EXPEDITION_ENCOUNTER_CIRCLE)
+	var fought_minos := false
+	for i: int in 3000:
+		if ctrl.phase == ExpeditionController.Phase.AT_CAMP or ctrl.is_over():
+			break
+		match ctrl.phase:
+			ExpeditionController.Phase.AT_FORK:
+				ctrl.execute(ExpeditionCommand.choose_path(ctrl.entrances()[0].id))
+			ExpeditionController.Phase.PENDING:
+				ctrl.execute(ExpeditionCommand.engage_node())
+			ExpeditionController.Phase.IN_NODE:
+				ctrl.execute(ExpeditionCommand.complete_node())
+			ExpeditionController.Phase.IN_EVENT:
+				ctrl.execute(ExpeditionCommand.choose_option(&"follow_tracks"))
+			ExpeditionController.Phase.IN_RELIC:
+				ctrl.execute(ExpeditionCommand.place_relic())
+			ExpeditionController.Phase.IN_BATTLE:
+				if ctrl.battle.state.enemies.any(func(e: Combatant) -> bool: return e.def_id == &"elite_minos"):
+					fought_minos = true
+				# Win at once: this test is about the path, not the fight.
+				for e: Combatant in ctrl.battle.state.enemies:
+					e.hp = 0
+					e.state = Combatant.State.DEAD
+				ctrl.battle.phase = BattleController.Phase.VICTORY
+				ctrl._resolve_battle()
+	assert_eq(ctrl.phase, ExpeditionController.Phase.AT_CAMP)
+	assert_true(fought_minos, "Minos antes do Pouso")
 
 
 func test_the_arena_legs_still_have_no_elites() -> void:

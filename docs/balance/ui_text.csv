@@ -128,6 +128,7 @@ anim_name_boss_asmodeus,Asmodeu
 pool_easy,Fácil
 pool_hard,Difícil
 pool_elite,Elite
+pool_guardian,Guardião
 pool_boss,Chefe
 pool_ambush,Emboscada
 dev_title,Teste:
@@ -136,6 +137,7 @@ dev_desolation_down,-{amount} desolação
 dev_consolation,Consolação
 node_battle,Combate
 node_elite,Elite
+node_guardian,Guardião
 node_temptation,Tentação
 node_soul,Encontro
 node_relic,Relíquia oculta

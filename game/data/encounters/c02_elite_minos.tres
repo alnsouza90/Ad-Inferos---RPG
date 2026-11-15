@@ -6,7 +6,7 @@
 script = ExtResource("1_jxnpp")
 id = &"c02_elite_minos"
 circle = 2
-pool = &"elite"
+pool = &"guardian"
 slots = Array[StringName]([&"enemy_mud_devil", &"enemy_infernal_scarab", &"elite_minos"])
 type = &"elite"
 hazard = &"gale"

@@ -154,7 +154,7 @@ Campos de `docs/specs/enemy-ai.md` §2. As condições ficam em `conditions` no 
 | --- | --- | --- |
 | `id` | texto | |
 | `circle` | inteiro | 0 a 9 (`m0` para a arena do protótipo) |
-| `pool` | `easy` / `hard` / `elite` / `boss` / `ambush` | |
+| `pool` | `easy` / `hard` / `elite` / `guardian` / `boss` / `ambush` | `elite`: o Pecado Encarnado do nó variável; `guardian`: o Guardião fixo do fim do trecho 1 (D-407) |
 | `slot_1` … `slot_4` | texto | ID do inimigo em cada posição |
 | `type` | `common` / `elite` / `boss` | Para recompensas e desolação de fim de combate |
 | `hazard` | vazio / `gale` | Mecânica de ambiente do círculo neste combate (`expedition.md` §10): `gale` é o Vendaval do Círculo 2. Vazio na arena e no chefe (Asmodeu tem o próprio Vendaval) |
