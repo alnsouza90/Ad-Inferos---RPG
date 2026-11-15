@@ -989,6 +989,7 @@ func _ensure_view(c: Combatant) -> CombatantView:
 	view.speed = SPEEDS[speed_index]
 	if view.player() != null:
 		view.player().outline_width = 1.0
+		CircleLook.light_figure(view.player(), c.is_saint())
 		# Painted frames (not pixel art yet) are shrunk with the smooth filter.
 		if not is_pixel_art(frames):
 			view.player().texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR

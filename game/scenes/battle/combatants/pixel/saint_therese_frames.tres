@@ -8,10 +8,75 @@ script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_idle.png"
 frame_size = Vector2i(256, 256)
+columns = 9
+count = 9
+fps = 8
+looping = true
+anchor = Vector2(128, 245)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_walk"]
+script = ExtResource("2_clip")
+id = &"walk"
+sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_walk.png"
+frame_size = Vector2i(256, 256)
+columns = 8
+count = 8
+fps = 8
+looping = true
+anchor = Vector2(128, 245)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_windup.png"
+frame_size = Vector2i(256, 256)
 columns = 1
 count = 1
 fps = 0
-looping = true
+looping = false
+anchor = Vector2(128, 245)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_strike.png"
+frame_size = Vector2i(256, 256)
+columns = 3
+count = 3
+fps = 8
+looping = false
+anchor = Vector2(128, 245)
+impact_frame = 0
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_defend.png"
+frame_size = Vector2i(256, 256)
+columns = 2
+count = 2
+fps = 8
+looping = false
+anchor = Vector2(128, 245)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/pixel/characters/saint_therese/saint_therese_fall.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
 anchor = Vector2(128, 245)
 impact_frame = -1
 pose_time = 0.4
@@ -25,6 +90,6 @@ attack_style = &"melee"
 spell_style = &"crosses"
 blessing_style = &"petals"
 weight = &"light"
-halo_center = Vector2(132, 32)
+halo_center = Vector2(130, 36)
 halo_diameter = 44
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

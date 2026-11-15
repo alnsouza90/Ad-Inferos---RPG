@@ -6,6 +6,7 @@ extends RefCounted
 ## a rule, so nothing here comes from docs/balance.
 
 const SHADER_PATH: String = "res://shaders/circle_filter.gdshader"
+const FIGURE_SHADER_PATH: String = "res://shaders/halo.gdshader"
 const SCENERY_DIR: String = "res://assets/pixel/environments"
 ## Circle 2 (D-379): ramp from the reserved colours of the palette and the
 ## strength of the mix.
@@ -13,6 +14,12 @@ const CIRCLE_02_RAMP: Array[Color] = [
 	Color("0D0C10"), Color("241A30"), Color("3B2A4D"), Color("5B3F7A"), Color("8A6BB0"), Color("E4DDCF"),
 ]
 const CIRCLE_02_STRENGTH: float = 0.55
+## Rim light on the figures (approved preview v2, Art Bible): the saints
+## carry the amber of the lamp, the enemies the colour of their circle.
+const RIM_SAINT := Color("E07B1F")
+const CIRCLE_02_RIM_ENEMY := Color("8A6BB0")
+const RIM_STRENGTH: float = 1.0
+
 ## Parallax of each layer (asset-pipeline §4): the sky far away, the middle
 ## with the ground the characters walk on, the front a little faster.
 const PARALLAX_BACK: float = 0.2
@@ -45,6 +52,20 @@ static func filter_material(circle: StringName = &"circle_02") -> ShaderMaterial
 	mat.set_shader_parameter("strength", CIRCLE_02_STRENGTH)
 	_materials[circle] = mat
 	return mat
+
+
+## Gives `player` the edge of light of its side (saints on the left edge,
+## enemies on the right). Its material must be the figure shader
+## (halo.gdshader); a player without one gets it.
+static func light_figure(player: FramePlayer, is_saint: bool, circle: StringName = &"circle_02") -> void:
+	var mat := player.material as ShaderMaterial
+	if mat == null:
+		mat = ShaderMaterial.new()
+		mat.shader = load(FIGURE_SHADER_PATH)
+		player.material = mat
+	var color: Color = RIM_SAINT if is_saint else CIRCLE_02_RIM_ENEMY
+	mat.set_shader_parameter("rim_color", Color(color, RIM_STRENGTH))
+	mat.set_shader_parameter("rim_side", -1.0 if is_saint else 1.0)
 
 
 ## Layers behind the characters, back to front: {"path", "parallax"}.

@@ -701,6 +701,7 @@ func _build_party() -> void:
 			player.position = Vector2(x, FEET_Y)
 			player.speed = maxf(BattleScreen.SPEEDS[speed_index], 1.0)
 			player.setup(frames, Vector2.ZERO, BattleScreen.figure_px_of(frames) * frames.display_scale)
+			CircleLook.light_figure(player, true)
 			if not BattleScreen.is_pixel_art(frames):
 				player.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			_party.add_child(player)
