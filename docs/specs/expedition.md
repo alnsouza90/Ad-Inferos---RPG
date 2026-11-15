@@ -175,7 +175,7 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 | Círculo | Mecânica | Regra |
 | --- | --- | --- |
 | 0 Antinferno | Indecisão | Santo que usou `Pass` ou não agiu na rodada recebe +5 de desolação |
-| 2 Luxúria | Vendaval | No `ROUND_START`, sortear duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. Clausura de Bento impede a troca de quem está ao lado dele |
+| 2 Luxúria | Vendaval | No `ROUND_START`, sortear duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. Clausura de Bento impede a troca de quem está ao lado dele; **Firmar o pé** (`bosses.md` §2.2) impede a troca e dá Firmeza. Não acontece na luta com Asmodeu (`bosses.md` §5.1) |
 | 3 Gula | Fome | Cura recebida × 0,5 até a equipe usar um Pão naquele combate |
 | 4 Avareza | Ouro Maldito | Ao receber Esmolas em um nó, cada santo ganha +5 de desolação |
 | 5 Ira e Acídia | Fúria e Torpor | Condições `fury` (inimigos) e `torpor` (santos). Torpor não se aplica na luta contra Belfegor |
@@ -189,8 +189,8 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 Os pecados de cada círculo agem como **assédio dos inimigos**, nunca como pecado dos santos. A mecânica de ambiente da tabela acima e o assédio são **um conceito só**, a Provação do Círculo, com três regras fixas:
 
 1. **É visível antes**, como intenção de ambiente ou condição com contagem.
-2. **Tem uma resposta ativa do santo, com custo** (ex.: o Pão na Fome, trocar de lugar nos Túmulos, Exorcismo no Contrapasso, o milagre no Torpor; no Vendaval, uma resposta comum a definir na T38, além da Clausura de Bento).
-3. **Resistir dá prêmio:** quando a companhia responde à provação, ganha uma ficha de **Firmeza** (proposta: +1 de Fervor na rodada seguinte, dentro do limite de ganho extra; número a aprovar na T38).
+2. **Tem uma resposta ativa do santo, com custo** (ex.: o Pão na Fome, trocar de lugar nos Túmulos, Exorcismo no Contrapasso, o milagre no Torpor; no Vendaval, **Firmar o pé**, além da Clausura de Bento; `bosses.md` §2.2).
+3. **Resistir dá prêmio:** quando a companhia responde à provação, ganha uma ficha de **Firmeza**: +1 de Fervor na rodada seguinte, dentro do limite de ganho extra, no máximo uma por rodada (`bosses.md` §2.4; o número passa pela simulação da T61).
 
 - O **Pecado Encarnado** (elite do círculo) aplica a provação com força, numa ação própria. No Círculo 2, o **Encanto** da Vertigem puxa as intenções para um santo: ele sofre o assédio, não peca.
 - O **chefe** cobra a mesma lição como prova final.
