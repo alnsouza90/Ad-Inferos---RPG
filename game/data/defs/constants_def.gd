@@ -20,6 +20,16 @@ func get_int(key: StringName) -> int:
 	return int(round(get_float(key)))
 
 
+## Rules still being simulated (T61, D-363) read their numbers this way: a
+## key that is not in constants.csv yet leaves the rule off.
+func get_float_or(key: StringName, fallback: float) -> float:
+	return float(values[String(key)]) if has_key(key) else fallback
+
+
+func get_int_or(key: StringName, fallback: int) -> int:
+	return int(round(get_float_or(key, float(fallback))))
+
+
 func get_list(key: StringName) -> Array[float]:
 	assert(has_key(key), "Unknown constant: %s" % key)
 	var result: Array[float] = []

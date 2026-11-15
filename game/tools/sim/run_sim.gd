@@ -45,9 +45,20 @@ func _init() -> void:
 	quit(0)
 
 
+## --set=key=value,key=value: numbers for the rules being simulated (T61),
+## in memory only. constants.csv is never touched (D-363).
+func _apply_overrides(constants: ConstantsDef, spec: String) -> void:
+	for pair: String in spec.split(",", false):
+		var kv: PackedStringArray = pair.split("=", true, 1)
+		if kv.size() == 2:
+			constants.values[kv[0].strip_edges()] = float(kv[1])
+			print("  experimento: %s = %s" % [kv[0], kv[1]])
+
+
 ## Whole M1 legs with the real expedition controller (testing.md §5.3).
 func _run_legs(args: Dictionary, given: Dictionary) -> void:
 	var game: GameData = GameData.load_all()
+	_apply_overrides(game.catalog.constants, String(args.get("set", "")))
 	var sim := LegSimulator.new(game.load_expedition_catalog())
 	sim.incense_policy = StringName(args.get("incense", LegSimulator.INCENSE_REVEAL))
 	var policies: Array[StringName] = [SimPolicy.HEURISTIC, SimPolicy.RANDOM]

@@ -14,11 +14,13 @@ const INJURY_MAJOR: StringName = &"major"
 ## Gains pass through every multiplier; reductions never do (§2). Then the
 ## thresholds are checked: 100 (Faith check), < 50 in Dark Night
 ## (Purification) and 200 (Prostration).
-static func change(saint: Combatant, amount: int, source: StringName, ctx: DesolationContext) -> void:
+## `raw`: the gain skips the multipliers (Interceder moves weight, it does
+## not create it, D-268).
+static func change(saint: Combatant, amount: int, source: StringName, ctx: DesolationContext, raw: bool = false) -> void:
 	if amount == 0 or not saint.is_saint():
 		return
 	var delta: int = amount
-	if amount > 0:
+	if amount > 0 and not raw:
 		delta = Damage.round_half_up(amount * gain_multiplier(saint, ctx))
 	var maximum: int = ctx.constants.get_int(&"desolation_max")
 	var before: int = saint.desolation
@@ -54,8 +56,12 @@ static func light_multiplier(ctx: DesolationContext) -> float:
 
 static func faith_chance(saint: Combatant, ctx: DesolationContext) -> float:
 	var c: ConstantsDef = ctx.constants
-	var chance: float = c.get_float(&"faith_check_base") + c.get_float(&"faith_check_per_point") * saint.faith + ctx.faith_bonus
-	return minf(c.get_float(&"faith_check_cap"), chance)
+	var chance: float = c.get_float(&"faith_check_base") + c.get_float(&"faith_check_per_point") * saint.faith + ctx.faith_bonus + ctx.prepared_bonus
+	var cap: float = c.get_float(&"faith_check_cap")
+	# A prepared test (D-270, being simulated) may reach a higher cap.
+	if ctx.prepared_bonus > 0.0:
+		cap = c.get_float_or(&"faith_prepared_cap", cap)
+	return minf(cap, chance)
 
 
 ## §3: success → Consolation and desolation back to [consolation_reset_value];
@@ -84,6 +90,16 @@ static func force_consolation(saint: Combatant, ctx: DesolationContext) -> void:
 	saint.desolation = ctx.constants.get_int(&"consolation_reset_value")
 	ctx.emit.call(&"desolation_changed", {"target": saint.id, "old": before, "new": saint.desolation, "source": &"dev_tools"})
 	_set_state(saint, CONSOLATION, ctx)
+
+
+## Purification from outside the thresholds (Fidelity, the gift of
+## Consolation; D-271, D-285, being simulated).
+static func purify(saint: Combatant, ctx: DesolationContext) -> void:
+	_purify(saint, ctx)
+
+
+static func set_normal(saint: Combatant, ctx: DesolationContext) -> void:
+	_set_state(saint, NORMAL, ctx)
 
 
 static func _purify(saint: Combatant, ctx: DesolationContext) -> void:

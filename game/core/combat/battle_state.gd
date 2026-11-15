@@ -296,6 +296,34 @@ func add_desolation(c: Combatant, amount: int, source: StringName = &"") -> void
 	Desolation.change(c, amount, source, desolation_context(c))
 
 
+## Who helped whom this battle (D-270, being simulated): target id -> ally ids.
+var helped_by: Dictionary = {}
+## Saints who kept the Vigil in this leg (set by the expedition).
+var vigil_saints: Array[StringName] = []
+
+
+func note_help(target: Combatant, helper: Combatant) -> void:
+	if target == null or helper == null or target == helper or not target.is_saint() or not helper.is_saint():
+		return
+	var list: Array = helped_by.get(target.id, [])
+	if not list.has(helper.id):
+		list.append(helper.id)
+	helped_by[target.id] = list
+
+
+## The preparation of the Faith test (D-270): +[faith_prepared_per_ally] per
+## ally who helped, up to [faith_prepared_ally_max], +[faith_prepared_vigil]
+## after a Vigil. Off while the keys are not in constants.csv.
+func prepared_bonus(saint: Combatant) -> float:
+	if not constants.has_key(&"faith_prepared_per_ally"):
+		return 0.0
+	var allies: int = (helped_by.get(saint.id, []) as Array).size()
+	var bonus: float = minf(allies * constants.get_float(&"faith_prepared_per_ally"), constants.get_float_or(&"faith_prepared_ally_max", 1.0))
+	if vigil_saints.has(saint.id):
+		bonus += constants.get_float_or(&"faith_prepared_vigil", 0.0)
+	return bonus
+
+
 func desolation_context(saint: Combatant = null) -> DesolationContext:
 	var ctx := DesolationContext.new()
 	ctx.constants = constants
@@ -304,6 +332,7 @@ func desolation_context(saint: Combatant = null) -> DesolationContext:
 	ctx.battle = self
 	ctx.emit = emit
 	if saint != null:
+		ctx.prepared_bonus = prepared_bonus(saint)
 		if has_affinity_bonus(saint, &"carmel"):
 			ctx.affinity_mult = constants.get_float(&"affinity_carmel_desolation_mult")
 		var benedict: Combatant = clausura_holder()

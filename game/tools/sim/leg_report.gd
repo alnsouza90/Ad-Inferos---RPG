@@ -45,6 +45,16 @@ static func build(sim: LegSimulator) -> LegReport:
 	r.metrics["battles_per_leg"] = _mean(heuristic_legs, "battles")
 	r.metrics["rounds_per_leg"] = _mean(heuristic_legs, "rounds")
 	r.metrics["commands_per_leg"] = _mean(heuristic_legs, "commands")
+	# Rules being simulated (T61).
+	var total := func(key: String) -> float: return heuristic_legs.reduce(func(acc: float, l: Dictionary) -> float: return acc + float(l.get(key, 0)), 0.0)
+	var n: float = maxf(1.0, float(heuristic_legs.size()))
+	r.metrics["faith_checks_per_leg"] = total.call("faith_checks") / n
+	r.metrics["consolation_rate"] = total.call("faith_success") / maxf(1.0, total.call("faith_checks"))
+	r.metrics["prostrations_per_leg"] = total.call("prostrations") / n
+	r.metrics["intercedes_per_leg"] = total.call("intercedes") / n
+	r.metrics["gifts_per_leg"] = total.call("gifts") / n
+	r.metrics["fidelity_exits_per_leg"] = total.call("fidelity_exits") / n
+	r.metrics["battle_end_desolation"] = total.call("battle_end_total") / maxf(1.0, total.call("battle_end_count"))
 	var random_legs: Array = sim.legs.filter(func(l: Dictionary) -> bool: return l["policy"] == SimPolicy.RANDOM)
 	if not random_legs.is_empty():
 		r.metrics["random_leg_complete"] = _rate(random_legs.map(func(l: Dictionary) -> Dictionary: return {"x": l["end"] == ExpeditionController.END_LEG_COMPLETE}), "x")
@@ -66,7 +76,7 @@ func summary() -> String:
 		if t[2] != null or t[3] != null:
 			mark = "OK" if (t[2] == null or v >= float(t[2])) and (t[3] == null or v <= float(t[3])) else "XX"
 		lines.append("%s %s: %.3f" % [mark, t[1], v])
-	for key: String in ["rounds_easy", "rounds_hard", "hp_left_easy", "legs_with_dark_night", "leg_complete", "defeated", "ambush_rate", "relic_rate", "hp_left_leg", "desolation_end", "peak_desolation", "peak_desolation_max", "alms", "battles_per_leg", "rounds_per_leg", "commands_per_leg", "random_leg_complete", "random_win_hard"]:
+	for key: String in ["battle_end_desolation", "faith_checks_per_leg", "consolation_rate", "prostrations_per_leg", "intercedes_per_leg", "gifts_per_leg", "fidelity_exits_per_leg", "rounds_easy", "rounds_hard", "hp_left_easy", "legs_with_dark_night", "leg_complete", "defeated", "ambush_rate", "relic_rate", "hp_left_leg", "desolation_end", "peak_desolation", "peak_desolation_max", "alms", "battles_per_leg", "rounds_per_leg", "commands_per_leg", "random_leg_complete", "random_win_hard"]:
 		if metrics.has(key):
 			lines.append("   %s: %.3f" % [key, metrics[key]])
 	lines.append("   opções da Tentação: %s" % [counts["event_options"]])

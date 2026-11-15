@@ -79,6 +79,22 @@ func play_leg(battle_policy: StringName, path_policy: StringName, campaign_seed:
 			for e: BattleEvent in battle_before.history:
 				if e.type == &"state_changed" and e.data["new"] == Desolation.DARK_NIGHT:
 					dark_night[e.data["target"]] = true
+				# Rules being simulated (T61): how often each one shows up.
+				match e.type:
+					&"faith_check":
+						leg["faith_checks"] = int(leg.get("faith_checks", 0)) + 1
+						if e.data["success"]:
+							leg["faith_success"] = int(leg.get("faith_success", 0)) + 1
+					&"prostration":
+						leg["prostrations"] = int(leg.get("prostrations", 0)) + 1
+					&"interceded":
+						leg["intercedes"] = int(leg.get("intercedes", 0)) + 1
+					&"consolation_given":
+						leg["gifts"] = int(leg.get("gifts", 0)) + 1
+					&"desolation_changed":
+						if e.data.get("source", &"") == &"battle_end":
+							leg["battle_end_total"] = int(leg.get("battle_end_total", 0)) + int(e.data["new"]) - int(e.data["old"])
+							leg["battle_end_count"] = int(leg.get("battle_end_count", 0)) + 1
 		for id: StringName in ctrl.state.party:
 			var status: SaintStatus = ctrl.saints[id]
 			if status.spirit_state == Desolation.DARK_NIGHT:
@@ -110,6 +126,7 @@ func play_leg(battle_policy: StringName, path_policy: StringName, campaign_seed:
 	leg["light_end"] = ctrl.state.light
 	leg["alms"] = ctrl.state.alms_banked + ctrl.state.alms_unbanked
 	leg["virtues"] = ctrl.virtues.total()
+	leg["fidelity_exits"] = ctrl.fidelity_exits
 	return leg
 
 

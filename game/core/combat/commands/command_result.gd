@@ -20,6 +20,9 @@ const NO_PROVISION: StringName = &"no_provision"
 const NOT_USABLE_IN_BATTLE: StringName = &"not_usable_in_battle"
 const PROVISION_LIMIT: StringName = &"provision_limit"
 const RETREAT_NOT_ALLOWED: StringName = &"retreat_not_allowed"
+const RULE_OFF: StringName = &"rule_off"
+const NOTHING_TO_TAKE: StringName = &"nothing_to_take"
+const NOT_IN_CONSOLATION: StringName = &"not_in_consolation"
 
 var ok: bool = false
 var reason: StringName = &""

@@ -101,6 +101,10 @@ func execute(cmd: BattleCommand) -> CommandResult:
 			reason = _run_provision(cmd)
 		BattleCommand.RETREAT_BATTLE:
 			reason = _run_retreat()
+		BattleCommand.INTERCEDE:
+			reason = _run_intercede(cmd)
+		BattleCommand.GIVE_CONSOLATION:
+			reason = _run_give_consolation(cmd)
 		_:
 			reason = CommandResult.UNKNOWN_COMMAND
 	if reason != &"":
@@ -128,6 +132,10 @@ func validate(cmd: BattleCommand) -> StringName:
 			return reason
 		BattleCommand.PASS:
 			return _check_pass(_saint(cmd.actor_id))
+		BattleCommand.INTERCEDE:
+			return _check_intercede(cmd)
+		BattleCommand.GIVE_CONSOLATION:
+			return _check_give_consolation(cmd)
 		BattleCommand.SWAP_SLOTS:
 			var mover: Combatant = _saint(cmd.actor_id)
 			if mover == null:
@@ -502,6 +510,84 @@ func _run_pass(cmd: BattleCommand) -> StringName:
 	actor.has_acted = true
 	_emit(EV_PASSED, {"actor": actor.id})
 	state.engine.consume_stun(actor)
+	return &""
+
+
+# --- rules being simulated (T61, D-363): off without their constants -----------
+
+## Interceder (D-268): the actor takes [intercede_amount] of an ally's
+## desolation (or less, if the ally has less). It moves, it does not create:
+## the actor's gain skips the multipliers.
+func _check_intercede(cmd: BattleCommand) -> StringName:
+	if not state.constants.has_key(&"intercede_amount"):
+		return CommandResult.RULE_OFF
+	var actor: Combatant = _saint(cmd.actor_id)
+	var reason: StringName = _check_pass(actor)
+	if reason != &"":
+		return reason
+	if actor.has_condition(BattleState.STUN):
+		return CommandResult.STUNNED
+	var target: Combatant = state.party_at(cmd.target_slots[0]) if cmd.target_slots.size() == 1 else null
+	if target == null or target == actor or not target.is_standing():
+		return CommandResult.INVALID_TARGET
+	if target.desolation <= 0:
+		return CommandResult.NOTHING_TO_TAKE
+	return &""
+
+
+func _run_intercede(cmd: BattleCommand) -> StringName:
+	var reason: StringName = _check_intercede(cmd)
+	if reason != &"":
+		return reason
+	var actor: Combatant = _saint(cmd.actor_id)
+	var target: Combatant = state.party_at(cmd.target_slots[0])
+	var amount: int = mini(state.constants.get_int(&"intercede_amount"), target.desolation)
+	actor.has_acted = true
+	_emit(&"interceded", {"actor": actor.id, "target": target.id, "amount": amount})
+	state.note_help(target, actor)
+	Desolation.change(target, -amount, &"intercede", state.desolation_context(target))
+	Desolation.change(actor, amount, &"intercede", state.desolation_context(actor), true)
+	return &""
+
+
+## The gift of Consolation (D-285): an ally in the Dark Night is purified;
+## a Fallen ally rises; any other ally loses [consolation_gift_desolation].
+## The giver goes back to normal.
+func _check_give_consolation(cmd: BattleCommand) -> StringName:
+	if not state.constants.has_key(&"consolation_gift_desolation"):
+		return CommandResult.RULE_OFF
+	var actor: Combatant = _saint(cmd.actor_id)
+	var reason: StringName = _check_pass(actor)
+	if reason != &"":
+		return reason
+	if actor.has_condition(BattleState.STUN):
+		return CommandResult.STUNNED
+	if actor.spirit_state != Desolation.CONSOLATION:
+		return CommandResult.NOT_IN_CONSOLATION
+	var target: Combatant = state.party_at(cmd.target_slots[0]) if cmd.target_slots.size() == 1 else null
+	if target == null or target == actor or not (target.is_standing() or (target.is_fallen() and target.revivable)):
+		return CommandResult.INVALID_TARGET
+	return &""
+
+
+func _run_give_consolation(cmd: BattleCommand) -> StringName:
+	var reason: StringName = _check_give_consolation(cmd)
+	if reason != &"":
+		return reason
+	var actor: Combatant = _saint(cmd.actor_id)
+	var target: Combatant = state.party_at(cmd.target_slots[0])
+	actor.has_acted = true
+	_emit(&"consolation_given", {"actor": actor.id, "target": target.id})
+	state.note_help(target, actor)
+	var ctx: DesolationContext = state.desolation_context(target)
+	if target.is_fallen():
+		var hp: int = state.revive(target, maxi(1, Damage.round_half_up(target.max_hp * state.constants.get_float_or(&"consolation_gift_revive_hp", 0.25))))
+		_emit(&"revived", {"target": target.id, "hp": hp, "amount": hp})
+	elif target.spirit_state == Desolation.DARK_NIGHT:
+		Desolation.purify(target, ctx)
+	else:
+		Desolation.change(target, -state.constants.get_int(&"consolation_gift_desolation"), &"consolation_gift", ctx)
+	Desolation.set_normal(actor, state.desolation_context(actor))
 	return &""
 
 
