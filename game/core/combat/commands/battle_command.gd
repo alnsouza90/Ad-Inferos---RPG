@@ -14,6 +14,8 @@ const RETREAT_BATTLE: StringName = &"RetreatBattle"
 ## Interceder (D-268) and the gift of Consolation (D-285), combat §4.1.
 const INTERCEDE: StringName = &"Intercede"
 const GIVE_CONSOLATION: StringName = &"GiveConsolation"
+## Firmar o pé against the Vendaval (bosses.md §2.2).
+const STAND_FIRM: StringName = &"StandFirm"
 
 var type: StringName
 var actor_id: StringName = &""
@@ -87,6 +89,13 @@ static func give_consolation(p_actor: StringName, p_target_slot: int) -> BattleC
 	cmd.type = GIVE_CONSOLATION
 	cmd.actor_id = p_actor
 	cmd.target_slots = [p_target_slot] as Array[int]
+	return cmd
+
+
+static func stand_firm(p_actor: StringName) -> BattleCommand:
+	var cmd := BattleCommand.new()
+	cmd.type = STAND_FIRM
+	cmd.actor_id = p_actor
 	return cmd
 
 

@@ -175,7 +175,7 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 | Círculo | Mecânica | Regra |
 | --- | --- | --- |
 | 0 Antinferno | Indecisão | Santo que usou `Pass` ou não agiu na rodada recebe +5 de desolação |
-| 2 Luxúria | Vendaval | No `ROUND_START`, sortear duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. Clausura de Bento impede a troca de quem está ao lado dele; **Firmar o pé** (`bosses.md` §2.2) impede a troca e dá Firmeza. Não acontece na luta com Asmodeu (`bosses.md` §5.1) |
+| 2 Luxúria | Vendaval | No `ROUND_START`, sortear duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. A Clausura de Bento **não** segura o Vendaval (D-402); **Firmar o pé** (`bosses.md` §2.2) impede a troca e dá Firmeza. Não acontece na luta com Asmodeu (`bosses.md` §5.1) |
 | 3 Gula | Fome | Cura recebida × 0,5 até a equipe usar um Pão naquele combate |
 | 4 Avareza | Ouro Maldito | Ao receber Esmolas em um nó, cada santo ganha +5 de desolação |
 | 5 Ira e Acídia | Fúria e Torpor | Condições `fury` (inimigos) e `torpor` (santos). Torpor não se aplica na luta contra Belfegor |
@@ -189,7 +189,7 @@ Executadas na etapa `HAZARD` do combate, salvo indicação.
 Os pecados de cada círculo agem como **assédio dos inimigos**, nunca como pecado dos santos. A mecânica de ambiente da tabela acima e o assédio são **um conceito só**, a Provação do Círculo, com três regras fixas:
 
 1. **É visível antes**, como intenção de ambiente ou condição com contagem.
-2. **Tem uma resposta ativa do santo, com custo** (ex.: o Pão na Fome, trocar de lugar nos Túmulos, Exorcismo no Contrapasso, o milagre no Torpor; no Vendaval, **Firmar o pé**, além da Clausura de Bento; `bosses.md` §2.2).
+2. **Tem uma resposta ativa do santo, com custo** (ex.: o Pão na Fome, trocar de lugar nos Túmulos, Exorcismo no Contrapasso, o milagre no Torpor; no Vendaval, **Firmar o pé**; `bosses.md` §2.2).
 3. **Resistir dá prêmio:** quando a companhia responde à provação, ganha uma ficha de **Firmeza**: +1 de Fervor na rodada seguinte, dentro do limite de ganho extra, no máximo uma por rodada (`bosses.md` §2.4; o número passa pela simulação da T61).
 
 - O **Pecado Encarnado** (elite do círculo) aplica a provação com força, numa ação própria. No Círculo 2, o **Encanto** da Vertigem puxa as intenções para um santo: ele sofre o assédio, não peca.
@@ -253,8 +253,8 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
 | Relíquia encontrada | O jogador escolhe na hora um santo com espaço livre (1 espaço por santo até o nível 4, [relic_slots_start]); o efeito vale já no trecho. Sem espaço, vai para a mochila sem efeito até a vila | D-146 |
-| Encontros do círculo (§3) | Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*` | Backlog do M1 |
+| Encontros do círculo (§3) | ~~Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*`~~ Desde a T39, `c02_easy_*` no trecho e `c02_hard_*` na emboscada (`bosses.md` §6); saves antigos seguem com os `m0_*` | Backlog do M1; T39 |
 | Ordem da equipe | Cada combate começa na ordem em que o anterior terminou (vale também depois do M1) | D-134 |
 | Saída do Pouso (§6) | Seguir ou retirada planejada encerram o trecho, com as Esmolas garantidas | Backlog do M1 |
 | Experiência (§8) e ferimentos (§9) | Ferimentos ficam registrados no estado, sem efeito; sem experiência | Backlog do M1 |
-| Mecânica de ambiente do Círculo 2 (§10) | Sem Vendaval | Backlog do M1 |
+| Mecânica de ambiente do Círculo 2 (§10) | ~~Sem Vendaval~~ Vendaval desde a T39, com Firmar o pé e Firmeza | Backlog do M1; T39 |

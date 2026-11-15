@@ -98,7 +98,7 @@ func press_new_leg() -> void:
 func press_depart() -> void:
 	var campaign_seed: int = fixed_seed if fixed_seed != 0 else int(Time.get_unix_time_from_system()) ^ Time.get_ticks_usec()
 	var map_seed: int = ExpeditionController.map_seed_for(campaign_seed, CIRCLE, EXPEDITION_NUMBER)
-	var ctrl := ExpeditionController.start_new(catalog, CIRCLE, map_seed, GameData.M0_FORMATION, catalog.kit_provisions(KIT), EncounterDef.ARENA_CIRCLE)
+	var ctrl := ExpeditionController.start_new(catalog, CIRCLE, map_seed, GameData.M0_FORMATION, catalog.kit_provisions(KIT), GameData.EXPEDITION_ENCOUNTER_CIRCLE)
 	var state: Node = _game_state()
 	if state != null:
 		state.call("start_expedition", catalog, ctrl, campaign_seed)

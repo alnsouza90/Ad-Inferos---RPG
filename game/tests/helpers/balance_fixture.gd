@@ -40,7 +40,7 @@ static func valid_tables() -> Dictionary:
 			+ "e_hit,2,1|2|3|4,1|2,single,front_most,always,0,attack\n",
 		"enemies": "id,name_pt,family,circles,nature,role,size,max_hp,armor,immune,leaves_remains,remains_rounds,actions,art_id\n"
 			+ "enemy_e,Demônio,a,2|3,corporeal,brute,1,30,1,stun,,,e_hit|e_brood,enemy_e\n",
-		"encounters": "id,circle,pool,slot_1,slot_2,slot_3,slot_4,type\nenc_1,m0,easy,enemy_e,enemy_e,,,common\n",
+		"encounters": "id,circle,pool,slot_1,slot_2,slot_3,slot_4,type,hazard\nenc_1,m0,easy,enemy_e,enemy_e,,,common,\n",
 		"provisions": "id,name_pt,price,usable_in_battle,targeting,effect_ids\nbread,Pão,15,y,ally,bread\n",
 		"ui_text": "id,text_pt\nend_turn,Encerrar turno\nround,Rodada {round}\n",
 		"map_templates": "id,leg,layer,index,role,type,links\n"

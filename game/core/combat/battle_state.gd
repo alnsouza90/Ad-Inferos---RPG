@@ -22,6 +22,17 @@ var condition_defs: Dictionary = {}
 var provisions: Array[StringName] = []
 ## &"common", &"elite" or &"boss" (retreat is not allowed against bosses).
 var encounter_type: StringName = &"common"
+## Circle environment mechanic (expedition §10): &"gale" or &"".
+var hazard: StringName = &""
+## Vendaval of this round (bosses.md §2.1): the two adjacent party slots
+## marked at ROUND_START and swapped at HAZARD; empty when nothing is marked.
+var gale_slots: Array[int] = []
+## A saint stood firm this round (bosses.md §2.2): the swap does not happen.
+var gale_held: bool = false
+## Firmeza (bosses.md §2.4): tokens earned this round, and the Fervor they
+## give at the start of the next one.
+var firmness_this_round: int = 0
+var firmness_pending: int = 0
 var provisions_used_this_turn: int = 0
 ## True during ENEMY_TURN and HAZARD (affects expire_round_end, conditions §3.3).
 var in_enemy_phase: bool = false
@@ -370,6 +381,22 @@ func clausura_holder() -> Combatant:
 	return null
 
 
+## The Vendaval would swap the marked slots at HAZARD this round. The
+## Clausura does not hold it: it only guards against enemies (D-402).
+func gale_will_swap() -> bool:
+	return gale_slots.size() == 2 and not gale_held
+
+
+## Firmeza (bosses.md §2.4): one token, at most [firmness_per_round] a
+## round. Returns true when a token was earned.
+func earn_firmness() -> bool:
+	if firmness_this_round >= constants.get_int(&"firmness_per_round"):
+		return false
+	firmness_this_round += 1
+	firmness_pending += 1
+	return true
+
+
 ## Allies adjacent to the Clausura holder (not the holder itself).
 func is_clausura_protected(c: Combatant) -> bool:
 	var holder: Combatant = clausura_holder()
@@ -506,6 +533,7 @@ func to_dict() -> Dictionary:
 		"round": round_number, "party": party_list, "enemies": enemy_list, "intents": intent_list,
 		"provisions": provision_list, "provisions_used_this_turn": provisions_used_this_turn,
 		"encounter_type": String(encounter_type), "light": light,
+		"gale": Array(gale_slots), "gale_held": gale_held, "firmness_pending": firmness_pending,
 		"rng": rng.get_counters(),
 	}
 

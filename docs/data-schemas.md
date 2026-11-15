@@ -157,6 +157,7 @@ Campos de `docs/specs/enemy-ai.md` §2. As condições ficam em `conditions` no 
 | `pool` | `easy` / `hard` / `elite` / `boss` / `ambush` | |
 | `slot_1` … `slot_4` | texto | ID do inimigo em cada posição |
 | `type` | `common` / `elite` / `boss` | Para recompensas e desolação de fim de combate |
+| `hazard` | vazio / `gale` | Mecânica de ambiente do círculo neste combate (`expedition.md` §10): `gale` é o Vendaval do Círculo 2. Vazio na arena e no chefe (Asmodeu tem o próprio Vendaval) |
 
 ### 3.10 `provisions.csv` → `ProvisionDef`
 

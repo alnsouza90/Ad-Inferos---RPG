@@ -10,3 +10,6 @@ const ARENA_CIRCLE: int = -1
 @export var pool: StringName = &""
 @export var slots: Array[StringName] = []
 @export var type: StringName = &""
+## Circle environment mechanic of this battle (expedition §10): &"gale"
+## (Vendaval of Circle 2) or &"" for none.
+@export var hazard: StringName = &""

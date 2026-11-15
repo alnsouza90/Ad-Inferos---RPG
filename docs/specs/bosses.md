@@ -19,7 +19,7 @@ Escopo: o Guardião (Minos), o Pecado Encarnado (Vertigem) e o chefe (Asmodeu) d
 
 ### 2.1 Vendaval (já especificado, `expedition.md` §10)
 
-No `ROUND_START`, sortear (RNG `battle`) duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. A Clausura de Bento impede a troca de quem está ao lado dele. **[D]** a tempestade que arrasta os luxuriosos (*Inferno* V); a forma de jogo é **[J]**.
+No `ROUND_START`, sortear (RNG `battle`) duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. ~~A Clausura de Bento impede a troca de quem está ao lado dele.~~ **A Clausura não segura o Vendaval** (D-402: vale só contra os inimigos; com Bento no meio ela seguraria todo Vendaval). **Implementado na T39:** o sorteio é entre as duplas de posições vizinhas, com chance igual, depois das intenções inimigas; as posições marcadas são as da rodada (quem estiver nelas no `HAZARD` é trocado, inclusive um Caído); só nos encontros com `hazard = gale` (`encounters.csv`). **[D]** a tempestade que arrasta os luxuriosos (*Inferno* V); a forma de jogo é **[J]**.
 
 ### 2.2 Firmar o pé (resposta comum, D-393 (3))
 
@@ -34,7 +34,7 @@ Comando novo `StandFirm(actor)`, ao lado de Trocar e Passar. **[J]**
 | Validação | Rejeitar se não há Vendaval marcado na posição do santo, se ele já agiu, ou se está Atordoado ou Caído |
 | Prévia | "Firmar o pé: a troca não acontece. Firmeza: +[firmness_fervor] de Fervor na próxima rodada" |
 
-- Se a Clausura de Bento já impede a troca, Firmar o pé não está disponível (não há troca a impedir).
+- ~~Se a Clausura de Bento já impede a troca, Firmar o pé não está disponível.~~ A Clausura não segura o Vendaval (D-402).
 
 ### 2.3 Encanto da Vertigem (o assédio com força, D-393 (2))
 
@@ -174,7 +174,7 @@ Os encontros `m0_*` continuam na arena de teste.
 | Caso | Regra |
 | --- | --- |
 | B01 | Firmar o pé de um santo marcado pelo Vendaval impede a troca, gasta a ação dele e dá 1 Firmeza; a rodada seguinte começa com +1 de Fervor, sem passar do limite de ganho extra |
-| B02 | Firmar o pé é rejeitado para santo não marcado, que já agiu, Atordoado, ou quando a Clausura de Bento já impede a troca |
+| B02 | Firmar o pé é rejeitado para santo não marcado, que já agiu ou Atordoado; a Clausura de Bento não segura o Vendaval (D-402) |
 | B03 | Com um santo Encantado, toda ação inimiga de alvo único que pode mirá-lo o mira; ações em área e ambiente não mudam |
 | B04 | Provocação de Jorge vence o Encanto |
 | B05 | Uma cura ou bênção de outro santo quebra o Encanto na hora e dá 1 Firmeza; a do próprio santo não quebra |
