@@ -136,13 +136,14 @@ A tela usa esses eventos para a barra, a auréola (`docs/art/asset-pipeline.md` 
 | D15 | Interceder pelo Sangramento 3 de um aliado | Aliado sem Sangramento; quem intercede com 3 pilhas; desolação igual |
 | D16 | Santo em Consolação dá a Consolação a aliado em Noite Escura | Aliado: Purificação, estado normal; quem deu: normal |
 | D17 | Dar a Consolação a aliado normal com 70 | Aliado 40 |
+| D17b | Dar a Consolação a aliado Caído (vida máxima 30) dentro da janela | Levanta com 9 de vida |
 | D18 | Fé 20, dois companheiros ajudaram e fez a Vigília | Preparo 15%; chance limitada a 70% |
 | D19 | Noite Escura, 3 combates vencidos de pé | Purificação; desolação ≤ 50; marcas 0 |
 | D20 | Noite Escura termina por desolação abaixo de 50 com 1 marca | Marcas 0 |
 
 ## 8. Regras da consultoria (D-266 (3), D-280)
 
-Direção aprovada por Alan na consultoria do Fable, simulada na T61 (`docs/balance/sim-reports/2026-11-15-m2-t61.md`). **Em vigor desde a T62** com os números de D-396: desolação por rodadas (§2.1), Interceder e dar a Consolação (`combat.md` §4.1), preparo do teste de Fé (§3) e Fidelidade (§4.4). Alan aceitou o jogo mais duro que os números dão no trecho 1 (Noite Escura 0,34 por trecho); a meta de Noite Escura é medida de novo na expedição longa (T42). **Ainda pendentes:** o aviso na intenção inimiga que levará o santo aos 100 (D-270), o fio de ouro de Interceder na tela, a vida com que o dom da Consolação levanta um Caído (sem número aprovado: até lá, um Caído não é alvo do dom) e as variantes do Lume (T61, parte 2). A tabela abaixo é o registro do que foi simulado.
+Direção aprovada por Alan na consultoria do Fable, simulada na T61 (`docs/balance/sim-reports/2026-11-15-m2-t61.md`). **Em vigor desde a T62** com os números de D-396 e D-399: desolação por rodadas (§2.1), Interceder e dar a Consolação (`combat.md` §4.1), preparo do teste de Fé (§3) e Fidelidade (§4.4). Alan aceitou o jogo mais duro que os números dão no trecho 1 (Noite Escura 0,34 por trecho); a meta de Noite Escura é medida de novo na expedição longa (T42). **Ainda pendentes:** o aviso na intenção inimiga que levará o santo aos 100 (D-270), o fio de ouro de Interceder na tela e as variantes do Lume (T61, parte 2). A tabela abaixo é o registro do que foi simulado.
 
 | Regra | Decisão | O que muda | A simular |
 | --- | --- | --- | --- |

@@ -49,11 +49,10 @@ func test_the_real_data_has_every_approved_number() -> void:
 		"desolation_battle_end_base": 20, "desolation_battle_end_per_round": 3, "desolation_battle_end_from_round": 1,
 		"intercede_amount": 15, "fidelity_marks": 3, "fidelity_reset_value": 50,
 		"faith_prepared_per_ally": 0.05, "faith_prepared_ally_max": 0.1, "faith_prepared_vigil": 0.05,
-		"faith_prepared_cap": 0.7, "consolation_gift_desolation": 30,
+		"faith_prepared_cap": 0.7, "consolation_gift_desolation": 30, "consolation_gift_revive_hp": 0.3,
 	}
 	for key: String in approved:
 		assert_almost_eq(real.get_float(StringName(key)), float(approved[key]), 0.0001, key)
-	assert_false(real.has_key(&"consolation_gift_revive_hp"), "levantar um Caído espera o número de Alan")
 
 
 # --- Interceder ------------------------------------------------------------------
@@ -174,9 +173,9 @@ func test_gift_cannot_raise_a_fallen_ally_without_the_revive_number() -> void:
 	b.hp = 0
 	b.state = Combatant.State.FALLEN
 	assert_eq(c.execute(BattleCommand.give_consolation(&"saint_a", 2)).reason, CommandResult.INVALID_TARGET)
-	_put("consolation_gift_revive_hp", 0.5)
+	_put("consolation_gift_revive_hp", 0.3)
 	assert_true(c.execute(BattleCommand.give_consolation(&"saint_a", 2)).ok)
-	assert_eq(b.hp, Damage.round_half_up(b.max_hp * 0.5), "levanta com a fração dada")
+	assert_eq(b.hp, Damage.round_half_up(b.max_hp * 0.3), "levanta com 30% da vida (D-399)")
 
 
 # --- preparation of the Faith test ---------------------------------------------------
