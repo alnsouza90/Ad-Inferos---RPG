@@ -74,6 +74,9 @@ reason_no_provision,Sem provisão
 reason_not_usable_in_battle,Não se usa em combate
 reason_provision_limit,Limite de provisões no turno
 reason_retreat_not_allowed,Não há retirada contra chefe
+reason_rule_off,Regra ainda em teste.
+reason_nothing_to_take,Não há desolação para tomar.
+reason_not_in_consolation,Só um santo em Consolação pode dá-la.
 reason_no_slot,Sem posição para trocar
 result_victory,Vitória
 result_defeat,Derrota

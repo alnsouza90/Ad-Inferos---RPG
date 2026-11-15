@@ -11,6 +11,10 @@ const PASS: StringName = &"Pass"
 const USE_PROVISION: StringName = &"UseProvision"
 const END_PARTY_TURN: StringName = &"EndPartyTurn"
 const RETREAT_BATTLE: StringName = &"RetreatBattle"
+## Being simulated (T61), off until their numbers are in constants.csv:
+## Interceder (D-268) and the gift of Consolation (D-285).
+const INTERCEDE: StringName = &"Intercede"
+const GIVE_CONSOLATION: StringName = &"GiveConsolation"
 
 var type: StringName
 var actor_id: StringName = &""
@@ -60,6 +64,24 @@ static func use_provision(p_provision: StringName, p_target_slot: int, p_actor: 
 	var cmd := BattleCommand.new()
 	cmd.type = USE_PROVISION
 	cmd.provision_id = p_provision
+	cmd.actor_id = p_actor
+	cmd.target_slots = [p_target_slot] as Array[int]
+	return cmd
+
+
+## The actor takes on part of the desolation of the ally in `p_target_slot`.
+static func intercede(p_actor: StringName, p_target_slot: int) -> BattleCommand:
+	var cmd := BattleCommand.new()
+	cmd.type = INTERCEDE
+	cmd.actor_id = p_actor
+	cmd.target_slots = [p_target_slot] as Array[int]
+	return cmd
+
+
+## The actor, in Consolation, gives it to the ally in `p_target_slot`.
+static func give_consolation(p_actor: StringName, p_target_slot: int) -> BattleCommand:
+	var cmd := BattleCommand.new()
+	cmd.type = GIVE_CONSOLATION
 	cmd.actor_id = p_actor
 	cmd.target_slots = [p_target_slot] as Array[int]
 	return cmd

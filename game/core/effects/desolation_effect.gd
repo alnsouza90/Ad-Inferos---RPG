@@ -11,4 +11,7 @@ func apply(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:
 	var amount: float = effect.amount
 	if target.is_dark_night() and effect.params.has("dark_night_amount"):
 		amount = float(effect.params["dark_night_amount"])
+	if amount < 0.0:
+		# An ally who relieves him prepares his Faith test (D-270, simulated).
+		ctx.state.note_help(target, ctx.actor)
 	ctx.state.add_desolation(target, int(amount), ctx.source_id)

@@ -47,6 +47,10 @@ static func _saint_candidates(ctrl: BattleController, saint: Combatant, include_
 			seen[provision] = true
 			for slot: int in [1, 2, 3]:
 				cmds.append(BattleCommand.use_provision(provision, slot, saint.id))
+	# Rules being simulated (T61): refused while their numbers are off.
+	for slot: int in [1, 2, 3, 4]:
+		cmds.append(BattleCommand.intercede(saint.id, slot))
+		cmds.append(BattleCommand.give_consolation(saint.id, slot))
 	cmds.append(BattleCommand.swap_slots(saint.id, -1))
 	cmds.append(BattleCommand.swap_slots(saint.id, 1))
 	cmds.append(BattleCommand.pass_turn(saint.id))

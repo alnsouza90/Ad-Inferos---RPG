@@ -16,6 +16,9 @@ var trait_mult: float = 1.0
 var relic_mult: float = 1.0
 var season_mult: float = 1.0
 var faith_bonus: float = 0.0
+## The company prepared the Faith test (D-270, being simulated): allies who
+## interceded for or relieved this saint, and the Vigil of the leg.
+var prepared_bonus: float = 0.0
 ## Set during a battle: Prostration makes the saint fall in it.
 var battle: BattleState
 var emit: Callable = func(_type: StringName, _data: Dictionary) -> void: pass

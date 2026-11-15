@@ -9,7 +9,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Recalibrar metas "vitória da heurística em difícil" e "Noite Escura na expedição longa" (D-113); forma decidida em D-125 e D-126. Feito na T31 (D-164, D-165); o difícil volta a ser medido no M2 | M2 | 03/11/2026 |
 | ~~Criar `docs/backlog/m1.md`~~ Proposta feita e perguntas respondidas por Alan em 04/11/2026 (D-121 a D-126) | Alan | 03/11/2026 |
 | Datas das festas dos santos (`feasts.csv`) | Pesquisa do Martirológio (Alan) | 03/11/2026 |
-| Heurística do simulador gasta todo o Fervor no milagre de Jorge (rever a política, não os números); entra no passo 0 da rodada de simulação (D-280) | `m2.md` T61 | 03/11/2026 |
+| ~~Heurística do simulador gasta todo o Fervor no milagre de Jorge~~ Corrigido na T61 (D-395); entra no passo 0 da rodada de simulação (D-280) | `m2.md` T61 | 03/11/2026 |
 | Fundos "xadrez" pintados na imagem (JPG não tem transparência): Diabo de Lodo, Sopro Errante, Sombra, Mãe-Enxame, Moscardo, Enxame e camada da frente do cenário. Ideal: PNG com transparência real ou fundo liso cinza; senão, recorte na T16 | Alan / T16 | 03/11/2026 |
 | Consolação de São Bento veio com auréola desenhada (a Direção de Arte pede sem); conferir no motor ou pedir versão sem | T16 / Alan | 03/11/2026 |
 | ~~Confirmar qual imagem de Teresinha é o padrão e qual é a Consolação~~ Confirmado por Alan em 03/11/2026: muitas pétalas = Consolação; poucas = padrão | Alan | 03/11/2026 |
@@ -98,3 +98,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Peças em pixel que o motor desenha por enquanto~~ Lamparina, óculo, ícones, entradas, tenda, relicário e almas gerados e no jogo (D-385), aguardam Alan | Alan | 15/11/2026 |
 | Revisão de Alan da arte de D-385; pendentes: ícones fracos (guarda, Passar), ícone separado de Deslocar, Pouso em pixel numa tela refeita, ícones de ação nas lancetas (T44) | Alan / T44 / T53 | 15/11/2026 |
 | Teste no APK da T65 (tela de 960 × 540) e da T60 (luta em poses): aprovadas pelas prévias e pelo GIF | Alan | 15/11/2026 |
+| T61 parte 2: variantes do Lume (D-262, D-273), prêmio do escuro em experiência (D-274) e Firmeza; e medir de novo Interceder, Fidelidade e o dom da Consolação na expedição longa | T42 | 15/11/2026 |
