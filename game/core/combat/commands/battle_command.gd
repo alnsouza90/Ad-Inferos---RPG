@@ -11,8 +11,7 @@ const PASS: StringName = &"Pass"
 const USE_PROVISION: StringName = &"UseProvision"
 const END_PARTY_TURN: StringName = &"EndPartyTurn"
 const RETREAT_BATTLE: StringName = &"RetreatBattle"
-## Being simulated (T61), off until their numbers are in constants.csv:
-## Interceder (D-268) and the gift of Consolation (D-285).
+## Interceder (D-268) and the gift of Consolation (D-285), combat §4.1.
 const INTERCEDE: StringName = &"Intercede"
 const GIVE_CONSOLATION: StringName = &"GiveConsolation"
 
@@ -25,6 +24,8 @@ var provision_id: StringName = &""
 var target_slots: Array[int] = []
 ## SwapSlots only: -1 toward slot 1, +1 toward the back.
 var direction: int = 0
+## Intercede only: the negative condition to take; &"" takes desolation.
+var condition_id: StringName = &""
 
 
 static func use_ability(p_actor: StringName, p_ability: StringName, p_targets: Array[int] = []) -> BattleCommand:
@@ -69,12 +70,14 @@ static func use_provision(p_provision: StringName, p_target_slot: int, p_actor: 
 	return cmd
 
 
-## The actor takes on part of the desolation of the ally in `p_target_slot`.
-static func intercede(p_actor: StringName, p_target_slot: int) -> BattleCommand:
+## The actor takes on part of the desolation of the ally in `p_target_slot`,
+## or every stack of the ally's negative condition `p_condition`.
+static func intercede(p_actor: StringName, p_target_slot: int, p_condition: StringName = &"") -> BattleCommand:
 	var cmd := BattleCommand.new()
 	cmd.type = INTERCEDE
 	cmd.actor_id = p_actor
 	cmd.target_slots = [p_target_slot] as Array[int]
+	cmd.condition_id = p_condition
 	return cmd
 
 
@@ -111,6 +114,8 @@ func to_dict() -> Dictionary:
 		data["targets"] = Array(target_slots)
 	if direction != 0:
 		data["direction"] = direction
+	if condition_id != &"":
+		data["condition"] = String(condition_id)
 	return data
 
 
@@ -123,4 +128,5 @@ static func from_dict(data: Dictionary) -> BattleCommand:
 	for slot: Variant in data.get("targets", []):
 		cmd.target_slots.append(int(slot))
 	cmd.direction = int(data.get("direction", 0))
+	cmd.condition_id = StringName(str(data.get("condition", "")))
 	return cmd

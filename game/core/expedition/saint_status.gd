@@ -20,6 +20,8 @@ var injury: StringName = INJURY_NONE
 var relics: Array[StringName] = []
 ## Faith added by carried relics (stat_add), applied to every battle.
 var faith_bonus: int = 0
+## Battles ended standing in the current Dark Night (Fidelity, D-271).
+var fidelity_marks: int = 0
 
 
 static func from_def(def: SaintDef) -> SaintStatus:
@@ -51,6 +53,7 @@ func to_dict() -> Dictionary:
 		"id": String(id), "max_hp": max_hp, "hp": hp, "desolation": desolation,
 		"spirit_state": String(spirit_state), "purified": purified, "injury": String(injury),
 		"relics": relics.map(func(r: StringName) -> String: return String(r)), "faith_bonus": faith_bonus,
+		"fidelity_marks": fidelity_marks,
 	}
 
 
@@ -66,4 +69,5 @@ static func from_dict(data: Dictionary) -> SaintStatus:
 	for r: Variant in data.get("relics", []):
 		s.relics.append(StringName(str(r)))
 	s.faith_bonus = int(data.get("faith_bonus", 0))
+	s.fidelity_marks = int(data.get("fidelity_marks", 0))
 	return s

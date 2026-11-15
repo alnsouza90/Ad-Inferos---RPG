@@ -80,13 +80,15 @@ O combate começa em `ROUND_START` da rodada 1 com Fervor 0 (portanto a equipe a
 | `UseProvision(provision, target, actor)` | Usa uma provisão da expedição; `actor` é o santo que aplica (importa para o traço de Nicolau de Mira) e **não** gasta a ação dele | Não; limite de [provisions_per_turn] por turno de equipe |
 | `EndPartyTurn` | Encerra o turno; santos que não agiram perdem a ação | — |
 | `RetreatBattle` | Retirada de emergência (não disponível contra chefe) | — |
+| `Intercede(actor, target, condition?)` | Interceder (D-268): sem Fervor, por outro santo de pé. Sem `condition`, move [intercede_amount] (15) de desolação do aliado para quem intercede (ou o que o aliado tiver); com `condition`, move todas as pilhas dessa condição negativa, com a duração. Move, não cria: o ganho não passa pelos multiplicadores (`desolation.md` §2) nem pela Vontade. Recusado sem nada a tomar (`nothing_to_take`) | Sim |
+| `GiveConsolation(actor, target)` | Dar a Consolação (D-285): só o santo em Consolação, por outro santo. Aliado em Noite Escura: Purificação; aliado normal ou em Consolação: −[consolation_gift_desolation] (30). Quem deu volta a `normal`. Levantar um Caído espera o número de Alan | Sim |
+
+Interceder e dar a Consolação contam como ajuda para o preparo do teste de Fé do aliado (`desolation.md` §3).
 
 **Comandos aprovados, ainda não especificados** (entram com os números aprovados; nada implementado):
 
 | Comando | Decisão | Ideia | Quando |
 | --- | --- | --- | --- |
-| Interceder | D-268 | Ação comum de todo santo, ao lado de Trocar e Passar; gasta a ação, sem Fervor; toma para si desolação ou uma condição de um aliado (`desolation.md` §8). Na tela, um fio de ouro liga os dois santos | T61 e T62 |
-| Dar a Consolação | D-285 | O santo em Consolação a dá a um companheiro, gastando a ação (`desolation.md` §8) | T61 e T62 |
 | Súplica | D-283 | Um santo que ficou na Capela socorre a companhia uma vez, sem gastar a vez de ninguém nem Fervor (`village-economy.md` §4) | M3 |
 | Firmar o pé (`StandFirm`) | D-267, D-393 | Especificado em `bosses.md` §2.2: santo marcado pelo Vendaval gasta a ação, a troca não acontece, ganha Firmeza | T39 |
 

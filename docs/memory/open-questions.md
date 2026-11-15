@@ -100,3 +100,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Teste no APK da T65 (tela de 960 × 540) e da T60 (luta em poses): aprovadas pelas prévias e pelo GIF | Alan | 15/11/2026 |
 | T61 parte 2: variantes do Lume (D-262, D-273), prêmio do escuro em experiência (D-274) e Firmeza; e medir de novo Interceder, Fidelidade e o dom da Consolação na expedição longa | T42 | 15/11/2026 |
 | Meta nova de Noite Escura por trecho com a desolação de fim de combate de D-396 (20 + 3 por rodada desde a 1ª): medir na expedição longa | T42 | 15/11/2026 |
+| T62: a desolação por rodadas vale só no combate comum? Proposta: sim (elite 20 e chefe 35 fixos, como `desolation.md` §2.1) | Alan | 15/11/2026 |
+| T62: as marcas de Fidelidade zeram quando a Noite Escura termina de outro jeito? Proposta: sim | Alan | 15/11/2026 |
+| T62: com quanta vida o dom da Consolação levanta um Caído? Proposta: 30% (como o Abandono de Teresinha); até lá, um Caído não é alvo do dom | Alan | 15/11/2026 |
+| T62 (D-270): aviso na intenção inimiga que levará o santo aos 100 e o fio de ouro de Interceder na tela ainda não feitos | T44 | 15/11/2026 |

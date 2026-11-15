@@ -62,6 +62,8 @@ const RACK_POS := Vector2(396, 478)
 const CANDLE_FLAMES: Array[Vector2] = [Vector2(22, 2), Vector2(42, 11), Vector2(63, -1), Vector2(85, 9), Vector2(107, 3), Vector2(127, 6)]
 const ACTION_POS := Vector2(566, 368)
 const ACTION_SIZE := Vector2(126, 24)
+## Two small actions share a row: Swap and Pass, Interceder and the gift.
+const HALF_ACTION_SIZE := Vector2(64, 24)
 const HOOK_POS := Vector2(566, 446)
 const HOOK_STEP: float = 28.0
 const HOOK_TEXT := Rect2(4, 62, 26, 24)
@@ -157,6 +159,8 @@ var _ability_buttons: Array[Button] = []
 var _miracle_button: Button
 var _swap_button: Button
 var _pass_button: Button
+var _intercede_button: Button
+var _give_button: Button
 var _provisions_button: Button
 var _end_turn_button: Button
 ## Open while the player is choosing a provision (the flow of the old
@@ -279,6 +283,36 @@ func press_pass() -> void:
 		_execute(selection.take_pending())
 		return
 	selection.choose_pass()
+	_refresh()
+
+
+## Interceder (combat §4.1): tap an ally, then the button again to take
+## something else (desolation or one of the ally's negative conditions);
+## with only one thing to take, the button confirms, like an ability.
+func press_intercede() -> void:
+	if not _accepting_input() or selection.actor() == null:
+		return
+	if selection.mode == BattleSelection.Mode.INTERCEDE and selection.pending != null:
+		if not selection.next_intercede_option():
+			_execute(selection.take_pending())
+			return
+	elif selection.mode == BattleSelection.Mode.INTERCEDE:
+		selection.clear_choice()
+	else:
+		selection.choose_intercede()
+	_refresh()
+
+
+func press_give_consolation() -> void:
+	if not _accepting_input() or selection.actor() == null:
+		return
+	if selection.mode == BattleSelection.Mode.GIVE_CONSOLATION and selection.pending != null:
+		_execute(selection.take_pending())
+		return
+	if selection.mode == BattleSelection.Mode.GIVE_CONSOLATION:
+		selection.clear_choice()
+	else:
+		selection.choose_give_consolation()
 	_refresh()
 
 
@@ -661,6 +695,10 @@ func _refresh_top() -> void:
 		return
 	var cap: int = ctrl.state.constants.get_int(&"fervor_cap")
 	_round_label.text = texts.t(&"round", {"round": ctrl.state.round_number})
+	if ctrl.state.encounter_type == &"common" and ctrl.state.constants.has_key(&"desolation_battle_end_per_round"):
+		# The clock of D-269: what a victory now would cost, before multipliers.
+		var at_end: int = ExpeditionController.battle_end_desolation(ctrl.state, ctrl.state.constants.get_int(&"desolation_battle_end_common"))
+		_round_label.text = texts.t(&"round_clock", {"round": ctrl.state.round_number, "amount": at_end})
 	_fervor_label.text = texts.t(&"fervor", {"amount": ctrl.fervor.amount, "max": cap})
 	_fervor_flames.queue_redraw()
 	_speed_button.text = texts.t(SPEED_KEYS[speed_index])
@@ -780,11 +818,15 @@ func _refresh_controls() -> void:
 		_set_button(_miracle_button, _ability_label(actor, actor.miracle, true), selection.ability_reason(actor.miracle, true), false, selection.mode == BattleSelection.Mode.MIRACLE)
 		_set_button(_swap_button, texts.t(&"swap"), selection.swap_reason(), false, selection.mode == BattleSelection.Mode.SWAP)
 		_set_button(_pass_button, texts.t(&"pass"), selection.pass_reason(), false, selection.mode == BattleSelection.Mode.PASS)
+		_set_button(_intercede_button, texts.t(&"intercede"), selection.intercede_reason(), false, selection.mode == BattleSelection.Mode.INTERCEDE)
+		_set_button(_give_button, texts.t(&"give_consolation"), selection.give_consolation_reason(), false, selection.mode == BattleSelection.Mode.GIVE_CONSOLATION)
 		_set_button(_provisions_button, texts.t(&"provisions"), _provisions_reason(), false, selection.mode == BattleSelection.Mode.PROVISION)
 	else:
 		_set_button(_miracle_button, texts.t(&"miracle"), &"", true, false)
 		_set_button(_swap_button, texts.t(&"swap"), &"", true, false)
 		_set_button(_pass_button, texts.t(&"pass"), &"", true, false)
+		_set_button(_intercede_button, texts.t(&"intercede"), &"", true, false)
+		_set_button(_give_button, texts.t(&"give_consolation"), &"", true, false)
 		_set_button(_provisions_button, texts.t(&"provisions"), &"", true, false)
 	_miracle_label.text = _miracle_button.text
 	_miracle_label.add_theme_color_override("font_color", PixelStyle.COLOR_LEAD_LIGHT if _miracle_button.disabled else PixelStyle.COLOR_GOLD)
@@ -908,6 +950,24 @@ func _refresh_hint() -> void:
 			_hint.text = def.desc_pt + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.PROVISION and not ctrl.is_over():
 		_hint.text = texts.provision_name(selection.provision_id) + "\n" + _hint.text
+	if selection.mode == BattleSelection.Mode.INTERCEDE and not ctrl.is_over():
+		_hint.text = _intercede_hint() + "\n" + _hint.text
+	if selection.mode == BattleSelection.Mode.GIVE_CONSOLATION and not ctrl.is_over():
+		_hint.text = texts.t(&"give_consolation_desc") + "\n" + _hint.text
+
+
+## What the pending Interceder takes, or what the action does.
+func _intercede_hint() -> String:
+	if selection.pending == null:
+		return texts.t(&"intercede_desc")
+	var ally: Combatant = ctrl.state.party_at(selection.picked[0])
+	var option: StringName = selection.intercede_option()
+	var key: StringName = &"intercede_take_desolation" if option == &"" else &"intercede_take_condition"
+	var amount: int = mini(ctrl.state.constants.get_int(&"intercede_amount"), ally.desolation)
+	var text: String = texts.t(key, {"amount": amount, "saint": texts.name_of(ally), "condition": texts.condition_name(option)})
+	if selection.intercede_options.size() > 1:
+		text += " " + texts.t(&"intercede_more")
+	return text
 
 
 ## The sheet on the right (DD): the tapped combatant, or the chosen saint.
@@ -1339,7 +1399,7 @@ func _draw_flame(on: Control, at: Vector2, size_px: int = 1) -> void:
 
 
 func _build_top_bar() -> void:
-	_round_label = _label(Vector2(330, 4), Vector2(300, 14))
+	_round_label = _label(Vector2(180, 4), Vector2(600, 14))
 	PixelStyle.title(_round_label)
 	_hint = _label(Vector2(230, 20), Vector2(500, 36))
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1401,8 +1461,12 @@ func _build_hero_panel() -> void:
 	_fervor_label = _label(Vector2(480, 462), Vector2(82, 12))
 	_fervor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_fervor_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
-	_swap_button = _button(ACTION_POS, ACTION_SIZE, press_swap)
-	_pass_button = _button(ACTION_POS + Vector2(0, ACTION_SIZE.y + 2.0), ACTION_SIZE, press_pass)
+	var half_step := Vector2(HALF_ACTION_SIZE.x + 2.0, 0)
+	var row_step := Vector2(0, ACTION_SIZE.y + 2.0)
+	_swap_button = _button(ACTION_POS, HALF_ACTION_SIZE, press_swap)
+	_pass_button = _button(ACTION_POS + half_step, HALF_ACTION_SIZE, press_pass)
+	_intercede_button = _button(ACTION_POS + row_step, HALF_ACTION_SIZE, press_intercede)
+	_give_button = _button(ACTION_POS + row_step + half_step, HALF_ACTION_SIZE, press_give_consolation)
 	# The provisions hang on their hooks, always in view: the old button
 	# only keeps its place in the flow (press_provisions) and names the row.
 	_provisions_button = _button(ACTION_POS + Vector2(0, (ACTION_SIZE.y + 2.0) * 2.0), ACTION_SIZE, press_provisions)

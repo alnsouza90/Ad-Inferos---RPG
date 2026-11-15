@@ -44,7 +44,8 @@ Versão 1.0 · ADR-0005
       "level": 1, "xp": 0, "hp": 32, "desolation": 0, "spirit_state": "normal",
       "injury": null, "injury_weeks_left": 0,
       "equipped_abilities": ["george_spear_thrust", "george_shield_bash", "george_raised_shield", "george_formal_challenge"],
-      "upgrades": [], "charism": null, "equipment": { "instrument": 1, "habit": 1 }, "relics": []
+      "upgrades": [], "charism": null, "equipment": { "instrument": 1, "habit": 1 }, "relics": [],
+      "fidelity_marks": 0
     }
   },
   "expedition": null,
@@ -71,7 +72,8 @@ Ao carregar, os comandos são reaplicados e o resultado precisa bater com `check
   "circle": "circle_02", "map_seed": 99, "map": { "...": "estrutura gerada" },
   "current_node": "l1_n2", "visited": ["l1_n0"], "light": 85,
   "provisions": ["bread", "candle"], "alms_unbanked": 140, "alms_banked": 0,
-  "party": ["saint_george", "saint_benedict", "saint_therese"], "fallen_once": []
+  "party": ["saint_george", "saint_benedict", "saint_therese"], "fallen_once": [],
+  "vigil_saints": ["saint_george"]
 }
 ```
 
@@ -124,6 +126,7 @@ Ao carregar: criar o combate com a semente e o retrato inicial, reaplicar os com
 - `save_version` começa em 1 e sobe a cada mudança de estrutura **ou** de regra que altere o resultado de comandos já gravados.
 - Cada migração é uma função `migrate_v{n}_to_v{n+1}(data: Dictionary) -> Dictionary` em `autoload/save_migrations.gd`, com teste próprio.
 - Se a mudança de regra impedir a reconstrução de um combate gravado, a migração **reinicia esse combate** a partir do retrato inicial (o jogador perde apenas os comandos daquele combate) e registra o fato.
+- **Versão 3 (T62, D-396):** as regras novas de desolação mudam o resultado dos comandos já gravados, então o retrato de conferência antigo nunca bate. A migração marca a expedição com `"rebuild": true`; ao carregar, o log é refeito com as regras novas, sem a conferência, e para no primeiro comando que elas recusarem (o resto se perde). O próximo salvamento já grava a versão 3 normal.
 
 ## 8. Casos de teste obrigatórios
 

@@ -6,7 +6,7 @@ extends RefCounted
 ## comes from BattleController.validate() and every preview from
 ## BattleController.preview().
 
-enum Mode { NONE, ABILITY, MIRACLE, SWAP, PASS, PROVISION }
+enum Mode { NONE, ABILITY, MIRACLE, SWAP, PASS, PROVISION, INTERCEDE, GIVE_CONSOLATION }
 
 ## Answers of tap_combatant().
 const IGNORED: StringName = &"ignored"
@@ -30,6 +30,10 @@ var side: StringName = &""
 var valid_sets: Array = []
 ## Slots tapped so far (chosen_enemy_slots needs several taps).
 var picked: Array[int] = []
+## Interceder: what can be taken from the tapped ally (&"" is desolation,
+## then each negative condition) and which one the pending command takes.
+var intercede_options: Array[StringName] = []
+var intercede_index: int = 0
 ## Complete command waiting for the confirming tap, or null.
 var pending: BattleCommand
 var preview: Array[PreviewEntry] = []
@@ -80,6 +84,8 @@ func clear_choice() -> void:
 	picked = []
 	pending = null
 	preview = []
+	intercede_options = []
+	intercede_index = 0
 
 
 func select_actor(id: StringName) -> bool:
@@ -132,6 +138,95 @@ func provision_reason(id: StringName) -> StringName:
 		if reason == &"":
 			return &""
 	return reason
+
+
+## "" when the actor could intercede for some ally now (combat §4.1).
+func intercede_reason() -> StringName:
+	return _support_reason(Mode.INTERCEDE)
+
+
+## "" when the actor could give the Consolation to some ally now.
+func give_consolation_reason() -> StringName:
+	return _support_reason(Mode.GIVE_CONSOLATION)
+
+
+func _support_reason(p_mode: Mode) -> StringName:
+	if actor() == null:
+		return CommandResult.UNKNOWN_ACTOR
+	var reason: StringName = CommandResult.INVALID_TARGET
+	for slot: int in range(1, ctrl.state.party_size() + 1):
+		for option: StringName in _support_options(p_mode, slot):
+			var r: StringName = ctrl.validate(_support_command(p_mode, slot, option))
+			if r == &"":
+				return &""
+			# Checks on the actor give the same answer for any ally.
+			if r != CommandResult.INVALID_TARGET and r != CommandResult.NOTHING_TO_TAKE:
+				return r
+			if r == CommandResult.NOTHING_TO_TAKE:
+				reason = r
+	return reason
+
+
+## What could be asked of the ally in `slot`: Interceder takes desolation
+## (&"") or one negative condition; the gift has a single option.
+func _support_options(p_mode: Mode, slot: int) -> Array[StringName]:
+	var options: Array[StringName] = [&""]
+	var ally: Combatant = ctrl.state.party_at(slot)
+	if p_mode == Mode.INTERCEDE and ally != null:
+		options.append_array(ctrl.intercede_conditions(ally))
+	return options
+
+
+func _valid_support_options(p_mode: Mode, slot: int) -> Array[StringName]:
+	var valid: Array[StringName] = []
+	for option: StringName in _support_options(p_mode, slot):
+		if ctrl.validate(_support_command(p_mode, slot, option)) == &"":
+			valid.append(option)
+	return valid
+
+
+func _support_command(p_mode: Mode, slot: int, option: StringName) -> BattleCommand:
+	if p_mode == Mode.INTERCEDE:
+		return BattleCommand.intercede(actor_id, slot, option)
+	return BattleCommand.give_consolation(actor_id, slot)
+
+
+func choose_intercede() -> bool:
+	return _choose_support(Mode.INTERCEDE)
+
+
+func choose_give_consolation() -> bool:
+	return _choose_support(Mode.GIVE_CONSOLATION)
+
+
+func _choose_support(p_mode: Mode) -> bool:
+	if actor() == null:
+		return false
+	clear_choice()
+	for slot: int in range(1, ctrl.state.party_size() + 1):
+		if not _valid_support_options(p_mode, slot).is_empty():
+			valid_sets.append([slot] as Array[int])
+	if valid_sets.is_empty():
+		return false
+	mode = p_mode
+	side = SIDE_PARTY
+	return true
+
+
+## Interceder with an ally chosen: the next thing to take (desolation, then
+## each negative condition). False when there is nothing else to choose.
+func next_intercede_option() -> bool:
+	if mode != Mode.INTERCEDE or pending == null or intercede_options.size() < 2:
+		return false
+	intercede_index = (intercede_index + 1) % intercede_options.size()
+	pending = _command(picked)
+	preview = ctrl.preview(pending)
+	return true
+
+
+## The option the pending Interceder takes (&"" for desolation).
+func intercede_option() -> StringName:
+	return intercede_options[intercede_index] if intercede_index < intercede_options.size() else &""
 
 
 func choose_ability(id: StringName) -> bool:
@@ -281,6 +376,9 @@ func _tap_slot(slot: int) -> StringName:
 
 func _set_pending(slots: Array[int]) -> void:
 	picked = slots.duplicate()
+	if mode == Mode.INTERCEDE:
+		intercede_options = _valid_support_options(mode, slots[0])
+		intercede_index = 0
 	pending = _command(slots)
 	preview = ctrl.preview(pending)
 
@@ -297,6 +395,10 @@ func _command(slots: Array[int]) -> BattleCommand:
 			return BattleCommand.use_provision(provision_id, slots[0], actor_id)
 		Mode.PASS:
 			return BattleCommand.pass_turn(actor_id)
+		Mode.INTERCEDE:
+			return BattleCommand.intercede(actor_id, slots[0], intercede_option())
+		Mode.GIVE_CONSOLATION:
+			return BattleCommand.give_consolation(actor_id, slots[0])
 	return null
 
 

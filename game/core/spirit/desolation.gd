@@ -58,7 +58,7 @@ static func faith_chance(saint: Combatant, ctx: DesolationContext) -> float:
 	var c: ConstantsDef = ctx.constants
 	var chance: float = c.get_float(&"faith_check_base") + c.get_float(&"faith_check_per_point") * saint.faith + ctx.faith_bonus + ctx.prepared_bonus
 	var cap: float = c.get_float(&"faith_check_cap")
-	# A prepared test (D-270, being simulated) may reach a higher cap.
+	# A prepared test (D-270) may reach a higher cap.
 	if ctx.prepared_bonus > 0.0:
 		cap = c.get_float_or(&"faith_prepared_cap", cap)
 	return minf(cap, chance)

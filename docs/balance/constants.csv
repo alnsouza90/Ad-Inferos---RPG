@@ -32,6 +32,17 @@ purification_xp_bonus,0.25,Experiência extra após Purificação
 desolation_battle_end_common,20,Fim de combate comum
 desolation_battle_end_elite,20,Fim de combate de elite
 desolation_battle_end_boss,35,Fim de combate de chefe
+desolation_battle_end_base,20,Fim de combate comum por rodadas: base (D-269; D-396)
+desolation_battle_end_per_round,3,Fim de combate comum por rodadas: a mais por rodada (D-396)
+desolation_battle_end_from_round,1,Fim de combate comum por rodadas: primeira rodada que conta (D-396)
+intercede_amount,15,Desolação que Interceder move do aliado para quem intercede (D-268; D-396)
+fidelity_marks,3,Marcas de Fidelidade que tiram o santo da Noite Escura (D-271; D-396)
+fidelity_reset_value,50,Desolação máxima após a saída pela Fidelidade (D-271)
+faith_prepared_per_ally,0.05,Preparo da Fé: chance por companheiro que ajudou no combate (D-270; D-396)
+faith_prepared_ally_max,0.1,Preparo da Fé: máximo somado pelos companheiros (D-396)
+faith_prepared_vigil,0.05,Preparo da Fé: chance por ter feito a Vigília (D-396)
+faith_prepared_cap,0.7,Chance máxima de Consolação com preparo (D-396)
+consolation_gift_desolation,30,Desolação que o dom da Consolação tira de um aliado em estado normal (D-285; D-396)
 desolation_ally_fallen,15,Aliado caído
 desolation_emergency_retreat,25,Retirada de emergência
 desolation_vigil,20,Vigília no Pouso (redução)

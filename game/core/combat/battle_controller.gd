@@ -513,11 +513,12 @@ func _run_pass(cmd: BattleCommand) -> StringName:
 	return &""
 
 
-# --- rules being simulated (T61, D-363): off without their constants -----------
+# --- the rules of T61 and T62 (D-396): off in a catalog without their constants ---
 
-## Interceder (D-268): the actor takes [intercede_amount] of an ally's
-## desolation (or less, if the ally has less). It moves, it does not create:
-## the actor's gain skips the multipliers.
+## Interceder (combat §4.1, D-268): the actor takes [intercede_amount] of an
+## ally's desolation (or less, if the ally has less), or every stack of one
+## negative condition of the ally (`condition_id`). It moves, it does not
+## create: the actor's gain skips the multipliers.
 func _check_intercede(cmd: BattleCommand) -> StringName:
 	if not state.constants.has_key(&"intercede_amount"):
 		return CommandResult.RULE_OFF
@@ -530,9 +531,27 @@ func _check_intercede(cmd: BattleCommand) -> StringName:
 	var target: Combatant = state.party_at(cmd.target_slots[0]) if cmd.target_slots.size() == 1 else null
 	if target == null or target == actor or not target.is_standing():
 		return CommandResult.INVALID_TARGET
+	if cmd.condition_id != &"":
+		var def: ConditionDef = state.condition_defs.get(cmd.condition_id)
+		if def == null or def.polarity != &"negative" or not target.has_condition(cmd.condition_id):
+			return CommandResult.NOTHING_TO_TAKE
+		return &""
 	if target.desolation <= 0:
 		return CommandResult.NOTHING_TO_TAKE
 	return &""
+
+
+## Negative conditions an ally carries that Interceder can take, in display
+## order (the screen offers one button for each).
+func intercede_conditions(target: Combatant) -> Array[StringName]:
+	var ids: Array[StringName] = []
+	for condition_id: StringName in target.conditions:
+		var def: ConditionDef = state.condition_defs.get(condition_id)
+		if def != null and def.polarity == &"negative":
+			ids.append(condition_id)
+	ids.sort_custom(func(a: StringName, b: StringName) -> bool:
+		return (state.condition_defs[a] as ConditionDef).display_priority < (state.condition_defs[b] as ConditionDef).display_priority)
+	return ids
 
 
 func _run_intercede(cmd: BattleCommand) -> StringName:
@@ -541,18 +560,23 @@ func _run_intercede(cmd: BattleCommand) -> StringName:
 		return reason
 	var actor: Combatant = _saint(cmd.actor_id)
 	var target: Combatant = state.party_at(cmd.target_slots[0])
-	var amount: int = mini(state.constants.get_int(&"intercede_amount"), target.desolation)
 	actor.has_acted = true
-	_emit(&"interceded", {"actor": actor.id, "target": target.id, "amount": amount})
 	state.note_help(target, actor)
+	if cmd.condition_id != &"":
+		_emit(&"interceded", {"actor": actor.id, "target": target.id, "condition": cmd.condition_id})
+		state.move_condition(target, actor, cmd.condition_id)
+		return &""
+	var amount: int = mini(state.constants.get_int(&"intercede_amount"), target.desolation)
+	_emit(&"interceded", {"actor": actor.id, "target": target.id, "amount": amount})
 	Desolation.change(target, -amount, &"intercede", state.desolation_context(target))
 	Desolation.change(actor, amount, &"intercede", state.desolation_context(actor), true)
 	return &""
 
 
-## The gift of Consolation (D-285): an ally in the Dark Night is purified;
-## a Fallen ally rises; any other ally loses [consolation_gift_desolation].
-## The giver goes back to normal.
+## The gift of Consolation (combat §4.1, D-285): an ally in the Dark Night is
+## purified; a Fallen ally rises with [consolation_gift_revive_hp] of the
+## maximum hp; any other ally loses [consolation_gift_desolation]. The giver
+## goes back to normal. Without the revive value a Fallen ally is no target.
 func _check_give_consolation(cmd: BattleCommand) -> StringName:
 	if not state.constants.has_key(&"consolation_gift_desolation"):
 		return CommandResult.RULE_OFF
@@ -565,7 +589,8 @@ func _check_give_consolation(cmd: BattleCommand) -> StringName:
 	if actor.spirit_state != Desolation.CONSOLATION:
 		return CommandResult.NOT_IN_CONSOLATION
 	var target: Combatant = state.party_at(cmd.target_slots[0]) if cmd.target_slots.size() == 1 else null
-	if target == null or target == actor or not (target.is_standing() or (target.is_fallen() and target.revivable)):
+	var can_raise: bool = target != null and target.is_fallen() and target.revivable and state.constants.has_key(&"consolation_gift_revive_hp")
+	if target == null or target == actor or not (target.is_standing() or can_raise):
 		return CommandResult.INVALID_TARGET
 	return &""
 
@@ -581,7 +606,7 @@ func _run_give_consolation(cmd: BattleCommand) -> StringName:
 	state.note_help(target, actor)
 	var ctx: DesolationContext = state.desolation_context(target)
 	if target.is_fallen():
-		var hp: int = state.revive(target, maxi(1, Damage.round_half_up(target.max_hp * state.constants.get_float_or(&"consolation_gift_revive_hp", 0.25))))
+		var hp: int = state.revive(target, maxi(1, Damage.round_half_up(target.max_hp * state.constants.get_float(&"consolation_gift_revive_hp"))))
 		_emit(&"revived", {"target": target.id, "hp": hp, "amount": hp})
 	elif target.spirit_state == Desolation.DARK_NIGHT:
 		Desolation.purify(target, ctx)

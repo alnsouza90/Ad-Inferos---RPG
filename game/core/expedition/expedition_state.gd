@@ -27,6 +27,9 @@ var revealed_nodes: Array[StringName] = []
 ## Camp of this leg reached (consecrated) and rest taken (§6).
 var camp_reached: bool = false
 var camp_rested: bool = false
+## Saints who kept the Vigil at the last rest: it prepares their Faith test
+## (desolation §3, D-270).
+var vigil_saints: Array[StringName] = []
 ## Starting Fervor of the next battle from Prayers, already capped (§6).
 var next_battle_fervor: int = 0
 ## Relics found in this expedition (lost on defeat, §9) and those carried in
@@ -92,6 +95,7 @@ func to_dict() -> Dictionary:
 		"party": _to_strings(party), "fallen_once": _to_strings(fallen_once),
 		"gate_level": gate_level, "revealed_nodes": _to_strings(revealed_nodes),
 		"camp_reached": camp_reached, "camp_rested": camp_rested, "next_battle_fervor": next_battle_fervor,
+		"vigil_saints": _to_strings(vigil_saints),
 		"relics_found": _to_strings(relics_found), "relic_pack": _to_strings(relic_pack), "pending_relic": String(pending_relic),
 	}
 
@@ -116,6 +120,7 @@ static func from_dict(data: Dictionary) -> ExpeditionState:
 	state.camp_reached = bool(data.get("camp_reached", false))
 	state.camp_rested = bool(data.get("camp_rested", false))
 	state.next_battle_fervor = int(data.get("next_battle_fervor", 0))
+	state.vigil_saints = _to_names(data.get("vigil_saints", []))
 	state.relics_found = _to_names(data.get("relics_found", []))
 	state.relic_pack = _to_names(data.get("relic_pack", []))
 	state.pending_relic = StringName(str(data.get("pending_relic", "")))

@@ -50,6 +50,10 @@ static func restore(catalog: ExpeditionCatalog, data: Dictionary) -> ExpeditionC
 	var e: Dictionary = section
 	if not e.get("initial") is Dictionary or not e.get("commands") is Array:
 		return null
+	if bool(e.get("rebuild", false)):
+		# A save from before a change of rules (save-load §7): replayed under
+		# the new rules as far as they accept it; its old check cannot match.
+		return ExpeditionController.replay_accepted(catalog, e["initial"], e["commands"])
 	var ctrl := ExpeditionController.try_replay(catalog, e["initial"], e["commands"])
 	if ctrl == null:
 		return null
