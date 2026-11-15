@@ -50,6 +50,7 @@ const EV_CAMP_RESTED: StringName = &"camp_rested"
 const EV_AMBUSH: StringName = &"ambush"
 const EV_RELIC_FOUND: StringName = &"relic_found"
 const EV_RELIC_PLACED: StringName = &"relic_placed"
+const EV_FIDELITY_MARK: StringName = &"fidelity_mark"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -80,12 +81,9 @@ var event: EventDef
 var ambush_encounter_circle: int = 0
 
 var _initial: Dictionary = {}
-## Rules being simulated (T61); not saved until approved (T62).
-## Fidelity marks per saint (D-271) and how many Dark Nights ended by them.
-var fidelity_marks: Dictionary = {}
+## How many Dark Nights ended by Fidelity in this expedition (simulator
+## metric; the marks themselves are in SaintStatus, D-271).
 var fidelity_exits: int = 0
-## Saints who kept the Vigil in this leg (prepare the Faith test, D-270).
-var vigil_saints: Array[StringName] = []
 
 
 ## New expedition from the gate: full Light, fresh saints, leg 1 generated
@@ -130,6 +128,16 @@ static func try_replay(p_catalog: ExpeditionCatalog, initial: Dictionary, comman
 	for entry: Variant in commands:
 		if not entry is Dictionary or c.execute(ExpeditionCommand.from_dict(entry)) != &"":
 			return null
+	return c
+
+
+## For a save from before a change of rules: replays the log and stops at
+## the first command the current rules refuse; the rest is dropped.
+static func replay_accepted(p_catalog: ExpeditionCatalog, initial: Dictionary, commands: Array) -> ExpeditionController:
+	var c := from_snapshot(p_catalog, initial)
+	for entry: Variant in commands:
+		if not entry is Dictionary or c.execute(ExpeditionCommand.from_dict(entry)) != &"":
+			break
 	return c
 
 
@@ -672,7 +680,7 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 		foes.append(_enemy_def(enemy_id))
 	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(seed_key))
 	bs.light = state.light
-	bs.vigil_saints = vigil_saints.duplicate()
+	bs.vigil_saints = state.vigil_saints.duplicate()
 	bs.prayer_fervor = state.next_battle_fervor
 	state.next_battle_fervor = 0
 	for c: Combatant in bs.party:
@@ -695,35 +703,33 @@ func _enemy_def(enemy_id: StringName) -> EnemyDef:
 	return enemies.get(String(enemy_id))
 
 
-## Desolation at the end of a won battle. While the rule by rounds is being
-## simulated (D-269), [desolation_battle_end_base] plus
-## [desolation_battle_end_per_round] for each round from
-## [desolation_battle_end_from_round] on replace
-## the fixed value; without those keys the fixed value stands.
+## Desolation at the end of a won common battle (desolation §2.1, D-269,
+## D-396): [desolation_battle_end_base] plus [desolation_battle_end_per_round]
+## for each round from [desolation_battle_end_from_round] on. Elite and boss
+## battles keep their fixed value; so does a catalog without the rule (tests).
 static func battle_end_desolation(bs: BattleState, fixed: int) -> int:
 	var c: ConstantsDef = bs.constants
-	if not c.has_key(&"desolation_battle_end_per_round"):
+	if bs.encounter_type != &"common" or not c.has_key(&"desolation_battle_end_per_round"):
 		return fixed
-	# Counted from round [desolation_battle_end_from_round] (Alan: the 1st, D-396).
-	var from_round: int = c.get_int_or(&"desolation_battle_end_from_round", 3)
+	var from_round: int = c.get_int(&"desolation_battle_end_from_round")
 	var extra_rounds: int = maxi(0, bs.round_number - from_round + 1)
 	return c.get_int(&"desolation_battle_end_base") + extra_rounds * c.get_int(&"desolation_battle_end_per_round")
 
 
-## Fidelity (D-271, being simulated): a saint in the Dark Night who ends a
+## Fidelity (desolation §4.4, D-271): a saint in the Dark Night who ends a
 ## won battle standing gains a mark and no battle-end desolation; with
-## [fidelity_marks] marks he is purified and his desolation goes to
+## [fidelity_marks] marks the saint is purified and the desolation goes to
 ## [fidelity_reset_value]. True when the battle-end desolation is skipped.
 func _keeps_fidelity(bs: BattleState, saint: Combatant) -> bool:
 	var c: ConstantsDef = bs.constants
 	if not c.has_key(&"fidelity_marks") or not saint.is_standing() or saint.spirit_state != Desolation.DARK_NIGHT:
 		return false
-	var marks: int = int(fidelity_marks.get(saint.id, 0)) + 1
-	fidelity_marks[saint.id] = marks
-	if marks >= c.get_int(&"fidelity_marks"):
-		fidelity_marks.erase(saint.id)
+	var status: SaintStatus = saints[saint.id]
+	status.fidelity_marks += 1
+	_emit(EV_FIDELITY_MARK, {"saint": saint.id, "marks": status.fidelity_marks})
+	if status.fidelity_marks >= c.get_int(&"fidelity_marks"):
 		var ctx: DesolationContext = bs.desolation_context(saint)
-		saint.desolation = mini(saint.desolation, c.get_int_or(&"fidelity_reset_value", 50))
+		saint.desolation = mini(saint.desolation, c.get_int(&"fidelity_reset_value"))
 		Desolation.purify(saint, ctx)
 		fidelity_exits += 1
 	return true
@@ -792,6 +798,9 @@ func _settle_saints(bs: BattleState) -> void:
 		status.desolation = saint.desolation
 		status.spirit_state = saint.spirit_state
 		status.purified = saint.purified
+		# Marks count only a Dark Night still going on (D-271).
+		if saint.spirit_state != Desolation.DARK_NIGHT:
+			status.fidelity_marks = 0
 
 
 ## Alms of a won battle (expedition §8): base × circle band × low Light.
@@ -899,6 +908,8 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 		return problem
 	command_log.append(cmd.to_dict())
 	state.camp_rested = true
+	# The Vigil prepares the Faith test until the next rest (D-270).
+	state.vigil_saints.clear()
 	var c: ConstantsDef = catalog.constants
 	var refund := false
 	var ambush_mult: float = 1.0
@@ -912,8 +923,7 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 		match StringName(str(a["activity"])):
 			ACTIVITY_VIGIL:
 				_change_desolation(saint_id, -c.get_int(&"desolation_vigil"), &"vigil")
-				if not vigil_saints.has(saint_id):
-					vigil_saints.append(saint_id)
+				state.vigil_saints.append(saint_id)
 			ACTIVITY_SHARE:
 				_heal_pct(target, c.get_float(&"share_heal_pct"))
 			ACTIVITY_PRAYER:

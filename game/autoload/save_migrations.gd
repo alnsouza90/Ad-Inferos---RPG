@@ -7,8 +7,13 @@ extends RefCounted
 ##   1 → 2 (T37, D-365): entering a node with corridor content no longer
 ##   starts it; EngageNode does. Old logs get an EngageNode after each such
 ##   ChoosePath, so they replay to the same place.
+##   2 → 3 (T62, D-396): the rules chosen after T61 change what old commands
+##   give (battle-end desolation by rounds, Fidelity, the prepared Faith
+##   test), so an old log cannot reach its check. The save is marked
+##   `rebuild`: loading replays it under the new rules, without the check,
+##   and stops at the first command the new rules refuse (save-load §7).
 
-const CURRENT_VERSION: int = 2
+const CURRENT_VERSION: int = 3
 const CONTENT_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_relic", "node_soul"]
 
 ## n -> Callable taking a version-n save and returning version n + 1.
@@ -22,7 +27,15 @@ func _init(p_steps: Variant = null, p_current: int = CURRENT_VERSION) -> void:
 
 
 static func default_steps() -> Dictionary:
-	return {1: SaveMigrations.migrate_v1_to_v2}
+	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3}
+
+
+static func migrate_v2_to_v3(data: Dictionary) -> Dictionary:
+	var result: Dictionary = data.duplicate(true)
+	var section: Variant = result.get("expedition")
+	if section is Dictionary:
+		(section as Dictionary)["rebuild"] = true
+	return result
 
 
 static func migrate_v1_to_v2(data: Dictionary) -> Dictionary:

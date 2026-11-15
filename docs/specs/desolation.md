@@ -1,6 +1,6 @@
 # Especificação · Desolação e Consolação
 
-Versão 1.1 (12/11/2026: regras aprovadas a simular, §8) · base: GDD v1.1 §5 · números em `docs/balance/constants.csv`
+Versão 1.2 (15/11/2026: regras de §8 em vigor com os números de D-396, T62) · base: GDD v1.1 §5 · números em `docs/balance/constants.csv`
 
 A desolação é a pressão espiritual de cada santo. Nenhum estado representa pecado ou perda de santidade; o santo nunca perde o controle das próprias ações.
 
@@ -31,7 +31,7 @@ Reduções (valores negativos) não passam pelos multiplicadores.
 
 | Fonte | Valor base [constante] | Quando |
 | --- | --- | --- |
-| Fim de combate comum vencido | [desolation_battle_end_common] (20, D-165; era 12); forma por rodadas em simulação (§8, D-269) | Em todos os santos que participaram |
+| Fim de combate comum vencido | [desolation_battle_end_base] (20) + [desolation_battle_end_per_round] (3) × rodadas jogadas a partir da [desolation_battle_end_from_round] (1ª) (D-269, D-396); luta de 4 rodadas dá 32. `desolation_battle_end_common` (20) só vale se a regra por rodadas não estiver nos dados | Em todos os santos que participaram; **não** em quem está em Noite Escura e termina de pé (§4.4) |
 | Fim de combate de elite | [desolation_battle_end_elite] (20) | Idem |
 | Fim de combate de chefe | [desolation_battle_end_boss] (35) | Idem |
 | Ação inimiga espiritual | Definido no efeito `desolation` do inimigo | No alvo |
@@ -62,8 +62,12 @@ Quando a desolação de um santo em estado `normal` passa de menos de 100 para 1
 2. Chance de Consolação:
 
 ```text
-chance = mínimo([faith_check_cap] (60%), [faith_check_base] (10%) + [faith_check_per_point] (4%) × faith + bônus de relíquias, traços, Moradas e preparo (§8, D-270))
+chance = mínimo(teto, [faith_check_base] (10%) + [faith_check_per_point] (4%) × faith + bônus de relíquias, traços e Moradas + preparo)
+preparo = mínimo([faith_prepared_ally_max] (10%), [faith_prepared_per_ally] (5%) × companheiros que ajudaram neste combate) + [faith_prepared_vigil] (5%) se fez a Vigília no último Pouso
+teto = [faith_prepared_cap] (70%) quando há preparo; senão [faith_check_cap] (60%)
 ```
+
+"Ajudar" é Interceder por ele, dar-lhe a Consolação ou tirar-lhe desolação com uma habilidade neste combate; cada companheiro conta uma vez (D-270). A Vigília vale até o próximo descanso.
 
 3. Sorteio pelo fluxo `faith` do `RngStream`.
 4. **Sucesso → Consolação:** desolação vai a [consolation_reset_value] (50); estado `consolation`.
@@ -89,6 +93,13 @@ A interface mostra a chance ao lado da barra a partir de [faith_chance_display_t
 - Evento instantâneo ao sair da Noite Escura.
 - Concede +[purification_xp_bonus] (25%) de experiência ao santo até o fim da expedição atual (ou da próxima, se ocorrer na vila).
 - Efeitos de relíquia ligados à Purificação disparam aqui.
+
+### 4.4 Fidelidade (D-271, D-396)
+
+- O santo em Noite Escura que termina **de pé** um combate **vencido** ganha uma marca e **não** recebe a desolação de fim de combate.
+- Com [fidelity_marks] (3) marcas: Purificação (§4.3); a desolação vai a no máximo [fidelity_reset_value] (50); as marcas recomeçam.
+- As marcas só contam a Noite Escura em curso: se ela termina de outro jeito, voltam a 0. Ficam no save, em cada santo (`fidelity_marks`).
+- A saída de §4.2 continua valendo.
 
 ## 5. Limiar de 200: Prostração
 
@@ -118,10 +129,21 @@ A tela usa esses eventos para a barra, a auréola (`docs/art/asset-pipeline.md` 
 | D08 | Redução de 40 com Lume 10 | Reduz 40 (multiplicadores não se aplicam) |
 | D09 | Desolação 30 recebe −40 | Fica em 0 |
 | D10 | Noite Escura tenta milagre | Rejeitado (`combat.md` C05) |
+| D11 | Combate comum vencido na 4ª rodada, Lume 80 | +32 em cada santo (20 + 3 × 4) |
+| D12 | Combate de elite vencido na 6ª rodada | +20 (o valor fixo da elite) |
+| D13 | Jorge (0) intercede por Bento (40), Lume 10 | Bento 25; Jorge 15 (sem multiplicador) |
+| D14 | Interceder por aliado com 6 de desolação | Aliado 0; quem intercede +6 |
+| D15 | Interceder pelo Sangramento 3 de um aliado | Aliado sem Sangramento; quem intercede com 3 pilhas; desolação igual |
+| D16 | Santo em Consolação dá a Consolação a aliado em Noite Escura | Aliado: Purificação, estado normal; quem deu: normal |
+| D17 | Dar a Consolação a aliado normal com 70 | Aliado 40 |
+| D17b | Dar a Consolação a aliado Caído (vida máxima 30) dentro da janela | Levanta com 9 de vida |
+| D18 | Fé 20, dois companheiros ajudaram e fez a Vigília | Preparo 15%; chance limitada a 70% |
+| D19 | Noite Escura, 3 combates vencidos de pé | Purificação; desolação ≤ 50; marcas 0 |
+| D20 | Noite Escura termina por desolação abaixo de 50 com 1 marca | Marcas 0 |
 
-## 8. Aprovado, a simular (D-266 (3), D-280)
+## 8. Regras da consultoria (D-266 (3), D-280)
 
-Direção aprovada por Alan na consultoria do Fable. **Nada aqui está em vigor:** os números saem da rodada de simulação (`docs/backlog/m2.md` T61), uma regra de cada vez, mantendo a meta de Noite Escura (D-164), e só entram em `constants.csv` e nesta especificação com o aprovado de Alan (D-363). A implementação é a T62.
+Direção aprovada por Alan na consultoria do Fable, simulada na T61 (`docs/balance/sim-reports/2026-11-15-m2-t61.md`). **Em vigor desde a T62** com os números de D-396 e D-399: desolação por rodadas (§2.1), Interceder e dar a Consolação (`combat.md` §4.1), preparo do teste de Fé (§3) e Fidelidade (§4.4). Alan aceitou o jogo mais duro que os números dão no trecho 1 (Noite Escura 0,34 por trecho); a meta de Noite Escura é medida de novo na expedição longa (T42). **Ainda pendentes:** o aviso na intenção inimiga que levará o santo aos 100 (D-270), o fio de ouro de Interceder na tela e as variantes do Lume (T61, parte 2). A tabela abaixo é o registro do que foi simulado.
 
 | Regra | Decisão | O que muda | A simular |
 | --- | --- | --- | --- |
@@ -132,4 +154,4 @@ Direção aprovada por Alan na consultoria do Fable. **Nada aqui está em vigor:
 | A consolação é dom | D-285 | O santo em Consolação pode, gastando a ação, dar a Consolação a um companheiro: em Noite Escura, ele sai com Purificação; Caído na janela, levanta; nos outros casos, perde parte da desolação. Quem deu volta a `normal` | Parte da desolação: proposta 30 |
 | Laços | D-286 (M3) | Interceder entre santos com Laço move mais desolação (grau 1) | Depois de Interceder |
 
-Casos de teste destas regras são escritos junto com a T62, a partir dos números aprovados.
+Casos de teste: D11 a D20 (§7).

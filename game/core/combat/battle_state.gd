@@ -318,9 +318,9 @@ func prepared_bonus(saint: Combatant) -> float:
 	if not constants.has_key(&"faith_prepared_per_ally"):
 		return 0.0
 	var allies: int = (helped_by.get(saint.id, []) as Array).size()
-	var bonus: float = minf(allies * constants.get_float(&"faith_prepared_per_ally"), constants.get_float_or(&"faith_prepared_ally_max", 1.0))
+	var bonus: float = minf(allies * constants.get_float(&"faith_prepared_per_ally"), constants.get_float(&"faith_prepared_ally_max"))
 	if vigil_saints.has(saint.id):
-		bonus += constants.get_float_or(&"faith_prepared_vigil", 0.0)
+		bonus += constants.get_float(&"faith_prepared_vigil")
 	return bonus
 
 
@@ -406,6 +406,26 @@ func add_condition_stacks(c: Combatant, condition_id: StringName, amount: int) -
 	if after > before:
 		c.conditions[condition_id] = after
 	return after - before
+
+
+## Interceder (D-268): every stack of `condition_id` goes from `from` to `to`,
+## with its source and expiry. A transfer is not a new application, so Will
+## and immunity do not apply; the receiver keeps at most max_stacks.
+func move_condition(from: Combatant, to: Combatant, condition_id: StringName) -> void:
+	var stacks_moved: int = from.stacks(condition_id)
+	var def: ConditionDef = condition_defs.get(condition_id)
+	var before: int = to.stacks(condition_id)
+	var after: int = mini(before + stacks_moved, def.max_stacks) if def.stacking == &"add" else mini(maxi(before, stacks_moved), def.max_stacks)
+	if from.condition_sources.has(condition_id):
+		to.condition_sources[condition_id] = from.condition_sources[condition_id]
+	if from.condition_expiry.has(condition_id):
+		to.condition_expiry[condition_id] = maxi(int(to.condition_expiry.get(condition_id, 0)), int(from.condition_expiry[condition_id]))
+	from.conditions.erase(condition_id)
+	from.condition_sources.erase(condition_id)
+	from.condition_expiry.erase(condition_id)
+	to.conditions[condition_id] = after
+	emit.call(&"condition_removed", {"target": from.id, "condition": condition_id, "stacks": stacks_moved})
+	emit.call(&"condition_applied", {"target": to.id, "condition": condition_id, "stacks": after - before, "total": after})
 
 
 ## Removes up to `amount` stacks of one condition. Returns stacks removed.

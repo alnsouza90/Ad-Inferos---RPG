@@ -1,5 +1,6 @@
 id,text_pt
 round,Rodada {round}
+round_clock,Rodada {round} · desolação ao vencer: {amount}
 fervor,Fervor {amount}/{max}
 pause,Pausa
 resume,Continuar
@@ -10,6 +11,13 @@ speed_instant,Velocidade: instantânea
 miracle,Milagre
 swap,Trocar
 pass,Passar
+intercede,Interceder
+give_consolation,Consolação
+intercede_desc,Tomar para si a desolação ou uma condição de um aliado.
+intercede_take_desolation,Tomar {amount} de desolação de {saint}.
+intercede_take_condition,Tomar todo o {condition} de {saint}.
+intercede_more,Toque em Interceder para tomar outra coisa.
+give_consolation_desc,Dar a Consolação a um companheiro; quem dá volta ao normal.
 provisions,Provisões
 end_turn,Encerrar turno
 cost_badge,{cost} Fervor
@@ -74,10 +82,10 @@ reason_no_provision,Sem provisão
 reason_not_usable_in_battle,Não se usa em combate
 reason_provision_limit,Limite de provisões no turno
 reason_retreat_not_allowed,Não há retirada contra chefe
-reason_rule_off,Regra ainda em teste.
-reason_nothing_to_take,Não há desolação para tomar.
-reason_not_in_consolation,Só um santo em Consolação pode dá-la.
-reason_no_slot,Sem posição para trocar
+reason_rule_off,Em teste
+reason_nothing_to_take,Nada a tomar
+reason_not_in_consolation,Sem Consolação
+reason_no_slot,Sem posição
 result_victory,Vitória
 result_defeat,Derrota
 result_retreat,Retirada
