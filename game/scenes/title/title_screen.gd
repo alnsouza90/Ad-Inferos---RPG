@@ -153,7 +153,7 @@ func _open(p_screen: Control) -> void:
 ## Party in formation and the provisions of the kit, then "Partir".
 func _preparation() -> Control:
 	var root := CenterContainer.new()
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	LegacyStage.fill(root)
 	root.set_meta(&"kind", &"preparation")
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 24)
@@ -191,7 +191,7 @@ func _build() -> void:
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(background)
 	_menu = CenterContainer.new()
-	_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	LegacyStage.fill(_menu)
 	add_child(_menu)
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 26)

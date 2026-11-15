@@ -2,53 +2,74 @@ class_name BattleScreen
 extends Control
 ## The battle screen of screens §3. It sends commands to BattleController,
 ## animates the returned events in order and redraws from the state; it never
-## decides a rule (architecture §3.2). Layout is built in code on a 1920×1080
-## stage that stays centred when the phone is wider (aspect = expand).
-## T36 (D-257, D-258): Darkest Dungeon mood. The field (top 720 px) shows the
-## Circle 2 scenery with every combatant animated, feet on the ground line,
-## bars at the feet and intents over the heads; the iron panel below holds
-## the chosen saint (left) and the sheet of the tapped combatant (right).
+## decides a rule (architecture §3.2).
+## T65 (ADR-0013, D-367): the screen is drawn in pixel art on the inner
+## 960 × 540 grid. The field (top 360) shows the scenery of the circle in
+## layers with parallax and the filter of the circle, every combatant at the
+## natural size of its frames with the feet on the ground line; the panel
+## below (180) is the "chapel in the dark": the saint in an arch, lancet
+## windows for the abilities, the rose window of the miracle, the candle
+## rack of the Fervor, the provisions on their hooks and the tapped
+## combatant in a broken frame. When the phone is wider (aspect = expand)
+## the field grows sideways and the panel stays centred.
 
-const STAGE_SIZE := Vector2(1920, 1080)
-const FIELD_HEIGHT: float = 720.0
-## Ground line of the field and height of a standing figure (D-256).
-const GROUND_Y: float = 655.0
-const FIGURE_HEIGHT: float = 380.0
+const STAGE_SIZE := Vector2(960, 540)
+const FIELD_HEIGHT: float = 360.0
+## Ground line of the field and height of a standing figure in pixel art
+## (ADR-0013): the frames are shown at their natural size.
+const GROUND_Y: float = 338.0
+const FIGURE_HEIGHT: float = 230.0
 ## Intents over the enemies, all on one row (field y).
-const INTENT_ROW_Y: float = 150.0
-const VIEW_WIDTH: float = 200.0
+const INTENT_ROW_Y: float = 84.0
+const VIEW_WIDTH: float = 110.0
 ## Feet of the front saint and the front enemy, and the step between slots.
-const SAINT_FRONT_X: float = 740.0
-const ENEMY_FRONT_X: float = 1110.0
-const SLOT_STEP: float = 210.0
+const SAINT_FRONT_X: float = 385.0
+const ENEMY_FRONT_X: float = 590.0
+const SLOT_STEP: float = 118.0
 ## Share of the two figures' widths kept apart when the attacker arrives.
-const CONTACT_SHARE: float = 0.55
+const CONTACT_SHARE: float = 0.3
 const BLOW_HOLD: float = 0.45
-## Scenery of the field (Circle 2, leg 1): layers scaled to the field.
-const SCENERY_DIR: String = "res://assets/environments/circles/circle_02/t1"
-const SCENERY_LAYERS: Array[String] = ["env_circle_02_t1_back.png", "env_circle_02_t1_mid.webp"]
-const SCENERY_DETAIL: String = "env_circle_02_t1_front_detail.webp"
-const SCENERY_SCALE: float = 0.8
-const SCENERY_OFFSET := Vector2(-104, -110)
-const VIGNETTE_ALPHA: float = 0.45
+## The front layer of the scenery shows only in the corners of the battle,
+## pushed down, so nothing covers the fighters (D-258).
+const FRONT_DROP: float = 110.0
+const FRONT_CORNER: float = 110.0
+## Shake and push of the impact camera were measured on the old 1920 stage.
+const CAMERA_REACH: float = 0.5
 ## The Lume (expedition light) on the left edge (D-257): a lantern that
 ## slides down an iron rod as the light fades.
-const LUME_X: float = 70.0
-const LUME_TOP: float = 70.0
-const LUME_BOTTOM: float = 600.0
-const LANTERN_HEIGHT: float = 120.0
-const PIP_SIZE := Vector2(18, 18)
-## The portrait frame on screen, and the window inside it where the portrait
-## goes (shares of the frame measured on ui_portrait_frame.png, D-259): the
-## iron never covers the face.
-const PORTRAIT_FRAME := Rect2(44, 30, 168, 164)
-const PORTRAIT_WINDOW := Rect2(0.18, 0.235, 0.645, 0.67)
-const COLOR_BACKGROUND := Color(0.035, 0.035, 0.04)
+const LUME_X: float = 24.0
+const LUME_TOP: float = 34.0
+const LUME_BOTTOM: float = 230.0
+const LANTERN_SIZE := Vector2(22, 34)
+## The pieces of the panel (positions on the stage, from the approved
+## preview v2) and the windows inside them, measured on the pieces.
+const ARCH_POS := Vector2(8, 366)
+const PORTRAIT_WINDOW := Rect2(22, 62, 60, 96)
+## Corner of the portrait, left and above the head point of the idle frame.
+const PORTRAIT_FROM_HEAD := Vector2(26, 22)
+const LANCET_POS := Vector2(118, 380)
+const LANCET_STEP: float = 68.0
+const LANCET_TEXT := Rect2(7, 56, 51, 84)
+const ROSE_POS := Vector2(400, 380)
+const RACK_POS := Vector2(396, 478)
+## Where the flame of each candle of the rack burns (pixels of the piece).
+const CANDLE_FLAMES: Array[Vector2] = [Vector2(22, 2), Vector2(42, 11), Vector2(63, -1), Vector2(85, 9), Vector2(107, 3), Vector2(127, 6)]
+const ACTION_POS := Vector2(566, 368)
+const ACTION_SIZE := Vector2(126, 24)
+const HOOK_POS := Vector2(566, 446)
+const HOOK_STEP: float = 28.0
+const HOOK_TEXT := Rect2(4, 62, 26, 24)
+const FRAME_POS := Vector2(712, 372)
+const FRAME_WINDOW := Rect2(14, 14, 64, 90)
+const SHEET_X: float = 812.0
+const OVERLAY_WIDTH: float = 300.0
+const OVERLAY_MARGIN: float = 400.0
+const COLOR_BACKGROUND := Color("0D0C10")
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
-const COLOR_DAMAGE := Color(1.0, 0.45, 0.4)
-const COLOR_HEAL := Color(0.5, 1.0, 0.6)
-const COLOR_SPIRIT := Color(0.8, 0.65, 1.0)
-const COLOR_CONDITION := Color(1.0, 0.95, 0.75)
+const COLOR_DAMAGE := Color("E0554A")
+const COLOR_HEAL := Color("8FB573")
+const COLOR_SPIRIT := Color("B79AD8")
+const COLOR_CONDITION := Color("E4DDCF")
 ## Animation speed factors for 1×, 2× and instant (screens §3).
 const SPEEDS: Array[float] = [1.0, 2.0, 0.0]
 const SPEED_KEYS: Array[StringName] = [&"speed_normal", &"speed_fast", &"speed_instant"]
@@ -59,11 +80,17 @@ const ABILITY_SLOTS: int = 4
 ## Desolation step of the dev buttons (a test tool, not a game number).
 const DEV_DESOLATION_STEP: int = 25
 const DEFAULT_ENCOUNTER: StringName = &"m0_easy_01"
-## Frames of every character live at <dir>/<def id>_frames.tres (T35); a
-## combatant without them stays a rectangle with its name.
+## Frames of every character: the pixel art ones (T64) at
+## <dir>/pixel/<def id>_frames.tres; a character that has none yet keeps its
+## painted frames (<dir>/<def id>_frames.tres, T35), drawn smaller; without
+## either it stays a rectangle with its name.
 const ART_DIR: String = "res://scenes/battle/combatants"
+const PIXEL_ART_DIR: String = "res://scenes/battle/combatants/pixel"
 const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_portrait.png"
+## The painted halo (the animation test screen still uses it) and the one
+## of the pixel grid.
 const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
+const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
 @export var encounter_id: StringName = DEFAULT_ENCOUNTER
@@ -104,7 +131,14 @@ var _lines: IntentLine
 var _views: Dictionary = {}
 var _round_label: Label
 var _fervor_label: Label
-var _fervor_pips: HBoxContainer
+var _fervor_flames: Control
+var _field_clip: Control
+var _scenery_back: ParallaxScenery
+## The front layer, once in each bottom corner (clipped by its holder).
+var _scenery_front: Array[ParallaxScenery] = []
+var _front_corners: Array[Control] = []
+var _miracle_label: Label
+var _hooks: Control
 var _speed_button: Button
 var _pause_button: Button
 var _hint: Label
@@ -116,7 +150,9 @@ var _swap_button: Button
 var _pass_button: Button
 var _provisions_button: Button
 var _end_turn_button: Button
-var _provision_menu: VBoxContainer
+## Open while the player is choosing a provision (the flow of the old
+## "Provisões" button). The hooks are always in view (Art Bible).
+var _provision_menu: Control
 var _confirm_overlay: Control
 var _confirm_label: Label
 var _pause_overlay: Control
@@ -142,7 +178,7 @@ var _frames: Dictionary = {}
 var _camera: ImpactCamera
 var _dim: ColorRect
 var _flash: ColorRect
-var _lantern: TextureRect
+var _lantern: Control
 var _lume_label: Label
 var _lume_holder: Control
 var _fighters: Control
@@ -610,14 +646,7 @@ func _refresh_top() -> void:
 	var cap: int = ctrl.state.constants.get_int(&"fervor_cap")
 	_round_label.text = texts.t(&"round", {"round": ctrl.state.round_number})
 	_fervor_label.text = texts.t(&"fervor", {"amount": ctrl.fervor.amount, "max": cap})
-	while _fervor_pips.get_child_count() < cap:
-		var pip := ColorRect.new()
-		pip.custom_minimum_size = PIP_SIZE
-		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_fervor_pips.add_child(pip)
-	for i: int in _fervor_pips.get_child_count():
-		var pip_rect: ColorRect = _fervor_pips.get_child(i)
-		pip_rect.color = HudStyle.COLOR_FERVOR if i < ctrl.fervor.amount else HudStyle.COLOR_PIP_OFF
+	_fervor_flames.queue_redraw()
 	_speed_button.text = texts.t(SPEED_KEYS[speed_index])
 	_pause_button.text = texts.t(&"pause")
 	_refresh_lume()
@@ -629,8 +658,8 @@ func _refresh_lume() -> void:
 	if light < 0:
 		return
 	var share: float = clampf(float(light) / maxf(float(light_max), 1.0), 0.0, 1.0)
-	var y: float = LUME_BOTTOM - (LUME_BOTTOM - LUME_TOP) * share
-	_lantern.position = Vector2(LUME_X - _lantern.size.x * 0.5, y - LANTERN_HEIGHT * 0.5)
+	var y: float = roundf(LUME_BOTTOM - (LUME_BOTTOM - LUME_TOP) * share)
+	_lantern.position = Vector2(LUME_X - LANTERN_SIZE.x * 0.5, y - LANTERN_SIZE.y * 0.5)
 	_lume_label.text = data.ui.text(&"walk_light", {"value": light})
 
 
@@ -715,11 +744,11 @@ func _refresh_controls() -> void:
 	_portrait.visible = _portrait.texture != null
 	_portrait_frame.visible = actor != null
 	if actor != null:
-		_portrait_frame.self_modulate = HudStyle.frame_tint(actor.spirit_state, actor.desolation, ctrl.state.constants.get_int(&"desolation_max"))
+		_portrait_frame.self_modulate = PixelStyle.frame_tint(actor.spirit_state, actor.desolation, ctrl.state.constants.get_int(&"desolation_max"))
 		var slot: int = ctrl.state.party_slot_of(actor)
 		var status_text: String = texts.status(actor)
 		_actor_detail.text = texts.t(&"slot", {"slot": slot}) + (" · " + status_text if not status_text.is_empty() else "")
-		_stats.text = "%s\n%s" % [texts.hp(actor), texts.desolation(actor)]
+		_stats.text = "%s · %s" % [texts.hp(actor), texts.desolation(actor)]
 	else:
 		_actor_detail.text = ""
 		_stats.text = ""
@@ -741,18 +770,22 @@ func _refresh_controls() -> void:
 		_set_button(_swap_button, texts.t(&"swap"), &"", true, false)
 		_set_button(_pass_button, texts.t(&"pass"), &"", true, false)
 		_set_button(_provisions_button, texts.t(&"provisions"), &"", true, false)
-	_miracle_button.add_theme_color_override("font_color", HudStyle.COLOR_GOLD)
+	_miracle_label.text = _miracle_button.text
+	_miracle_label.add_theme_color_override("font_color", PixelStyle.COLOR_LEAD_LIGHT if _miracle_button.disabled else PixelStyle.COLOR_GOLD)
 	_end_turn_button.text = texts.t(&"end_turn")
 	_end_turn_button.disabled = not _accepting_input()
 	_refresh_provision_menu(open)
 
 
+## The head of the saint, cut from its idle frame around the head point
+## (as in the approved preview); a saint without frames keeps the painted
+## portrait.
 func _portrait_of(actor: Combatant) -> Texture2D:
 	if actor == null:
 		return null
-	var art: CombatantArt = _arts.get(actor.id)
-	if art != null and art.portrait != null:
-		return art.portrait
+	var head: Texture2D = _head_picture(actor.id, PORTRAIT_WINDOW.size)
+	if head != null:
+		return head
 	var path: String = PORTRAIT_PATH % [actor.def_id, actor.def_id]
 	return load(path) as Texture2D if ResourceLoader.exists(path) else null
 
@@ -778,7 +811,10 @@ func _set_button(button: Button, label: String, reason: StringName, off: bool, c
 		text += "\n(" + texts.reason(reason) + ")"
 	button.text = text
 	button.disabled = off or reason != &""
-	button.modulate = COLOR_CHOSEN if chosen else Color.WHITE
+	if button is PieceButton:
+		(button as PieceButton).chosen = chosen
+	else:
+		button.modulate = COLOR_CHOSEN if chosen else Color.WHITE
 
 
 func _provisions_reason() -> StringName:
@@ -800,19 +836,33 @@ func _unique_provisions() -> Array[StringName]:
 	return ids
 
 
+## One hook with its bag per kind of provision the company carries, with
+## the amount (Art Bible: the provisions are always in view).
 func _refresh_provision_menu(open: bool) -> void:
-	for child: Node in _provision_menu.get_children():
+	for child: Node in _hooks.get_children():
+		_hooks.remove_child(child)
 		child.queue_free()
 	if not open:
 		_provision_menu.visible = false
-		return
-	for id: StringName in _unique_provisions():
-		var button := Button.new()
-		button.custom_minimum_size = Vector2(320, 70)
-		var count: int = ctrl.state.provisions.count(id)
-		_set_button(button, "%s (%d)" % [texts.provision_name(id), count], selection.provision_reason(id), false, selection.provision_id == id)
-		button.pressed.connect(press_provision.bind(id))
-		_provision_menu.add_child(button)
+	var ids: Array[StringName] = _unique_provisions()
+	for i: int in ids.size():
+		var id: StringName = ids[i]
+		var hook := PieceButton.new()
+		hook.setup(PixelStyle.piece("ui_hook_bag"), null, null, HOOK_TEXT)
+		hook.show_plate = false
+		hook.position = Vector2(i * HOOK_STEP, 0)
+		hook.set_meta(&"provision", id)
+		hook.text = str(ctrl.state.provisions.count(id))
+		hook.disabled = not open or selection.provision_reason(id) != &""
+		hook.chosen = open and selection.mode == BattleSelection.Mode.PROVISION and selection.provision_id == id
+		hook.modulate = Color(0.5, 0.5, 0.55) if hook.disabled else Color.WHITE
+		hook.pressed.connect(press_provision.bind(id))
+		_hooks.add_child(hook)
+
+
+## How many hooks hang in the panel (tests).
+func provision_hook_count() -> int:
+	return _hooks.get_child_count()
 
 
 func _refresh_hint() -> void:
@@ -837,6 +887,8 @@ func _refresh_hint() -> void:
 		var def: AbilityDef = ctrl.state.catalog.ability(selection.ability_id)
 		if def != null and not def.desc_pt.is_empty():
 			_hint.text = def.desc_pt + "\n" + _hint.text
+	if selection.mode == BattleSelection.Mode.PROVISION and not ctrl.is_over():
+		_hint.text = texts.provision_name(selection.provision_id) + "\n" + _hint.text
 
 
 ## The sheet on the right (DD): the tapped combatant, or the chosen saint.
@@ -848,7 +900,7 @@ func _refresh_info() -> void:
 		_sheet_picture.texture = null
 		return
 	_sheet_title.text = texts.name_of(c)
-	_sheet_picture.texture = _idle_picture(c.id)
+	_sheet_picture.texture = _head_picture(c.id, FRAME_WINDOW.size)
 	var lines: Array[String] = []
 	var first: String = texts.hp(c)
 	var status_text: String = texts.status(c)
@@ -865,16 +917,28 @@ func _refresh_info() -> void:
 	_info.text = "\n".join(lines)
 
 
-## First frame of the idle clip, for the sheet.
-func _idle_picture(combatant_id: StringName) -> Texture2D:
+## The top of the idle figure of a combatant, `window` pixels on the pixel
+## grid: around the head point when the frames have one (saints), else the
+## top of the figure. Null without frames.
+func _head_picture(combatant_id: StringName, window: Vector2) -> Texture2D:
 	var frames: CharacterFrames = _frames.get(combatant_id)
 	var idle: FrameClip = frames.clip(&"idle") if frames != null else null
 	if idle == null:
 		return null
+	var sheet: Texture2D = FramePlayer.sheet(idle.sheet_path)
+	if sheet == null:
+		return null
+	# Painted frames are bigger than the grid: the window takes the same
+	# share of the figure.
+	var k: float = frames.figure_height / FIGURE_HEIGHT
+	var corner := Vector2(idle.anchor.x - window.x * 0.5 * k, idle.anchor.y - frames.figure_height)
+	if frames.halo_diameter > 0.0:
+		corner = frames.halo_center - PORTRAIT_FROM_HEAD * k
+	var cell: Rect2 = idle.region(0)
 	var atlas := AtlasTexture.new()
-	atlas.atlas = FramePlayer.sheet(idle.sheet_path)
-	atlas.region = idle.region(0)
-	return atlas if atlas.atlas != null else null
+	atlas.atlas = sheet
+	atlas.region = Rect2(cell.position + corner.floor(), (window * k).floor()).intersection(cell)
+	return atlas
 
 
 func _info_intent_target() -> Combatant:
@@ -912,21 +976,29 @@ func _ensure_view(c: Combatant) -> CombatantView:
 	if _views.has(c.id):
 		return _views[c.id]
 	if _halo_settings == null:
-		_halo_settings = load(HALO_SETTINGS_PATH)
+		_halo_settings = load(HALO_SETTINGS_PIXEL_PATH)
 	var view := CombatantView.new()
 	var frames: CharacterFrames = _frames_for(c)
 	_frames[c.id] = frames
+	view.figure_px = figure_px_of(frames)
+	view.float_font_size = PixelStyle.TEXT_SIZE * 2
+	view.float_outline = 4
+	view.float_rise = 36.0
 	view.setup(c.id, c.is_saint(), VIEW_WIDTH, null, _halo_settings if c.is_saint() else null, frames)
 	view.set_info_visible(false)
 	view.speed = SPEEDS[speed_index]
-	view.scale = Vector2.ONE * view_scale()
+	if view.player() != null:
+		view.player().outline_width = 1.0
+		# Painted frames (not pixel art yet) are shrunk with the smooth filter.
+		if not is_pixel_art(frames):
+			view.player().texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	view.tapped.connect(tap)
 	view.impact.connect(_on_impact.bind(view))
 	_fighters.add_child(view)
 	_views[c.id] = view
 	var badge := CombatantBadge.new()
 	var display: float = frames.display_scale if frames != null else 1.0
-	badge.set_head_height(FIGURE_HEIGHT * display, GROUND_Y - INTENT_ROW_Y)
+	badge.set_head_height(figure_px_of(frames) * display, GROUND_Y - INTENT_ROW_Y)
 	_badges_layer.add_child(badge)
 	_badges[c.id] = badge
 	_show(view, c)
@@ -934,14 +1006,29 @@ func _ensure_view(c: Combatant) -> CombatantView:
 
 
 func _frames_for(c: Combatant) -> CharacterFrames:
-	var path: String = "%s/%s_frames.tres" % [ART_DIR, c.def_id]
-	return load(path) as CharacterFrames if ResourceLoader.exists(path) else null
+	for dir: String in [PIXEL_ART_DIR, ART_DIR]:
+		var path: String = "%s/%s_frames.tres" % [dir, c.def_id]
+		if ResourceLoader.exists(path):
+			return load(path) as CharacterFrames
+	return null
 
 
-## Scale of a combatant view: its figure (CombatantView.FIGURE_SIZE) becomes
-## FIGURE_HEIGHT tall on the field.
+## Height of a standing figure on screen: pixel art at its natural size
+## (one pixel of the drawing is one pixel of the screen, ADR-0013); painted
+## frames are shrunk to FIGURE_HEIGHT.
+static func figure_px_of(frames: CharacterFrames) -> float:
+	return frames.figure_height if is_pixel_art(frames) else FIGURE_HEIGHT
+
+
+## True for frames that came from the pixel art tool (T64).
+static func is_pixel_art(frames: CharacterFrames) -> bool:
+	return frames != null and frames.resource_path.begins_with(PIXEL_ART_DIR)
+
+
+## The views are not scaled on the pixel grid: one pixel of a frame is one
+## pixel of the screen (ADR-0013).
 static func view_scale() -> float:
-	return FIGURE_HEIGHT / CombatantView.FIGURE_SIZE.y
+	return 1.0
 
 
 ## Where the feet of `view` stand on the field (x).
@@ -951,7 +1038,7 @@ func _feet_x(view: CombatantView) -> float:
 
 func _place(view: CombatantView, x: float, animated: bool) -> void:
 	var feet_local := Vector2(VIEW_WIDTH * 0.5, CombatantView.INTENT_HEIGHT + CombatantView.BODY_HEIGHT)
-	var target := Vector2(x, GROUND_Y) - feet_local * view.scale.x
+	var target := (Vector2(x, GROUND_Y) - feet_local * view.scale.x).round()
 	var badge: CombatantBadge = _badges.get(view.combatant_id)
 	if animated and view.is_inside_tree() and view.position != Vector2.ZERO:
 		var t: float = MOVE_TIME / SPEEDS[speed_index]
@@ -990,7 +1077,7 @@ func lume_shown() -> bool:
 
 
 func lantern_y() -> float:
-	return _lantern.position.y + LANTERN_HEIGHT * 0.5
+	return _lantern.position.y + LANTERN_SIZE.y * 0.5
 
 
 func portrait_tint() -> Color:
@@ -1019,10 +1106,62 @@ func stage_position() -> Vector2:
 func _center_stage() -> void:
 	if _stage != null:
 		_stage.position = ((screen_size() - STAGE_SIZE) * 0.5).floor()
+		_layout_field()
+
+
+## How far the field goes beyond each side of the stage on a wide phone.
+func field_margin() -> float:
+	return maxf(_stage.position.x, 0.0) if _stage != null else 0.0
+
+
+## The field takes the whole width of the screen: the scenery repeats to the
+## sides, the fighters stay on the stage in the middle.
+func _layout_field() -> void:
+	if _field_clip == null:
+		return
+	var margin: float = field_margin()
+	var wide := Vector2(STAGE_SIZE.x + margin * 2.0, FIELD_HEIGHT)
+	_field_clip.position = Vector2(-margin, 0)
+	_field_clip.size = wide
+	_field.position = Vector2(margin, 0)
+	_camera.rehome(_field.position)
+	_scenery_back.position = Vector2(-margin, 0)
+	_scenery_back.size = wide
+	var corner := Vector2(margin + FRONT_CORNER, FIELD_HEIGHT)
+	_front_corners[0].position = Vector2(-margin, 0)
+	_front_corners[1].position = Vector2(STAGE_SIZE.x - FRONT_CORNER, 0)
+	for i: int in _front_corners.size():
+		_front_corners[i].size = corner
+		# Each copy is laid over the whole field; its holder shows one corner.
+		_scenery_front[i].position = Vector2(-margin, 0) - _front_corners[i].position
+		_scenery_front[i].size = wide
+	_dim.position = Vector2(-margin - 200.0, -200.0)
+	_dim.size = wide + Vector2(400, 400)
+	_flash.size = wide
+	_lume_holder.position = Vector2(margin, 0)
+
+
+## The far layers of the scenery follow the camera of a blow less than the
+## fighters do: the depth shows (parallax).
+func _process(_delta: float) -> void:
+	if _scenery_back == null:
+		return
+	var pushed: float = _field.position.x - field_margin()
+	_scenery_back.set_shift(pushed)
+	for front: ParallaxScenery in _scenery_front:
+		front.set_shift(pushed)
+
+
+func scenery_layer_count() -> int:
+	return _scenery_back.layer_count() + _scenery_front[0].layer_count()
+
+
+func scenery_material() -> Material:
+	return _scenery_back.material
 
 
 func _build_ui() -> void:
-	theme = HudStyle.theme(26)
+	theme = PixelStyle.theme()
 	var background := ColorRect.new()
 	background.color = COLOR_BACKGROUND
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1047,7 +1186,7 @@ func _build_ui() -> void:
 	_retreat_reason = _overlay_label(_pause_overlay)
 	_result_overlay = _overlay()
 	_result_label = _overlay_label(_result_overlay)
-	_result_label.add_theme_font_size_override("font_size", 64)
+	PixelStyle.title(_result_label, PixelStyle.COLOR_BONE, PixelStyle.BIG_TITLE_SIZE)
 	var again: Button = _overlay_button(_result_overlay, texts.t(&"play_again"), press_play_again)
 	again.visible = not in_expedition
 	var back: Button = _overlay_button(_result_overlay, texts.t(&"result_continue" if in_expedition else &"back_to_arena"), press_back)
@@ -1055,226 +1194,225 @@ func _build_ui() -> void:
 	_ui_built = true
 
 
-## The field: scenery, darkening, fighters, bars and marks, the intent line
-## and the small front detail, clipped to the top of the stage. The impact
-## camera zooms all of it.
+## The field: scenery behind (sky and middle), darkening, fighters, bars and
+## marks, the scenery in front, clipped to the top of the screen. The impact
+## camera moves all of it.
 func _build_field() -> void:
-	var clip := Control.new()
-	clip.size = Vector2(STAGE_SIZE.x, FIELD_HEIGHT)
-	clip.clip_contents = true
-	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(clip)
+	_field_clip = Control.new()
+	_field_clip.size = Vector2(STAGE_SIZE.x, FIELD_HEIGHT)
+	_field_clip.clip_contents = true
+	_field_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(_field_clip)
 	_field = Control.new()
-	_field.size = clip.size
+	_field.size = _field_clip.size
 	_field.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	clip.add_child(_field)
-	for file: String in SCENERY_LAYERS:
-		var layer := _scenery(file)
-		if layer != null:
-			layer.size *= SCENERY_SCALE
-			layer.position = SCENERY_OFFSET
-			_field.add_child(layer)
-	var vignette := ColorRect.new()
-	vignette.color = Color(0.02, 0.015, 0.02, VIGNETTE_ALPHA)
-	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vignette.size = clip.size
-	_field.add_child(vignette)
+	_field_clip.add_child(_field)
+	var set_id: StringName = CircleLook.SET_BOSS if ctrl.state.encounter_type == &"boss" else CircleLook.SET_LEG_1
+	_scenery_back = ParallaxScenery.new()
+	_scenery_back.setup(CircleLook.back_layers(set_id), CircleLook.filter_material())
+	_field.add_child(_scenery_back)
 	_dim = ColorRect.new()
 	_dim.color = Color(0.02, 0.01, 0.02, 0.0)
 	_dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dim.position = Vector2(-400, -400)
-	_dim.size = clip.size + Vector2(800, 800)
 	_field.add_child(_dim)
+	_fighters = Control.new()
+	_fighters.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fighters.size = _field.size
+	_field.add_child(_fighters)
+	# Bars, intents, conditions and previews float over the fighters.
 	_badges_layer = Control.new()
 	_badges_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field.add_child(_badges_layer)
-	_fighters = Control.new()
-	_fighters.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_fighters.size = clip.size
-	_field.add_child(_fighters)
-	# Intents, conditions and previews float over the fighters.
-	_field.move_child(_badges_layer, _fighters.get_index() + 1)
 	_lines = IntentLine.new()
-	_lines.size = clip.size
+	_lines.size = _field.size
 	# Covers the whole field: it must never swallow the taps on the views.
 	_lines.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field.add_child(_lines)
-	var detail := _scenery(SCENERY_DETAIL)
-	if detail != null:
-		detail.size = clip.size
-		_field.add_child(detail)
+	for i: int in 2:
+		var holder := Control.new()
+		holder.clip_contents = true
+		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_field.add_child(holder)
+		var front := ParallaxScenery.new()
+		front.setup(CircleLook.front_layers(set_id), CircleLook.filter_material())
+		front.drop = FRONT_DROP
+		holder.add_child(front)
+		_front_corners.append(holder)
+		_scenery_front.append(front)
 	_flash = ColorRect.new()
 	_flash.color = Color(1, 1, 1, 0)
 	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_flash.size = clip.size
-	clip.add_child(_flash)
+	_field_clip.add_child(_flash)
 	_camera = ImpactCamera.new(_field, _flash, _dim)
-	_build_lume(clip)
+	_camera.reach = CAMERA_REACH
+	_build_lume(_field_clip)
+	_layout_field()
 
 
-func _scenery(file: String) -> TextureRect:
-	var path: String = "%s/%s" % [SCENERY_DIR, file]
-	if not ResourceLoader.exists(path):
-		return null
-	var layer := TextureRect.new()
-	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.texture = load(path) as Texture2D
-	layer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	layer.stretch_mode = TextureRect.STRETCH_SCALE
-	layer.size = layer.texture.get_size()
-	return layer
-
-
+## The Lume as in the approved preview (v2): an iron rod and a small
+## lantern with its flame, drawn by the engine until the drawn piece comes.
 func _build_lume(holder: Control) -> void:
 	_lume_holder = Control.new()
 	_lume_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lume_holder.visible = false
 	holder.add_child(_lume_holder)
-	var rod := TextureRect.new()
+	var rod := ColorRect.new()
 	rod.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rod.texture = HudStyle.hud_texture("ui_lume_scale")
-	rod.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	rod.stretch_mode = TextureRect.STRETCH_SCALE
-	var rod_height: float = LUME_BOTTOM - LUME_TOP + 60.0
-	var rod_width: float = rod_height * 50.0 / 1024.0
-	rod.size = Vector2(rod_width, rod_height)
-	rod.position = Vector2(LUME_X - rod_width * 0.5, LUME_TOP - 30.0)
+	rod.color = PixelStyle.COLOR_LEAD_LIGHT
+	rod.position = Vector2(LUME_X - 1.0, LUME_TOP - LANTERN_SIZE.y * 0.5)
+	rod.size = Vector2(2, LUME_BOTTOM - LUME_TOP + LANTERN_SIZE.y)
 	_lume_holder.add_child(rod)
-	_lantern = TextureRect.new()
+	_lantern = Control.new()
 	_lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_lantern.texture = HudStyle.hud_texture("ui_lume_lantern")
-	_lantern.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_lantern.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_lantern.size = Vector2(LANTERN_HEIGHT * 156.0 / 256.0, LANTERN_HEIGHT)
+	_lantern.size = LANTERN_SIZE
+	_lantern.draw.connect(_draw_lantern)
 	_lume_holder.add_child(_lantern)
 	_lume_label = Label.new()
 	_lume_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_lume_label.position = Vector2(LUME_X - 70.0, LUME_BOTTOM + 40.0)
-	_lume_label.size = Vector2(140, 40)
+	_lume_label.position = Vector2(LUME_X - 22.0, LUME_BOTTOM + LANTERN_SIZE.y * 0.5 + 2.0)
+	_lume_label.size = Vector2(44, 12)
 	_lume_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_lume_label.add_theme_font_size_override("font_size", 30)
+	_lume_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
 	_lume_holder.add_child(_lume_label)
 
 
+func _draw_lantern() -> void:
+	_lantern.draw_rect(Rect2(Vector2.ZERO, LANTERN_SIZE), PixelStyle.COLOR_LEAD_LIGHT)
+	_lantern.draw_rect(Rect2(Vector2(2, 2), LANTERN_SIZE - Vector2(4, 4)), PixelStyle.COLOR_IRON)
+	_draw_flame(_lantern, Vector2(LANTERN_SIZE.x * 0.5, LANTERN_SIZE.y * 0.5 + 6.0), 2)
+
+
+## A small flame in whole pixels, as in the approved preview: a diamond of
+## amber with a gold heart. `at` is its base; `size_px` the side of a block.
+func _draw_flame(on: Control, at: Vector2, size_px: int = 1) -> void:
+	var widths: Array[int] = [1, 3, 5, 3, 1]
+	for row: int in widths.size():
+		var w: float = widths[row] * size_px
+		var y: float = at.y - (widths.size() - row) * size_px
+		on.draw_rect(Rect2(floorf(at.x - w * 0.5), y, w, size_px), PixelStyle.COLOR_AMBER)
+	on.draw_rect(Rect2(floorf(at.x - size_px * 0.5), at.y - 3.0 * size_px, size_px, size_px), PixelStyle.COLOR_GOLD)
+
+
 func _build_top_bar() -> void:
-	_round_label = _label(Vector2(0, 14), Vector2(STAGE_SIZE.x, 50), 40)
-	_pause_button = _button(Vector2(1560, 16), Vector2(150, 60), press_pause)
-	_speed_button = _button(Vector2(1720, 16), Vector2(180, 60), press_speed)
+	_round_label = _label(Vector2(330, 4), Vector2(300, 14))
+	PixelStyle.title(_round_label)
+	_hint = _label(Vector2(230, 20), Vector2(500, 36))
+	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_pause_button = _button(Vector2(778, 4), Vector2(52, 26), press_pause)
+	_speed_button = _button(Vector2(834, 4), Vector2(122, 26), press_speed)
 	_build_dev_row()
 
 
-## The iron panel under the field: banners at the sides, the chosen saint on
-## the left, the sheet of the tapped combatant on the right.
+## The panel under the field, the "chapel in the dark" (Art Bible, D-368):
+## the chosen saint and its actions on the left, the tapped combatant in a
+## broken frame on the right.
 func _build_bottom() -> void:
-	var strip := ColorRect.new()
-	strip.color = Color(0.06, 0.06, 0.065)
-	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	strip.position = Vector2(0, FIELD_HEIGHT)
-	strip.size = Vector2(STAGE_SIZE.x, STAGE_SIZE.y - FIELD_HEIGHT)
-	_stage.add_child(strip)
-	var edge := ColorRect.new()
-	edge.color = HudStyle.COLOR_PANEL_EDGE
-	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	edge.position = Vector2(0, FIELD_HEIGHT)
-	edge.size = Vector2(STAGE_SIZE.x, 6)
-	_stage.add_child(edge)
-	for x: float in [6.0, STAGE_SIZE.x - 136.0]:
-		var banner := TextureRect.new()
-		banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		banner.texture = HudStyle.hud_texture("ui_banner_keys")
-		banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		banner.position = Vector2(x, FIELD_HEIGHT + 6)
-		banner.size = Vector2(130, STAGE_SIZE.y - FIELD_HEIGHT - 10)
-		_stage.add_child(banner)
-	_build_hero_panel(Rect2(140, FIELD_HEIGHT + 10, 920, 344))
-	_build_sheet_panel(Rect2(1066, FIELD_HEIGHT + 10, 714, 344))
+	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
+	_build_hero_panel()
+	_build_sheet_panel()
 
 
-func _build_hero_panel(rect: Rect2) -> void:
-	_stage.add_child(HudStyle.iron_panel(rect))
-	var x0: float = rect.position.x
-	var y0: float = rect.position.y
+func _build_hero_panel() -> void:
+	_portrait_frame = _piece("ui_portrait_arch", ARCH_POS)
 	_portrait = TextureRect.new()
-	var frame_rect := Rect2(PORTRAIT_FRAME.position + Vector2(x0, y0), PORTRAIT_FRAME.size)
-	_portrait.position = frame_rect.position + PORTRAIT_WINDOW.position * frame_rect.size
-	_portrait.size = PORTRAIT_WINDOW.size * frame_rect.size
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_portrait.position = ARCH_POS + PORTRAIT_WINDOW.position
+	_portrait.size = PORTRAIT_WINDOW.size
 	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_portrait.visible = false
 	_stage.add_child(_portrait)
-	_portrait_frame = TextureRect.new()
-	# Expand before the texture: otherwise the frame keeps the texture's size.
-	_portrait_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portrait_frame.stretch_mode = TextureRect.STRETCH_SCALE
-	_portrait_frame.texture = HudStyle.hud_texture("ui_portrait_frame")
-	_portrait_frame.position = frame_rect.position
-	_portrait_frame.size = frame_rect.size
-	_portrait_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(_portrait_frame)
-	_actor_label = _label(Vector2(x0 + 240, y0 + 18), Vector2(420, 50), 42)
+	_actor_label = _label(Vector2(118, 362), Vector2(150, 16))
 	_actor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_actor_detail = _label(Vector2(x0 + 240, y0 + 64), Vector2(420, 30), 24)
+	PixelStyle.title(_actor_label)
+	_actor_detail = _label(Vector2(250, 365), Vector2(120, 12))
 	_actor_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_actor_detail.add_theme_color_override("font_color", HudStyle.COLOR_TEXT_DIM)
-	_stats = _label(Vector2(x0 + 34, y0 + 196), Vector2(190, 64), 24)
-	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_fervor_label = _label(Vector2(x0 + 34, y0 + 256), Vector2(190, 30), 24)
-	_fervor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_fervor_label.add_theme_color_override("font_color", HudStyle.COLOR_FERVOR)
-	_fervor_pips = HBoxContainer.new()
-	_fervor_pips.position = Vector2(x0 + 36, y0 + 290)
-	_fervor_pips.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_fervor_pips.add_theme_constant_override("separation", 7)
-	_stage.add_child(_fervor_pips)
-	var bx: float = x0 + 240
-	var size_ability := Vector2(156, 96)
+	_actor_detail.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
+	_stats = _label(Vector2(372, 365), Vector2(190, 12))
+	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_stats.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
 	for i: int in ABILITY_SLOTS:
-		_ability_buttons.append(_button(Vector2(bx + i * (size_ability.x + 8), y0 + 100), size_ability, press_ability.bind(i)))
-	var row: float = y0 + 204
-	_miracle_button = _button(Vector2(bx, row), Vector2(248, 72), press_miracle)
-	_miracle_button.add_theme_font_size_override("font_size", 20)
-	_swap_button = _button(Vector2(bx + 256, row), Vector2(110, 72), press_swap)
-	_pass_button = _button(Vector2(bx + 374, row), Vector2(110, 72), press_pass)
-	_provisions_button = _button(Vector2(bx + 492, row), Vector2(166, 72), press_provisions)
-	_provisions_button.add_theme_font_size_override("font_size", 19)
-	_hint = _label(Vector2(bx, y0 + 280), Vector2(652, 56), 22)
-	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hint.add_theme_color_override("font_color", HudStyle.COLOR_TEXT_DIM)
-	_provision_menu = VBoxContainer.new()
-	_provision_menu.position = Vector2(bx + 330, FIELD_HEIGHT - 300)
+		var lancet := PieceButton.new()
+		lancet.setup(PixelStyle.piece("ui_lancet_on"), PixelStyle.piece("ui_lancet_chosen"), PixelStyle.piece("ui_lancet_off"), LANCET_TEXT)
+		lancet.position = LANCET_POS + Vector2(i * LANCET_STEP, 0)
+		lancet.pressed.connect(press_ability.bind(i))
+		_stage.add_child(lancet)
+		_ability_buttons.append(lancet)
+	var rose := PieceButton.new()
+	rose.setup(PixelStyle.piece("ui_rose_on"), PixelStyle.piece("ui_rose_on"), PixelStyle.piece("ui_rose_off"), Rect2())
+	rose.position = ROSE_POS
+	rose.pressed.connect(press_miracle)
+	_stage.add_child(rose)
+	_miracle_button = rose
+	_miracle_label = _label(ROSE_POS + Vector2(82, 2), Vector2(80, 76))
+	_miracle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_miracle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_piece("ui_candle_rack", RACK_POS)
+	_fervor_flames = Control.new()
+	_fervor_flames.position = RACK_POS
+	_fervor_flames.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fervor_flames.draw.connect(_draw_fervor)
+	_stage.add_child(_fervor_flames)
+	_fervor_label = _label(Vector2(480, 462), Vector2(82, 12))
+	_fervor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_fervor_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
+	_swap_button = _button(ACTION_POS, ACTION_SIZE, press_swap)
+	_pass_button = _button(ACTION_POS + Vector2(0, ACTION_SIZE.y + 2.0), ACTION_SIZE, press_pass)
+	# The provisions hang on their hooks, always in view: the old button
+	# only keeps its place in the flow (press_provisions) and names the row.
+	_provisions_button = _button(ACTION_POS + Vector2(0, (ACTION_SIZE.y + 2.0) * 2.0), ACTION_SIZE, press_provisions)
+	_provisions_button.flat = true
+	_provisions_button.focus_mode = Control.FOCUS_NONE
+	_hooks = Control.new()
+	_hooks.position = HOOK_POS
+	_hooks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(_hooks)
+	_provision_menu = Control.new()
+	_provision_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_provision_menu.visible = false
 	_stage.add_child(_provision_menu)
 
 
-## DD's sheet: the tapped enemy (or saint), with its figure, life, intent
-## and conditions; "Encerrar turno" in its corner.
-func _build_sheet_panel(rect: Rect2) -> void:
-	_stage.add_child(HudStyle.iron_panel(rect))
-	var x0: float = rect.position.x
-	var y0: float = rect.position.y
+## One flame over each candle of the rack, as many as the Fervor.
+func _draw_fervor() -> void:
+	if ctrl == null:
+		return
+	for i: int in mini(ctrl.fervor.amount, CANDLE_FLAMES.size()):
+		_draw_flame(_fervor_flames, CANDLE_FLAMES[i])
+
+
+## Flames lit on the candle rack (tests).
+func fervor_flames() -> int:
+	return mini(ctrl.fervor.amount, CANDLE_FLAMES.size())
+
+
+## DD's sheet: the tapped enemy (or saint) in the broken frame, with its
+## life, intent and conditions; "Encerrar turno" in its corner.
+func _build_sheet_panel() -> void:
+	_piece("ui_broken_frame", FRAME_POS)
 	_sheet_picture = TextureRect.new()
-	_sheet_picture.position = Vector2(x0 + 30, y0 + 30)
-	_sheet_picture.size = Vector2(170, 280)
+	_sheet_picture.position = FRAME_POS + FRAME_WINDOW.position
+	_sheet_picture.size = FRAME_WINDOW.size
 	_sheet_picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_sheet_picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_sheet_picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_sheet_picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(_sheet_picture)
-	_sheet_title = _label(Vector2(x0 + 220, y0 + 18), Vector2(470, 50), 40)
+	_sheet_title = _label(Vector2(SHEET_X, 368), Vector2(144, 16))
 	_sheet_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_info = _label(Vector2(x0 + 220, y0 + 72), Vector2(466, 180), 23)
+	PixelStyle.title(_sheet_title)
+	_info = _label(Vector2(SHEET_X, 386), Vector2(144, 112))
 	_info.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_end_turn_button = _button(Vector2(x0 + rect.size.x - 290, y0 + rect.size.y - 92), Vector2(260, 68), press_end_turn)
+	_info.clip_text = true
+	_info.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
+	_end_turn_button = _button(Vector2(SHEET_X, 502), Vector2(142, 32), press_end_turn)
 
 
-## Test buttons (D-117), small, under the top bar.
+## Test buttons (D-117), small, in the top left corner.
 func _build_dev_row() -> void:
 	_dev_row = HBoxContainer.new()
-	_dev_row.position = Vector2(170, 84)
-	_dev_row.add_theme_constant_override("separation", 8)
+	_dev_row.position = Vector2(44, 4)
+	_dev_row.add_theme_constant_override("separation", 2)
 	_dev_row.visible = dev_tools and not in_expedition
 	_stage.add_child(_dev_row)
 	var specs: Array = [
@@ -1285,19 +1423,27 @@ func _build_dev_row() -> void:
 	for spec: Array in specs:
 		var button := Button.new()
 		button.text = spec[0]
-		button.custom_minimum_size = Vector2(230, 52)
-		button.add_theme_font_size_override("font_size", 20)
+		button.custom_minimum_size = Vector2(0, 16)
 		button.pressed.connect(spec[1])
 		_dev_row.add_child(button)
 
 
-func _label(pos: Vector2, label_size: Vector2, font_size: int) -> Label:
+## One piece of the cathedral interface at its natural size.
+func _piece(file_name: String, pos: Vector2) -> TextureRect:
+	var rect := TextureRect.new()
+	rect.texture = PixelStyle.piece(file_name)
+	rect.position = pos
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(rect)
+	return rect
+
+
+func _label(pos: Vector2, label_size: Vector2) -> Label:
 	var label := Label.new()
 	label.position = pos
 	label.size = label_size
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", font_size)
 	_stage.add_child(label)
 	return label
 
@@ -1306,8 +1452,7 @@ func _button(pos: Vector2, button_size: Vector2, action: Callable) -> Button:
 	var button := Button.new()
 	button.position = pos
 	button.size = button_size
-	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	button.add_theme_font_size_override("font_size", 22)
+	button.clip_text = true
 	button.pressed.connect(action)
 	_stage.add_child(button)
 	return button
@@ -1315,15 +1460,17 @@ func _button(pos: Vector2, button_size: Vector2, action: Callable) -> Button:
 
 func _overlay() -> Control:
 	var shade := ColorRect.new()
-	shade.color = Color(0, 0, 0, 0.75)
-	shade.size = STAGE_SIZE
+	shade.color = Color(PixelStyle.COLOR_PITCH, 0.8)
+	# Wider than the stage: it also covers the sides of a wide phone.
+	shade.position = Vector2(-OVERLAY_MARGIN, 0)
+	shade.size = STAGE_SIZE + Vector2(OVERLAY_MARGIN * 2.0, 0)
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP
 	shade.visible = false
 	var box := VBoxContainer.new()
 	box.name = "Box"
-	box.position = Vector2(STAGE_SIZE.x * 0.5 - 300, 340)
-	box.custom_minimum_size = Vector2(600, 0)
-	box.add_theme_constant_override("separation", 24)
+	box.position = Vector2(OVERLAY_MARGIN + (STAGE_SIZE.x - OVERLAY_WIDTH) * 0.5, 150)
+	box.custom_minimum_size = Vector2(OVERLAY_WIDTH, 0)
+	box.add_theme_constant_override("separation", 10)
 	shade.add_child(box)
 	_stage.add_child(shade)
 	return shade
@@ -1333,8 +1480,8 @@ func _overlay_label(overlay: Control) -> Label:
 	var label := Label.new()
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.custom_minimum_size = Vector2(600, 0)
-	label.add_theme_font_size_override("font_size", 34)
+	label.custom_minimum_size = Vector2(OVERLAY_WIDTH, 0)
+	PixelStyle.title(label)
 	overlay.get_node("Box").add_child(label)
 	return label
 
@@ -1342,8 +1489,7 @@ func _overlay_label(overlay: Control) -> Label:
 func _overlay_button(overlay: Control, text: String, action: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(600, 90)
-	button.add_theme_font_size_override("font_size", 32)
+	button.custom_minimum_size = Vector2(OVERLAY_WIDTH, 36)
 	button.pressed.connect(action)
 	overlay.get_node("Box").add_child(button)
 	return button

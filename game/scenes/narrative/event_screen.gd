@@ -301,7 +301,7 @@ func _build_options() -> void:
 
 func _center_stage() -> void:
 	if _stage != null:
-		_stage.position = ((_screen_size() - STAGE_SIZE) * 0.5).floor()
+		LegacyStage.place(_stage, STAGE_SIZE, _screen_size())
 
 
 ## Never centre on a zero size (the T17 phone bug, lessons.md).

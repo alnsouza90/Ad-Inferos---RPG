@@ -8,17 +8,18 @@ extends Control
 ## Darkest Dungeon look (T36, D-258): each node a square iron room with the
 ## icon of its type and its name under it; the links are corridors of small
 ## squares, lit where the party walked; the room where it stands glows.
-const ROOM_SIZE := Vector2(104, 104)
-const LABEL_SIZE := Vector2(220, 60)
-const ICON_SIZE: float = 76.0
-const STEP_SIZE: float = 20.0
+## Sizes on the 960 × 540 grid (T65, ADR-0013).
+const ROOM_SIZE := Vector2(52, 52)
+const LABEL_SIZE := Vector2(110, 30)
+const ICON_SIZE: float = 38.0
+const STEP_SIZE: float = 10.0
 const STEPS_PER_LINK: int = 4
-const COLOR_STEP := Color(0.25, 0.25, 0.26)
-const COLOR_STEP_WALKED := Color(0.62, 0.61, 0.58)
-const COLOR_ROOM := Color(0.09, 0.09, 0.095)
-const COLOR_ROOM_EDGE := Color(0.33, 0.33, 0.34)
-const COLOR_VISITED := Color(0.62, 0.61, 0.58)
-const COLOR_CURRENT := Color(0.98, 0.86, 0.6)
+const COLOR_STEP := Color("33313A")
+const COLOR_STEP_WALKED := Color("8A8791")
+const COLOR_ROOM := Color("0D0C10")
+const COLOR_ROOM_EDGE := Color("55525D")
+const COLOR_VISITED := Color("8A8791")
+const COLOR_CURRENT := Color("D9A520")
 const ICONS: Dictionary = {
 	MapNode.TYPE_BATTLE: "icon_node_combat",
 	MapNode.TYPE_ELITE: "icon_node_elite",
@@ -88,9 +89,8 @@ func _add_box(centre: Vector2, text: String, edge: Color, icon_name: String) -> 
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_ROOM
 	style.border_color = edge
-	style.set_border_width_all(6 if edge == COLOR_CURRENT else 4)
-	style.shadow_color = Color(edge, 0.55) if edge == COLOR_CURRENT else Color(0, 0, 0, 0.6)
-	style.shadow_size = 16 if edge == COLOR_CURRENT else 4
+	style.set_border_width_all(3 if edge == COLOR_CURRENT else 2)
+	style.anti_aliasing = false
 	room.add_theme_stylebox_override("panel", style)
 	room.size = ROOM_SIZE
 	room.position = centre - ROOM_SIZE * 0.5
@@ -98,6 +98,8 @@ func _add_box(centre: Vector2, text: String, edge: Color, icon_name: String) -> 
 	add_child(room)
 	var icon := TextureRect.new()
 	icon.texture = HudStyle.icon(icon_name)
+	# Painted icons, much bigger than they show: smooth filter.
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -110,8 +112,8 @@ func _add_box(centre: Vector2, text: String, edge: Color, icon_name: String) -> 
 	label.position = centre + Vector2(-LABEL_SIZE.x * 0.5, ROOM_SIZE.y * 0.5 + 2.0)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("font_size", 22)
-	label.add_theme_color_override("font_color", HudStyle.COLOR_TEXT if edge != COLOR_ROOM_EDGE else HudStyle.COLOR_TEXT_DIM)
+	label.add_theme_constant_override("line_spacing", 0)
+	label.add_theme_color_override("font_color", PixelStyle.COLOR_BONE if edge != COLOR_ROOM_EDGE else PixelStyle.COLOR_GREY)
 	add_child(label)
 	return label
 
@@ -147,5 +149,6 @@ func _corridor(from: Vector2, to: Vector2, walked_pairs: Dictionary) -> void:
 	for k: int in STEPS_PER_LINK:
 		var at: Vector2 = start.lerp(finish, (k + 0.5) / STEPS_PER_LINK)
 		var rect := Rect2(at - Vector2.ONE * STEP_SIZE * 0.5, Vector2.ONE * STEP_SIZE)
-		draw_rect(rect.grow(2.0), Color(0, 0, 0, 0.9))
+		draw_rect(Rect2(rect.position.round() - Vector2.ONE, rect.size + Vector2(2, 2)), PixelStyle.COLOR_PITCH)
+		rect.position = rect.position.round()
 		draw_rect(rect, COLOR_STEP_WALKED if lit else COLOR_STEP)

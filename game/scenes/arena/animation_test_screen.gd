@@ -241,7 +241,7 @@ func screen_size() -> Vector2:
 
 func _center_stage() -> void:
 	if _stage != null:
-		_stage.position = ((screen_size() - STAGE_SIZE) * 0.5).floor()
+		LegacyStage.place(_stage, STAGE_SIZE, screen_size())
 
 
 func _build() -> void:

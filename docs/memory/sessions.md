@@ -2,6 +2,13 @@
 
 Resumo curto de cada sessão. A mais recente no topo.
 
+## Sessão 10 (14 e 15/11/2026) · T65
+
+- Commits de arte e memória do ramo `ccr-22a5456d-tz0r3e` trazidos para o ramo da T65 (avanço direto, sem conflito).
+- Godot: o oficial 4.7.2 baixou do GitHub nesta sessão (o download funcionou); serve para os testes e para a captura real da tela (`xvfb-run`), sem esperar a compilação.
+- Feito: T65 (D-381). Prévia da tela real enviada a Alan.
+- Pendências novas: Jorge e Teresinha sem clipes de ação em pixel; cinco inimigos ainda pintados; lamparina e ícones em pixel (`open-questions.md`).
+
 ## Sessão 8 · 12/11/2026
 
 - PR #60 (D-266) conferido (CI verde) e com merge, como Alan aprovou.

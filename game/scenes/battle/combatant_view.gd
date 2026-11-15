@@ -131,6 +131,14 @@ var _impact_share: float = 1.0
 var _intent_target: bool = false
 ## Which gestures of the weight of the blow are on (all, in the battle).
 var gestures: BlowGestures = BlowGestures.new()
+## Height of the standing figure in pixels of the view. On the pixel grid
+## (T65, ADR-0013) the battle sets the figure height of the frames, so one
+## pixel of the drawing is one pixel of the screen. Set before setup().
+var figure_px: float = FIGURE_SIZE.y
+## Numbers rising over the combatant: font size, outline and rise in pixels.
+var float_font_size: int = 30
+var float_outline: int = 6
+var float_rise: float = 70.0
 var _shadow: Control
 
 
@@ -459,7 +467,7 @@ func effect_scale(holder: Node) -> float:
 	if item == null or item == self:
 		return 1.0
 	var relative: Transform2D = item.get_global_transform().affine_inverse() * get_global_transform()
-	return relative.get_scale().x * FIGURE_SIZE.y / SpellEffect.REFERENCE_HEIGHT
+	return relative.get_scale().x * figure_px / SpellEffect.REFERENCE_HEIGHT
 
 
 ## Where the feet of the figure stand, in global coordinates.
@@ -555,13 +563,13 @@ func play_fall() -> float:
 func float_text(text: String, color: Color) -> void:
 	if speed <= 0.0 or text.is_empty():
 		return
-	var label := _label(Vector2(-30, INTENT_HEIGHT + 40), Vector2(size.x + 60, 40), 30)
+	var label := _label(Vector2(-30, INTENT_HEIGHT + 40), Vector2(size.x + 60, 40), float_font_size)
 	label.text = text
 	label.add_theme_color_override("font_color", color)
 	label.add_theme_color_override("font_outline_color", Color.BLACK)
-	label.add_theme_constant_override("outline_size", 6)
+	label.add_theme_constant_override("outline_size", float_outline)
 	var tw := create_tween()
-	tw.tween_property(label, "position:y", label.position.y - 70.0, FLOAT_TIME / speed)
+	tw.tween_property(label, "position:y", label.position.y - float_rise, FLOAT_TIME / speed)
 	tw.parallel().tween_property(label, "modulate:a", 0.0, FLOAT_TIME / speed)
 	tw.tween_callback(label.queue_free)
 
@@ -603,7 +611,7 @@ func _build_player(width: float) -> void:
 	_player.material = _figure_material
 	_player.speed = speed
 	# Feet on the bottom of the panel, like the still figure.
-	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), FIGURE_SIZE.y * _frames.display_scale)
+	_player.setup(_frames, Vector2(width * 0.5, BODY_HEIGHT), figure_px * _frames.display_scale)
 	# Crouch, stretch and lean are anchored on the feet (03-animacao §2).
 	_body.pivot_offset = Vector2(width * 0.5, BODY_HEIGHT)
 	_shadow = Control.new()

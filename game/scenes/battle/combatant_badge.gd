@@ -5,19 +5,22 @@ extends Control
 ## intent and conditions over the head. The battle screen places it at the
 ## feet and fills it from already formatted state; it never decides a rule.
 
-const BAR_WIDTH: float = 128.0
-const BAR_HEIGHT: float = 10.0
-const BAR_GAP: float = 16.0
+## Sizes in pixels of the 960 × 540 screen (T65, ADR-0013): whole numbers,
+## so every edge falls on the pixel grid.
+const BAR_WIDTH: float = 64.0
+const BAR_HEIGHT: float = 4.0
+const BAR_GAP: float = 6.0
 const PIPS: int = 10
-const PIP_SIZE: float = 9.0
-const PIP_GAP: float = 3.8
-const MARK_HALF: float = 100.0
-const MARK_DASH: float = 18.0
-const MARK_STEP: float = 30.0
-const INTENT_SIZE: float = 84.0
-const INTENT_DISC: float = 104.0
-const CONDITION_SIZE: float = 44.0
-const PREVIEW_WIDTH: float = 300.0
+const PIP_SIZE: float = 4.0
+const PIP_GAP: float = 2.0
+const MARK_HALF: float = 50.0
+const MARK_DASH: float = 8.0
+const MARK_STEP: float = 12.0
+const MARK_WIDTH: float = 2.0
+const INTENT_SIZE: float = 22.0
+const INTENT_DISC: float = 30.0
+const CONDITION_SIZE: float = 16.0
+const PREVIEW_WIDTH: float = 120.0
 
 var is_saint: bool = true
 var hp_share: float = 1.0
@@ -26,9 +29,9 @@ var desolation_pips: int = 0
 var down: bool = false
 var mark: CombatantView.Mark = CombatantView.Mark.NONE
 ## Height of the head above the feet, in pixels of the stage.
-var head_height: float = 380.0
+var head_height: float = 230.0
 ## Height of the intents' row above the feet: every intent on one line (DD).
-var intent_height: float = 470.0
+var intent_height: float = 254.0
 
 var _intent_icon: TextureRect
 var _intent_value: Label
@@ -48,28 +51,35 @@ func _init() -> void:
 	_intent_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_intent_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_intent_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	# The icons are still the painted ones, much bigger than they show.
+	_intent_icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_intent_icon.size = Vector2(INTENT_SIZE, INTENT_SIZE)
 	_intent_icon.position = Vector2((INTENT_DISC - INTENT_SIZE) * 0.5, (INTENT_DISC - INTENT_SIZE) * 0.5)
 	_intent_disc.add_child(_intent_icon)
 	_intent_value = Label.new()
 	_intent_value.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_intent_value.position = Vector2(INTENT_DISC * 0.62, INTENT_DISC * 0.6)
-	_intent_value.add_theme_font_size_override("font_size", 36)
-	_intent_value.add_theme_color_override("font_color", HudStyle.COLOR_TEXT)
-	_intent_value.add_theme_color_override("font_outline_color", HudStyle.COLOR_DANGER_DARK)
-	_intent_value.add_theme_constant_override("outline_size", 10)
+	_intent_value.position = Vector2(INTENT_DISC - 6.0, INTENT_DISC - 14.0)
+	_intent_value.add_theme_font_override("font", PixelStyle.text_font())
+	_intent_value.add_theme_font_size_override("font_size", PixelStyle.TEXT_SIZE * 2)
+	_intent_value.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
+	_intent_value.add_theme_color_override("font_outline_color", PixelStyle.COLOR_PITCH)
+	_intent_value.add_theme_constant_override("outline_size", 4)
 	_intent_disc.add_child(_intent_value)
 	_conditions = HBoxContainer.new()
 	_conditions.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_conditions.add_theme_constant_override("separation", 4)
+	_conditions.add_theme_constant_override("separation", 2)
 	add_child(_conditions)
 	_preview = Label.new()
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_preview.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_preview.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_preview.size = Vector2(PREVIEW_WIDTH, 80)
-	_preview.add_theme_font_size_override("font_size", 26)
-	_preview.add_theme_color_override("font_color", HudStyle.COLOR_SELECTED)
+	_preview.size = Vector2(PREVIEW_WIDTH, 40)
+	_preview.add_theme_font_override("font", PixelStyle.text_font())
+	_preview.add_theme_font_size_override("font_size", PixelStyle.TEXT_SIZE)
+	_preview.add_theme_color_override("font_color", PixelStyle.COLOR_GOLD)
+	_preview.add_theme_color_override("font_outline_color", PixelStyle.COLOR_PITCH)
+	_preview.add_theme_constant_override("outline_size", 2)
+	_preview.add_theme_constant_override("line_spacing", 0)
 	add_child(_preview)
 	_layout()
 
@@ -121,6 +131,7 @@ func set_conditions(entries: Array[Dictionary], more_text: String) -> void:
 			var rect := TextureRect.new()
 			rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			rect.texture = tex
+			rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			rect.custom_minimum_size = Vector2(CONDITION_SIZE, CONDITION_SIZE)
@@ -156,7 +167,11 @@ func _small_label(text: String) -> Label:
 	var label := Label.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.text = text
-	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_font_override("font", PixelStyle.text_font())
+	label.add_theme_font_size_override("font_size", PixelStyle.TEXT_SIZE)
+	label.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
+	label.add_theme_color_override("font_outline_color", PixelStyle.COLOR_PITCH)
+	label.add_theme_constant_override("outline_size", 2)
 	return label
 
 
@@ -167,22 +182,22 @@ func _layout() -> void:
 		return
 	_intent_disc.position = Vector2(-INTENT_DISC * 0.5, -intent_height - INTENT_DISC * 0.5)
 	var width: float = _conditions.get_combined_minimum_size().x
-	_conditions.position = Vector2(-width * 0.5, -head_height - CONDITION_SIZE - 14.0)
-	_preview.position = Vector2(-PREVIEW_WIDTH * 0.5, -head_height * 0.55)
+	_conditions.position = Vector2(-roundf(width * 0.5), -head_height - CONDITION_SIZE - 4.0)
+	_preview.position = Vector2(-PREVIEW_WIDTH * 0.5, -roundf(head_height * 0.55))
 
 
 func _draw() -> void:
 	var y: float = BAR_GAP
 	var left: float = -BAR_WIDTH * 0.5
-	draw_rect(Rect2(left - 2, y - 2, BAR_WIDTH + 4, BAR_HEIGHT + 4), HudStyle.COLOR_INK)
+	draw_rect(Rect2(left - 1, y - 1, BAR_WIDTH + 2, BAR_HEIGHT + 2), PixelStyle.COLOR_PITCH)
 	if not down:
-		draw_rect(Rect2(left, y, BAR_WIDTH * hp_share, BAR_HEIGHT), HudStyle.COLOR_DANGER)
+		draw_rect(Rect2(left, y, roundf(BAR_WIDTH * hp_share), BAR_HEIGHT), PixelStyle.COLOR_BLOOD)
 	if is_saint:
-		var py: float = y + BAR_HEIGHT + 5.0
+		var py: float = y + BAR_HEIGHT + 2.0
 		for i: int in PIPS:
-			var px: float = left + i * (PIP_SIZE + PIP_GAP)
-			draw_rect(Rect2(px - 1, py - 1, PIP_SIZE + 2, PIP_SIZE + 2), HudStyle.COLOR_INK)
-			draw_rect(Rect2(px, py, PIP_SIZE, PIP_SIZE), HudStyle.COLOR_PIP_ON if i < desolation_pips else HudStyle.COLOR_PIP_OFF)
+			var px: float = left + i * (PIP_SIZE + PIP_GAP) + 3.0
+			draw_rect(Rect2(px - 1, py - 1, PIP_SIZE + 2, PIP_SIZE + 2), PixelStyle.COLOR_PITCH)
+			draw_rect(Rect2(px, py, PIP_SIZE, PIP_SIZE), PixelStyle.COLOR_VIOLET if i < desolation_pips else PixelStyle.COLOR_LEAD)
 	_draw_mark()
 
 
@@ -192,27 +207,26 @@ func _draw_mark() -> void:
 	var color: Color
 	match mark:
 		CombatantView.Mark.SELECTED:
-			color = HudStyle.COLOR_SELECTED
+			color = PixelStyle.COLOR_GOLD
 		CombatantView.Mark.TARGETABLE:
-			color = HudStyle.COLOR_TARGETABLE
+			color = PixelStyle.COLOR_BONE
 		CombatantView.Mark.PENDING:
 			color = Color.WHITE
 		CombatantView.Mark.INTENT_TARGET:
-			color = HudStyle.COLOR_DANGER.lightened(0.2)
+			color = PixelStyle.COLOR_BLOOD.lightened(0.2)
 		_:
 			return
 	var x: float = -MARK_HALF
 	while x < MARK_HALF:
-		draw_line(Vector2(x, 4), Vector2(minf(x + MARK_DASH, MARK_HALF), 4), color, 4.0)
+		draw_rect(Rect2(x, 1, minf(MARK_DASH, MARK_HALF - x), MARK_WIDTH), color)
 		x += MARK_STEP
-	draw_line(Vector2(-MARK_HALF, -8), Vector2(-MARK_HALF, 6), color, 4.0)
-	draw_line(Vector2(MARK_HALF, -8), Vector2(MARK_HALF, 6), color, 4.0)
+	draw_rect(Rect2(-MARK_HALF, -4, MARK_WIDTH, 7), color)
+	draw_rect(Rect2(MARK_HALF - MARK_WIDTH, -4, MARK_WIDTH, 7), color)
 
 
+## An iron disc with a blood rim, as in the approved preview (v2).
 func _draw_disc() -> void:
 	var c := Vector2(INTENT_DISC, INTENT_DISC) * 0.5
 	var r: float = INTENT_DISC * 0.5
-	for k: int in 4:
-		_intent_disc.draw_circle(c, r + 14.0 - k * 3.0, Color(HudStyle.COLOR_DANGER, 0.08 + k * 0.05))
-	_intent_disc.draw_circle(c, r, Color(0.09, 0.03, 0.03))
-	_intent_disc.draw_arc(c, r - 2.0, 0.0, TAU, 48, HudStyle.COLOR_DANGER, 4.0)
+	_intent_disc.draw_circle(c, r, PixelStyle.COLOR_BLOOD)
+	_intent_disc.draw_circle(c, r - 2.0, PixelStyle.COLOR_IRON)
