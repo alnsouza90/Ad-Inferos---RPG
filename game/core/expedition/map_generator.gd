@@ -15,6 +15,9 @@ const LEG_RULES: Dictionary = {
 	2: {"layers": 4, "roles": {&"battle": 2, &"soul": 1, &"variable": 1}, "fixed": {3: &"soul"}},
 	3: {"layers": 3, "roles": {&"battle": 2, &"variable": 1}, "fixed": {}},
 }
+## The Guardian of the circle stands in a layer of its own after the last
+## layer of this leg, before the camp (D-407, Dante: Minos at the entrance).
+const GUARDIAN_LEG: int = 1
 const MIN_NODES: int = 2
 const MAX_NODES: int = 3
 
@@ -22,9 +25,12 @@ var constants: ConstantsDef
 var rng: RngStream
 ## Encounter ids for battle nodes (the circle's easy or hard pool, §3).
 var battle_encounters: Array[StringName] = []
-## Elite encounter ids; empty in the M1, which has no elites (D-124).
+## Elite encounter ids for the variable node: the circle's Sin Incarnate
+## (D-406); empty in the arena, which has no elites.
 var elite_encounters: Array[StringName] = []
 var allow_elite: bool = false
+## The circle's Guardian encounters (pool `guardian`); empty: no Guardian.
+var guardian_encounters: Array[StringName] = []
 
 
 func _init(p_constants: ConstantsDef, p_rng: RngStream) -> void:
@@ -37,18 +43,42 @@ func generate(leg: int, reserve: MapTemplateDef) -> LegMap:
 	for attempt: int in attempts:
 		var map: LegMap = _attempt(leg)
 		if map != null:
+			_add_guardian(map)
 			_assign_encounters(map)
 			return map
 	var fallback: LegMap = LegMap.from_template(reserve)
+	_add_guardian(fallback)
 	_assign_encounters(fallback)
 	return fallback
+
+
+## D-407: one more layer with the Guardian alone, linked from every node of
+## the last layer, so every path faces it before the camp.
+func _add_guardian(map: LegMap) -> void:
+	if map.leg != GUARDIAN_LEG or guardian_encounters.is_empty():
+		return
+	for n: MapNode in map.layer_nodes(map.layer_count()):
+		n.links = [0] as Array[int]
+	var guardian := MapNode.make(map.layer_count() + 1, 0)
+	guardian.role = MapNode.ROLE_GUARDIAN
+	guardian.type = MapNode.TYPE_ELITE
+	map.layers.append([guardian])
+
+
+## True when the leg ends with the Guardian's own layer (D-407).
+static func has_guardian(map: LegMap) -> bool:
+	if map.layer_count() == 0:
+		return false
+	var last: Array[MapNode] = map.layer_nodes(map.layer_count())
+	return last.size() == 1 and last[0].role == MapNode.ROLE_GUARDIAN
 
 
 ## Checks every path of `map` against the leg composition (E01) and the
 ## "at most one elite per path" rule.
 static func is_valid(map: LegMap) -> bool:
 	var rules: Dictionary = LEG_RULES[map.leg]
-	if map.layer_count() != int(rules["layers"]):
+	var guardian: bool = has_guardian(map)
+	if map.layer_count() != int(rules["layers"]) + (1 if guardian else 0):
 		return false
 	for n: MapNode in map.all_nodes():
 		if not _node_is_consistent(map, n):
@@ -57,6 +87,9 @@ static func is_valid(map: LegMap) -> bool:
 		var counts: Dictionary = {}
 		var elites: int = 0
 		for n: MapNode in path:
+			# The Guardian is outside the composition and the elite limit.
+			if n.role == MapNode.ROLE_GUARDIAN:
+				continue
 			counts[n.role] = int(counts.get(n.role, 0)) + 1
 			if n.type == MapNode.TYPE_ELITE:
 				elites += 1
@@ -272,5 +305,7 @@ func _assign_encounters(map: LegMap) -> void:
 	for n: MapNode in map.all_nodes():
 		if n.type == MapNode.TYPE_BATTLE and not battle_encounters.is_empty():
 			n.encounter_id = battle_encounters[rng.pick_index(battle_encounters.size())]
+		elif n.role == MapNode.ROLE_GUARDIAN:
+			n.encounter_id = guardian_encounters[rng.pick_index(guardian_encounters.size())]
 		elif n.type == MapNode.TYPE_ELITE and not elite_encounters.is_empty():
 			n.encounter_id = elite_encounters[rng.pick_index(elite_encounters.size())]

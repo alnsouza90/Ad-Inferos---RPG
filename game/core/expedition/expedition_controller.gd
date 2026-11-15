@@ -102,6 +102,7 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 	# circle has elite encounters, so the arena legs keep their maps.
 	generator.elite_encounters = p_catalog.encounter_pool(encounter_circle, &"elite")
 	generator.allow_elite = not generator.elite_encounters.is_empty()
+	generator.guardian_encounters = p_catalog.encounter_pool(encounter_circle, &"guardian")
 	c.ambush_encounter_circle = encounter_circle
 	c.map = generator.generate(1, p_catalog.reserves.get(1))
 	c.state.map = c.map.to_dict()

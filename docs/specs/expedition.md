@@ -31,7 +31,8 @@ O gerador cria o trecho e verifica **todos os caminhos possíveis**; se algum vi
 | 3 | 3 | 2 combates; 1 nó variável |
 
 - Nó variável: elite, relíquia oculta ou combate, sorteado com pesos [node_weight_elite] (40), [node_weight_relic] (35), [node_weight_battle] (25).
-- No máximo um elite por caminho em cada trecho. Os elites do círculo se alternam entre os trechos, evitando repetir o último enfrentado; o Pecado Encarnado pode voltar em mais de uma luta da expedição (D-406, T42).
+- No máximo um elite por caminho em cada trecho. O elite do nó variável é o Pecado Encarnado do círculo, que volta em todos os trechos (D-406).
+- **Guardião (D-407):** o trecho 1 termina numa camada a mais, de um nó só, com o Guardião do círculo (Minos), antes do Pouso; todo caminho passa por ele. Ele não conta na composição da tabela nem no limite de elites.
 
 ### 2.2 Visibilidade
 

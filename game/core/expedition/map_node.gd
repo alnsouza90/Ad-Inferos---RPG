@@ -9,6 +9,9 @@ const ROLE_BATTLE: StringName = &"battle"
 const ROLE_TEMPTATION: StringName = &"temptation"
 const ROLE_VARIABLE: StringName = &"variable"
 const ROLE_SOUL: StringName = &"soul"
+## The Guardian of the circle (Minos in Circle 2): a fixed elite in a layer of
+## its own at the end of leg 1 (D-407).
+const ROLE_GUARDIAN: StringName = &"guardian"
 
 const TYPE_BATTLE: StringName = &"node_battle"
 const TYPE_ELITE: StringName = &"node_elite"
@@ -47,6 +50,8 @@ static func type_for_role(p_role: StringName) -> StringName:
 			return TYPE_TEMPTATION
 		ROLE_SOUL:
 			return TYPE_SOUL
+		ROLE_GUARDIAN:
+			return TYPE_ELITE
 	return &""
 
 

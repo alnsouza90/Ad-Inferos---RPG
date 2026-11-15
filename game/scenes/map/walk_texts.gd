@@ -18,6 +18,9 @@ func t(key: StringName, args: Dictionary = {}) -> String:
 
 ## Node type in text (never only an icon, screens §4): "Combate".
 func type_name(n: MapNode) -> String:
+	# The Guardian of the circle has its own name on the map (D-407).
+	if n.role == MapNode.ROLE_GUARDIAN:
+		return t(&"node_guardian")
 	return t(n.type)
 
 

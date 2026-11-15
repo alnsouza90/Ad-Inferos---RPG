@@ -12,7 +12,8 @@ Escopo: o Guardião (Minos), o Pecado Encarnado (Vertigem) e o chefe (Asmodeu) d
 
 - Elites e chefe usam as regras de IA de `enemy-ai.md`: prioridade, condições, recarga, intenção visível antes do turno da equipe. Nada aqui usa sorte além do RNG `battle` já previsto (ADR-0003).
 - Elites aparecem em `node_elite`, sempre com escolta (`expedition.md` §3). No máximo um elite por caminho em cada trecho (T40).
-- **O Pecado Encarnado é a encarnação do círculo (D-406):** pode aparecer em mais de uma luta da mesma expedição. Os elites do círculo **se alternam** entre as lutas de elite: cada nó de elite sorteia entre os elites do círculo, evitando repetir o último enfrentado quando houver outro (regra aplicada na T42, com os trechos 2 e 3).
+- **O Pecado Encarnado é a encarnação do círculo (D-406):** volta como luta de elite em todos os trechos: o nó variável, quando sorteia elite, traz o Pecado Encarnado do círculo (no Círculo 2, a Vertigem). Num círculo com mais de um Pecado, eles se alternam, evitando repetir o último enfrentado.
+- **O Guardião é obrigatório (D-407):** Minos aparece uma vez por expedição, numa camada só dele no **fim do trecho 1**, ligada a todos os nós da camada anterior, antes do primeiro Pouso (Dante: Minos julga na entrada do círculo). Fica fora da composição dos caminhos e do limite de um elite por caminho. Encontro no grupo `guardian` de `encounters.csv`.
 - O chefe aparece em `node_boss`, sem retirada de emergência (`expedition.md` §9).
 - O santo **nunca** peca nem perde o controle das próprias ações. Todo assédio vem de fora, é visível e tem resposta (`expedition.md` §10.1).
 
