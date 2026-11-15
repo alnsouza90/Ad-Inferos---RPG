@@ -164,7 +164,8 @@ func test_figures_are_spaced_and_portraits_use_the_bust() -> void:
 	var screen: BattleScreen = _battle(&"m0_hard_02")
 	for c: Combatant in screen.ctrl.state.party:
 		var frames: CharacterFrames = screen.view_of(c.id).player().frames
-		assert_almost_eq(frames.figure_height, BattleScreen.FIGURE_HEIGHT, 6.0, "%s na altura reduzida" % c.id)
+		# A crozier or a spear can rise a little above the head (Bento, D-387).
+		assert_almost_eq(frames.figure_height, BattleScreen.FIGURE_HEIGHT, 12.0, "%s na altura reduzida" % c.id)
 	var saint_front: float = screen.feet_of(screen.ctrl.state.party_at(1).id).x
 	var enemy_front: float = screen.feet_of(screen.ctrl.state.enemy_at(1).id).x
 	assert_gt(enemy_front - saint_front, BattleScreen.SLOT_STEP, "vão maior entre os dois times")

@@ -6,7 +6,8 @@ Resumo curto de cada sessão. A mais recente no topo.
 
 - Commits de arte e memória do ramo `ccr-22a5456d-tz0r3e` trazidos para o ramo da T65 (avanço direto, sem conflito).
 - Godot: o oficial 4.7.2 baixou do GitHub nesta sessão (o download funcionou); serve para os testes e para a captura real da tela (`xvfb-run`), sem esperar a compilação.
-- Feito: T65 (D-381). Prévia da tela real enviada a Alan.
+- Feito: T65 (D-381 a D-387). Alan revisou várias rodadas; arte gerada no PixelLab com a lista liberada por ele (1.709 → 1.455 gerações). PR da T65 aberto.
+- Lição: conferir os shaders no Godot 4 (o COLOR do fragment já traz a textura); a cor ao quadrado escureceu tudo (D-382, `lessons.md`).
 - Pendências novas: Jorge e Teresinha sem clipes de ação em pixel; cinco inimigos ainda pintados; lamparina e ícones em pixel (`open-questions.md`).
 
 ## Sessão 8 · 12/11/2026
