@@ -97,3 +97,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Cinco inimigos da Família A ainda sem pixel~~ Gerados e no jogo (D-383, D-385), aguardam a revisão de Alan | Alan | 15/11/2026 |
 | ~~Peças em pixel que o motor desenha por enquanto~~ Lamparina, óculo, ícones, entradas, tenda, relicário e almas gerados e no jogo (D-385), aguardam Alan | Alan | 15/11/2026 |
 | Revisão de Alan da arte de D-385; pendentes: ícones fracos (guarda, Passar), ícone separado de Deslocar, Pouso em pixel numa tela refeita, ícones de ação nas lancetas (T44) | Alan / T44 / T53 | 15/11/2026 |
+| Teste no APK da T65 (tela de 960 × 540) e da T60 (luta em poses): aprovadas pelas prévias e pelo GIF | Alan | 15/11/2026 |
