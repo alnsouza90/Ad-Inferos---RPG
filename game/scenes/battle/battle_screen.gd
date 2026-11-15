@@ -97,6 +97,8 @@ const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_por
 ## The painted halo (the animation test screen still uses it) and the one
 ## of the pixel grid.
 const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
+## Clip a saint may have for the preparation of its miracle (D-388).
+const MIRACLE_WINDUP: StringName = &"miracle_windup"
 const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
@@ -513,6 +515,9 @@ func _animate(ev: BattleEvent) -> float:
 			if actor != null:
 				_hint.text = "%s: %s" % [texts.name_of(actor), texts.ability_name(d["ability"])]
 			var targets: Array = d.get("targets", [])
+			var actor_view: CombatantView = view_of(d["actor"])
+			if actor != null and actor_view != null and StringName(str(d["ability"])) == actor.miracle:
+				actor_view.next_windup = MIRACLE_WINDUP
 			return _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &"")
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""

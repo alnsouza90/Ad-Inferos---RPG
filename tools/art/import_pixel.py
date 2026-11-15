@@ -89,6 +89,8 @@ class Character:
     # Halo point measured on the figure cut to its outline (06-rumo-pixel §9):
     # x and y from the top-left of the figure, and the diameter.
     halo: tuple[float, float, float] | None
+    # Every clip of the character gets the warm skin (D-388).
+    warm: bool = False
     clips: list["Clip"] = field(default_factory=list)
 
 
@@ -136,6 +138,8 @@ def read_characters() -> list[Character]:
             )
     with CLIPS_CSV.open(encoding="utf-8") as f:
         for row in csv.DictReader(f):
+            if "warm_skin" in row["cleanup"] and row["character"] in chars:
+                chars[row["character"]].warm = True
             if row["character"] not in chars:
                 raise SystemExit(f"{CLIPS_CSV.name}: personagem sem linha em {CHARACTERS_CSV.name}: {row['character']}")
             chars[row["character"]].clips.append(Clip(
@@ -302,10 +306,41 @@ def clean(clip: Clip, char: Character, colours: np.ndarray,
         report["meio-tom"] += binarize(cell)
         if "white_arc" in clip.cleanup:
             report["arco"] += erase_white_arc(cell, idle_colours)
+        if "warm_skin" in clip.cleanup:
+            report["pele"] = report.get("pele", 0) + warm_skin(cell, clip.character)
         for token in clip.cleanup:
             if token.startswith("specks="):
                 report["soltos"] += erase_specks(cell, int(token.split("=")[1]))
     return _finish(cells, clip, char, colours, report)
+
+
+# The warm skin of Saint George (D-388): Bento and Teresinha in the new style
+# came out greyish or pink; their skin tones are taken to this ramp by light.
+# The warm skin of Saint George (D-388): each skin colour of the new
+# drawings of Bento and Teresinha (measured on the face) becomes one of the
+# palette colours of George's skin, the habit, the cloak and the veil keep
+# their own colours.
+SKIN_MAP = {
+    "saint_benedict": {"#C8B396": "#C4A98D", "#A4927D": "#9A745A", "#8F7F6C": "#9A745A",
+                       "#826E58": "#765B47", "#6F5C4A": "#765B47"},
+    "saint_therese": {"#DABBA5": "#C4A98D", "#C6A691": "#C4A98D", "#A08371": "#9A745A",
+                      "#836A5C": "#765B47", "#5D4439": "#553327"},
+}
+
+
+def warm_skin(cell: np.ndarray, character: str) -> int:
+    """The skin colours of `character` become George's; returns how many
+    pixels changed."""
+    changed = 0
+    rgb = cell[:, :, :3].astype(np.int32)
+    opaque = cell[:, :, 3] == 255
+    for source, target in SKIN_MAP.get(character, {}).items():
+        src = [int(source[k:k + 2], 16) for k in (1, 3, 5)]
+        dst = [int(target[k:k + 2], 16) for k in (1, 3, 5)]
+        hit = opaque & (np.abs(rgb - src).sum(axis=2) <= 6)
+        cell[:, :, :3][hit] = dst
+        changed += int(hit.sum())
+    return changed
 
 
 def shrink(cell: np.ndarray, scale: float) -> np.ndarray:
@@ -357,6 +392,8 @@ def write_bust(char: Character, cell: np.ndarray, colours: np.ndarray) -> Path:
     enemy sheet (the figures on the field are shrunk, D-384)."""
     full = cell.copy()
     binarize(full)
+    if char.warm:
+        warm_skin(full, char.id)
     if char.palette == "snap":
         snap_to_palette(full, colours)
     x0, y0, x1, _ = outline(full)

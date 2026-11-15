@@ -55,6 +55,19 @@ anchor = Vector2(124, 253)
 impact_frame = 0
 pose_time = 0.4
 
+[sub_resource type="Resource" id="clip_spell_strike"]
+script = ExtResource("2_clip")
+id = &"spell_strike"
+sheet_path = "res://assets/pixel/characters/saint_benedict/saint_benedict_spell_strike.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(124, 253)
+impact_frame = 0
+pose_time = 0.4
+
 [sub_resource type="Resource" id="clip_defend"]
 script = ExtResource("2_clip")
 id = &"defend"
@@ -92,4 +105,4 @@ blessing_style = &"ring"
 weight = &"heavy"
 halo_center = Vector2(128, 123)
 halo_diameter = 26
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

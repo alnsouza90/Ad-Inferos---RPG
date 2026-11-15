@@ -42,6 +42,19 @@ anchor = Vector2(129, 250)
 impact_frame = -1
 pose_time = 0.4
 
+[sub_resource type="Resource" id="clip_miracle_windup"]
+script = ExtResource("2_clip")
+id = &"miracle_windup"
+sheet_path = "res://assets/pixel/characters/saint_george/saint_george_miracle_windup.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(129, 250)
+impact_frame = -1
+pose_time = 0.4
+
 [sub_resource type="Resource" id="clip_strike"]
 script = ExtResource("2_clip")
 id = &"strike"
@@ -90,6 +103,6 @@ attack_style = &"melee"
 spell_style = &"crosses"
 blessing_style = &"shield"
 weight = &"medium"
-halo_center = Vector2(131, 124)
+halo_center = Vector2(125, 121)
 halo_diameter = 26
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_miracle_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

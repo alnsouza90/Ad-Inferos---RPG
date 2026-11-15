@@ -140,6 +140,8 @@ var float_font_size: int = 30
 var float_outline: int = 6
 var float_rise: float = 70.0
 var _shadow: Control
+## Clip of the preparation of the next blow only (the miracle's, D-388).
+var next_windup: StringName = &""
 ## Blows struck so far (the alternate blow, D-386).
 var _strike_count: int = 0
 
@@ -400,6 +402,9 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	# A boss can have the preparation of its own spell (Asmodeus' breath
 	# video, D-242).
 	var windup_id: StringName = &"spell_windup" if _frames.has_clip(&"spell_windup") else &"windup"
+	if next_windup != &"" and _frames.has_clip(next_windup):
+		windup_id = next_windup
+	next_windup = &""
 	var windup: float = _player.play(windup_id) if _frames.has_clip(windup_id) else 0.0
 	# ...and its own release (Vertigo's shadow claws, D-247).
 	var strike_id: StringName = &"spell_strike" if _frames.has_clip(&"spell_strike") else &"strike"
@@ -682,6 +687,11 @@ func _play_frame_attack(reach_px: float) -> float:
 	var home := Vector2(0, INTENT_HEIGHT)
 	var direction: float = 1.0 if is_saint else -1.0
 	var windup_id: StringName = &"melee_windup" if _frames.has_clip(&"melee_windup") else &"windup"
+	# The miracle may have its own preparation (George raises the spear
+	# high before the thrust, D-388).
+	if next_windup != &"" and _frames.has_clip(next_windup):
+		windup_id = next_windup
+	next_windup = &""
 	var windup: float = _player.play(windup_id) if _frames.has_clip(windup_id) else 0.0
 	var anticipating: bool = gestures.is_on(BlowGestures.ANTICIPATION)
 	if anticipating:
