@@ -99,3 +99,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Revisão de Alan da arte de D-385; pendentes: ícones fracos (guarda, Passar), ícone separado de Deslocar, Pouso em pixel numa tela refeita, ícones de ação nas lancetas (T44) | Alan / T44 / T53 | 15/11/2026 |
 | Teste no APK da T65 (tela de 960 × 540) e da T60 (luta em poses): aprovadas pelas prévias e pelo GIF | Alan | 15/11/2026 |
 | T61 parte 2: variantes do Lume (D-262, D-273), prêmio do escuro em experiência (D-274) e Firmeza; e medir de novo Interceder, Fidelidade e o dom da Consolação na expedição longa | T42 | 15/11/2026 |
+| Meta nova de Noite Escura por trecho com a desolação de fim de combate de D-396 (20 + 3 por rodada desde a 1ª): medir na expedição longa | T42 | 15/11/2026 |
