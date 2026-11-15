@@ -88,7 +88,7 @@ O combate começa em `ROUND_START` da rodada 1 com Fervor 0 (portanto a equipe a
 | Interceder | D-268 | Ação comum de todo santo, ao lado de Trocar e Passar; gasta a ação, sem Fervor; toma para si desolação ou uma condição de um aliado (`desolation.md` §8). Na tela, um fio de ouro liga os dois santos | T61 e T62 |
 | Dar a Consolação | D-285 | O santo em Consolação a dá a um companheiro, gastando a ação (`desolation.md` §8) | T61 e T62 |
 | Súplica | D-283 | Um santo que ficou na Capela socorre a companhia uma vez, sem gastar a vez de ninguém nem Fervor (`village-economy.md` §4) | M3 |
-| Firmar o pé (resposta comum ao Vendaval) | D-267 | Resposta ativa à Provação do Círculo 2 (`expedition.md` §10.1) | T38 |
+| Firmar o pé (`StandFirm`) | D-267, D-393 | Especificado em `bosses.md` §2.2: santo marcado pelo Vendaval gasta a ação, a troca não acontece, ganha Firmeza | T39 |
 
 ### 4.2 Validações de `UseAbility` e `UseMiracle`
 

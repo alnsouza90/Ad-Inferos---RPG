@@ -89,7 +89,9 @@ Opção bloqueada aparece desabilitada, com o requisito escrito ("Exige Caridade
 
 ### 3.2 Resultados (`outcomes`)
 
-`virtue`, `desolation` (`target: party` ou um santo), `light`, `alms`, `provisions`, `relic`, `injury`, `suffrages`, `set_flag`, `start_battle` (encontro), `unlock`.
+`virtue`, `desolation` (`target: party` ou um santo), `light`, `alms`, `provisions`, `relic`, `injury`, `suffrages`, `set_flag`, `start_battle` (encontro), `unlock`, `dominion` (D-284, D-393).
+
+`dominion`: a companhia **alcança o Peregrino** e uma garra do Domínio do chefe do círculo cede (`bosses.md` §5.2). Vai nas opções que resolvem bem uma Tentação e no Encontro com a alma; conta no máximo 2 vezes por expedição no Círculo 2. Na tela: "Uma garra se abre." Sem número.
 
 No M1, `relic`, `suffrages` e `unlock` ainda não têm sistema: ficam só registrados no histórico da expedição.
 
@@ -101,7 +103,7 @@ No M1, `relic`, `suffrages` e `unlock` ainda não têm sistema: ficam só regist
 - Toda chance é visível e pode ser melhorada por pelo menos um santo, provisão ou relíquia.
 - Consequências ficam na expedição ou nas virtudes do Peregrino. **Nunca** ferimento permanente além do sistema normal, e **nunca** o santo comete pecado.
 - A tenda **não muda** com o assédio (D-267): ela continua sendo o eco da tentação do Peregrino (D-141). O assédio dos pecados aos santos é outra coisa, acontece **no combate**, aplicado de fora pelos inimigos, e está em `expedition.md` §10.1 (Provação do Círculo).
-- **Aprovado, a especificar na T38 (D-284):** resolver bem uma Tentação (ou o Encontro com alma) pode **ceder um ponto do Domínio** do chefe do círculo, além de mudar a virtude. O resultado novo entra em §3.2 com `bosses.md`.
+- **Domínio (D-284, D-393):** resolver bem uma Tentação (ou o Encontro com alma) **cede uma garra do Domínio** do chefe do círculo, além de mudar a virtude: resultado `dominion` (§3.2, `bosses.md` §5.2).
 
 ### 4.2 Encontro com alma
 
