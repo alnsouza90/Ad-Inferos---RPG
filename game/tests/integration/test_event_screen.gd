@@ -130,7 +130,7 @@ func test_origin_label_and_illustration() -> void:
 	assert_eq(s.origin_shown(), data.ui.text(&"origin_game_fiction"))
 	assert_not_null(s.background_texture(), "ilustração do evento ao fundo")
 	assert_gt(s.size.x, 0.0)
-	assert_eq(s.stage_position(), ((s.size - EventScreen.STAGE_SIZE) * 0.5).floor())
+	assert_eq(s.stage_position(), LegacyStage.position_for(EventScreen.STAGE_SIZE, s.size), "palco antigo pela metade, centralizado (T65)")
 
 
 # --- options: requirement and chance written on the button ---------------------------

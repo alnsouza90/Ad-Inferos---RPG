@@ -9,34 +9,29 @@ extends Control
 ## ExpeditionCommand through `run` and redraws from the state: walking is
 ## presentation and never touches the rules (item 2).
 
-const STAGE_SIZE := Vector2(1920, 1080)
-const SCENERY_DIR: String = "res://assets/environments/circles/circle_02/t1"
-## Scenery layers, back to front, with their parallax (asset-pipeline §4:
-## _back about 20%, _mid 100% and emendable, _front about 130%). The
-## characters walk between _mid and _front. A missing file is skipped.
-const LAYERS: Array[Dictionary] = [
-	{"file": "env_circle_02_t1_back.png", "parallax": 0.2, "tile": false},
-	{"file": "env_circle_02_t1_mid.webp", "parallax": 1.0, "tile": true},
-]
-const FRONT_LAYERS: Array[Dictionary] = [
-	{"file": "env_circle_02_t1_front.png", "parallax": 1.3, "tile": true},
-]
-const FRAMES_DIR: String = "res://scenes/battle/combatants"
+## T65 (ADR-0013): drawn in pixel art on the 960 × 540 grid, in the same
+## frame as the battle (field in the top 360, ground line, party in the same
+## place), so the hard cut into the battle changes nothing but the panel.
+const STAGE_SIZE := Vector2(960, 540)
+const FIELD_HEIGHT: float = BattleScreen.FIELD_HEIGHT
+const FRAMES_DIRS: Array[String] = [BattleScreen.PIXEL_ART_DIR, BattleScreen.ART_DIR]
 ## Length of one corridor in stage pixels at parallax 100%.
-const CORRIDOR_LENGTH: float = 2600.0
+const CORRIDOR_LENGTH: float = 1300.0
 ## Walking speed in stage pixels per second at 1×.
-const WALK_SPEED: float = 560.0
+const WALK_SPEED: float = 280.0
 ## Where the vanguard stands on the screen while the camera follows.
-const PARTY_SCREEN_X: float = 820.0
+const PARTY_SCREEN_X: float = BattleScreen.SAINT_FRONT_X
 ## The content and the entrances stand this far ahead of the vanguard when
 ## the party reaches them.
-const AHEAD: float = 330.0
-const FEET_Y: float = 900.0
-const FIGURE_HEIGHT: float = 470.0
-const FIGURE_STEP: float = 210.0
-const OBJECT_SIZE := Vector2(300, 360)
-const ENTRANCE_SIZE := Vector2(260, 380)
-const BUTTON_SIZE := Vector2(320, 100)
+const AHEAD: float = 170.0
+const FEET_Y: float = BattleScreen.GROUND_Y
+const FIGURE_HEIGHT: float = BattleScreen.FIGURE_HEIGHT
+const FIGURE_STEP: float = BattleScreen.SLOT_STEP
+const OBJECT_SIZE := Vector2(90, 110)
+const ENTRANCE_SIZE := Vector2(80, 120)
+const BUTTON_SIZE := Vector2(140, 32)
+## The front layer of the scenery passes low before the party.
+const FRONT_DROP: float = 215.0
 ## Hard cut into the battle (D-359): guard pose, the camera comes a little
 ## closer and the background darkens.
 const CUT_TIME: float = 0.35
@@ -46,17 +41,28 @@ const CUT_DARK: float = 0.55
 const GUARD_HOLD: float = 0.5
 ## Scenery light by the expedition Light (§2.3 item 10, only looks).
 const DARKEST: float = 0.55
-const COLOR_BACKGROUND := Color(0.09, 0.07, 0.08)
-const COLOR_SAINT := Color(0.42, 0.36, 0.3)
-const COLOR_OBJECT := Color(0.32, 0.26, 0.2, 0.92)
-const COLOR_OBJECT_DONE := Color(0.2, 0.18, 0.16, 0.7)
-const COLOR_STRAIGHT := Color(0.36, 0.3, 0.18, 0.92)
-const COLOR_DETOUR := Color(0.2, 0.17, 0.2, 0.92)
+const COLOR_BACKGROUND := Color("0D0C10")
+const COLOR_SAINT := Color("54483B")
+const COLOR_OBJECT := Color("3E2A1E")
+const COLOR_OBJECT_DONE := Color("2B2A27")
+const COLOR_STRAIGHT := Color("654E3D")
+const COLOR_DETOUR := Color("33313A")
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
-const COLOR_LIGHT_ON := Color(1.0, 0.8, 0.35)
-const COLOR_LIGHT_OFF := Color(0.25, 0.22, 0.2)
-const COLOR_DIM := Color(0, 0, 0, 0.7)
-const LIGHT_BAR_SIZE := Vector2(300, 26)
+const COLOR_LIGHT_ON := Color("E07B1F")
+const COLOR_LIGHT_OFF := Color("33313A")
+const COLOR_DIM := Color(0.05, 0.047, 0.063, 0.8)
+const LIGHT_BAR_SIZE := Vector2(140, 6)
+const OVERLAY_MARGIN: float = 400.0
+## Drawn pieces of the corridor (T65): the entrance of each path kind.
+const PROPS_DIR: String = "res://assets/pixel/environments/circle_02"
+const ENTRANCE_PROPS: Dictionary = {
+	CorridorLook.STRAIGHT: "env_circle_02_entry_straight",
+	&"door": "env_circle_02_entry_door",
+	&"cave": "env_circle_02_entry_cave",
+	&"stairs": "env_circle_02_entry_stair",
+}
+const SOUL_DRAWINGS: int = 3
+const LIST_BUTTON_SIZE := Vector2(300, 28)
 
 ## A command was accepted that leaves this corridor (ChoosePath, or content
 ## that opens its own screen): the flow shows the next phase.
@@ -89,8 +95,9 @@ var corridor: CorridorWalk
 
 var _stage: Control
 var _world: Control
-var _layers: Array[TextureRect] = []
-var _layer_parallax: Array[float] = []
+var _field_clip: Control
+var _scenery_back: ParallaxScenery
+var _scenery_front: ParallaxScenery
 var _objects: Control
 var _party: Control
 var _figures: Array[FramePlayer] = []
@@ -405,7 +412,10 @@ func figure_clips() -> Array[StringName]:
 
 ## Horizontal offset of a scenery layer (index in back-to-front order).
 func layer_offset(index: int) -> float:
-	return _layers[index].position.x
+	var behind: int = _scenery_back.layer_count()
+	if index < behind:
+		return _scenery_back.layer_offset(index)
+	return _scenery_front.layer_offset(index - behind)
 
 
 func darkness() -> float:
@@ -561,13 +571,13 @@ func _play_all(clip: StringName) -> void:
 
 ## The camera follows the party: the world moves under it.
 func _place_world() -> void:
-	var walked: float = corridor.position * CORRIDOR_LENGTH
-	for i: int in _layers.size():
-		_layers[i].position.x = -walked * _layer_parallax[i]
+	var walked: float = roundf(corridor.position * CORRIDOR_LENGTH)
+	_scenery_back.set_camera_x(walked)
+	_scenery_front.set_camera_x(walked)
 	_objects.position.x = -walked
 	var shade: float = lerpf(DARKEST, 1.0, clampf(ctrl.state.light / float(ExpeditionLight.LIGHT_MAX), 0.0, 1.0))
-	for layer: TextureRect in _layers:
-		layer.modulate = Color(shade, shade, shade)
+	_scenery_back.modulate = Color(shade, shade, shade)
+	_scenery_front.modulate = Color(shade, shade, shade)
 
 
 func _refresh() -> void:
@@ -632,6 +642,7 @@ func _pass_by_text() -> String:
 
 func _action(text: String, callback: Callable) -> void:
 	var button := _button(text, BUTTON_SIZE)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	button.pressed.connect(callback)
 	_action_box.add_child(button)
 
@@ -658,23 +669,69 @@ func _build_objects() -> void:
 	_content_view = null
 	var n: MapNode = ctrl.current_node()
 	if corridor.has_content() and not n.is_battle_like():
-		_content_view = _block(texts.type_name(n), COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
-		_content_view.position = Vector2(_world_x(corridor.content_at) - OBJECT_SIZE.x * 0.5, FEET_Y - OBJECT_SIZE.y)
+		var prop: Texture2D = _content_prop(n)
+		if prop != null:
+			_content_view = _prop_view(prop, texts.type_name(n))
+			_content_view.modulate = Color.WHITE if corridor.content_pending else Color(0.6, 0.6, 0.65)
+		else:
+			_content_view = _block(texts.type_name(n), COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
+		_content_view.position = Vector2(roundf(_world_x(corridor.content_at) - _content_view.size.x * 0.5), FEET_Y - _content_view.size.y)
 		_objects.add_child(_content_view)
 	for id: StringName in corridor.entrance_order():
 		var e: MapNode = ctrl.map.find(id)
 		var kind: StringName = CorridorLook.path_kind(id, _straight)
 		var text: String = texts.type_name(e) + "\n" + texts.path_name(kind)
-		var view := _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
+		var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
+		var view: Control = _prop_view(entrance, text) if entrance != null else _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
 		view.set_meta(&"text", text)
 		view.mouse_filter = Control.MOUSE_FILTER_STOP
 		view.gui_input.connect(func(event: InputEvent) -> void:
 			if _is_tap(event):
 				tap_entrance(id)
 				view.accept_event())
-		view.position = Vector2(_world_x(float(corridor.entrance_at[id])) - ENTRANCE_SIZE.x * 0.5, FEET_Y - ENTRANCE_SIZE.y)
+		view.position = Vector2(roundf(_world_x(float(corridor.entrance_at[id])) - view.size.x * 0.5), FEET_Y - view.size.y)
 		_objects.add_child(view)
 		_entrance_views[id] = view
+
+
+## The drawing of what waits in the corridor (T65, D-385): the tent of the
+## Temptation, the reliquary (open once taken), one of the souls (picked by
+## the node id, so a resumed game looks the same).
+func _content_prop(n: MapNode) -> Texture2D:
+	match n.type:
+		MapNode.TYPE_TEMPTATION:
+			return _prop("env_circle_02_tent")
+		MapNode.TYPE_RELIC:
+			return _prop("prop_reliquary_closed" if corridor.content_pending else "prop_reliquary_open")
+		MapNode.TYPE_SOUL:
+			return _prop("env_circle_02_soul_%d" % (RngStream.fnv1a32(String(n.id)) % SOUL_DRAWINGS + 1))
+	return null
+
+
+func _prop(file_name: String) -> Texture2D:
+	if file_name.is_empty():
+		return null
+	var path: String = "%s/%s.png" % [PROPS_DIR, file_name]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
+
+## A drawn piece standing on the ground, its name in small letters above it.
+func _prop_view(tex: Texture2D, text: String) -> Control:
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.size = tex.get_size()
+	var picture := TextureRect.new()
+	picture.texture = tex
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Part of the scenery: the filter of the circle tints it too (D-379).
+	picture.material = CircleLook.filter_material()
+	holder.add_child(picture)
+	var label := _label(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size = Vector2(maxf(tex.get_width(), 90.0), 24)
+	label.position = Vector2(roundf((tex.get_width() - label.size.x) * 0.5), -26)
+	holder.add_child(label)
+	return holder
 
 
 static func _is_tap(event: InputEvent) -> bool:
@@ -698,20 +755,25 @@ func _build_party() -> void:
 			var player := FramePlayer.new()
 			player.position = Vector2(x, FEET_Y)
 			player.speed = maxf(BattleScreen.SPEEDS[speed_index], 1.0)
-			player.setup(frames, Vector2.ZERO, FIGURE_HEIGHT)
+			player.setup(frames, Vector2.ZERO, BattleScreen.figure_px_of(frames) * frames.display_scale)
+			CircleLook.light_figure(player, true)
+			if not BattleScreen.is_pixel_art(frames):
+				player.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			_party.add_child(player)
 			_figures.append(player)
 			continue
-		var block := _block(texts.saint_name(saint_id), COLOR_SAINT, Vector2(170, 420))
-		block.position = Vector2(x - 85, FEET_Y - 420)
+		var block := _block(texts.saint_name(saint_id), COLOR_SAINT, Vector2(80, 200))
+		block.position = Vector2(x - 40, FEET_Y - 200)
 		_party.add_child(block)
 
 
+## Pixel art frames first (T64); a saint without them keeps the painted ones.
 func _frames_for(saint_id: StringName) -> CharacterFrames:
-	var path: String = FRAMES_DIR.path_join("%s_frames.tres" % saint_id)
-	if not ResourceLoader.exists(path):
-		return null
-	return load(path) as CharacterFrames
+	for dir: String in FRAMES_DIRS:
+		var path: String = dir.path_join("%s_frames.tres" % saint_id)
+		if ResourceLoader.exists(path):
+			return load(path) as CharacterFrames
+	return null
 
 
 func _fill_provisions() -> void:
@@ -719,9 +781,9 @@ func _fill_provisions() -> void:
 		_provisions_list.remove_child(child)
 		child.queue_free()
 	if pending_provision != &"":
-		_provisions_list.add_child(_label(texts.t(&"walk_choose_saint", {"provision": texts.provision_name(pending_provision)}), 30))
+		_provisions_list.add_child(_label(texts.t(&"walk_choose_saint", {"provision": texts.provision_name(pending_provision)})))
 		for saint_id: StringName in ctrl.state.party:
-			var target := _button(texts.saint_name(saint_id), Vector2(620, 90))
+			var target := _button(texts.saint_name(saint_id), LIST_BUTTON_SIZE)
 			target.pressed.connect(press_provision_target.bind(saint_id))
 			_provisions_list.add_child(target)
 		return
@@ -732,13 +794,13 @@ func _fill_provisions() -> void:
 			order.append(id)
 		counts[id] = int(counts.get(id, 0)) + 1
 	if order.is_empty():
-		_provisions_list.add_child(_label(texts.t(&"walk_no_provisions"), 30))
+		_provisions_list.add_child(_label(texts.t(&"walk_no_provisions")))
 	for id: StringName in order:
 		var problem: StringName = ctrl.field_provision_problem(id, ctrl.state.party[0] if not ctrl.state.party.is_empty() else &"")
 		var line: String = texts.t(&"walk_provision_line", {"provision": texts.provision_name(id), "count": counts[id]})
 		if problem != &"":
 			line += " · " + texts.reason(problem)
-		var button := _button(line, Vector2(620, 90))
+		var button := _button(line, LIST_BUTTON_SIZE)
 		button.set_meta(&"provision", id)
 		button.disabled = problem != &""
 		button.pressed.connect(press_provision.bind(id))
@@ -748,6 +810,7 @@ func _fill_provisions() -> void:
 func _center_stage() -> void:
 	if _stage != null:
 		_stage.position = ((_screen_size() - STAGE_SIZE) * 0.5).floor()
+		_layout_field()
 
 
 ## Never centre on a zero size (the T17 phone bug, lessons.md).
@@ -757,9 +820,24 @@ func _screen_size() -> Vector2:
 	return get_viewport_rect().size if is_inside_tree() else STAGE_SIZE
 
 
+## The field takes the whole width of the screen, as in the battle.
+func _layout_field() -> void:
+	if _field_clip == null:
+		return
+	var margin: float = maxf(_stage.position.x, 0.0)
+	var wide := Vector2(STAGE_SIZE.x + margin * 2.0, FIELD_HEIGHT)
+	_field_clip.position = Vector2(-margin, 0)
+	_field_clip.size = wide
+	_world.position = Vector2(margin, 0)
+	for scenery: ParallaxScenery in [_scenery_back, _scenery_front]:
+		scenery.position = Vector2(-margin, 0)
+		scenery.size = wide
+	_dark.size = wide
+
+
 func _build() -> void:
-	# The interface of the battle (T36, D-258): Pirata One, iron buttons.
-	theme = HudStyle.theme(30)
+	# The interface in pixel art (T65): Jersey 10, flat iron buttons.
+	theme = PixelStyle.theme()
 	clip_contents = true
 	# The screen itself takes the held finger; buttons on top take their taps.
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -772,84 +850,57 @@ func _build() -> void:
 	_stage.size = STAGE_SIZE
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stage)
+	_field_clip = Control.new()
+	_field_clip.size = Vector2(STAGE_SIZE.x, FIELD_HEIGHT)
+	_field_clip.clip_contents = true
+	_field_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(_field_clip)
 	_world = Control.new()
-	_world.size = STAGE_SIZE
+	_world.size = _field_clip.size
 	_world.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(_world)
-	for layer: Dictionary in LAYERS:
-		_add_layer(layer)
+	_field_clip.add_child(_world)
+	# Scenery of leg 1 of Circle 2 (asset-pipeline §4: the sky moves about
+	# 20%, the middle 100%, the front about 130%); the party walks between
+	# the middle and the front.
+	_scenery_back = ParallaxScenery.new()
+	_scenery_back.setup(CircleLook.back_layers(CircleLook.SET_LEG_1), CircleLook.filter_material())
+	_world.add_child(_scenery_back)
 	_objects = Control.new()
 	_objects.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_world.add_child(_objects)
 	_party = Control.new()
 	_party.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_world.add_child(_party)
-	for layer: Dictionary in FRONT_LAYERS:
-		_add_layer(layer)
+	_scenery_front = ParallaxScenery.new()
+	_scenery_front.setup(CircleLook.front_layers(CircleLook.SET_LEG_1), CircleLook.filter_material())
+	_scenery_front.drop = FRONT_DROP
+	_world.add_child(_scenery_front)
 	_dark = ColorRect.new()
 	_dark.color = Color(0, 0, 0, 0)
-	_dark.size = STAGE_SIZE
+	_dark.size = _field_clip.size
 	_dark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(_dark)
-	_build_top_bar()
-	_info = _label("", 30)
-	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_info.position = Vector2(560, 150)
-	_info.size = Vector2(800, 140)
-	_stage.add_child(_info)
-	_action_box = HBoxContainer.new()
-	_action_box.position = Vector2(STAGE_SIZE.x - 2 * BUTTON_SIZE.x - 110, STAGE_SIZE.y - BUTTON_SIZE.y - 70)
-	_action_box.add_theme_constant_override("separation", 30)
-	_stage.add_child(_action_box)
-	_provisions_button = _button("", BUTTON_SIZE)
-	_provisions_button.position = Vector2(70, STAGE_SIZE.y - BUTTON_SIZE.y - 70)
-	_provisions_button.pressed.connect(press_provisions)
-	_stage.add_child(_provisions_button)
+	_field_clip.add_child(_dark)
+	_build_panel()
 	_build_provisions_overlay()
 	_build_minimap_overlay()
+	_layout_field()
 
 
-## One scenery layer, wide enough for the whole walk at its parallax.
-func _add_layer(spec: Dictionary) -> void:
-	var path: String = SCENERY_DIR.path_join(str(spec["file"]))
-	if not ResourceLoader.exists(path):
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	var layer := TextureRect.new()
-	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.texture = texture
-	layer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	var parallax: float = float(spec["parallax"])
-	var tile_width: float = STAGE_SIZE.y * texture.get_width() / float(texture.get_height())
-	var needed: float = STAGE_SIZE.x + CORRIDOR_LENGTH * parallax
-	if bool(spec["tile"]):
-		# Tiling keeps the texture's own size, so the layer is drawn at the
-		# stage height by scaling the rect, not the texture.
-		layer.stretch_mode = TextureRect.STRETCH_TILE
-		var factor: float = STAGE_SIZE.y / float(texture.get_height())
-		layer.size = Vector2(ceilf(needed / tile_width) * texture.get_width(), texture.get_height())
-		layer.scale = Vector2(factor, factor)
-	else:
-		layer.stretch_mode = TextureRect.STRETCH_SCALE
-		layer.size = Vector2(maxf(tile_width, needed), STAGE_SIZE.y)
-	_world.add_child(layer)
-	_layers.append(layer)
-	_layer_parallax.append(parallax)
-
-
-func _build_top_bar() -> void:
-	var bar := ColorRect.new()
-	bar.color = Color(0, 0, 0, 0.55)
-	bar.size = Vector2(STAGE_SIZE.x, 120)
-	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(bar)
-	_light_label = _label("", 30)
-	_light_label.position = Vector2(80, 14)
-	_light_label.size = Vector2(LIGHT_BAR_SIZE.x, 50)
+## The panel under the field, in the same place as the battle's: the Lume
+## and the Alms on the left with Provisões and Mapa (D-258), what stands
+## here and its buttons in the middle.
+func _build_panel() -> void:
+	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
+	var top: float = FIELD_HEIGHT
+	_light_label = _label("")
+	_light_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_light_label.position = Vector2(16, top + 10)
+	_light_label.size = Vector2(LIGHT_BAR_SIZE.x, 12)
+	_light_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
 	_stage.add_child(_light_label)
 	var light_back := ColorRect.new()
 	light_back.color = COLOR_LIGHT_OFF
-	light_back.position = Vector2(80, 70)
+	light_back.position = Vector2(16, top + 24)
 	light_back.size = LIGHT_BAR_SIZE
 	light_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(light_back)
@@ -858,14 +909,31 @@ func _build_top_bar() -> void:
 	_light_fill.size = LIGHT_BAR_SIZE
 	_light_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	light_back.add_child(_light_fill)
-	_alms_label = _label("", 30)
-	_alms_label.position = Vector2(460, 30)
-	_alms_label.size = Vector2(960, 60)
+	_alms_label = _label("")
+	_alms_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_alms_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_alms_label.position = Vector2(16, top + 36)
+	_alms_label.size = Vector2(LIGHT_BAR_SIZE.x + 20.0, 24)
 	_stage.add_child(_alms_label)
+	_provisions_button = _button("", BUTTON_SIZE)
+	_provisions_button.position = Vector2(16, top + 66)
+	_provisions_button.pressed.connect(press_provisions)
+	_stage.add_child(_provisions_button)
 	var minimap_button := _button(texts.t(&"walk_minimap"), BUTTON_SIZE)
-	minimap_button.position = Vector2(STAGE_SIZE.x - BUTTON_SIZE.x - 70, 10)
+	minimap_button.position = Vector2(16, top + 104)
 	minimap_button.pressed.connect(press_minimap)
 	_stage.add_child(minimap_button)
+	_info = _label("")
+	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_info.position = Vector2(190, top + 14)
+	_info.size = Vector2(580, 72)
+	_stage.add_child(_info)
+	_action_box = HBoxContainer.new()
+	_action_box.position = Vector2(190, top + 104)
+	_action_box.size = Vector2(580, BUTTON_SIZE.y)
+	_action_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	_action_box.add_theme_constant_override("separation", 10)
+	_stage.add_child(_action_box)
 
 
 func _build_provisions_overlay() -> void:
@@ -874,14 +942,10 @@ func _build_provisions_overlay() -> void:
 	_provisions_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_provisions_overlay.visible = false
 	_stage.add_child(_provisions_overlay)
-	var panel := ColorRect.new()
-	panel.color = COLOR_DIM
-	panel.position = Vector2(50, 300)
-	panel.size = Vector2(680, 560)
-	_provisions_overlay.add_child(panel)
+	_provisions_overlay.add_child(PixelStyle.plate(Rect2(16, 110, LIST_BUTTON_SIZE.x + 16.0, 240), COLOR_DIM))
 	_provisions_list = VBoxContainer.new()
-	_provisions_list.position = Vector2(80, 330)
-	_provisions_list.add_theme_constant_override("separation", 14)
+	_provisions_list.position = Vector2(24, 118)
+	_provisions_list.add_theme_constant_override("separation", 4)
 	_provisions_overlay.add_child(_provisions_list)
 
 
@@ -893,22 +957,23 @@ func _build_minimap_overlay() -> void:
 	# A tap anywhere outside the map closes it (screens §4).
 	var dim := Button.new()
 	dim.flat = true
-	dim.size = STAGE_SIZE
+	dim.position = Vector2(-OVERLAY_MARGIN, 0)
+	dim.size = STAGE_SIZE + Vector2(OVERLAY_MARGIN * 2.0, 0)
 	var dim_style := StyleBoxFlat.new()
 	dim_style.bg_color = COLOR_DIM
 	for state_name: String in ["normal", "hover", "pressed", "focus"]:
 		dim.add_theme_stylebox_override(state_name, dim_style)
 	dim.pressed.connect(close_minimap)
 	_minimap_overlay.add_child(dim)
-	_minimap_overlay.add_child(HudStyle.iron_panel(Rect2(70, 130, 1780, 840)))
+	_minimap_overlay.add_child(PixelStyle.plate(Rect2(30, 44, 900, 440)))
 	_minimap = MiniMapView.new()
-	_minimap.position = Vector2(110, 170)
-	_minimap.size = Vector2(1700, 760)
+	_minimap.position = Vector2(50, 60)
+	_minimap.size = Vector2(860, 400)
 	_minimap.mouse_filter = Control.MOUSE_FILTER_STOP
 	_minimap.setup(ctrl, texts)
 	_minimap_overlay.add_child(_minimap)
 	var close_button := _button(texts.t(&"walk_minimap_close"), BUTTON_SIZE)
-	close_button.position = Vector2(STAGE_SIZE.x - BUTTON_SIZE.x - 70, 10)
+	close_button.position = Vector2(STAGE_SIZE.x - BUTTON_SIZE.x - 30, 8)
 	close_button.pressed.connect(close_minimap)
 	_minimap_overlay.add_child(close_button)
 
@@ -920,19 +985,18 @@ func _block(text: String, color: Color, block_size: Vector2) -> ColorRect:
 	block.color = color
 	block.size = block_size
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var label := _label(text, 28)
-	label.size = Vector2(block_size.x, 120)
-	label.position = Vector2(0, block_size.y * 0.35)
+	var label := _label(text)
+	label.size = Vector2(block_size.x, 48)
+	label.position = Vector2(0, roundf(block_size.y * 0.3))
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	block.add_child(label)
 	return block
 
 
-func _label(text: String, font_size: int) -> Label:
+func _label(text: String) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", font_size)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label
 

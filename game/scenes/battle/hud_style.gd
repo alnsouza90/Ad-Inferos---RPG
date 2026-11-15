@@ -8,6 +8,7 @@ extends RefCounted
 const FONT_PATH: String = "res://assets/fonts/PirataOne-Regular.ttf"
 const HUD_DIR: String = "res://assets/ui/hud"
 const ICON_DIR: String = "res://assets/ui/icons"
+const PIXEL_ICON_DIR: String = "res://assets/pixel/icons"
 ## Corner of the button frame texture (pixels of ui_button_frame.png).
 const BUTTON_MARGIN: float = 26.0
 
@@ -65,7 +66,9 @@ static func hud_texture(file_name: String) -> Texture2D:
 static func icon(file_name: String) -> Texture2D:
 	if file_name.is_empty():
 		return null
-	return _load("%s/%s.png" % [ICON_DIR, file_name])
+	# The pixel art icon when there is one (T65, D-385), else the painted one.
+	var pixel: Texture2D = _load("%s/%s.png" % [PIXEL_ICON_DIR, file_name])
+	return pixel if pixel != null else _load("%s/%s.png" % [ICON_DIR, file_name])
 
 
 static func intent_icon(intent: Intent) -> Texture2D:

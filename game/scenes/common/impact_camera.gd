@@ -25,6 +25,9 @@ var field: Control
 var flash: ColorRect
 ## Darkens the scenery behind the fighters during a blow (G1); optional.
 var dim: ColorRect
+## Scale of the shake and the push, in pixels: 1 on the old 1920 stage,
+## 0.5 on the 960 × 540 grid (T65).
+var reach: float = 1.0
 var _home: Vector2
 var _tween: Tween
 
@@ -34,6 +37,15 @@ func _init(p_field: Control, p_flash: ColorRect, p_dim: ColorRect = null) -> voi
 	flash = p_flash
 	dim = p_dim
 	_home = field.position
+
+
+## The field moved (a wider screen): its resting place is `home` now.
+func rehome(home: Vector2) -> void:
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+		field.scale = Vector2.ONE
+	_home = home
+	field.position = home
 
 
 ## `at` is a global position; `speed` 0 skips the effect; `strength` scales
@@ -50,7 +62,7 @@ func punch(at: Vector2, speed: float = 1.0, strength: float = 1.0) -> void:
 	var zoom: float = 1.0 + (ZOOM - 1.0) * strength
 	_tween.tween_property(field, "scale", Vector2(zoom, zoom), ZOOM_IN_TIME / speed)
 	for offset: Vector2 in SHAKE:
-		_tween.tween_property(field, "position", _home + offset * strength, SHAKE_STEP / speed)
+		_tween.tween_property(field, "position", _home + offset * strength * reach, SHAKE_STEP / speed)
 	_tween.tween_property(field, "position", _home, SHAKE_STEP / speed)
 	_tween.tween_property(field, "scale", Vector2.ONE, ZOOM_OUT_TIME / speed)
 	if flash != null:
@@ -71,6 +83,8 @@ func blow(at: Vector2, speed: float, hold: float, push: Vector2 = Vector2.ZERO, 
 	field.position = _home
 	field.scale = Vector2.ONE
 	field.pivot_offset = field.get_global_transform().affine_inverse() * at
+	push *= reach
+	shake *= reach
 	_tween = field.create_tween()
 	_tween.tween_property(field, "scale", Vector2(BLOW_ZOOM, BLOW_ZOOM), BLOW_IN_TIME / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_tween.parallel().tween_property(field, "position", _home + push, BLOW_IN_TIME / speed)

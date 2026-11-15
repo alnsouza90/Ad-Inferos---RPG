@@ -35,9 +35,11 @@ var outline_strength: float = 0.0:
 		queue_redraw()
 var outline_color: Color = Color(0.68, 0.42, 1.0)
 ## Offsets of the outline copies, in screen pixels.
-const OUTLINE_OFFSETS: Array[Vector2] = [Vector2(-5, 0), Vector2(5, 0), Vector2(0, -5), Vector2(0, 5), Vector2(-4, -4), Vector2(4, 4), Vector2(-4, 4), Vector2(4, -4)]
+const OUTLINE_OFFSETS: Array[Vector2] = [Vector2(-5, 0), Vector2(5, 0), Vector2(0, -5), Vector2(0, 5), Vector2(-5, -5), Vector2(5, 5), Vector2(-5, 5), Vector2(5, -5)]
 const OUTLINE_SHADER_PATH: String = "res://shaders/silhouette.gdshader"
 const OUTLINE_PULSE: float = 0.25
+## Width of the outline in pixels of the screen (1 on the pixel grid, T65).
+var outline_width: float = 5.0
 ## A steady outline (the target of an enemy's intent, T36) does not pulse.
 var outline_pulse: bool = true
 var _outline: Control
@@ -164,7 +166,7 @@ func _draw_outline() -> void:
 	var tint := Color(outline_color, outline_strength * pulse)
 	var rect: Rect2 = d["rect"]
 	for offset: Vector2 in OUTLINE_OFFSETS:
-		_outline.draw_texture_rect_region(d["texture"], Rect2(rect.position + offset, rect.size), d["region"], tint)
+		_outline.draw_texture_rect_region(d["texture"], Rect2(rect.position + offset * (outline_width / 5.0), rect.size), d["region"], tint)
 
 
 func _draw() -> void:

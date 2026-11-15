@@ -162,7 +162,7 @@ func test_layout_puts_everyone_on_the_ground_in_slot_order() -> void:
 		var view: CombatantView = screen.view_of(c.id)
 		assert_not_null(view.player(), "%s com a arte do Drive" % c.id)
 		var height: float = view.player().display_height * view.scale.y
-		assert_almost_eq(height, BattleScreen.FIGURE_HEIGHT * view.player().frames.display_scale, 0.5, "%s com a altura combinada" % c.id)
+		assert_almost_eq(height, BattleScreen.figure_px_of(view.player().frames) * view.player().frames.display_scale, 0.5, "%s com a altura combinada" % c.id)
 		var badge: CombatantBadge = screen.badge_of(c.id)
 		assert_true(badge.intent_shown(), "%s mostra a intenção" % c.id)
 		assert_not_null(badge.intent_texture(), "%s: intenção com ícone" % c.id)
@@ -174,14 +174,15 @@ func test_layout_puts_everyone_on_the_ground_in_slot_order() -> void:
 	assert_lt(BattleScreen.GROUND_Y, BattleScreen.FIELD_HEIGHT, "os pés ficam acima do painel")
 
 
-## Alan's review (D-259): women a little shorter than men, each halo on its
+## Alan's review (D-259), revised by D-376: the saints, women included,
+## stand at the same height for now; each halo on its
 ## saint's head point, a light red outline (no line) on the intent's target,
 ## and the portrait inside the window of its frame.
 func test_review_heights_halos_outline_and_portrait() -> void:
 	var screen: BattleScreen = _screen(&"m0_easy_01", SEED)
 	var george: CombatantView = screen.view_of(&"saint_george")
 	var therese: CombatantView = screen.view_of(&"saint_therese")
-	assert_lt(therese.player().display_height, george.player().display_height, "Teresinha mais baixa que Jorge")
+	assert_eq(therese.player().pixel_scale(), george.player().pixel_scale(), "Teresinha na mesma escala de Jorge por enquanto (D-376)")
 	for id: StringName in [&"saint_george", &"saint_benedict", &"saint_therese"]:
 		var view: CombatantView = screen.view_of(id)
 		var frames: CharacterFrames = view.player().frames
@@ -201,9 +202,9 @@ func test_review_heights_halos_outline_and_portrait() -> void:
 	for c: Combatant in screen.ctrl.state.party:
 		if intent == null or intent.target_slot != screen.ctrl.state.party_slot_of(c):
 			assert_false(screen.view_of(c.id).is_intent_target(), "%s sem contorno" % c.id)
-	var frame_rect := Rect2(screen._portrait_frame.position, screen._portrait_frame.size)
-	var window := Rect2(frame_rect.position + BattleScreen.PORTRAIT_WINDOW.position * frame_rect.size, BattleScreen.PORTRAIT_WINDOW.size * frame_rect.size)
-	assert_eq(Rect2(screen._portrait.position, screen._portrait.size), window, "o retrato fica na janela da moldura")
+	var window := Rect2(screen._portrait_frame.position + BattleScreen.PORTRAIT_WINDOW.position, BattleScreen.PORTRAIT_WINDOW.size)
+	assert_eq(Rect2(screen._portrait.position, screen._portrait.size), window, "o retrato fica na janela do arco")
+	assert_true(Rect2(screen._portrait_frame.position, screen._portrait_frame.size).encloses(window), "a janela fica dentro do arco")
 
 
 ## T36: tapping an enemy opens its sheet on the right (DD), and the Lume

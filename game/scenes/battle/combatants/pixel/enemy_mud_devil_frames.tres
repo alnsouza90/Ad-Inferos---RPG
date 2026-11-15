@@ -8,18 +8,83 @@ script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_idle.png"
 frame_size = Vector2i(256, 256)
+columns = 5
+count = 5
+fps = 6
+looping = true
+anchor = Vector2(168, 256)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_windup.png"
+frame_size = Vector2i(256, 256)
 columns = 1
 count = 1
 fps = 0
-looping = true
-anchor = Vector2(190, 256)
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_strike.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = 0
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_strike_alt"]
+script = ExtResource("2_clip")
+id = &"strike_alt"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_strike_alt.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = 0
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_defend.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_fall.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_mud_devil"
-figure_height = 243.0
+figure_height = 146.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"orb"
@@ -27,4 +92,4 @@ blessing_style = &"ring"
 weight = &"heavy"
 halo_center = Vector2(0, 0)
 halo_diameter = 0
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_strike_alt"), SubResource("clip_defend"), SubResource("clip_fall")])

@@ -9,6 +9,10 @@ const MAX_LAYERS: int = 10
 
 var data: GameData
 var cat: ExpeditionCatalog
+## Bento's pixel art already has every clip (walk, defend); Jorge and
+## Teresinha only stand for now (T64), so the clips are checked on him.
+const BENEDICT: int = 1
+
 var ctrl: ExpeditionController
 var walk: WalkScreen
 ## Every command the screen sent, in order.
@@ -133,11 +137,11 @@ func test_holding_moves_by_the_walking_speed_and_releasing_stops() -> void:
 	walk._process(0.5)
 	var expected: float = WalkScreen.WALK_SPEED * 2.0 * 0.5 / WalkScreen.CORRIDOR_LENGTH
 	assert_almost_eq(walk.position_in_corridor(), expected, 0.0001, "instantâneo anda a 2×")
-	assert_eq(walk.figure_clips()[0], &"walk")
+	assert_eq(walk.figure_clips()[BENEDICT], &"walk")
 	walk.release()
 	walk._process(0.5)
 	assert_almost_eq(walk.position_in_corridor(), expected, 0.0001)
-	assert_eq(walk.figure_clips()[0], &"idle")
+	assert_eq(walk.figure_clips()[BENEDICT], &"idle")
 	assert_eq(places.back()["x"], walk.position_in_corridor(), "a posição é guardada ao parar")
 
 
@@ -181,7 +185,7 @@ func test_E17_reaching_the_enemies_starts_the_battle_without_a_touch() -> void:
 	assert_eq(c.phase, ExpeditionController.Phase.IN_BATTLE, "o combate começou sem toque")
 	assert_eq(sent.back().type, ExpeditionCommand.ENGAGE_NODE)
 	assert_eq(entered, [target.id] as Array[StringName])
-	assert_eq(w2.figure_clips()[0], &"defend", "corte seco: todos em guarda (D-359)")
+	assert_eq(w2.figure_clips()[BENEDICT], &"defend", "corte seco: todos em guarda (D-359)")
 	assert_gt(w2.darkness(), 0.0, "o fundo escurece")
 
 
@@ -280,7 +284,7 @@ func test_after_a_battle_the_party_stands_where_the_enemies_were() -> void:
 		return
 	var after := _new_walk(c)
 	assert_almost_eq(after.position_in_corridor(), CorridorWalk.CONTENT_AT, 0.0001)
-	assert_eq(after.figure_clips()[0], &"idle", "a guarda se desfaz e o parado volta")
+	assert_eq(after.figure_clips()[BENEDICT], &"idle", "a guarda se desfaz e o parado volta")
 	after.walk_by(1.0)
 	assert_eq(after.position_in_corridor(), 1.0, "o caminho está livre")
 

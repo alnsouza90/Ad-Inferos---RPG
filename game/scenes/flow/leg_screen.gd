@@ -268,7 +268,7 @@ func _mark_choice(key: StringName) -> void:
 ## A centred panel with a text and room for buttons.
 func _panel(kind: StringName, text: String) -> VBoxContainer:
 	var root := CenterContainer.new()
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	LegacyStage.fill(root)
 	root.set_meta(&"kind", kind)
 	_replace(root)
 	var box := VBoxContainer.new()

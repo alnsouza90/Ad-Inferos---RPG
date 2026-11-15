@@ -93,3 +93,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Escala de exibição em pixel da Teresinha~~ Santas do mesmo tamanho dos santos por enquanto (D-376). Fica só o chefe maior que 256: por partes ou 2× inteiro | Alan, em Asmodeu | 14/11/2026 |
 | Asmodeu sem clipe de sopro em pixel: a magia dele usa a luz genérica (`orb`) até Alan gerar o sopro | Alan (arte) | 14/11/2026 |
 | Minos sem clipe de queda em pixel: usa o desvanecer do motor | Alan (arte) | 14/11/2026 |
+| ~~Jorge e Teresinha em pixel só têm o quadro parado~~ Animações trazidas da galeria de Alan (D-382) | Alan (PixelLab) | 15/11/2026 |
+| ~~Cinco inimigos da Família A ainda sem pixel~~ Gerados e no jogo (D-383, D-385), aguardam a revisão de Alan | Alan | 15/11/2026 |
+| ~~Peças em pixel que o motor desenha por enquanto~~ Lamparina, óculo, ícones, entradas, tenda, relicário e almas gerados e no jogo (D-385), aguardam Alan | Alan | 15/11/2026 |
+| Revisão de Alan da arte de D-385; pendentes: ícones fracos (guarda, Passar), ícone separado de Deslocar, Pouso em pixel numa tela refeita, ícones de ação nas lancetas (T44) | Alan / T44 / T53 | 15/11/2026 |

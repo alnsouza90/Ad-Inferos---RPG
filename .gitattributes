@@ -28,3 +28,4 @@ game/addons/** !filter !diff !merge
 # Pixel art do jogo fica fora do LFS: imagens pequenas, e o CI e as sessões
 # na nuvem as recebem sem git lfs pull (ADR-0013)
 game/assets/pixel/**/*.png !filter -diff -merge -text
+game/assets/pixel/**/*.ttf !filter -diff -merge -text

@@ -203,7 +203,7 @@ func test_cards_show_portrait_hit_points_and_desolation() -> void:
 		assert_not_null(s.activity_button(id, ExpeditionController.ACTIVITY_OWN), "atividade própria de %s" % id)
 	assert_eq(s.activity_button(&"saint_george", ExpeditionController.ACTIVITY_OWN).text, "Guarda")
 	assert_true(s.fixed_button(CampScreen.FIXED_REST).text.contains("1 Pão"), "Descansar mostra o custo")
-	assert_eq(s.stage_position(), ((s.size - CampScreen.STAGE_SIZE) * 0.5).floor())
+	assert_eq(s.stage_position(), LegacyStage.position_for(CampScreen.STAGE_SIZE, s.size), "palco antigo pela metade, centralizado (T65)")
 
 
 func test_every_camp_text_exists_in_the_data() -> void:

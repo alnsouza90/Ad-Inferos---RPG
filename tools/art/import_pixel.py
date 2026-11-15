@@ -62,6 +62,17 @@ ARC_MIN_LUMA = 95
 FEET_TOLERANCE = 3
 # Rows above the feet that count as "the feet" to find their centre.
 FEET_ROWS = 6
+# Every figure is shrunk by this factor after the cleaning, so the company
+# and the enemies stand apart on the 960 x 540 screen with room between the
+# two sides (D-384). The feet stay on the same point of the 256 frame.
+FIGURE_SCALE = 0.6
+# The bust for the portrait arch and the enemy sheet is cut from the idle
+# frame at full size, before the shrink: width, height, and how far the
+# corner sits left and above the halo point (saints) or the top of the
+# figure (the others).
+BUST_SIZE = (64, 96)
+BUST_FROM_HALO = (30, 24)
+BUST_ABOVE_TOP = 2
 # Seconds a single pose holds (presentation timing, as in FrameClip).
 POSE_TIME = 0.4
 
@@ -78,6 +89,8 @@ class Character:
     # Halo point measured on the figure cut to its outline (06-rumo-pixel §9):
     # x and y from the top-left of the figure, and the diameter.
     halo: tuple[float, float, float] | None
+    # Every clip of the character gets the warm skin (D-388).
+    warm: bool = False
     clips: list["Clip"] = field(default_factory=list)
 
 
@@ -125,6 +138,8 @@ def read_characters() -> list[Character]:
             )
     with CLIPS_CSV.open(encoding="utf-8") as f:
         for row in csv.DictReader(f):
+            if "warm_skin" in row["cleanup"] and row["character"] in chars:
+                chars[row["character"]].warm = True
             if row["character"] not in chars:
                 raise SystemExit(f"{CLIPS_CSV.name}: personagem sem linha em {CHARACTERS_CSV.name}: {row['character']}")
             chars[row["character"]].clips.append(Clip(
@@ -291,11 +306,66 @@ def clean(clip: Clip, char: Character, colours: np.ndarray,
         report["meio-tom"] += binarize(cell)
         if "white_arc" in clip.cleanup:
             report["arco"] += erase_white_arc(cell, idle_colours)
+        if "warm_skin" in clip.cleanup:
+            report["pele"] = report.get("pele", 0) + warm_skin(cell, clip.character)
         for token in clip.cleanup:
             if token.startswith("specks="):
                 report["soltos"] += erase_specks(cell, int(token.split("=")[1]))
+    return _finish(cells, clip, char, colours, report)
+
+
+# The warm skin of Saint George (D-388): Bento and Teresinha in the new style
+# came out greyish or pink; their skin tones are taken to this ramp by light.
+# The warm skin of Saint George (D-388): each skin colour of the new
+# drawings of Bento and Teresinha (measured on the face) becomes one of the
+# palette colours of George's skin, the habit, the cloak and the veil keep
+# their own colours.
+SKIN_MAP = {
+    "saint_benedict": {"#C8B396": "#C4A98D", "#A4927D": "#9A745A", "#8F7F6C": "#9A745A",
+                       "#826E58": "#765B47", "#6F5C4A": "#765B47"},
+    "saint_therese": {"#DABBA5": "#C4A98D", "#C6A691": "#C4A98D", "#A08371": "#9A745A",
+                      "#836A5C": "#765B47", "#5D4439": "#553327"},
+}
+
+
+def warm_skin(cell: np.ndarray, character: str) -> int:
+    """The skin colours of `character` become George's; returns how many
+    pixels changed."""
+    changed = 0
+    rgb = cell[:, :, :3].astype(np.int32)
+    opaque = cell[:, :, 3] == 255
+    for source, target in SKIN_MAP.get(character, {}).items():
+        src = [int(source[k:k + 2], 16) for k in (1, 3, 5)]
+        dst = [int(target[k:k + 2], 16) for k in (1, 3, 5)]
+        hit = opaque & (np.abs(rgb - src).sum(axis=2) <= 6)
+        cell[:, :, :3][hit] = dst
+        changed += int(hit.sum())
+    return changed
+
+
+def shrink(cell: np.ndarray, scale: float) -> np.ndarray:
+    """The frame at `scale`, averaged by area so no line is lost, back on a
+    256 canvas with the bottom centre kept in place."""
+    if scale >= 1.0:
+        return cell
+    image = Image.fromarray(cell, "RGBA")
+    side = int(round(FRAME * scale))
+    # Premultiplied, so the empty pixels do not darken the edges.
+    small = image.convert("RGBa").resize((side, side), Image.BOX).convert("RGBA")
+    out = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+    out.paste(small, ((FRAME - side) // 2, FRAME - side))
+    return np.array(out)
+
+
+def _finish(cells: list[np.ndarray], clip: Clip, char: Character, colours: np.ndarray,
+            report: dict[str, int]) -> list[np.ndarray]:
+    for i, cell in enumerate(cells):
+        cell = shrink(cell, FIGURE_SCALE)
+        binarize(cell)
         if char.palette == "snap":
             report["paleta"] += snap_to_palette(cell, colours)
+        cells[i] = cell
+    name = f"{clip.character}/{clip.clip}"
     left = sum(off_palette(c, colours) for c in cells)
     notes = ", ".join(f"{k} {v}" for k, v in report.items() if v)
     print(f"  {clip.clip:8} {len(cells):2} quadros" + (f" · {notes}" if notes else "")
@@ -315,6 +385,32 @@ def write_sheet(clip: Clip, cells: list[np.ndarray]) -> Sheet:
     path = folder / f"{clip.character}_{clip.clip}.png"
     Image.fromarray(sheet, "RGBA").save(path, optimize=True)
     return Sheet(clip, path, len(cells), columns)
+
+
+def write_bust(char: Character, cell: np.ndarray, colours: np.ndarray) -> Path:
+    """The head and shoulders at full size, for the portrait arch and the
+    enemy sheet (the figures on the field are shrunk, D-384)."""
+    full = cell.copy()
+    binarize(full)
+    if char.warm:
+        warm_skin(full, char.id)
+    if char.palette == "snap":
+        snap_to_palette(full, colours)
+    x0, y0, x1, _ = outline(full)
+    if char.halo is not None:
+        left = int(x0 + char.halo[0] - BUST_FROM_HALO[0])
+        top = int(y0 + char.halo[1] - BUST_FROM_HALO[1])
+    else:
+        left = int((x0 + x1) // 2 - BUST_SIZE[0] // 2)
+        top = y0 - BUST_ABOVE_TOP
+    left = min(max(left, 0), FRAME - BUST_SIZE[0])
+    top = min(max(top, 0), FRAME - BUST_SIZE[1])
+    bust = full[top:top + BUST_SIZE[1], left:left + BUST_SIZE[0]]
+    folder = DST / char.id
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"{char.id}_bust.png"
+    Image.fromarray(bust, "RGBA").save(path, optimize=True)
+    return path
 
 
 def res_path(path: Path) -> str:
@@ -353,8 +449,9 @@ def write_resource(char: Character, sheets: list[Sheet], anchor: tuple[int, int]
         ]
     halo_center, halo_diameter = (0.0, 0.0), 0.0
     if char.halo is not None:
-        halo_center = (figure[0] + char.halo[0], figure[1] + char.halo[1])
-        halo_diameter = char.halo[2]
+        # Measured on the full-size figure: shrunk with it.
+        halo_center = (round(figure[0] + char.halo[0] * FIGURE_SCALE), round(figure[1] + char.halo[1] * FIGURE_SCALE))
+        halo_diameter = round(char.halo[2] * FIGURE_SCALE)
     lines += [
         "[resource]",
         'script = ExtResource("1_set")',
@@ -399,7 +496,9 @@ def run(only: list[str], preview_dir: Path | None) -> int:
         print(char.id)
         idle = char.clips[0]
         # The colours of the idle, before any change: what the arc is not.
-        idle_colours = colour_set(pick(source_frames(idle.source), idle.frames, idle.clip))
+        idle_cells = pick(source_frames(idle.source), idle.frames, idle.clip)
+        idle_colours = colour_set(idle_cells)
+        write_bust(char, idle_cells[0], colours)
         cleaned = {clip.clip: clean(clip, char, colours, idle_colours) for clip in char.clips}
         idle0 = cleaned["idle"][0]
         anchor = feet(idle0)

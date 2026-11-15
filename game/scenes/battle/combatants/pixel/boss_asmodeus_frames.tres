@@ -12,7 +12,7 @@ columns = 12
 count = 12
 fps = 8
 looping = true
-anchor = Vector2(128, 221)
+anchor = Vector2(128, 235)
 impact_frame = -1
 pose_time = 0.4
 
@@ -25,7 +25,7 @@ columns = 4
 count = 4
 fps = 8
 looping = false
-anchor = Vector2(128, 221)
+anchor = Vector2(128, 235)
 impact_frame = -1
 pose_time = 0.4
 
@@ -38,7 +38,7 @@ columns = 4
 count = 4
 fps = 8
 looping = false
-anchor = Vector2(128, 221)
+anchor = Vector2(128, 235)
 impact_frame = 1
 pose_time = 0.4
 
@@ -51,14 +51,14 @@ columns = 6
 count = 6
 fps = 8
 looping = false
-anchor = Vector2(128, 221)
+anchor = Vector2(128, 235)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"boss_asmodeus"
-figure_height = 186.0
+figure_height = 112.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"orb"
