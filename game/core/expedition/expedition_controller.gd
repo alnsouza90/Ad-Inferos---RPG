@@ -697,13 +697,16 @@ func _enemy_def(enemy_id: StringName) -> EnemyDef:
 
 ## Desolation at the end of a won battle. While the rule by rounds is being
 ## simulated (D-269), [desolation_battle_end_base] plus
-## [desolation_battle_end_per_round] for each round from the 3rd on replace
+## [desolation_battle_end_per_round] for each round from
+## [desolation_battle_end_from_round] on replace
 ## the fixed value; without those keys the fixed value stands.
 static func battle_end_desolation(bs: BattleState, fixed: int) -> int:
 	var c: ConstantsDef = bs.constants
 	if not c.has_key(&"desolation_battle_end_per_round"):
 		return fixed
-	var extra_rounds: int = maxi(0, bs.round_number - 2)
+	# Counted from round [desolation_battle_end_from_round] (Alan: the 1st, D-396).
+	var from_round: int = c.get_int_or(&"desolation_battle_end_from_round", 3)
+	var extra_rounds: int = maxi(0, bs.round_number - from_round + 1)
 	return c.get_int(&"desolation_battle_end_base") + extra_rounds * c.get_int(&"desolation_battle_end_per_round")
 
 
