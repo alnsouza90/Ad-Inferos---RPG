@@ -734,7 +734,7 @@ func _refresh_lume() -> void:
 
 
 ## The Vendaval mark over the two saints it would swap at the end of the
-## round, or why it will not (a saint stood firm, or the Clausura).
+## round, or that a saint stood firm against it.
 func _refresh_gale() -> void:
 	var slots: Array[int] = ctrl.state.gale_slots
 	_gale_label.visible = slots.size() == 2 and not ctrl.is_over()
@@ -743,8 +743,6 @@ func _refresh_gale() -> void:
 	var key: StringName = &"gale_mark"
 	if ctrl.state.gale_held:
 		key = &"gale_held_firm"
-	elif ctrl.state.gale_blocked_by_clausura():
-		key = &"gale_held_clausura"
 	_gale_label.text = texts.t(key)
 	var mid: float = (_saint_x(slots[0]) + _saint_x(slots[1])) * 0.5
 	_gale_label.position = Vector2(roundf(mid - GALE_LABEL_WIDTH * 0.5), INTENT_ROW_Y)

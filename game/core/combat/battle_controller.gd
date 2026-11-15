@@ -786,7 +786,7 @@ func _apply_hazard() -> void:
 		_emit(&"moved", {"target": a.id, "from": slots[0], "to": slots[1]})
 		_emit(&"moved", {"target": b.id, "from": slots[1], "to": slots[0]})
 	else:
-		_emit(EV_GALE_HELD, {"slots": slots, "reason": &"stood_firm" if state.gale_held else &"clausura"})
+		_emit(EV_GALE_HELD, {"slots": slots, "reason": &"stood_firm"})
 	state.gale_slots.clear()
 	state.gale_held = false
 
@@ -800,7 +800,7 @@ func _mark_gale() -> void:
 		return
 	var first: int = 1 + state.rng.battle().pick_index(state.party_size() - 1)
 	state.gale_slots = [first, first + 1] as Array[int]
-	_emit(EV_GALE_MARKED, {"slots": state.gale_slots.duplicate(), "blocked": state.gale_blocked_by_clausura()})
+	_emit(EV_GALE_MARKED, {"slots": state.gale_slots.duplicate()})
 
 
 ## Firmar o pé (bosses.md §2.2): a saint in a marked slot holds the swap.

@@ -64,15 +64,15 @@ func test_the_screen_shows_the_vendaval_and_stand_firm() -> void:
 	add_child_autofree(screen)
 	var slots: Array[int] = screen.ctrl.state.gale_slots
 	assert_eq(slots.size(), 2)
-	# The M0 formation has Benedict in the middle: his Clausura holds the wind.
-	assert_eq(screen.gale_text(), screen.texts.t(&"gale_held_clausura"))
+	# Benedict in the middle does not hold the wind (D-402).
+	assert_eq(screen.gale_text(), screen.texts.t(&"gale_mark"))
 	assert_true(screen._stand_firm_button.visible)
 	var marked: Combatant = screen.ctrl.state.party_at(slots[0])
 	screen.tap(marked.id)
-	assert_eq(screen.selection.stand_firm_reason(), CommandResult.NO_GALE, "com a Clausura não há troca a impedir")
+	assert_eq(screen.selection.stand_firm_reason(), &"", "Firmar o pé disponível para o marcado")
 
 
-func test_without_clausura_the_marked_saint_can_stand_firm_on_screen() -> void:
+func test_the_marked_saint_can_stand_firm_on_screen() -> void:
 	var screen := BattleScreen.new()
 	screen.speed_index = BattleScreen.SPEED_INSTANT
 	var state: BattleState = data.battle(&"m0_easy_01", 3)

@@ -104,6 +104,7 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~T62: as marcas de Fidelidade zeram quando a Noite Escura termina de outro jeito? Proposta: sim~~ Sim, conforme proposto (D-399) | Alan | 15/11/2026 |
 | ~~T62: com quanta vida o dom da Consolação levanta um Caído? Proposta: 30% (como o Abandono de Teresinha); até lá, um Caído não é alvo do dom~~ Sim, conforme proposto (D-399) | Alan | 15/11/2026 |
 | T62 (D-270): aviso na intenção inimiga que levará o santo aos 100 e o fio de ouro de Interceder na tela ainda não feitos | T44 | 15/11/2026 |
-| T39: com Bento no meio, a Clausura segura todo Vendaval (o vento nunca sopra na formação padrão). Manter, ou a Clausura vale só contra inimigos? | Alan | 15/11/2026 |
+| ~~T39: com Bento no meio, a Clausura segura todo Vendaval (o vento nunca sopra na formação padrão). Manter, ou a Clausura vale só contra inimigos?~~ Opção B: a Clausura não segura o Vendaval (D-402) | Alan | 15/11/2026 |
 | T39: encontros difíceis do Círculo 2 bem mais duros que os da arena (vitória 47% contra 66%); medir de novo na expedição longa | T42 | 15/11/2026 |
-| T39: ícone do Vendaval sobre os santos (hoje só a palavra); peça do PixelLab com custo e permissão | Alan / T44 | 15/11/2026 |
+| ~~T39: ícone do Vendaval sobre os santos (hoje só a palavra); peça do PixelLab com custo e permissão~~ Decidido (D-402): ícone, efeito no motor e, se precisar, elemento do PixelLab, na T44 | Alan / T44 | 15/11/2026 |
+| Vendaval na T44: ícone, efeito no motor (vento varrendo o campo na troca) e talvez um elemento do PixelLab (mandar custo antes, D-402) | Alan / T44 | 15/11/2026 |

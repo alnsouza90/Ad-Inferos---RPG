@@ -21,7 +21,6 @@ stand_firm,Firmar o pé
 stand_firm_desc,Firmar o pé: a troca do Vendaval não acontece. Firmeza: +{fervor} de Fervor na próxima rodada.
 gale_mark,Vendaval
 gale_held_firm,Vendaval: firme
-gale_held_clausura,Vendaval: Clausura
 give_consolation_desc,Dar a Consolação a um companheiro; quem dá volta ao normal.
 provisions,Provisões
 end_turn,Encerrar turno

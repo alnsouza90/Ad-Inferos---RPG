@@ -113,17 +113,18 @@ func test_B02_stand_firm_is_refused_when_it_cannot_hold_anything() -> void:
 	assert_eq(c.validate(BattleCommand.stand_firm(marked.id)), CommandResult.ALREADY_ACTED)
 
 
-func test_B02_the_clausura_holds_the_swap_so_standing_firm_is_not_offered() -> void:
+## D-402 (Alan, option B): the Clausura only guards against enemies; the
+## Vendaval blows even next to Benedict, and standing firm is the answer.
+func test_the_clausura_does_not_hold_the_vendaval() -> void:
 	var c: BattleController = _battle(&"gale", &"saint_b")  # Benedict-like in slot 2
-	assert_true(c.state.gale_blocked_by_clausura(), "com Bento no meio, toda dupla tem um vizinho dele")
-	assert_eq(c.validate(BattleCommand.stand_firm(_marked_saint(c).id)), CommandResult.NO_GALE)
-	var before: Array[StringName] = _ids(c)
-	var events: Array[BattleEvent] = c.end_party_turn()
+	var slots: Array[int] = c.state.gale_slots.duplicate()
+	var a: Combatant = c.state.party_at(slots[0])
+	assert_eq(c.validate(BattleCommand.stand_firm(a.id)), &"", "Firmar o pé continua oferecido")
+	c.end_party_turn()
 	if c.is_over():
 		pass_test("combate acabou")
 		return
-	assert_eq(_ids(c), before, "a Clausura segura a troca")
-	assert_true(events.any(func(e: BattleEvent) -> bool: return e.type == BattleController.EV_GALE_HELD))
+	assert_eq(c.state.party_slot_of(a), slots[1], "o vento troca mesmo ao lado de Bento")
 
 
 func test_B06_at_most_one_firmness_a_round() -> void:

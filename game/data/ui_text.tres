@@ -106,7 +106,6 @@ texts = {
 "event_requires_saint": "Exige {saint} na equipe",
 "event_requires_virtue": "Exige {virtue} {value}",
 "fervor": "Fervor {amount}/{max}",
-"gale_held_clausura": "Vendaval: Clausura",
 "gale_held_firm": "Vendaval: firme",
 "gale_mark": "Vendaval",
 "give_consolation": "Consolação",

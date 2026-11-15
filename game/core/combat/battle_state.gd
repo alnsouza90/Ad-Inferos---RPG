@@ -381,19 +381,10 @@ func clausura_holder() -> Combatant:
 	return null
 
 
-## True when the Clausura keeps the marked Vendaval from swapping: one of
-## the two saints in the marked slots is next to Benedict (bosses.md §2.1).
-func gale_blocked_by_clausura() -> bool:
-	for slot: int in gale_slots:
-		var c: Combatant = party_at(slot)
-		if c != null and is_clausura_protected(c):
-			return true
-	return false
-
-
-## The Vendaval would swap the marked slots at HAZARD this round.
+## The Vendaval would swap the marked slots at HAZARD this round. The
+## Clausura does not hold it: it only guards against enemies (D-402).
 func gale_will_swap() -> bool:
-	return gale_slots.size() == 2 and not gale_held and not gale_blocked_by_clausura()
+	return gale_slots.size() == 2 and not gale_held
 
 
 ## Firmeza (bosses.md §2.4): one token, at most [firmness_per_round] a
