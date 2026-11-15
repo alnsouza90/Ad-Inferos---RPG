@@ -12,7 +12,7 @@ columns = 5
 count = 5
 fps = 6
 looping = true
-anchor = Vector2(167, 253)
+anchor = Vector2(130, 254)
 impact_frame = -1
 pose_time = 0.4
 
@@ -25,7 +25,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(167, 253)
+anchor = Vector2(130, 254)
 impact_frame = -1
 pose_time = 0.4
 
@@ -38,7 +38,7 @@ columns = 2
 count = 2
 fps = 8
 looping = false
-anchor = Vector2(167, 253)
+anchor = Vector2(130, 254)
 impact_frame = 0
 pose_time = 0.4
 
@@ -51,7 +51,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(167, 253)
+anchor = Vector2(130, 254)
 impact_frame = -1
 pose_time = 0.4
 
@@ -64,14 +64,14 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(167, 253)
+anchor = Vector2(130, 254)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_infernal_scarab"
-figure_height = 238.0
+figure_height = 143.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"orb"

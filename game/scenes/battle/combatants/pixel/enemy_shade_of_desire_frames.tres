@@ -12,14 +12,14 @@ columns = 1
 count = 1
 fps = 0
 looping = true
-anchor = Vector2(132, 251)
+anchor = Vector2(130, 253)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_shade_of_desire"
-figure_height = 246.0
+figure_height = 148.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"outline"

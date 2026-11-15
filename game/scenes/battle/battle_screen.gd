@@ -18,14 +18,17 @@ const FIELD_HEIGHT: float = 360.0
 ## Ground line of the field and height of a standing figure in pixel art
 ## (ADR-0013): the frames are shown at their natural size.
 const GROUND_Y: float = 338.0
-const FIGURE_HEIGHT: float = 230.0
+## The pixel figures are drawn at 0.6 of their PixelLab size (D-384): this
+## is the height of a standing saint, and of painted frames shrunk to match.
+const FIGURE_HEIGHT: float = 138.0
 ## Intents over the enemies, all on one row (field y).
-const INTENT_ROW_Y: float = 84.0
+const INTENT_ROW_Y: float = 150.0
 const VIEW_WIDTH: float = 110.0
 ## Feet of the front saint and the front enemy, and the step between slots.
-## Four enemies and four saints fit in the 960 of the stage (T65).
-const SAINT_FRONT_X: float = 365.0
-const ENEMY_FRONT_X: float = 535.0
+## Four enemies and four saints fit in the 960 of the stage with room
+## between each figure and a wider gap between the two sides (D-384).
+const SAINT_FRONT_X: float = 400.0
+const ENEMY_FRONT_X: float = 560.0
 const SLOT_STEP: float = 112.0
 ## Share of the two figures' widths kept apart when the attacker arrives.
 const CONTACT_SHARE: float = 0.3
@@ -87,6 +90,7 @@ const DEFAULT_ENCOUNTER: StringName = &"m0_easy_01"
 ## either it stays a rectangle with its name.
 const ART_DIR: String = "res://scenes/battle/combatants"
 const PIXEL_ART_DIR: String = "res://scenes/battle/combatants/pixel"
+const BUST_PATH: String = "res://assets/pixel/characters/%s/%s_bust.png"
 const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_portrait.png"
 ## The painted halo (the animation test screen still uses it) and the one
 ## of the pixel grid.
@@ -784,6 +788,9 @@ func _refresh_controls() -> void:
 func _portrait_of(actor: Combatant) -> Texture2D:
 	if actor == null:
 		return null
+	var bust: Texture2D = _bust_of(actor)
+	if bust != null:
+		return bust
 	var head: Texture2D = _head_picture(actor.id, PORTRAIT_WINDOW.size)
 	if head != null:
 		return head
@@ -901,7 +908,8 @@ func _refresh_info() -> void:
 		_sheet_picture.texture = null
 		return
 	_sheet_title.text = texts.name_of(c)
-	_sheet_picture.texture = _head_picture(c.id, FRAME_WINDOW.size)
+	var bust: Texture2D = _bust_of(c)
+	_sheet_picture.texture = bust if bust != null else _head_picture(c.id, FRAME_WINDOW.size)
 	var lines: Array[String] = []
 	var first: String = texts.hp(c)
 	var status_text: String = texts.status(c)
@@ -916,6 +924,13 @@ func _refresh_info() -> void:
 			lines.append(texts.t(&"intent_details", {"intent": intent_text}))
 	lines.append(texts.conditions_details(c))
 	_info.text = "\n".join(lines)
+
+
+## Head and shoulders at full size, cut by the pixel art tool before the
+## figures are shrunk (D-384); null for a character without pixel art.
+func _bust_of(c: Combatant) -> Texture2D:
+	var path: String = BUST_PATH % [c.def_id, c.def_id]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
 
 
 ## The top of the idle figure of a combatant, `window` pixels on the pixel

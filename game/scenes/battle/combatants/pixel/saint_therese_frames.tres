@@ -12,7 +12,7 @@ columns = 9
 count = 9
 fps = 8
 looping = true
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = -1
 pose_time = 0.4
 
@@ -25,7 +25,7 @@ columns = 8
 count = 8
 fps = 8
 looping = true
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = -1
 pose_time = 0.4
 
@@ -38,7 +38,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = -1
 pose_time = 0.4
 
@@ -51,7 +51,7 @@ columns = 3
 count = 3
 fps = 8
 looping = false
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = 0
 pose_time = 0.4
 
@@ -64,7 +64,7 @@ columns = 2
 count = 2
 fps = 8
 looping = false
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = -1
 pose_time = 0.4
 
@@ -77,19 +77,19 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(128, 245)
+anchor = Vector2(128, 250)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"saint_therese"
-figure_height = 233.0
+figure_height = 141.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"crosses"
 blessing_style = &"petals"
 weight = &"light"
-halo_center = Vector2(130, 36)
-halo_diameter = 44
+halo_center = Vector2(129, 123)
+halo_diameter = 26
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

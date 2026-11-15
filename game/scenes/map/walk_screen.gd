@@ -27,8 +27,8 @@ const AHEAD: float = 170.0
 const FEET_Y: float = BattleScreen.GROUND_Y
 const FIGURE_HEIGHT: float = BattleScreen.FIGURE_HEIGHT
 const FIGURE_STEP: float = BattleScreen.SLOT_STEP
-const OBJECT_SIZE := Vector2(110, 140)
-const ENTRANCE_SIZE := Vector2(100, 150)
+const OBJECT_SIZE := Vector2(90, 110)
+const ENTRANCE_SIZE := Vector2(80, 120)
 const BUTTON_SIZE := Vector2(140, 32)
 ## The front layer of the scenery passes low before the party.
 const FRONT_DROP: float = 150.0

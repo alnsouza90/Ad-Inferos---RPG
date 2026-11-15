@@ -12,14 +12,14 @@ columns = 1
 count = 1
 fps = 0
 looping = true
-anchor = Vector2(190, 256)
+anchor = Vector2(168, 256)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_mud_devil"
-figure_height = 243.0
+figure_height = 146.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"orb"

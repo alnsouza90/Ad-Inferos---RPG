@@ -156,3 +156,21 @@ func test_old_screens_draw_at_half_size() -> void:
 	assert_eq(stage.scale, Vector2(0.5, 0.5))
 	assert_eq(stage.position, Vector2(135, 0))
 	assert_eq(stage.texture_filter, CanvasItem.TEXTURE_FILTER_LINEAR, "arte pintada com filtro suave")
+
+
+## D-384: the figures are shrunk so each one stands apart and the two sides
+## have a wider gap between them; the portraits keep the full-size bust.
+func test_figures_are_spaced_and_portraits_use_the_bust() -> void:
+	var screen: BattleScreen = _battle(&"m0_hard_02")
+	for c: Combatant in screen.ctrl.state.party:
+		var frames: CharacterFrames = screen.view_of(c.id).player().frames
+		assert_almost_eq(frames.figure_height, BattleScreen.FIGURE_HEIGHT, 6.0, "%s na altura reduzida" % c.id)
+	var saint_front: float = screen.feet_of(screen.ctrl.state.party_at(1).id).x
+	var enemy_front: float = screen.feet_of(screen.ctrl.state.enemy_at(1).id).x
+	assert_gt(enemy_front - saint_front, BattleScreen.SLOT_STEP, "vão maior entre os dois times")
+	for c: Combatant in screen.ctrl.state.party + screen.ctrl.state.enemies:
+		var feet: Vector2 = screen.feet_of(c.id)
+		assert_between(feet.x, 0.0, BattleScreen.STAGE_SIZE.x, "%s dentro dos 960" % c.id)
+	var portrait: Texture2D = screen.portrait_texture()
+	assert_not_null(portrait)
+	assert_true(portrait.resource_path.ends_with("_bust.png"), "retrato pelo busto em tamanho cheio")

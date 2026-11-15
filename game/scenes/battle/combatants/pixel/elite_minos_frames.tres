@@ -12,7 +12,7 @@ columns = 9
 count = 9
 fps = 8
 looping = true
-anchor = Vector2(157, 239)
+anchor = Vector2(131, 246)
 impact_frame = -1
 pose_time = 0.4
 
@@ -25,7 +25,7 @@ columns = 4
 count = 4
 fps = 8
 looping = false
-anchor = Vector2(157, 239)
+anchor = Vector2(131, 246)
 impact_frame = -1
 pose_time = 0.4
 
@@ -38,7 +38,7 @@ columns = 4
 count = 4
 fps = 8
 looping = false
-anchor = Vector2(157, 239)
+anchor = Vector2(131, 246)
 impact_frame = 2
 pose_time = 0.4
 
@@ -51,14 +51,14 @@ columns = 5
 count = 5
 fps = 8
 looping = false
-anchor = Vector2(157, 239)
+anchor = Vector2(131, 246)
 impact_frame = -1
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"elite_minos"
-figure_height = 221.0
+figure_height = 133.0
 display_scale = 1
 attack_style = &"throne"
 spell_style = &"orb"

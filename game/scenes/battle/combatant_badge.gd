@@ -13,7 +13,7 @@ const BAR_GAP: float = 6.0
 const PIPS: int = 10
 const PIP_SIZE: float = 4.0
 const PIP_GAP: float = 2.0
-const MARK_HALF: float = 50.0
+const MARK_HALF: float = 40.0
 const MARK_DASH: float = 8.0
 const MARK_STEP: float = 12.0
 const MARK_WIDTH: float = 2.0
@@ -29,9 +29,9 @@ var desolation_pips: int = 0
 var down: bool = false
 var mark: CombatantView.Mark = CombatantView.Mark.NONE
 ## Height of the head above the feet, in pixels of the stage.
-var head_height: float = 230.0
+var head_height: float = 138.0
 ## Height of the intents' row above the feet: every intent on one line (DD).
-var intent_height: float = 254.0
+var intent_height: float = 188.0
 
 var _intent_icon: TextureRect
 var _intent_value: Label
