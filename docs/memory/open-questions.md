@@ -114,4 +114,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~Minos obrigatório no fim do trecho 1: 32,6% de derrotas no trecho no simulador; manter, enfraquecer Minos ou mover para o começo do trecho 2~~ Mantido com 72 (D-408) | Alan | 15/11/2026 |
 | Textos da luta com Asmodeu para revisar: "A fumaça do fígado do peixe sobe e Asmodeu perde força (Tobias 8,2).", "São Rafael prende Asmodeu (Tobias 8,3).", "Asmodeu foge." (`ui_text.csv`) | Alan | 15/11/2026 |
 | São Rafael como recorte de ouro na vitória com o fígado (arte do PixelLab, custo e permissão antes); barra de vida grande do chefe | Alan / T44 | 15/11/2026 |
-| Asmodeu sem escolta cai em 5 rodadas (100%); medir na T42 com a companhia gasta antes de mudar números | T42 | 15/11/2026 |
+| Asmodeu sem escolta cai em 5 rodadas (100%); medir na T42 com a companhia gasta antes de mudar números; se fácil, aumentar a força dos golpes (D-410) | T42 | 15/11/2026 |
+| Especial da fase 3 de Asmodeu (D-410): escolher entre as propostas tiradas das referências | Alan | 15/11/2026 |
+| Como as garras do Domínio cedem ("alcançar o Peregrino"): alinhar com Alan o que está em `bosses.md` §5.2 e `narrative-system.md` §3.2 | Alan | 15/11/2026 |

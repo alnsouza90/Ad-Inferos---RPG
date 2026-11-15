@@ -4,11 +4,11 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_1nk2k"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_h2t4i"]
 
-[sub_resource type="Resource" id="Resource_2bc0s"]
+[sub_resource type="Resource" id="Resource_hvggx"]
 script = ExtResource("2_1nk2k")
 type = &"gale_swap"
 
-[sub_resource type="Resource" id="Resource_u68h8"]
+[sub_resource type="Resource" id="Resource_1nk2k"]
 script = ExtResource("1_hvggx")
 id = &"asmodeus_gale"
 use_slots = Array[int]([1, 2])
@@ -22,15 +22,15 @@ conditions = Array[Dictionary]([{
 "param": 2
 }])
 intent_icon = &"displace"
-effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_2bc0s")])
+effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_hvggx")])
 
-[sub_resource type="Resource" id="Resource_v4cub"]
+[sub_resource type="Resource" id="Resource_h2t4i"]
 script = ExtResource("2_1nk2k")
 type = &"apply_condition"
 condition_id = &"enchanted"
 stacks = 2
 
-[sub_resource type="Resource" id="Resource_jsyve"]
+[sub_resource type="Resource" id="Resource_2bc0s"]
 script = ExtResource("1_hvggx")
 id = &"asmodeus_enchant"
 priority = 2
@@ -39,29 +39,26 @@ target_slots = Array[int]([1, 2, 3])
 targeting = &"single"
 target_rule = &"highest_hp"
 conditions = Array[Dictionary]([{
-"name": "phase_at_least",
-"param": 3
-}, {
 "name": "no_party_condition",
 "param": "enchanted"
 }])
 cooldown = 3
 intent_icon = &"special"
-effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_v4cub")])
+effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_h2t4i")])
 
-[sub_resource type="Resource" id="Resource_koeoj"]
+[sub_resource type="Resource" id="Resource_u68h8"]
 script = ExtResource("2_1nk2k")
 type = &"damage"
 amount = 4.0
 damage_type = &"exorcism"
 
-[sub_resource type="Resource" id="Resource_iyox3"]
+[sub_resource type="Resource" id="Resource_v4cub"]
 script = ExtResource("2_1nk2k")
 order = 2
 type = &"desolation"
 amount = 8.0
 
-[sub_resource type="Resource" id="Resource_qp0fi"]
+[sub_resource type="Resource" id="Resource_jsyve"]
 script = ExtResource("1_hvggx")
 id = &"asmodeus_breath"
 priority = 3
@@ -74,16 +71,16 @@ conditions = Array[Dictionary]([{
 }])
 cooldown = 2
 intent_icon = &"corrupt"
-effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_koeoj"), SubResource("Resource_iyox3")])
+effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_u68h8"), SubResource("Resource_v4cub")])
 
-[sub_resource type="Resource" id="Resource_82j1q"]
+[sub_resource type="Resource" id="Resource_koeoj"]
 script = ExtResource("2_1nk2k")
 type = &"damage"
 amount = 5.0
 damage_type = &"strike"
 target_override = &"random_party"
 
-[sub_resource type="Resource" id="Resource_fpp1f"]
+[sub_resource type="Resource" id="Resource_iyox3"]
 script = ExtResource("2_1nk2k")
 order = 2
 type = &"damage"
@@ -91,7 +88,7 @@ amount = 5.0
 damage_type = &"strike"
 target_override = &"random_party"
 
-[sub_resource type="Resource" id="Resource_i1ywa"]
+[sub_resource type="Resource" id="Resource_qp0fi"]
 script = ExtResource("2_1nk2k")
 order = 3
 type = &"damage"
@@ -99,7 +96,7 @@ amount = 5.0
 damage_type = &"strike"
 target_override = &"random_party"
 
-[sub_resource type="Resource" id="Resource_jjght"]
+[sub_resource type="Resource" id="Resource_82j1q"]
 script = ExtResource("1_hvggx")
 id = &"asmodeus_three_heads"
 priority = 4
@@ -108,18 +105,18 @@ targeting = &"all_party"
 target_rule = &"front_most"
 conditions = Array[Dictionary]([{
 "name": "phase_at_least",
-"param": 3
+"param": 2
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_82j1q"), SubResource("Resource_fpp1f"), SubResource("Resource_i1ywa")])
+effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_koeoj"), SubResource("Resource_iyox3"), SubResource("Resource_qp0fi")])
 
-[sub_resource type="Resource" id="Resource_sr4l7"]
+[sub_resource type="Resource" id="Resource_fpp1f"]
 script = ExtResource("2_1nk2k")
 type = &"damage"
 amount = 12.0
 damage_type = &"strike"
 
-[sub_resource type="Resource" id="Resource_1fbr8"]
+[sub_resource type="Resource" id="Resource_i1ywa"]
 script = ExtResource("1_hvggx")
 id = &"asmodeus_lance"
 priority = 5
@@ -132,7 +129,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_sr4l7")])
+effects = Array[ExtResource("2_1nk2k")]([SubResource("Resource_fpp1f")])
 
 [resource]
 script = ExtResource("3_h2t4i")
@@ -145,7 +142,7 @@ role = &"boss"
 size = 2
 max_hp = 150
 armor = 1
-actions = Array[ExtResource("1_hvggx")]([SubResource("Resource_u68h8"), SubResource("Resource_jsyve"), SubResource("Resource_qp0fi"), SubResource("Resource_jjght"), SubResource("Resource_1fbr8")])
+actions = Array[ExtResource("1_hvggx")]([SubResource("Resource_1nk2k"), SubResource("Resource_2bc0s"), SubResource("Resource_jsyve"), SubResource("Resource_82j1q"), SubResource("Resource_i1ywa")])
 art_id = "boss_asmodeus"
 phase_thresholds = Array[float]([0.5])
 dominion_phase_thresholds = Array[float]([0.66, 0.33])

@@ -79,13 +79,23 @@ func test_the_phase_follows_the_hp_and_never_goes_back() -> void:
 	assert_eq(c.state.boss_phase, 3, "não volta")
 
 
-func test_the_last_phase_brings_the_three_heads_only_with_the_third_claw() -> void:
-	var c: BattleController = _ctrl(Dominion.claws(0, false))
-	c.state.boss_phase = 3
-	c.state.round_number = 1  # odd round: no Vendaval
+## D-410 (Alan): the Encanto from phase 1, the three heads from phase 2.
+func test_the_encanto_comes_in_phase_1_and_the_three_heads_in_phase_2() -> void:
+	var c: BattleController = _ctrl(Dominion.claws(2, true))
+	var boss: Combatant = c.state.boss()
+	c.state.round_number = 1
 	EnemyBrain.choose_intents(c.state)
-	var actions: Array = c.state.intents_of(c.state.boss()).map(func(i: Intent) -> StringName: return i.action_id)
-	assert_true(actions.has(&"asmodeus_enchant") or actions.has(&"asmodeus_three_heads"), str(actions))
+	assert_eq(c.state.intents_of(boss)[0].action_id, &"asmodeus_enchant", "Encanto já na fase 1")
+	boss.cooldowns[&"asmodeus_enchant"] = 99
+	boss.cooldowns[&"asmodeus_breath"] = 99
+	EnemyBrain.choose_intents(c.state)
+	assert_eq(c.state.intents_of(boss)[0].action_id, &"asmodeus_lance", "na fase 1, sem Três cabeças")
+	c.state.boss_phase = 2
+	EnemyBrain.choose_intents(c.state)
+	assert_eq(c.state.intents_of(boss)[0].action_id, &"asmodeus_three_heads", "Três cabeças na fase 2")
+
+
+func test_with_the_liver_there_are_only_two_phases() -> void:
 	var two: BattleController = _ctrl(Dominion.claws(0, true))
 	two.state.boss().hp = 1
 	two._check_outcome()
