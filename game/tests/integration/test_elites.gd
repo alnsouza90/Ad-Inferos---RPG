@@ -54,7 +54,7 @@ func test_the_elite_encounters_of_bosses_md() -> void:
 	var minos: EnemyDef = cat.battle_catalog.enemies[&"elite_minos"]
 	assert_eq([minos.max_hp, minos.armor], [72, 2])
 	var vertigo: EnemyDef = cat.battle_catalog.enemies[&"elite_sin_vertigo"]
-	assert_eq([vertigo.max_hp, vertigo.armor, vertigo.nature], [58, 0, &"spiritual"])
+	assert_eq([vertigo.max_hp, vertigo.armor, vertigo.nature], [80, 0, &"spiritual"], "80 de vida (D-405)")
 	assert_true(vertigo.immune.has(&"stun"))
 
 

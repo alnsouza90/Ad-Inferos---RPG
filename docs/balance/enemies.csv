@@ -7,4 +7,4 @@ enemy_wandering_breath,Sopro Errante,a,2|3|4|5,spiritual,manipulator,1,22,0,stun
 enemy_swarm_mother,Mãe-Enxame,a,2|3|4|5,corporeal,summoner,1,34,1,,,,swarm_mother_brood|swarm_mother_sting,enemy_swarm_mother
 enemy_swarmling,Enxame,a,2|3|4|5,corporeal,brute,1,10,0,,,,swarmling_bite,enemy_swarmling
 elite_minos,Minos,elite,2,corporeal,guard,1,72,2,,,,minos_coil|minos_summon|minos_tail_lash,elite_minos
-elite_sin_vertigo,Vertigem,elite,2,spiritual,manipulator,1,58,0,stun,,,vertigo_enchant|vertigo_whirl|vertigo_veils,elite_sin_vertigo
+elite_sin_vertigo,Vertigem,elite,2,spiritual,manipulator,1,80,0,stun,,,vertigo_enchant|vertigo_whirl|vertigo_veils,elite_sin_vertigo

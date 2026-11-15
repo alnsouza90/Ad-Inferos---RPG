@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_o54x0"]
 [ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_smfgd"]
 
-[sub_resource type="Resource" id="Resource_tc71j"]
+[sub_resource type="Resource" id="Resource_bknid"]
 script = ExtResource("2_o54x0")
 type = &"apply_condition"
 condition_id = &"enchanted"
 stacks = 2
 
-[sub_resource type="Resource" id="Resource_8b1f1"]
+[sub_resource type="Resource" id="Resource_o54x0"]
 script = ExtResource("1_bknid")
 id = &"vertigo_enchant"
 use_slots = Array[int]([2, 3, 4])
@@ -23,15 +23,15 @@ conditions = Array[Dictionary]([{
 }])
 cooldown = 3
 intent_icon = &"special"
-effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_tc71j")])
+effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_bknid")])
 
-[sub_resource type="Resource" id="Resource_1lwjo"]
+[sub_resource type="Resource" id="Resource_smfgd"]
 script = ExtResource("2_o54x0")
 type = &"move"
 move_kind = &"push"
 n = 1
 
-[sub_resource type="Resource" id="Resource_cnyk4"]
+[sub_resource type="Resource" id="Resource_tc71j"]
 script = ExtResource("1_bknid")
 id = &"vertigo_whirl"
 priority = 2
@@ -44,21 +44,21 @@ conditions = Array[Dictionary]([{
 "param": 2
 }])
 intent_icon = &"displace"
-effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_1lwjo")])
+effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_smfgd")])
 
-[sub_resource type="Resource" id="Resource_tx8wm"]
+[sub_resource type="Resource" id="Resource_8b1f1"]
 script = ExtResource("2_o54x0")
 type = &"damage"
 amount = 6.0
 damage_type = &"exorcism"
 
-[sub_resource type="Resource" id="Resource_j8t1v"]
+[sub_resource type="Resource" id="Resource_1lwjo"]
 script = ExtResource("2_o54x0")
 order = 2
 type = &"desolation"
 amount = 6.0
 
-[sub_resource type="Resource" id="Resource_t2e7u"]
+[sub_resource type="Resource" id="Resource_cnyk4"]
 script = ExtResource("1_bknid")
 id = &"vertigo_veils"
 priority = 3
@@ -71,7 +71,7 @@ conditions = Array[Dictionary]([{
 "param": null
 }])
 intent_icon = &"attack"
-effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_tx8wm"), SubResource("Resource_j8t1v")])
+effects = Array[ExtResource("2_o54x0")]([SubResource("Resource_8b1f1"), SubResource("Resource_1lwjo")])
 
 [resource]
 script = ExtResource("3_smfgd")
@@ -81,7 +81,7 @@ family = &"elite"
 circles = Array[int]([2])
 nature = &"spiritual"
 role = &"manipulator"
-max_hp = 58
+max_hp = 80
 immune = Array[StringName]([&"stun"])
-actions = Array[ExtResource("1_bknid")]([SubResource("Resource_8b1f1"), SubResource("Resource_cnyk4"), SubResource("Resource_t2e7u")])
+actions = Array[ExtResource("1_bknid")]([SubResource("Resource_o54x0"), SubResource("Resource_tc71j"), SubResource("Resource_cnyk4")])
 art_id = "elite_sin_vertigo"

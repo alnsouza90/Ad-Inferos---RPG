@@ -87,7 +87,7 @@ Escolta proposta: Diabo de Lodo (1), Escaravelho Infernal (2), Minos (3).
 
 | Campo | Proposta |
 | --- | --- |
-| Vida | [vertigo_max_hp] = 58 |
+| Vida | [vertigo_max_hp] = 80 (era 58; Alan subiu na T40, D-405) |
 | Armadura | 0 |
 | Imunidade | Atordoamento |
 | Tamanho | 1 posição; posição 2 ou 3 |
