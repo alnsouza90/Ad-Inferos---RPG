@@ -34,6 +34,7 @@ Versão 1.0 · base: GDD v1.1 §2 e §8 · dados em `docs/balance/enemy_actions.
 | `round_at_least(n)` | Rodada ≥ `n` |
 | `every_n_rounds(n)` | Rodada múltipla de `n` |
 | `party_has_condition(id)` | Algum santo tem a condição |
+| `no_party_condition(id)` | Nenhum santo de pé tem a condição (T40, Encanto da Vertigem) |
 | `free_enemy_slot` | Há posição inimiga livre (para invocar) |
 
 ## 3. Escolha da intenção (no `ROUND_START`)
@@ -51,12 +52,13 @@ Para cada inimigo vivo, da posição 1 à 4:
 | `back_most` | Santo válido na maior posição |
 | `lowest_hp` | Menor vida atual (absoluta) |
 | `lowest_hp_pct` | Menor percentual de vida |
+| `highest_hp` | Maior vida atual (T40: Minos, Vertigem) |
 | `highest_desolation` | Maior desolação |
 | `random` | Sorteio pelo fluxo `battle` do RNG |
 
 Empates (exceto `random`) são decididos pela menor posição.
 
-5. Se algum santo tem Provocação e a ação é de alvo único e alcança a posição dele, o alvo passa a ser o provocador.
+5. Se algum santo tem Provocação e a ação é de alvo único e alcança a posição dele, o alvo passa a ser o provocador. Sem Provocação, vale o mesmo para um santo **Encantado** (`bosses.md` §2.3).
 6. Registrar a intenção: `{enemy_id, action_id, target_slot | null, preview_value}`.
 
 ## 4. Execução (no `ENEMY_TURN`)

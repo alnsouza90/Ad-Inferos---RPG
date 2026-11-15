@@ -80,6 +80,8 @@ static func conditions_met(state: BattleState, enemy: Combatant, action: EnemyAc
 				ok = state.round_number % int(param) == 0
 			"party_has_condition":
 				ok = state.party.any(func(c: Combatant) -> bool: return c.is_standing() and c.has_condition(StringName(str(param))))
+			"no_party_condition":
+				ok = not state.party.any(func(c: Combatant) -> bool: return c.is_standing() and c.has_condition(StringName(str(param))))
 			"free_enemy_slot":
 				ok = state.occupied_enemy_slots() < BattleState.MAX_ENEMY_SLOTS
 			_:
@@ -129,6 +131,8 @@ static func _better(a: Combatant, b: Combatant, rule: StringName) -> bool:
 			return a.hp < b.hp
 		&"lowest_hp_pct":
 			return a.hp * b.max_hp < b.hp * a.max_hp
+		&"highest_hp":
+			return a.hp > b.hp
 		&"highest_desolation":
 			return a.desolation > b.desolation
 	return false
@@ -140,15 +144,18 @@ static func _slot(state: BattleState, c: Combatant) -> int:
 
 # --- taunt and preview (§3.5, §5) -----------------------------------------------------------
 
-## Single-target actions must aim at a saint with Taunt they can reach.
+## Single-target actions must aim at a saint with Taunt they can reach;
+## without Taunt, at an Enchanted saint they can reach (bosses.md §2.3: the
+## saint who offers himself protects the enchanted one).
 static func _apply_taunt(state: BattleState, action: EnemyActionDef, intent: Intent) -> void:
 	if action.targeting != SINGLE:
 		return
-	for slot: int in action.target_slots:
-		var c: Combatant = state.party_at(slot)
-		if c != null and c.is_standing() and c.has_condition(&"taunt"):
-			intent.target_slot = slot
-			return
+	for condition_id: StringName in [&"taunt", &"enchanted"]:
+		for slot: int in action.target_slots:
+			var c: Combatant = state.party_at(slot)
+			if c != null and c.is_standing() and c.has_condition(condition_id):
+				intent.target_slot = slot
+				return
 
 
 ## Recomputed whenever the state changes during the party turn: taunt may

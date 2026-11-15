@@ -9,3 +9,4 @@ duel,permanent,negative,1,refresh,none,none,none,false,duel_mark,res://assets/ui
 freeze,duration,negative,3,add,none,round_end,none,false,freeze_counter,res://assets/ui/icons/cond_freeze.png,2,Congelamento,"Cresce a cada rodada parado. Com 3, perde a próxima ação."
 fury,permanent,positive,5,add,none,none,none,false,fury_counter,res://assets/ui/icons/cond_fury.png,3,Fúria,+10% de dano por pilha.
 torpor,duration,negative,3,add,none,round_end,none,false,torpor_counter,res://assets/ui/icons/cond_torpor.png,3,Torpor,"Cresce a cada rodada sem milagre. Com 3, a equipe perde 1 de Fervor."
+enchanted,duration,negative,1,refresh,expire_after_rounds,none,none,false,enchanted_pull,res://assets/ui/icons/cond_enchanted.png,2,Encantado,Os inimigos miram este santo. Um companheiro que o cure ou abençoe quebra o encanto.

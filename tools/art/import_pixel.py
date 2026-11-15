@@ -65,6 +65,8 @@ FEET_ROWS = 6
 # Every figure is shrunk by this factor after the cleaning, so the company
 # and the enemies stand apart on the 960 x 540 screen with room between the
 # two sides (D-384). The feet stay on the same point of the 256 frame.
+# A character may have its own factor (`figure_scale` in the table): the
+# elites stand taller than the common enemies (D-405).
 FIGURE_SCALE = 0.6
 # The bust for the portrait arch and the enemy sheet is cut from the idle
 # frame at full size, before the shrink: width, height, and how far the
@@ -91,6 +93,7 @@ class Character:
     halo: tuple[float, float, float] | None
     # Every clip of the character gets the warm skin (D-388).
     warm: bool = False
+    figure_scale: float = FIGURE_SCALE
     clips: list["Clip"] = field(default_factory=list)
 
 
@@ -135,6 +138,7 @@ def read_characters() -> list[Character]:
                 weight=row["weight"],
                 palette=row["palette"],
                 halo=halo,
+                figure_scale=float(row.get("figure_scale") or FIGURE_SCALE),
             )
     with CLIPS_CSV.open(encoding="utf-8") as f:
         for row in csv.DictReader(f):
@@ -360,7 +364,7 @@ def shrink(cell: np.ndarray, scale: float) -> np.ndarray:
 def _finish(cells: list[np.ndarray], clip: Clip, char: Character, colours: np.ndarray,
             report: dict[str, int]) -> list[np.ndarray]:
     for i, cell in enumerate(cells):
-        cell = shrink(cell, FIGURE_SCALE)
+        cell = shrink(cell, char.figure_scale)
         binarize(cell)
         if char.palette == "snap":
             report["paleta"] += snap_to_palette(cell, colours)
@@ -450,8 +454,8 @@ def write_resource(char: Character, sheets: list[Sheet], anchor: tuple[int, int]
     halo_center, halo_diameter = (0.0, 0.0), 0.0
     if char.halo is not None:
         # Measured on the full-size figure: shrunk with it.
-        halo_center = (round(figure[0] + char.halo[0] * FIGURE_SCALE), round(figure[1] + char.halo[1] * FIGURE_SCALE))
-        halo_diameter = round(char.halo[2] * FIGURE_SCALE)
+        halo_center = (round(figure[0] + char.halo[0] * char.figure_scale), round(figure[1] + char.halo[1] * char.figure_scale))
+        halo_diameter = round(char.halo[2] * char.figure_scale)
     lines += [
         "[resource]",
         'script = ExtResource("1_set")',

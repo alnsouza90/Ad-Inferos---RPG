@@ -69,6 +69,39 @@ func _run(entry: Dictionary) -> void:
 		return
 	for target: Combatant in entry["targets"]:
 		handler.apply(ctx, effect, target)
+		_break_enchantment(ctx, effect, target)
+
+
+## bosses.md §2.3: another saint's ability that heals or blesses an Enchanted
+## saint (heal, Ward, Strength, cleansing) breaks the Encanto at once, and the
+## company earns a Firmeza.
+static func _break_enchantment(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:
+	if ctx.actor == null or not ctx.actor.is_saint() or target == ctx.actor or not target.is_saint():
+		return
+	if not target.has_condition(&"enchanted") or ctx.state.catalog.ability(ctx.source_id) == null:
+		return
+	if not _is_blessing(ctx, effect):
+		return
+	ctx.state.engine.remove_all(target, &"enchanted")
+	ctx.emit.call(&"condition_removed", {"target": target.id, "condition": &"enchanted", "stacks": 1})
+	ctx.emit.call(&"enchantment_broken", {"actor": ctx.actor.id, "target": target.id})
+	if ctx.state.earn_firmness():
+		ctx.emit.call(&"firmness_gained", {"actor": ctx.actor.id, "pending": ctx.state.firmness_pending})
+
+
+static func _is_blessing(ctx: EffectContext, effect: EffectDef) -> bool:
+	match effect.type:
+		&"heal", &"revive":
+			return true
+		&"apply_condition":
+			var def: ConditionDef = ctx.state.condition_defs.get(effect.condition_id)
+			return def != null and def.polarity == &"positive"
+		&"remove_condition":
+			if effect.polarity == &"negative":
+				return true
+			var removed: ConditionDef = ctx.state.condition_defs.get(effect.condition_id)
+			return removed != null and removed.polarity == &"negative"
+	return false
 
 
 ## target_override (combat §7.1): self, all_allies (optionally excluding the

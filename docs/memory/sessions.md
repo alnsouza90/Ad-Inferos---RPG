@@ -84,3 +84,11 @@ Resumo curto de cada sessão. A mais recente no topo.
 - PixelLab: 1.896 → 1.749 gerações (147, das quais cerca de 47 do Minos gerado por Alan no site).
 - Godot local: compila sozinho pelo gancho; numa sessão retomada a compilação morre e precisa de nova chamada (`lessons.md`).
 - Próxima sessão: **T65** (tela de 960 × 540), no ramo novo a partir da `main` (os commits de arte e memória desta sessão estão no ramo de trabalho e entram no PR da T65).
+
+## Sessão 10 (15/11/2026) · T65, T60, T38, T61, T62 e T39
+
+- PRs com merge, todos com o CI verde e o "aprovado" de Alan: #68 (T65, tela de 960 × 540, D-381 a D-390), #69 (T60, luta em poses, D-391, D-392), #70 (T38, `bosses.md`, D-393, D-394), #71 (T61 parte 1, simulação das regras novas, D-395 a D-397), #72 (T62, regras em vigor e save versão 3, D-398 a D-400), #73 (T39, encontros do Círculo 2, Vendaval, Firmar o pé e Firmeza, D-401 a D-403).
+- Godot oficial 4.7.2 baixado do GitHub em `~/.local/bin/godot` (desenha com `xvfb-run`; ver `lessons.md`).
+- Números de Alan: fim de combate 20 + 3 por rodada desde a 1ª (D-396); dom levanta Caído com 30% (D-399); a Clausura não segura o Vendaval (D-402).
+- Pendências novas: ícone, efeito no motor e talvez elemento do PixelLab para o Vendaval (T44); aviso na intenção e fio de ouro de Interceder (T44); medir de novo na T42 a Noite Escura e os difíceis do Círculo 2.
+- Próxima sessão: **T40** (elites Minos e Vertigem com o Encanto, nó variável completo), num ramo novo a partir da `main`.

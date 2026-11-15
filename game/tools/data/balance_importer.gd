@@ -43,15 +43,15 @@ const TRAIT_TRIGGERS: Array[String] = ["on_battle_start", "on_round_start", "on_
 const CAMP_EFFECTS: Array[String] = ["ambush_mult", "desolation_party", "heal_party_pct", "heal_ally_pct", "ally_desolation", "refund_bread", "alms_bonus", "next_battle_condition", "remove_minor_injury", "reveal_next_layer", "suffrage_bonus"]
 const CONDITION_KINDS: Array[String] = ["token", "duration", "permanent"]
 const STACKING: Array[String] = ["add", "refresh", "none"]
-const DECAY: Array[String] = ["none", "minus_one_after_tick", "expire_round_end"]
+const DECAY: Array[String] = ["none", "minus_one_after_tick", "expire_round_end", "expire_after_rounds"]
 const TICKS: Array[String] = ["none", "owner_turn_start", "round_end"]
 const CONSUME_ON: Array[String] = ["none", "on_hit_received", "on_damaging_action", "on_action_attempt"]
 const FAMILIES: Array[String] = ["a", "b", "c", "elite", "boss"]
 const NATURES: Array[String] = ["corporeal", "spiritual"]
 const ENEMY_ROLES: Array[String] = ["brute", "guard", "ranged", "corruptor", "manipulator", "summoner"]
 const ACTION_TARGETING: Array[String] = ["single", "all_party", "self", "ally_enemy", "all_enemies"]
-const TARGET_RULES: Array[String] = ["front_most", "back_most", "lowest_hp", "lowest_hp_pct", "highest_desolation", "random"]
-const ACTION_CONDITIONS_WITH_PARAM: Array[String] = ["self_hp_below", "ally_hp_below", "allies_alive_below", "round_at_least", "every_n_rounds", "party_has_condition"]
+const TARGET_RULES: Array[String] = ["front_most", "back_most", "lowest_hp", "lowest_hp_pct", "highest_hp", "highest_desolation", "random"]
+const ACTION_CONDITIONS_WITH_PARAM: Array[String] = ["self_hp_below", "ally_hp_below", "allies_alive_below", "round_at_least", "every_n_rounds", "party_has_condition", "no_party_condition"]
 const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
 const INTENT_ICONS: Array[String] = ["attack", "corrupt", "displace", "defend", "summon", "special"]
 const POOLS: Array[String] = ["easy", "hard", "elite", "boss", "ambush"]
@@ -415,7 +415,7 @@ func _action_conditions(t: CsvTable, line: int, row: Dictionary) -> Array[Dictio
 				_err("missing_value", t.file_name, line, "condição '%s' precisa de parâmetro" % cond_name)
 			else:
 				var p: String = pieces[1].strip_edges()
-				if cond_name == "party_has_condition":
+				if cond_name == "party_has_condition" or cond_name == "no_party_condition":
 					if not conditions.has(p):
 						_err("unknown_id", t.file_name, line, "condição '%s' não existe em conditions.csv" % p)
 					param = p

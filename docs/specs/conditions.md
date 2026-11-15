@@ -15,7 +15,7 @@ Toda condição é um registro de dados com os mesmos campos. O motor de condiç
 | `polarity` | `positive` / `negative` | Positivas são removidas quando o portador cai |
 | `max_stacks` | inteiro | Limite de pilhas |
 | `stacking` | `add` / `refresh` / `none` | Somar pilhas, substituir pelo maior valor, ou ignorar nova aplicação |
-| `decay` | `none` / `minus_one_after_tick` / `expire_round_end` | Como perde pilhas |
+| `decay` | `none` / `minus_one_after_tick` / `expire_round_end` / `expire_after_rounds` | Como perde pilhas |
 | `tick` | `none` / `owner_turn_start` / `round_end` | Quando o efeito periódico ocorre |
 | `consume_on` | `none` / `on_hit_received` / `on_damaging_action` / `on_action_attempt` | Quando a ficha é consumida |
 | `resisted_by_will` | `true` / `false` | Se a Vontade do alvo reduz as pilhas aplicadas |
@@ -44,6 +44,7 @@ Toda condição é um registro de dados com os mesmos campos. O motor de condiç
 
 - `minus_one_after_tick`: logo após o tick, −1 pilha; com 0, a condição sai.
 - `expire_round_end`: a condição inteira sai no fim da rodada em que foi aplicada... **exceto** quando aplicada durante o turno inimigo ou o ambiente, caso em que dura até o fim da rodada seguinte. Isso garante que toda ficha com expiração protege pelo menos um turno inimigo.
+- `expire_after_rounds` (T40): as pilhas do efeito dizem **quantas rodadas** a condição dura (a condição fica com 1 pilha); conta a partir da rodada seguinte quando aplicada no turno inimigo ou no ambiente; renovar recomeça a contagem. Usado pelo Encantado (`bosses.md` §2.3).
 
 ### 3.4 Remoção
 
@@ -83,6 +84,7 @@ Toda condição é um registro de dados com os mesmos campos. O motor de condiç
 | Amparo `ward` | token | pos | 3 | add | consumo `on_hit_received` | — | — | `ward_halve` | Próximo dano −50% |
 | Força `strength` | token | pos | 3 | add | consumo `on_damaging_action` | — | — | `strength_boost` | Próxima ação +25% |
 | Provocação `taunt` | token | pos | 1 | refresh | — | `expire_round_end` | — | `taunt_redirect` | Atrai ataques de alvo único |
+| Encantado `enchanted` (Círculo 2) | duration | neg | 1 | refresh | — | `expire_after_rounds` (2 rodadas) | não | `enchanted_pull` | Ações inimigas de alvo único que alcançam o santo miram nele (a Provocação vence); a bênção de outro santo quebra e dá Firmeza (`bosses.md` §2.3) |
 | Duelo `duel` | permanent | neg (no inimigo) | 1 | refresh | — | — | não | `duel_mark` | §5 |
 | Congelamento `freeze` (Círculo 9) | duration | neg | 3 | add | tick `round_end` | — | não | `freeze_counter` | +1 se o santo não mudou de posição na rodada; mudar remove 1; com 3, perde a próxima ação e zera |
 | Fúria `fury` (Círculo 5, inimigos) | permanent | pos | 5 | add | — | — | — | `fury_counter` | +1 cada vez que o inimigo recebe dano; +10% de dano por pilha |

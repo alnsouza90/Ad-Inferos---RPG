@@ -12,6 +12,7 @@ Escopo: o Guardião (Minos), o Pecado Encarnado (Vertigem) e o chefe (Asmodeu) d
 
 - Elites e chefe usam as regras de IA de `enemy-ai.md`: prioridade, condições, recarga, intenção visível antes do turno da equipe. Nada aqui usa sorte além do RNG `battle` já previsto (ADR-0003).
 - Elites aparecem em `node_elite`, sempre com escolta (`expedition.md` §3). No máximo um elite por caminho em cada trecho (T40).
+- **O Pecado Encarnado é a encarnação do círculo (D-406):** pode aparecer em mais de uma luta da mesma expedição. Os elites do círculo **se alternam** entre as lutas de elite: cada nó de elite sorteia entre os elites do círculo, evitando repetir o último enfrentado quando houver outro (regra aplicada na T42, com os trechos 2 e 3).
 - O chefe aparece em `node_boss`, sem retirada de emergência (`expedition.md` §9).
 - O santo **nunca** peca nem perde o controle das próprias ações. Todo assédio vem de fora, é visível e tem resposta (`expedition.md` §10.1).
 
@@ -87,7 +88,7 @@ Escolta proposta: Diabo de Lodo (1), Escaravelho Infernal (2), Minos (3).
 
 | Campo | Proposta |
 | --- | --- |
-| Vida | [vertigo_max_hp] = 58 |
+| Vida | [vertigo_max_hp] = 80 (era 58; Alan subiu na T40, D-405) |
 | Armadura | 0 |
 | Imunidade | Atordoamento |
 | Tamanho | 1 posição; posição 2 ou 3 |
@@ -100,6 +101,8 @@ Escolta proposta: Diabo de Lodo (1), Escaravelho Infernal (2), Minos (3).
 | `vertigo_whirl` · Rodopio | 3 | 2, 3, 4 | 1 santo, posições 1 e 2 | a cada 2 rodadas | 0 | Empurra o santo 1 posição para trás |
 
 Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
+
+**Implementado na T40 (D-404):** o Rodopio entra com prioridade 2 e os Véus com 3 (na ordem da tabela, os Véus valem "sempre" e o Rodopio nunca seria escolhido); os Véus miram o santo da frente (`front_most`), porque a tabela não diz a regra. Alvos de 1 a 3 (a companhia tem 3 posições). Minos: ids `elite_minos` e `elite_sin_vertigo` (os nomes da arte); o Rabo de serpente puxa até a posição 1 (`pull` 3), e a Clausura de Bento resiste ao puxão como a qualquer deslocamento por inimigo (D-109).
 
 ## 5. Asmodeu, o chefe
 

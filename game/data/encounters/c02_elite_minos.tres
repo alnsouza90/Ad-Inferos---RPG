@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/encounter_def.gd" id="1_jxnpp"]
+
+[resource]
+script = ExtResource("1_jxnpp")
+id = &"c02_elite_minos"
+circle = 2
+pool = &"elite"
+slots = Array[StringName]([&"enemy_mud_devil", &"enemy_infernal_scarab", &"elite_minos"])
+type = &"elite"
+hazard = &"gale"

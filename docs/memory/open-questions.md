@@ -108,3 +108,6 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | T39: encontros difíceis do Círculo 2 bem mais duros que os da arena (vitória 47% contra 66%); medir de novo na expedição longa | T42 | 15/11/2026 |
 | ~~T39: ícone do Vendaval sobre os santos (hoje só a palavra); peça do PixelLab com custo e permissão~~ Decidido (D-402): ícone, efeito no motor e, se precisar, elemento do PixelLab, na T44 | Alan / T44 | 15/11/2026 |
 | Vendaval na T44: ícone, efeito no motor (vento varrendo o campo na troca) e talvez um elemento do PixelLab (mandar custo antes, D-402) | Alan / T44 | 15/11/2026 |
+| ~~T40: Vertigem fácil no simulador (100% de vitória, 89% de vida no fim); subir a vida, trocar a escolta ou medir de novo na T42~~ Vida 80 (D-405); continua fácil: escolta frágil, nova pergunta | Alan | 15/11/2026 |
+| ~~T40: Minos e Vertigem no tamanho dos inimigos comuns na tela; tamanho dos elites e do chefe (pendência de D-233)~~ Minos 177 px e Vertigem 153 px (D-405); Asmodeu na T41 | Alan | 15/11/2026 |
+| ~~T40: Vertigem ainda fácil com 80 de vida (100%); trocar o Sopro Errante da escolta por um Diabo de Lodo ou medir na T42~~ Medir na T42 (D-406) | Alan | 15/11/2026 |
