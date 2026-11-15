@@ -140,6 +140,8 @@ var float_font_size: int = 30
 var float_outline: int = 6
 var float_rise: float = 70.0
 var _shadow: Control
+## Blows struck so far (the alternate blow, D-386).
+var _strike_count: int = 0
 
 
 ## `art` and `halo_settings` are optional: without them the combatant is a
@@ -772,11 +774,18 @@ func _freeze_player(on: bool) -> void:
 ## A boss can have its own frames for the blow (Asmodeus' lunge, D-236);
 ## the "strike" clip is then its spiritual attack.
 func _melee_strike_id() -> StringName:
-	return &"melee_strike" if _frames.has_clip(&"melee_strike") else &"strike"
+	if _frames.has_clip(&"melee_strike"):
+		return &"melee_strike"
+	# A second blow drawn for variety (the Mud Devil's claws and the mouth in
+	# its chest, D-386): the blows alternate. Presentation only.
+	if _frames.has_clip(&"strike_alt"):
+		return &"strike_alt" if _strike_count % 2 == 1 else &"strike"
+	return &"strike"
 
 
 func _start_strike() -> void:
 	_player.play(_melee_strike_id())
+	_strike_count += 1
 	# The blur (gesture 5) takes the place of the trail of ghosts.
 	if _frames.slides_to_target() and not gestures.is_on(BlowGestures.BLUR):
 		_trail_left = _player.scaled(DASH_MAX_TIME) + TRAIL_EVERY

@@ -587,6 +587,10 @@ func _act(actor_id: StringName, style: StringName, target_id: StringName) -> flo
 	if view == null:
 		return 0.0
 	var target: CombatantView = view_of(target_id)
+	# The Shade of Desire never strikes in the flesh: every blow of hers
+	# wraps the target in a dark light, like Vertigo's (D-386).
+	if style == AnimationStyle.PHYSICAL and view.player() != null and view.player().frames.attack_style == &"outline":
+		style = AnimationStyle.SPIRITUAL
 	if target == null or target == view:
 		if style == AnimationStyle.BLESSING:
 			return view.play_blessing()

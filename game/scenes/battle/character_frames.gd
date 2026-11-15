@@ -13,7 +13,8 @@ extends Resource
 @export var display_scale: float = 1.0
 ## How a physical attack reaches the target: &"melee" slides to it,
 ## &"ranged" hits from where it stands (Vertigo's veils reach far, D-240),
-## &"throne"
+## &"outline" never moves: the blow becomes a dark light around the target
+## (the Shade of Desire, D-386), &"throne"
 ## only leans (Minos never rises from the throne, D-219).
 @export var attack_style: StringName = &"melee"
 ## How a spiritual attack reaches the target: &"crosses" (exorcism: crosses
