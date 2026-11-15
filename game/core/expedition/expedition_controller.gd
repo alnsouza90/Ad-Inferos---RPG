@@ -98,6 +98,10 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 		c.saints[id] = SaintStatus.from_def(p_catalog.saint(id))
 	var generator := MapGenerator.new(p_catalog.constants, RngStream.new(map_seed, RngStreams.MAP))
 	generator.battle_encounters = p_catalog.encounter_pool(encounter_circle, &"easy")
+	# Elites in the variable node (expedition §2.1; T40): only where the
+	# circle has elite encounters, so the arena legs keep their maps.
+	generator.elite_encounters = p_catalog.encounter_pool(encounter_circle, &"elite")
+	generator.allow_elite = not generator.elite_encounters.is_empty()
 	c.ambush_encounter_circle = encounter_circle
 	c.map = generator.generate(1, p_catalog.reserves.get(1))
 	c.state.map = c.map.to_dict()

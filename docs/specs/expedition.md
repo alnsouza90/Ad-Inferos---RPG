@@ -250,7 +250,7 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Expedição de 3 trechos, Vigília e chefe (§1) | Só o trecho 1 e o Pouso; depois do Pouso, a expedição termina com um resumo | Backlog do M1 |
 | Provisões compradas na Despensa (§5) | Kit fixo em `docs/balance/starting_kits.csv`: 2 Pães, 1 Vela, 2 Águas Bentas, 1 Ataduras e 1 Incenso (7 dos 8 espaços do Portão nível 1) | D-123 |
 | Nível do Portão definido pela vila | Portão nível 1 | Backlog do M1 |
-| Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
+| Nó variável: elite, relíquia ou combate (§2.1) | ~~Só relíquia ou combate; nenhum elite~~ Desde a T40, com os elites do Círculo 2 e os três pesos; as pernas da arena seguem sem elite | D-124; T40 |
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
 | Relíquia encontrada | O jogador escolhe na hora um santo com espaço livre (1 espaço por santo até o nível 4, [relic_slots_start]); o efeito vale já no trecho. Sem espaço, vai para a mochila sem efeito até a vila | D-146 |
 | Encontros do círculo (§3) | ~~Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*`~~ Desde a T39, `c02_easy_*` no trecho e `c02_hard_*` na emboscada (`bosses.md` §6); saves antigos seguem com os `m0_*` | Backlog do M1; T39 |

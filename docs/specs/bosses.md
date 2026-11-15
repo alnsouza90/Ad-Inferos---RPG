@@ -101,6 +101,8 @@ Escolta proposta: Diabo de Lodo (1), Escaravelho Infernal (2), Minos (3).
 
 Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
 
+**Implementado na T40 (D-404):** o Rodopio entra com prioridade 2 e os Véus com 3 (na ordem da tabela, os Véus valem "sempre" e o Rodopio nunca seria escolhido); os Véus miram o santo da frente (`front_most`), porque a tabela não diz a regra. Alvos de 1 a 3 (a companhia tem 3 posições). Minos: ids `elite_minos` e `elite_sin_vertigo` (os nomes da arte); o Rabo de serpente puxa até a posição 1 (`pull` 3), e a Clausura de Bento resiste ao puxão como a qualquer deslocamento por inimigo (D-109).
+
 ## 5. Asmodeu, o chefe
 
 **[E]** Asmodeu é o demônio que atormentava Sara (Tobias 3,8); Tobias queima o coração e o fígado do peixe, a fumaça o expulsa e o Arcanjo Rafael o prende (Tobias 6,8; 8,2–3). **[T]** As três cabeças vêm do *Dictionnaire Infernal* (Collin de Plancy, séc. XIX). Na tela: dragão com o cavaleiro, lança e fumaça violeta (D-226). Espiritual (fraco a Exorcismo). Forma de jogo: **[J]**.

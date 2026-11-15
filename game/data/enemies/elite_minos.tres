@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/enemy_action_def.gd" id="1_m03w6"]
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="2_nb3y2"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="3_4tubx"]
+
+[sub_resource type="Resource" id="Resource_nemy0"]
+script = ExtResource("2_nb3y2")
+type = &"apply_condition"
+condition_id = &"ward"
+stacks = 2
+
+[sub_resource type="Resource" id="Resource_hrcmi"]
+script = ExtResource("1_m03w6")
+id = &"minos_coil"
+use_slots = Array[int]([1, 2, 3, 4])
+targeting = &"self"
+target_rule = &"front_most"
+conditions = Array[Dictionary]([{
+"name": "self_hp_below",
+"param": 50
+}])
+cooldown = 2
+intent_icon = &"defend"
+effects = Array[ExtResource("2_nb3y2")]([SubResource("Resource_nemy0")])
+
+[sub_resource type="Resource" id="Resource_lfygc"]
+script = ExtResource("2_nb3y2")
+type = &"summon"
+summon_id = &"enemy_shade_of_desire"
+max_alive = 1
+
+[sub_resource type="Resource" id="Resource_j8v07"]
+script = ExtResource("1_m03w6")
+id = &"minos_summon"
+priority = 2
+use_slots = Array[int]([1, 2, 3, 4])
+targeting = &"self"
+target_rule = &"front_most"
+conditions = Array[Dictionary]([{
+"name": "every_n_rounds",
+"param": 3
+}, {
+"name": "free_enemy_slot",
+"param": null
+}])
+intent_icon = &"summon"
+effects = Array[ExtResource("2_nb3y2")]([SubResource("Resource_lfygc")])
+
+[sub_resource type="Resource" id="Resource_3femy"]
+script = ExtResource("2_nb3y2")
+type = &"damage"
+amount = 8.0
+damage_type = &"strike"
+
+[sub_resource type="Resource" id="Resource_g5d4g"]
+script = ExtResource("2_nb3y2")
+order = 2
+type = &"move"
+move_kind = &"pull"
+n = 3
+
+[sub_resource type="Resource" id="Resource_o2uij"]
+script = ExtResource("1_m03w6")
+id = &"minos_tail_lash"
+priority = 3
+use_slots = Array[int]([1, 2, 3, 4])
+target_slots = Array[int]([2, 3])
+targeting = &"single"
+target_rule = &"highest_hp"
+conditions = Array[Dictionary]([{
+"name": "always",
+"param": null
+}])
+intent_icon = &"attack"
+effects = Array[ExtResource("2_nb3y2")]([SubResource("Resource_3femy"), SubResource("Resource_g5d4g")])
+
+[resource]
+script = ExtResource("3_4tubx")
+id = &"elite_minos"
+name_pt = "Minos"
+family = &"elite"
+circles = Array[int]([2])
+nature = &"corporeal"
+role = &"guard"
+max_hp = 72
+armor = 2
+actions = Array[ExtResource("1_m03w6")]([SubResource("Resource_hrcmi"), SubResource("Resource_j8v07"), SubResource("Resource_o2uij")])
+art_id = "elite_minos"

@@ -51,6 +51,8 @@ func apply(target: Combatant, condition_id: StringName, stacks: int, source: Com
 			emit.call(&"condition_resisted", {"target": target.id, "condition": condition_id})
 			return 0
 	var before: int = target.stacks(condition_id)
+	if def.decay == &"expire_after_rounds":
+		incoming = 1
 	var after: int
 	match def.stacking:
 		&"add":
@@ -68,6 +70,10 @@ func apply(target: Combatant, condition_id: StringName, stacks: int, source: Com
 		# Applied during the enemy turn or hazard, it lasts until the next
 		# round end, so it always protects through one enemy turn (§3.3).
 		target.condition_expiry[condition_id] = state.round_number + (1 if state.in_enemy_phase else 0)
+	elif def.decay == &"expire_after_rounds":
+		# The effect's stacks are rounds (§3.3): counted from the next round
+		# when applied during the enemy turn or hazard. Renewing restarts them.
+		target.condition_expiry[condition_id] = state.round_number + stacks - 1 + (1 if state.in_enemy_phase else 0)
 	emit.call(&"condition_applied", {"target": target.id, "condition": condition_id, "stacks": after - before, "total": after})
 	return after - before
 

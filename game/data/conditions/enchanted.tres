@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ConditionDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/condition_def.gd" id="1_rco4h"]
+
+[resource]
+script = ExtResource("1_rco4h")
+id = &"enchanted"
+kind = &"duration"
+polarity = &"negative"
+stacking = &"refresh"
+decay = &"expire_after_rounds"
+tick = &"none"
+consume_on = &"none"
+hook = &"enchanted_pull"
+icon = "res://assets/ui/icons/cond_enchanted.png"
+display_priority = 2
+name_pt = "Encantado"
+desc_pt = "Os inimigos miram este santo. Um companheiro que o cure ou abençoe quebra o encanto."
