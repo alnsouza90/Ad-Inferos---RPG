@@ -23,9 +23,10 @@ const FIGURE_HEIGHT: float = 230.0
 const INTENT_ROW_Y: float = 84.0
 const VIEW_WIDTH: float = 110.0
 ## Feet of the front saint and the front enemy, and the step between slots.
-const SAINT_FRONT_X: float = 385.0
-const ENEMY_FRONT_X: float = 590.0
-const SLOT_STEP: float = 118.0
+## Four enemies and four saints fit in the 960 of the stage (T65).
+const SAINT_FRONT_X: float = 365.0
+const ENEMY_FRONT_X: float = 535.0
+const SLOT_STEP: float = 112.0
 ## Share of the two figures' widths kept apart when the attacker arrives.
 const CONTACT_SHARE: float = 0.3
 const BLOW_HOLD: float = 0.45
@@ -963,6 +964,7 @@ func _sync_views(animated: bool) -> void:
 	for c: Combatant in ctrl.state.enemies:
 		present[c.id] = true
 		_place(_ensure_view(c), _enemy_x(ctrl.state.enemy_slot_of(c), c.size), animated)
+	_stack_by_slot()
 	for id: StringName in _views.keys():
 		if not present.has(id):
 			(_views[id] as CombatantView).queue_free()
@@ -970,6 +972,24 @@ func _sync_views(animated: bool) -> void:
 			_views.erase(id)
 			_badges.erase(id)
 			_frames.erase(id)
+
+
+## The figures overlap on the narrow grid: whoever stands closer to the
+## centre of the field is drawn in front (the front slots of each side).
+func _stack_by_slot() -> void:
+	var order: Array[Combatant] = []
+	for slot: int in range(ctrl.state.party.size(), 0, -1):
+		var saint: Combatant = ctrl.state.party_at(slot)
+		if saint != null:
+			order.append(saint)
+	for slot: int in range(ctrl.state.enemies.size() + 4, 0, -1):
+		var enemy: Combatant = ctrl.state.enemy_at(slot)
+		if enemy != null and not order.has(enemy):
+			order.append(enemy)
+	for c: Combatant in order:
+		var view: CombatantView = _views.get(c.id)
+		if view != null:
+			_fighters.move_child(view, _fighters.get_child_count() - 1)
 
 
 func _ensure_view(c: Combatant) -> CombatantView:

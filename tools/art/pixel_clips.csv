@@ -32,3 +32,8 @@ elite_minos,idle,art_source/characters/elites/elite_minos/pixel/elite_minos_px_i
 elite_minos,windup,art_source/characters/elites/elite_minos/pixel/elite_minos_px_tail_v01.png,2-5,8,once,,specks=12
 elite_minos,strike,art_source/characters/elites/elite_minos/pixel/elite_minos_px_tail_v01.png,6-9,8,once,2,specks=12
 elite_minos,defend,art_source/characters/elites/elite_minos/pixel/elite_minos_px_tail_v01.png,11-15,8,once,,specks=12
+enemy_infernal_scarab,idle,art_source/characters/enemies/enemy_infernal_scarab/pixel/enemy_infernal_scarab_px_idle_v01.png,0-4,6,loop,,specks=12
+enemy_infernal_scarab,windup,art_source/characters/enemies/enemy_infernal_scarab/pixel/enemy_infernal_scarab_px_windup_v01.png,1,0,once,,white_arc+specks=800
+enemy_infernal_scarab,strike,art_source/characters/enemies/enemy_infernal_scarab/pixel/enemy_infernal_scarab_px_strike_v01.png,3-4,8,once,0,white_arc+specks=12
+enemy_infernal_scarab,defend,art_source/characters/enemies/enemy_infernal_scarab/pixel/enemy_infernal_scarab_px_defend_v01.png,4,0,once,,white_arc+specks=40
+enemy_infernal_scarab,fall,art_source/characters/enemies/enemy_infernal_scarab/pixel/enemy_infernal_scarab_px_fall_v01.png,4,0,once,,specks=12
