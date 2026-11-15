@@ -25,6 +25,8 @@ const MAX_COMMANDS: int = 5000
 var catalog: ExpeditionCatalog
 var circle: StringName = &"circle_02"
 var kit: StringName = &"m1_kit"
+## Encounter pools: the game's (Circle 2) or the arena (--arena).
+var encounter_circle: int = GameData.EXPEDITION_ENCOUNTER_CIRCLE
 var incense_policy: StringName = INCENSE_REVEAL
 ## One Dictionary per leg played.
 var legs: Array[Dictionary] = []
@@ -45,7 +47,7 @@ func run(runs: int, battle_policies: Array[StringName], path_policy: StringName,
 ## One leg from the gate. Returns its metrics; its battles go to `battles`.
 func play_leg(battle_policy: StringName, path_policy: StringName, campaign_seed: int) -> Dictionary:
 	var map_seed: int = ExpeditionController.map_seed_for(campaign_seed, circle, 1)
-	var ctrl := ExpeditionController.start_new(catalog, circle, map_seed, GameData.M0_FORMATION, catalog.kit_provisions(kit), EncounterDef.ARENA_CIRCLE)
+	var ctrl := ExpeditionController.start_new(catalog, circle, map_seed, GameData.M0_FORMATION, catalog.kit_provisions(kit), encounter_circle)
 	var rng := RngStream.new(campaign_seed, &"sim_leg")
 	var policy := SimPolicy.new(battle_policy, RngStream.new(campaign_seed, &"sim_policy"))
 	var dark_night: Dictionary = {}

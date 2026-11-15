@@ -680,6 +680,7 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 		foes.append(_enemy_def(enemy_id))
 	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(seed_key))
 	bs.light = state.light
+	bs.hazard = enc.hazard
 	bs.vigil_saints = state.vigil_saints.duplicate()
 	bs.prayer_fervor = state.next_battle_fervor
 	state.next_battle_fervor = 0

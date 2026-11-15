@@ -23,6 +23,7 @@ const RETREAT_NOT_ALLOWED: StringName = &"retreat_not_allowed"
 const RULE_OFF: StringName = &"rule_off"
 const NOTHING_TO_TAKE: StringName = &"nothing_to_take"
 const NOT_IN_CONSOLATION: StringName = &"not_in_consolation"
+const NO_GALE: StringName = &"no_gale"
 
 var ok: bool = false
 var reason: StringName = &""

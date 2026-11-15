@@ -21,6 +21,9 @@ const GIFT_ABOVE_DESOLATION: int = 60
 ## The miracle is kept for when it pays: this much better than the best
 ## ability, or when the Fervor would be wasted at the cap (T61, step 0).
 const MIRACLE_ADVANTAGE: float = 1.5
+## T39: stand firm against the Vendaval when the swap would take at least
+## this many usable abilities away from the two saints together.
+const GALE_ABILITIES_LOST: int = 2
 
 var kind: StringName
 var rng: RngStream
@@ -39,7 +42,7 @@ func next(ctrl: BattleController) -> Dictionary:
 			continue
 		var options: Array[BattleCommand] = CommandCandidates.for_saint(ctrl, saint, true)
 		var useful: Array[BattleCommand] = options.filter(func(c: BattleCommand) -> bool: return c.type == BattleCommand.USE_ABILITY or c.type == BattleCommand.USE_MIRACLE)
-		var support: Array[BattleCommand] = options.filter(func(c: BattleCommand) -> bool: return c.type == BattleCommand.INTERCEDE or c.type == BattleCommand.GIVE_CONSOLATION)
+		var support: Array[BattleCommand] = options.filter(func(c: BattleCommand) -> bool: return c.type == BattleCommand.INTERCEDE or c.type == BattleCommand.GIVE_CONSOLATION or c.type == BattleCommand.STAND_FIRM)
 		var stunned: bool = saint.has_condition(&"stun")
 		var cmd: BattleCommand
 		match kind:
@@ -60,6 +63,8 @@ func _heuristic(ctrl: BattleController, saint: Combatant, useful: Array[BattleCo
 	var gift: BattleCommand = _gift(ctrl, support)
 	if gift != null:
 		return gift
+	if support.any(func(c: BattleCommand) -> bool: return c.type == BattleCommand.STAND_FIRM) and _gale_hurts(ctrl):
+		return BattleCommand.stand_firm(saint.id)
 	var miracles: Array[BattleCommand] = useful.filter(func(c: BattleCommand) -> bool: return c.type == BattleCommand.USE_MIRACLE)
 	if not miracles.is_empty() and _miracle_pays(ctrl, miracles, useful):
 		return _best_overall(ctrl, miracles)
@@ -95,6 +100,30 @@ func _miracle_pays(ctrl: BattleController, miracles: Array[BattleCommand], usefu
 	var m: float = float(best_miracle["damage"]) + float(best_miracle["heal"])
 	var o: float = float(best_other["damage"]) + float(best_other["heal"])
 	return m >= o * MIRACLE_ADVANTAGE
+
+
+## T39: the marked Vendaval would leave the two saints with fewer usable
+## abilities (by slot) than they have now.
+func _gale_hurts(ctrl: BattleController) -> bool:
+	var slots: Array[int] = ctrl.state.gale_slots
+	if slots.size() != 2:
+		return false
+	var lost := 0
+	for i: int in 2:
+		var c: Combatant = ctrl.state.party_at(slots[i])
+		if c == null or not c.is_standing():
+			continue
+		lost += _usable_from(ctrl, c, slots[i]) - _usable_from(ctrl, c, slots[1 - i])
+	return lost >= GALE_ABILITIES_LOST
+
+
+func _usable_from(ctrl: BattleController, c: Combatant, slot: int) -> int:
+	var count := 0
+	for id: StringName in c.equipped:
+		var def: AbilityDef = ctrl.state.catalog.ability(id)
+		if def != null and def.use_slots.has(slot):
+			count += 1
+	return count
 
 
 ## The gift of Consolation (D-285): to an ally in the Dark Night first, then

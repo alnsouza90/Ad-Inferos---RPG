@@ -51,7 +51,9 @@ func battle(encounter_id: String, seed: int) -> BattleState:
 	var foes: Array[EnemyDef] = []
 	for enemy_id: StringName in enc.slots:
 		foes.append(catalog.enemies[enemy_id])
-	return BattleState.create(catalog, m0_party(), foes, [] as Array[StringName], enc.type, seed)
+	var state := BattleState.create(catalog, m0_party(), foes, [] as Array[StringName], enc.type, seed)
+	state.hazard = enc.hazard
+	return state
 
 
 static func _folder(folder: String) -> Dictionary:

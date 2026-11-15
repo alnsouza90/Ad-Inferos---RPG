@@ -31,6 +31,11 @@ const EV_NO_TARGET: StringName = &"no_target"
 const EV_SWAPPED: StringName = &"swapped"
 const EV_PASSED: StringName = &"passed"
 const EV_PROVISION_USED: StringName = &"provision_used"
+const EV_GALE_MARKED: StringName = &"gale_marked"
+const EV_GALE_SWAPPED: StringName = &"gale_swapped"
+const EV_GALE_HELD: StringName = &"gale_held"
+const EV_STOOD_FIRM: StringName = &"stood_firm"
+const EV_FIRMNESS: StringName = &"firmness_gained"
 
 var state: BattleState
 var fervor: FervorPool
@@ -105,6 +110,8 @@ func execute(cmd: BattleCommand) -> CommandResult:
 			reason = _run_intercede(cmd)
 		BattleCommand.GIVE_CONSOLATION:
 			reason = _run_give_consolation(cmd)
+		BattleCommand.STAND_FIRM:
+			reason = _run_stand_firm(cmd)
 		_:
 			reason = CommandResult.UNKNOWN_COMMAND
 	if reason != &"":
@@ -136,6 +143,8 @@ func validate(cmd: BattleCommand) -> StringName:
 			return _check_intercede(cmd)
 		BattleCommand.GIVE_CONSOLATION:
 			return _check_give_consolation(cmd)
+		BattleCommand.STAND_FIRM:
+			return _check_stand_firm(cmd)
 		BattleCommand.SWAP_SLOTS:
 			var mover: Combatant = _saint(cmd.actor_id)
 			if mover == null:
@@ -235,8 +244,14 @@ func _begin_round() -> void:
 	if state.round_number == 1 and state.prayer_fervor > 0:
 		var prayed: int = fervor.add_initial(state.prayer_fervor)
 		_emit(EV_FERVOR_GAINED, {"amount": prayed, "total": fervor.amount, "bonus": true, "source": &"prayer"})
+	if state.firmness_pending > 0:
+		var firm: int = fervor.gain_bonus(state.firmness_pending * state.constants.get_int(&"firmness_fervor"))
+		_emit(EV_FERVOR_GAINED, {"amount": firm, "total": fervor.amount, "bonus": true, "source": &"firmness"})
+	state.firmness_pending = 0
+	state.firmness_this_round = 0
 	_choose_intents()
 	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size(), "intents": _intent_dicts()})
+	_mark_gale()
 	_apply_round_start_conditions()
 	_emit(EV_ROUND_START_CONDITIONS)
 	if _check_outcome():
@@ -760,7 +775,58 @@ func _execute_intent(enemy: Combatant) -> bool:
 
 ## expedition §10 (from M2); the M0 arena has no hazard.
 func _apply_hazard() -> void:
-	pass
+	if state.gale_slots.size() != 2:
+		return
+	var slots: Array[int] = state.gale_slots.duplicate()
+	if state.gale_will_swap():
+		var a: Combatant = state.party_at(slots[0])
+		var b: Combatant = state.party_at(slots[1])
+		state.swap_party_members(a, b)
+		_emit(EV_GALE_SWAPPED, {"slots": slots})
+		_emit(&"moved", {"target": a.id, "from": slots[0], "to": slots[1]})
+		_emit(&"moved", {"target": b.id, "from": slots[1], "to": slots[0]})
+	else:
+		_emit(EV_GALE_HELD, {"slots": slots, "reason": &"stood_firm" if state.gale_held else &"clausura"})
+	state.gale_slots.clear()
+	state.gale_held = false
+
+
+## Vendaval (expedition §10, bosses.md §2.1): two adjacent party slots,
+## drawn on the `battle` stream, shown as an environment intent.
+func _mark_gale() -> void:
+	state.gale_slots.clear()
+	state.gale_held = false
+	if state.hazard != &"gale" or state.party_size() < 2:
+		return
+	var first: int = 1 + state.rng.battle().pick_index(state.party_size() - 1)
+	state.gale_slots = [first, first + 1] as Array[int]
+	_emit(EV_GALE_MARKED, {"slots": state.gale_slots.duplicate(), "blocked": state.gale_blocked_by_clausura()})
+
+
+## Firmar o pé (bosses.md §2.2): a saint in a marked slot holds the swap.
+func _check_stand_firm(cmd: BattleCommand) -> StringName:
+	var actor: Combatant = _saint(cmd.actor_id)
+	var reason: StringName = _check_pass(actor)
+	if reason != &"":
+		return reason
+	if actor.has_condition(BattleState.STUN):
+		return CommandResult.STUNNED
+	if not state.gale_slots.has(state.party_slot_of(actor)) or not state.gale_will_swap():
+		return CommandResult.NO_GALE
+	return &""
+
+
+func _run_stand_firm(cmd: BattleCommand) -> StringName:
+	var reason: StringName = _check_stand_firm(cmd)
+	if reason != &"":
+		return reason
+	var actor: Combatant = _saint(cmd.actor_id)
+	actor.has_acted = true
+	state.gale_held = true
+	_emit(EV_STOOD_FIRM, {"actor": actor.id, "slots": state.gale_slots.duplicate()})
+	if state.earn_firmness():
+		_emit(EV_FIRMNESS, {"actor": actor.id, "pending": state.firmness_pending})
+	return &""
 
 
 ## conditions §3.3, step 8: expire_round_end conditions leave.

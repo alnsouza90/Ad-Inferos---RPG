@@ -253,8 +253,8 @@ Valem só no M1 (`docs/backlog/m1.md`); o M2 volta à regra completa.
 | Nó variável: elite, relíquia ou combate (§2.1) | Só relíquia ou combate, com os pesos [node_weight_relic] (35) e [node_weight_battle] (25); nenhum elite | D-124 |
 | Todas as relíquias de nó | Vela da Candelária, Cruz em tau e Crucifixo de madeira (`relics.csv`) | D-124 |
 | Relíquia encontrada | O jogador escolhe na hora um santo com espaço livre (1 espaço por santo até o nível 4, [relic_slots_start]); o efeito vale já no trecho. Sem espaço, vai para a mochila sem efeito até a vila | D-146 |
-| Encontros do círculo (§3) | Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*` | Backlog do M1 |
+| Encontros do círculo (§3) | ~~Combates do trecho com os encontros `m0_easy_*`; emboscada do Pouso com `m0_hard_*`~~ Desde a T39, `c02_easy_*` no trecho e `c02_hard_*` na emboscada (`bosses.md` §6); saves antigos seguem com os `m0_*` | Backlog do M1; T39 |
 | Ordem da equipe | Cada combate começa na ordem em que o anterior terminou (vale também depois do M1) | D-134 |
 | Saída do Pouso (§6) | Seguir ou retirada planejada encerram o trecho, com as Esmolas garantidas | Backlog do M1 |
 | Experiência (§8) e ferimentos (§9) | Ferimentos ficam registrados no estado, sem efeito; sem experiência | Backlog do M1 |
-| Mecânica de ambiente do Círculo 2 (§10) | Sem Vendaval | Backlog do M1 |
+| Mecânica de ambiente do Círculo 2 (§10) | ~~Sem Vendaval~~ Vendaval desde a T39, com Firmar o pé e Firmeza | Backlog do M1; T39 |

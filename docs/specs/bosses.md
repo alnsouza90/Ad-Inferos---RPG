@@ -19,7 +19,7 @@ Escopo: o Guardião (Minos), o Pecado Encarnado (Vertigem) e o chefe (Asmodeu) d
 
 ### 2.1 Vendaval (já especificado, `expedition.md` §10)
 
-No `ROUND_START`, sortear (RNG `battle`) duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. A Clausura de Bento impede a troca de quem está ao lado dele. **[D]** a tempestade que arrasta os luxuriosos (*Inferno* V); a forma de jogo é **[J]**.
+No `ROUND_START`, sortear (RNG `battle`) duas posições de santos adjacentes e mostrar como intenção de ambiente; no `HAZARD`, trocá-las. A Clausura de Bento impede a troca de quem está ao lado dele. **Implementado na T39:** o sorteio é entre as duplas de posições vizinhas, com chance igual, depois das intenções inimigas; as posições marcadas são as da rodada (quem estiver nelas no `HAZARD` é trocado, inclusive um Caído); só nos encontros com `hazard = gale` (`encounters.csv`). **[D]** a tempestade que arrasta os luxuriosos (*Inferno* V); a forma de jogo é **[J]**.
 
 ### 2.2 Firmar o pé (resposta comum, D-393 (3))
 

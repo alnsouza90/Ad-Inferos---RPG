@@ -2,7 +2,8 @@ extends SceneTree
 ## Balance simulator without a screen (CLAUDE.md §5, testing.md §5):
 ##   godot --headless --path game -s res://tools/sim/run_sim.gd -- --encounters=m0 --runs=1000
 ## Options: --encounters=<id prefix> --runs=N --seed=N --policies=random,greedy,heuristic
-## Whole M1 legs (T31): --mode=leg [--runs=N --seed=N --policies=heuristic,random --paths=random|safe --incense=reveal|keep]
+## Whole M1 legs (T31): --mode=leg [--runs=N --seed=N --policies=heuristic,random --paths=random|safe --incense=reveal|keep --arena=1]
+## (--arena=1 plays the legs with the "m0" encounters instead of the Circle 2 ones.)
 ## Writes res://tools/out/sim_<date>.csv (or leg_<date>.csv) and prints the summary.
 
 
@@ -61,6 +62,8 @@ func _run_legs(args: Dictionary, given: Dictionary) -> void:
 	_apply_overrides(game.catalog.constants, String(args.get("set", "")))
 	var sim := LegSimulator.new(game.load_expedition_catalog())
 	sim.incense_policy = StringName(args.get("incense", LegSimulator.INCENSE_REVEAL))
+	if str(args.get("arena", "")) == "1":
+		sim.encounter_circle = EncounterDef.ARENA_CIRCLE
 	var policies: Array[StringName] = [SimPolicy.HEURISTIC, SimPolicy.RANDOM]
 	if given.has("policies"):
 		policies.clear()

@@ -7,6 +7,9 @@ extends RefCounted
 ## The M0 party in formation order (GDD §3, D-308): George in the vanguard,
 ## Benedict in the centre, Therese in the rear.
 const M0_FORMATION: Array[StringName] = [&"saint_george", &"saint_benedict", &"saint_therese"]
+## Encounter pools of the expedition (T39): the Circle 2 groups of
+## `encounters.csv`, with the Vendaval. The arena keeps the "m0" ones.
+const EXPEDITION_ENCOUNTER_CIRCLE: int = 2
 
 var catalog: BattleCatalog
 var saints: Dictionary = {}
@@ -55,7 +58,9 @@ func battle(encounter_id: StringName, seed: int, provisions: Array[StringName] =
 	var foes: Array[EnemyDef] = []
 	for enemy_id: StringName in enc.slots:
 		foes.append(catalog.enemies[enemy_id])
-	return BattleState.create(catalog, m0_party(), foes, provisions, enc.type, seed)
+	var state := BattleState.create(catalog, m0_party(), foes, provisions, enc.type, seed)
+	state.hazard = enc.hazard
+	return state
 
 
 ## The M0 arena encounters (circle "m0" in encounters.csv), sorted by id.

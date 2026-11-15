@@ -64,6 +64,7 @@ const ACTION_POS := Vector2(566, 368)
 const ACTION_SIZE := Vector2(126, 24)
 ## Two small actions share a row: Swap and Pass, Interceder and the gift.
 const HALF_ACTION_SIZE := Vector2(64, 24)
+const GALE_LABEL_WIDTH: float = 200.0
 const HOOK_POS := Vector2(566, 446)
 const HOOK_STEP: float = 28.0
 const HOOK_TEXT := Rect2(4, 62, 26, 24)
@@ -161,6 +162,9 @@ var _swap_button: Button
 var _pass_button: Button
 var _intercede_button: Button
 var _give_button: Button
+var _stand_firm_button: Button
+## The Vendaval of this round over the two marked saints (bosses.md §2.1).
+var _gale_label: Label
 var _provisions_button: Button
 var _end_turn_button: Button
 ## Open while the player is choosing a provision (the flow of the old
@@ -313,6 +317,18 @@ func press_give_consolation() -> void:
 		selection.clear_choice()
 	else:
 		selection.choose_give_consolation()
+	_refresh()
+
+
+## Firmar o pé (bosses.md §2.2): first tap shows what it does, the second
+## confirms, like Pass.
+func press_stand_firm() -> void:
+	if not _accepting_input() or selection.actor() == null:
+		return
+	if selection.mode == BattleSelection.Mode.STAND_FIRM and selection.pending != null:
+		_execute(selection.take_pending())
+		return
+	selection.choose_stand_firm()
 	_refresh()
 
 
@@ -717,7 +733,30 @@ func _refresh_lume() -> void:
 	_lume_label.text = data.ui.text(&"walk_light", {"value": light})
 
 
+## The Vendaval mark over the two saints it would swap at the end of the
+## round, or why it will not (a saint stood firm, or the Clausura).
+func _refresh_gale() -> void:
+	var slots: Array[int] = ctrl.state.gale_slots
+	_gale_label.visible = slots.size() == 2 and not ctrl.is_over()
+	if not _gale_label.visible:
+		return
+	var key: StringName = &"gale_mark"
+	if ctrl.state.gale_held:
+		key = &"gale_held_firm"
+	elif ctrl.state.gale_blocked_by_clausura():
+		key = &"gale_held_clausura"
+	_gale_label.text = texts.t(key)
+	var mid: float = (_saint_x(slots[0]) + _saint_x(slots[1])) * 0.5
+	_gale_label.position = Vector2(roundf(mid - GALE_LABEL_WIDTH * 0.5), INTENT_ROW_Y)
+
+
+## The Vendaval as the screen shows it (tests).
+func gale_text() -> String:
+	return _gale_label.text if _gale_label.visible else ""
+
+
 func _refresh_views() -> void:
+	_refresh_gale()
 	var targetable: Array[StringName] = selection.targetable_ids()
 	var pending: Array[StringName] = []
 	if selection.pending != null:
@@ -820,6 +859,7 @@ func _refresh_controls() -> void:
 		_set_button(_pass_button, texts.t(&"pass"), selection.pass_reason(), false, selection.mode == BattleSelection.Mode.PASS)
 		_set_button(_intercede_button, texts.t(&"intercede"), selection.intercede_reason(), false, selection.mode == BattleSelection.Mode.INTERCEDE)
 		_set_button(_give_button, texts.t(&"give_consolation"), selection.give_consolation_reason(), false, selection.mode == BattleSelection.Mode.GIVE_CONSOLATION)
+		_set_button(_stand_firm_button, texts.t(&"stand_firm"), selection.stand_firm_reason(), false, selection.mode == BattleSelection.Mode.STAND_FIRM)
 		_set_button(_provisions_button, texts.t(&"provisions"), _provisions_reason(), false, selection.mode == BattleSelection.Mode.PROVISION)
 	else:
 		_set_button(_miracle_button, texts.t(&"miracle"), &"", true, false)
@@ -827,7 +867,10 @@ func _refresh_controls() -> void:
 		_set_button(_pass_button, texts.t(&"pass"), &"", true, false)
 		_set_button(_intercede_button, texts.t(&"intercede"), &"", true, false)
 		_set_button(_give_button, texts.t(&"give_consolation"), &"", true, false)
+		_set_button(_stand_firm_button, texts.t(&"stand_firm"), &"", true, false)
 		_set_button(_provisions_button, texts.t(&"provisions"), &"", true, false)
+	# Without a Vendaval in this battle the button is only noise.
+	_stand_firm_button.visible = ctrl.state.hazard == &"gale"
 	_miracle_label.text = _miracle_button.text
 	_miracle_label.add_theme_color_override("font_color", PixelStyle.COLOR_LEAD_LIGHT if _miracle_button.disabled else PixelStyle.COLOR_GOLD)
 	_end_turn_button.text = texts.t(&"end_turn")
@@ -954,6 +997,8 @@ func _refresh_hint() -> void:
 		_hint.text = _intercede_hint() + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.GIVE_CONSOLATION and not ctrl.is_over():
 		_hint.text = texts.t(&"give_consolation_desc") + "\n" + _hint.text
+	if selection.mode == BattleSelection.Mode.STAND_FIRM and not ctrl.is_over():
+		_hint.text = texts.t(&"stand_firm_desc", {"fervor": ctrl.state.constants.get_int(&"firmness_fervor")}) + "\n" + _hint.text
 
 
 ## What the pending Interceder takes, or what the action does.
@@ -1333,6 +1378,13 @@ func _build_field() -> void:
 	_badges_layer = Control.new()
 	_badges_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field.add_child(_badges_layer)
+	_gale_label = Label.new()
+	_gale_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_gale_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_gale_label.size = Vector2(GALE_LABEL_WIDTH, 14)
+	_gale_label.add_theme_color_override("font_color", PixelStyle.COLOR_VIOLET)
+	_gale_label.visible = false
+	_badges_layer.add_child(_gale_label)
 	_lines = IntentLine.new()
 	_lines.size = _field.size
 	# Covers the whole field: it must never swallow the taps on the views.
@@ -1469,7 +1521,8 @@ func _build_hero_panel() -> void:
 	_give_button = _button(ACTION_POS + row_step + half_step, HALF_ACTION_SIZE, press_give_consolation)
 	# The provisions hang on their hooks, always in view: the old button
 	# only keeps its place in the flow (press_provisions) and names the row.
-	_provisions_button = _button(ACTION_POS + Vector2(0, (ACTION_SIZE.y + 2.0) * 2.0), ACTION_SIZE, press_provisions)
+	_provisions_button = _button(ACTION_POS + row_step * 2.0, HALF_ACTION_SIZE, press_provisions)
+	_stand_firm_button = _button(ACTION_POS + row_step * 2.0 + half_step, HALF_ACTION_SIZE, press_stand_firm)
 	_provisions_button.flat = true
 	_provisions_button.focus_mode = Control.FOCUS_NONE
 	_hooks = Control.new()

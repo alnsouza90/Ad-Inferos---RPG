@@ -6,7 +6,7 @@ extends RefCounted
 ## comes from BattleController.validate() and every preview from
 ## BattleController.preview().
 
-enum Mode { NONE, ABILITY, MIRACLE, SWAP, PASS, PROVISION, INTERCEDE, GIVE_CONSOLATION }
+enum Mode { NONE, ABILITY, MIRACLE, SWAP, PASS, PROVISION, INTERCEDE, GIVE_CONSOLATION, STAND_FIRM }
 
 ## Answers of tap_combatant().
 const IGNORED: StringName = &"ignored"
@@ -127,6 +127,21 @@ func pass_reason() -> StringName:
 	if actor() == null:
 		return CommandResult.UNKNOWN_ACTOR
 	return ctrl.validate(BattleCommand.pass_turn(actor_id))
+
+
+func stand_firm_reason() -> StringName:
+	if actor() == null:
+		return CommandResult.UNKNOWN_ACTOR
+	return ctrl.validate(BattleCommand.stand_firm(actor_id))
+
+
+func choose_stand_firm() -> bool:
+	if stand_firm_reason() != &"":
+		return false
+	clear_choice()
+	mode = Mode.STAND_FIRM
+	_set_pending([] as Array[int])
+	return true
 
 
 func provision_reason(id: StringName) -> StringName:
@@ -395,6 +410,8 @@ func _command(slots: Array[int]) -> BattleCommand:
 			return BattleCommand.use_provision(provision_id, slots[0], actor_id)
 		Mode.PASS:
 			return BattleCommand.pass_turn(actor_id)
+		Mode.STAND_FIRM:
+			return BattleCommand.stand_firm(actor_id)
 		Mode.INTERCEDE:
 			return BattleCommand.intercede(actor_id, slots[0], intercede_option())
 		Mode.GIVE_CONSOLATION:

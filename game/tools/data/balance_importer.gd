@@ -17,7 +17,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"abilities": ["id", "owner", "name_pt", "kind", "cost", "use_slots", "targeting", "target_slots", "allow_self", "once_per_battle", "origin", "upgrade", "desc_pt"],
 	"enemy_actions": ["id", "priority", "use_slots", "target_slots", "targeting", "target_rule", "conditions", "cooldown", "intent_icon"],
 	"enemies": ["id", "name_pt", "family", "circles", "nature", "role", "size", "max_hp", "armor", "immune", "leaves_remains", "remains_rounds", "actions", "art_id"],
-	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type"],
+	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type", "hazard"],
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
 	"map_templates": ["id", "leg", "layer", "index", "role", "type", "links"],
 	"starting_kits": ["id", "provision_id", "amount"],
@@ -56,6 +56,7 @@ const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
 const INTENT_ICONS: Array[String] = ["attack", "corrupt", "displace", "defend", "summon", "special"]
 const POOLS: Array[String] = ["easy", "hard", "elite", "boss", "ambush"]
 const ENCOUNTER_TYPES: Array[String] = ["common", "elite", "boss"]
+const HAZARDS: Array[String] = ["gale"]
 const EVENT_TYPES: Array[String] = ["temptation", "soul_meeting", "flashback", "council", "intercession_mission", "story"]
 const EVENT_OUTCOMES: Array[String] = ["virtue", "desolation", "light", "alms", "provisions", "relic", "injury", "suffrages", "set_flag", "start_battle", "unlock"]
 const EVENT_REQUIREMENTS: Array[String] = ["virtue_at_least", "saint_in_party", "provision", "alms_at_least", "flag_set"]
@@ -492,6 +493,7 @@ func _build_encounters() -> void:
 			d.circle = _int(t, line, "circle", row, 0, 9)
 		d.pool = _enum(t, line, "pool", row, POOLS)
 		d.type = _enum(t, line, "type", row, ENCOUNTER_TYPES)
+		d.hazard = _enum(t, line, "hazard", row, HAZARDS, true)
 		var gap := false
 		var total_size := 0
 		for slot: int in range(1, MAX_ENEMY_SLOTS + 1):
