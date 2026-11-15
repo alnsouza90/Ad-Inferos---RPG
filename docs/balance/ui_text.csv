@@ -1,5 +1,11 @@
 id,text_pt
 round,Rodada {round}
+boss_status,Fase {phase} de {of} · Domínio: {claws} garras
+boss_phase_float,Fase {phase} de {of}
+boss_liver_smoke,"A fumaça do fígado do peixe sobe e Asmodeu perde força (Tobias 8,2)."
+boss_liver_smoke_short,Fumaça do fígado
+boss_bound,"São Rafael prende Asmodeu (Tobias 8,3)."
+boss_fled,Asmodeu foge.
 round_clock,Rodada {round} · desolação ao vencer: {amount}
 fervor,Fervor {amount}/{max}
 pause,Pausa

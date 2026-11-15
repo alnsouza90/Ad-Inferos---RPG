@@ -95,12 +95,12 @@ Os efeitos ficam em `effects.csv`.
 | `n` | inteiro | Casas de movimento |
 | `summon_id` | texto | Para `summon` |
 | `max_alive` | inteiro | Para `summon` |
-| `target_override` | `self` / `all_allies` / `all_enemies` / vazio | Aplica o efeito em outro alvo que não o da habilidade |
+| `target_override` | `self` / `all_allies` / `all_enemies` / `random_party` / vazio | Aplica o efeito em outro alvo que não o da habilidade; `random_party`: um dos alvos da ação, sorteado no fluxo `battle` (Três cabeças de Asmodeu, T41) |
 | `params` | chave=valor | Extras (ex.: `elite=2.0;boss=2.0`; `hp_fraction=0.3`; `const=bread_heal` indica que o valor vem da constante) |
 
 Parâmetros extras reconhecidos na v1: `elite`, `boss` (multiplicadores por categoria) · `hp_fraction` · `heal_if_alive=1` (revive que cura quem está de pé) · `dark_night_amount` (valor alternativo se o alvo estiver em Noite Escura) · `per_milestone` (soma por marco do Purgatório; o combate recebe o número de marcos no `SETUP`) · `exclude_self=1` · `with=actor` (troca o alvo de lugar com o usuário, sem gastar a ação do alvo) · `const`.
 
-Tipos de efeito exclusivos de provisões, fora de combate: `light` (soma Lume) e `reveal_or_cancel_ambush` (Incenso).
+Tipos de efeito exclusivos de provisões, fora de combate: `light` (soma Lume) e `reveal_or_cancel_ambush` (Incenso). Efeito `gale_swap` (T41): o Vendaval de Asmodeu troca os dois santos marcados quando a intenção foi escolhida (`bosses.md` §5.1).
 
 ### 3.5 `traits.csv` → `TraitDef`
 
@@ -134,7 +134,7 @@ Campos de `docs/specs/conditions.md` §2.
 | `family` | `a` / `b` / `c` / `elite` / `boss` | |
 | `circles` | lista | Círculos onde aparece |
 | `nature` | `corporeal` / `spiritual` | |
-| `role` | `brute` / `guard` / `ranged` / `corruptor` / `manipulator` / `summoner` | |
+| `role` | `brute` / `guard` / `ranged` / `corruptor` / `manipulator` / `summoner` / `boss` | |
 | `size` | 1–3 | Posições ocupadas |
 | `max_hp` | inteiro | |
 | `armor` | inteiro 0–3 | |
@@ -143,6 +143,11 @@ Campos de `docs/specs/conditions.md` §2.
 | `remains_rounds` | inteiro | |
 | `actions` | lista | IDs em `enemy_actions.csv` |
 | `art_id` | texto | Nome base da arte (`asset-pipeline.md`) |
+| `phase_thresholds` | lista de frações | Chefes: limiares de vida que mudam de fase (ex.: `0.5` = 2 fases); vazio = 1 fase (T41) |
+| `dominion_phase_thresholds` | lista de frações | Chefes: os limiares com a garra da fase extra do Domínio (ex.: `0.66|0.33`) |
+| `actions_per_round` | inteiro | Chefes: ações por rodada (vazio = 1) |
+| `dominion_extra_actions` | inteiro | Chefes: ações a mais com a garra da ação a mais |
+| `dominion_escort` | lista | Chefes: inimigos que entram com ele enquanto a garra da escolta segura |
 
 ### 3.8 `enemy_actions.csv` → `EnemyActionDef`
 

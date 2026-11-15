@@ -38,8 +38,8 @@ static func valid_tables() -> Dictionary:
 		"enemy_actions": "id,priority,use_slots,target_slots,targeting,target_rule,conditions,cooldown,intent_icon\n"
 			+ "e_brood,1,3|4,,self,front_most,every_n_rounds:2|free_enemy_slot,0,summon\n"
 			+ "e_hit,2,1|2|3|4,1|2,single,front_most,always,0,attack\n",
-		"enemies": "id,name_pt,family,circles,nature,role,size,max_hp,armor,immune,leaves_remains,remains_rounds,actions,art_id\n"
-			+ "enemy_e,Demônio,a,2|3,corporeal,brute,1,30,1,stun,,,e_hit|e_brood,enemy_e\n",
+		"enemies": "id,name_pt,family,circles,nature,role,size,max_hp,armor,immune,leaves_remains,remains_rounds,actions,art_id,phase_thresholds,dominion_phase_thresholds,actions_per_round,dominion_extra_actions,dominion_escort\n"
+			+ "enemy_e,Demônio,a,2|3,corporeal,brute,1,30,1,stun,,,e_hit|e_brood,enemy_e,,,,,\n",
 		"encounters": "id,circle,pool,slot_1,slot_2,slot_3,slot_4,type,hazard\nenc_1,m0,easy,enemy_e,enemy_e,,,common,\n",
 		"provisions": "id,name_pt,price,usable_in_battle,targeting,effect_ids\nbread,Pão,15,y,ally,bread\n",
 		"ui_text": "id,text_pt\nend_turn,Encerrar turno\nround,Rodada {round}\n",

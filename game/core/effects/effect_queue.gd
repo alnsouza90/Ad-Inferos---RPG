@@ -28,6 +28,7 @@ func _init(limit: int) -> void:
 	register(&"desolation", DesolationEffect.new())
 	register(&"summon", SummonEffect.new())
 	register(&"self_damage", SelfDamageEffect.new())
+	register(&"gale_swap", GaleSwapEffect.new())
 
 
 func register(type: StringName, handler: EffectHandler) -> void:
@@ -121,6 +122,12 @@ static func resolve_targets(ctx: EffectContext, effect: EffectDef) -> Array[Comb
 			for c: Combatant in _foes_of(ctx):
 				if c.is_standing():
 					result.append(c)
+		&"random_party":
+			# One of the action's targets, drawn on the battle stream
+			# (Asmodeus' three heads, bosses.md §5.1).
+			var standing: Array[Combatant] = ctx.targets.filter(func(c: Combatant) -> bool: return c.is_standing())
+			if not standing.is_empty():
+				result.append(standing[ctx.state.rng.battle().pick_index(standing.size())])
 		_:
 			result = ctx.targets.duplicate()
 	return result

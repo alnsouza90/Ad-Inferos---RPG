@@ -36,6 +36,9 @@ const EV_GALE_SWAPPED: StringName = &"gale_swapped"
 const EV_GALE_HELD: StringName = &"gale_held"
 const EV_STOOD_FIRM: StringName = &"stood_firm"
 const EV_FIRMNESS: StringName = &"firmness_gained"
+const EV_BOSS_PHASE: StringName = &"boss_phase_changed"
+const EV_LIVER_SMOKE: StringName = &"liver_smoke"
+const EV_BOSS_DEFEATED: StringName = &"boss_defeated"
 
 var state: BattleState
 var fervor: FervorPool
@@ -64,6 +67,9 @@ func start() -> Array[BattleEvent]:
 	fervor.reset()
 	state.compute_affinities()
 	_emit(EV_BATTLE_STARTED, {"affinities": state.active_affinities.duplicate()})
+	if state.boss() != null and state.has_liver:
+		# bosses.md §5.3: the smoke of the liver opens the fight.
+		_emit(EV_LIVER_SMOKE, {"boss": state.boss().id})
 	_begin_round()
 	return _flush()
 
@@ -249,7 +255,10 @@ func _begin_round() -> void:
 		_emit(EV_FERVOR_GAINED, {"amount": firm, "total": fervor.amount, "bonus": true, "source": &"firmness"})
 	state.firmness_pending = 0
 	state.firmness_this_round = 0
+	state.gale_slots.clear()
+	state.gale_held = false
 	_choose_intents()
+	_mark_boss_gale()
 	_emit(EV_INTENTS_CHOSEN, {"count": state.intents.size(), "intents": _intent_dicts()})
 	_mark_gale()
 	_apply_round_start_conditions()
@@ -280,10 +289,14 @@ func _run_enemy_turn() -> bool:
 			return false
 		if not enemy.is_alive_enemy():
 			continue
-		var acted: bool = _execute_intent(enemy)
-		_emit(EV_ENEMY_ACTION, {"enemy": enemy.id, "slot": slot, "acted": acted})
-		if _check_outcome():
-			return false
+		# A boss may act several times, one intent each (enemy-ai §6).
+		for intent: Intent in state.intents_of(enemy):
+			if not enemy.is_alive_enemy():
+				break
+			var acted: bool = _execute_intent(enemy, intent)
+			_emit(EV_ENEMY_ACTION, {"enemy": enemy.id, "slot": slot, "acted": acted})
+			if _check_outcome():
+				return false
 	return true
 
 
@@ -305,6 +318,7 @@ func _end_round() -> bool:
 
 ## Victory and defeat are checked at the end of every step (combat §8).
 func _check_outcome() -> bool:
+	_update_boss_phase()
 	if state.is_defeat():
 		_finish(Phase.DEFEAT, &"defeat")
 		return true
@@ -318,7 +332,19 @@ func _finish(final_phase: Phase, result: StringName) -> void:
 	phase = final_phase
 	fervor.reset()
 	state.engine.clear_all()
+	if final_phase == Phase.VICTORY and state.encounter_type == &"boss":
+		# bosses.md §5.3: with the liver, Raphael binds Asmodeus; without it,
+		# Asmodeus flees. The victory is worth the same.
+		_emit(EV_BOSS_DEFEATED, {"bound": state.has_liver})
 	_emit(EV_BATTLE_ENDED, {"result": result, "round": state.round_number})
+
+
+## enemy-ai §6: the boss's phase follows its hp and never goes back.
+func _update_boss_phase() -> void:
+	var now: int = state.boss_phase_for_hp()
+	if now > state.boss_phase:
+		state.boss_phase = now
+		_emit(EV_BOSS_PHASE, {"phase": now, "of": state.boss_phase_count()})
 
 
 # --- commands (combat §4) ------------------------------------------------------------
@@ -755,10 +781,9 @@ func _apply_enemy_turn_start_conditions(enemy: Combatant) -> void:
 
 ## enemy-ai §4. A stunned enemy loses its intent (conditions §4). Returns
 ## true if the enemy did something.
-func _execute_intent(enemy: Combatant) -> bool:
+func _execute_intent(enemy: Combatant, intent: Intent) -> bool:
 	if state.engine.consume_stun(enemy):
 		return false
-	var intent: Intent = state.intent_of(enemy)
 	if intent == null or intent.kind != Intent.KIND_ACTION:
 		return false
 	var action: EnemyActionDef = EnemyBrain.action_of(state, enemy, intent.action_id)
@@ -794,13 +819,27 @@ func _apply_hazard() -> void:
 ## Vendaval (expedition §10, bosses.md §2.1): two adjacent party slots,
 ## drawn on the `battle` stream, shown as an environment intent.
 func _mark_gale() -> void:
-	state.gale_slots.clear()
-	state.gale_held = false
 	if state.hazard != &"gale" or state.party_size() < 2:
 		return
 	var first: int = 1 + state.rng.battle().pick_index(state.party_size() - 1)
 	state.gale_slots = [first, first + 1] as Array[int]
 	_emit(EV_GALE_MARKED, {"slots": state.gale_slots.duplicate()})
+
+
+## The Vendaval of Asmodeus (bosses.md §5.1): when the boss announces it, the
+## two adjacent slots are drawn now, so the intent shows them.
+func _mark_boss_gale() -> void:
+	if state.party_size() < 2:
+		return
+	for intent: Intent in state.intents:
+		var enemy: Combatant = state.find(intent.enemy_id)
+		var action: EnemyActionDef = EnemyBrain.action_of(state, enemy, intent.action_id) if enemy != null else null
+		if action == null or not action.effects.any(func(e: EffectDef) -> bool: return e.type == &"gale_swap"):
+			continue
+		var first: int = 1 + state.rng.battle().pick_index(state.party_size() - 1)
+		state.gale_slots = [first, first + 1] as Array[int]
+		_emit(EV_GALE_MARKED, {"slots": state.gale_slots.duplicate(), "source": enemy.id})
+		return
 
 
 ## Firmar o pé (bosses.md §2.2): a saint in a marked slot holds the swap.

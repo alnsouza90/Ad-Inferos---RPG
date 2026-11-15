@@ -16,7 +16,7 @@ const TABLE_COLUMNS: Dictionary = {
 	"effects": ["owner_id", "order", "type", "amount", "damage_type", "condition_id", "stacks", "polarity", "move_kind", "n", "summon_id", "max_alive", "target_override", "params"],
 	"abilities": ["id", "owner", "name_pt", "kind", "cost", "use_slots", "targeting", "target_slots", "allow_self", "once_per_battle", "origin", "upgrade", "desc_pt"],
 	"enemy_actions": ["id", "priority", "use_slots", "target_slots", "targeting", "target_rule", "conditions", "cooldown", "intent_icon"],
-	"enemies": ["id", "name_pt", "family", "circles", "nature", "role", "size", "max_hp", "armor", "immune", "leaves_remains", "remains_rounds", "actions", "art_id"],
+	"enemies": ["id", "name_pt", "family", "circles", "nature", "role", "size", "max_hp", "armor", "immune", "leaves_remains", "remains_rounds", "actions", "art_id", "phase_thresholds", "dominion_phase_thresholds", "actions_per_round", "dominion_extra_actions", "dominion_escort"],
 	"encounters": ["id", "circle", "pool", "slot_1", "slot_2", "slot_3", "slot_4", "type", "hazard"],
 	"provisions": ["id", "name_pt", "price", "usable_in_battle", "targeting", "effect_ids"],
 	"map_templates": ["id", "leg", "layer", "index", "role", "type", "links"],
@@ -33,11 +33,11 @@ const ABILITY_TARGETING: Array[String] = ["self", "ally", "ally_fallen", "all_al
 const ABILITY_ALLY_TARGETING: Array[String] = ["ally", "ally_fallen"]
 const ABILITY_ENEMY_TARGETING: Array[String] = ["enemy", "enemy_group", "chosen_enemy_slots"]
 const ORIGINS: Array[String] = ["scripture", "catechism", "tradition", "hagiography", "legend", "apocrypha", "dante", "demonology", "game_fiction"]
-const EFFECT_TYPES: Array[String] = ["damage", "heal", "revive", "apply_condition", "remove_condition", "strip_positive_tokens", "move", "gain_fervor", "desolation", "summon", "self_damage", "light", "reveal_or_cancel_ambush"]
+const EFFECT_TYPES: Array[String] = ["damage", "heal", "revive", "apply_condition", "remove_condition", "strip_positive_tokens", "move", "gain_fervor", "desolation", "summon", "self_damage", "light", "reveal_or_cancel_ambush", "gale_swap"]
 const DAMAGE_TYPES: Array[String] = ["strike", "exorcism", "untyped"]
 const POLARITIES: Array[String] = ["positive", "negative"]
 const MOVE_KINDS: Array[String] = ["push", "pull", "swap"]
-const TARGET_OVERRIDES: Array[String] = ["self", "all_allies", "all_enemies"]
+const TARGET_OVERRIDES: Array[String] = ["self", "all_allies", "all_enemies", "random_party"]
 const EFFECT_PARAMS: Array[String] = ["elite", "boss", "hp_fraction", "heal_if_alive", "dark_night_amount", "per_milestone", "exclude_self", "with", "const"]
 const TRAIT_TRIGGERS: Array[String] = ["on_battle_start", "on_round_start", "on_ability_used", "on_damage_dealt", "on_damaged", "on_ally_fallen", "on_fallen", "passive"]
 const CAMP_EFFECTS: Array[String] = ["ambush_mult", "desolation_party", "heal_party_pct", "heal_ally_pct", "ally_desolation", "refund_bread", "alms_bonus", "next_battle_condition", "remove_minor_injury", "reveal_next_layer", "suffrage_bonus"]
@@ -48,10 +48,10 @@ const TICKS: Array[String] = ["none", "owner_turn_start", "round_end"]
 const CONSUME_ON: Array[String] = ["none", "on_hit_received", "on_damaging_action", "on_action_attempt"]
 const FAMILIES: Array[String] = ["a", "b", "c", "elite", "boss"]
 const NATURES: Array[String] = ["corporeal", "spiritual"]
-const ENEMY_ROLES: Array[String] = ["brute", "guard", "ranged", "corruptor", "manipulator", "summoner"]
+const ENEMY_ROLES: Array[String] = ["brute", "guard", "ranged", "corruptor", "manipulator", "summoner", "boss"]
 const ACTION_TARGETING: Array[String] = ["single", "all_party", "self", "ally_enemy", "all_enemies"]
 const TARGET_RULES: Array[String] = ["front_most", "back_most", "lowest_hp", "lowest_hp_pct", "highest_hp", "highest_desolation", "random"]
-const ACTION_CONDITIONS_WITH_PARAM: Array[String] = ["self_hp_below", "ally_hp_below", "allies_alive_below", "round_at_least", "every_n_rounds", "party_has_condition", "no_party_condition"]
+const ACTION_CONDITIONS_WITH_PARAM: Array[String] = ["self_hp_below", "ally_hp_below", "allies_alive_below", "round_at_least", "every_n_rounds", "party_has_condition", "no_party_condition", "phase_at_least"]
 const ACTION_CONDITIONS_NO_PARAM: Array[String] = ["always", "free_enemy_slot"]
 const INTENT_ICONS: Array[String] = ["attack", "corrupt", "displace", "defend", "summon", "special"]
 const POOLS: Array[String] = ["easy", "hard", "elite", "guardian", "boss", "ambush"]
@@ -470,12 +470,23 @@ func _build_enemies() -> void:
 		actions.sort_custom(func(a: EnemyActionDef, b: EnemyActionDef) -> bool: return a.priority < b.priority)
 		d.actions = actions
 		d.art_id = row["art_id"]
+		# Bosses (enemy-ai §6, bosses.md §5): phases, actions and Domínio.
+		d.phase_thresholds = _float_list(t, line, "phase_thresholds", row)
+		d.dominion_phase_thresholds = _float_list(t, line, "dominion_phase_thresholds", row)
+		d.actions_per_round = maxi(1, _int_opt(t, line, "actions_per_round", row, 0, 4))
+		d.dominion_extra_actions = _int_opt(t, line, "dominion_extra_actions", row, 0, 4)
+		for escort_id: String in _id_list(row["dominion_escort"]):
+			d.dominion_escort.append(StringName(escort_id))
 		enemies[row["id"]] = d
 	# Summons can only be validated once every enemy exists.
 	for owner_id: String in _effects_by_owner:
 		for e: EffectDef in _effects_by_owner[owner_id]:
 			if e.type == &"summon" and e.summon_id != &"" and not enemies.has(String(e.summon_id)):
 				_err("unknown_id", "effects.csv", 0, "'%s' invoca '%s', que não existe em enemies.csv" % [owner_id, e.summon_id])
+	for enemy_id: String in enemies:
+		for escort_id: StringName in (enemies[enemy_id] as EnemyDef).dominion_escort:
+			if not enemies.has(String(escort_id)):
+				_err("unknown_id", "enemies.csv", 0, "'%s' tem escolta '%s', que não existe" % [enemy_id, escort_id])
 
 
 func _build_encounters() -> void:
@@ -994,6 +1005,17 @@ func _float_opt(t: CsvTable, line: int, column: String, row: Dictionary) -> floa
 		_err("bad_number", t.file_name, line, "%s '%s' não é número" % [column, raw])
 		return 0.0
 	return raw.to_float()
+
+
+## "0.66|0.33" -> [0.66, 0.33]; empty -> [].
+func _float_list(t: CsvTable, line: int, column: String, row: Dictionary) -> Array[float]:
+	var result: Array[float] = []
+	for raw: String in _id_list(row[column]):
+		if not raw.is_valid_float():
+			_err("bad_number", t.file_name, line, "%s: '%s' não é número" % [column, raw])
+			continue
+		result.append(raw.to_float())
+	return result
 
 
 func _int_list(t: CsvTable, line: int, column: String, row: Dictionary, low: int, high: int, required: bool) -> Array[int]:

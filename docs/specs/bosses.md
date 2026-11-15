@@ -130,6 +130,8 @@ Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
 - O Vendaval do círculo **não** acontece na luta com Asmodeu: a lição vem pela ação dele, com intenção visível.
 - Troca de fase: o chefe recua, a silhueta pisca na cor do círculo e a fase nova aparece na barra (apresentação, T41).
 
+**Implementado na T41 (D-409):** id `boss_asmodeus` (o da arte). A tabela não dá prioridades nem recarga para todas as ações; ficou assim, na ordem: Vendaval (1; fase 2 em diante, rodadas pares), Encanto do desejo (2; fase 3, recarga 3, sem santo Encantado), Sopro violeta (3; recarga 2), Três cabeças (4; fase 3), Estocada (5). Com duas ações, a segunda é a próxima válida diferente da primeira. As posições do Vendaval de Asmodeu são sorteadas quando ele anuncia a ação e trocadas no turno dele. A Clausura não segura este Vendaval (D-402).
+
 ### 5.2 Domínio (D-284, D-393 (5))
 
 Asmodeu segura a alma do Peregrino com um Domínio de **3 garras**, visível junto da barra de vida. A companhia sempre pode vencer com as três. **[J]**

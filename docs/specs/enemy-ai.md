@@ -35,6 +35,7 @@ Versão 1.0 · base: GDD v1.1 §2 e §8 · dados em `docs/balance/enemy_actions.
 | `every_n_rounds(n)` | Rodada múltipla de `n` |
 | `party_has_condition(id)` | Algum santo tem a condição |
 | `no_party_condition(id)` | Nenhum santo de pé tem a condição (T40, Encanto da Vertigem) |
+| `phase_at_least(n)` | Chefe: a fase atual é `n` ou mais (T41) |
 | `free_enemy_slot` | Há posição inimiga livre (para invocar) |
 
 ## 3. Escolha da intenção (no `ROUND_START`)
@@ -79,7 +80,7 @@ Empates (exceto `random`) são decididos pela menor posição.
 ## 6. Chefes (a partir do M2)
 
 - Fases definidas por limiares de vida (`phase_thresholds`, ex.: [0.66, 0.33]); cada fase tem sua lista de ações.
-- Chefes podem ter `actions_per_round` > 1; cada ação é uma intenção separada.
+- Chefes podem ter `actions_per_round` > 1; cada ação é uma intenção separada, sempre de ações diferentes, escolhidas na ordem de prioridade (T41). A fase segue a vida e nunca volta; a troca de fase gera o evento `boss_phase_changed`.
 - Mecânicas próprias (contador da Judeca, olhar da Medusa) são ganchos nomeados, especificados por chefe em `docs/specs/bosses.md` (Círculo 2: Minos, Vertigem e Asmodeu, T38).
 - **Domínio (D-284):** todo chefe segura a alma do Peregrino com um Domínio (proposta: 0 a 3), visível na tela; cada ponto é uma vantagem concreta do chefe (ação a mais, escolta, fase extra) e cede quando a companhia alcança o Peregrino no círculo. A companhia sempre pode vencer com o Domínio cheio. Asmodeu é o primeiro, e o fígado do peixe é um dos pontos (T38).
 - **Pecado Encarnado e Provação (D-267):** o elite do círculo tem uma ação própria que aplica a Provação do Círculo com força (`expedition.md` §10.1); o chefe a cobra.

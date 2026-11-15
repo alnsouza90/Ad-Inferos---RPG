@@ -60,16 +60,28 @@ func battle(encounter_id: StringName, seed: int, provisions: Array[StringName] =
 		foes.append(catalog.enemies[enemy_id])
 	var state := BattleState.create(catalog, m0_party(), foes, provisions, enc.type, seed)
 	state.hazard = enc.hazard
+	if enc.type == &"boss":
+		# The arena fights the boss with the whole Domínio (bosses.md §5.2).
+		state.setup_boss(Dominion.claws(0, false), false)
 	return state
 
 
 ## The M0 arena encounters (circle "m0" in encounters.csv), sorted by id.
 func arena_encounter_ids() -> Array[StringName]:
 	var ids: Array[StringName] = []
+	var bosses: Array[StringName] = []
 	for id: StringName in encounters:
-		if (encounters[id] as EncounterDef).circle == EncounterDef.ARENA_CIRCLE:
+		var enc: EncounterDef = encounters[id]
+		if enc.circle == EncounterDef.ARENA_CIRCLE:
 			ids.append(id)
-	ids.sort_custom(func(a: StringName, b: StringName) -> bool: return String(a) < String(b))
+		elif enc.type == &"boss":
+			# The arena also offers the bosses, after the m0 fights, until the
+			# expedition brings them (T41, T42).
+			bosses.append(id)
+	var by_name := func(a: StringName, b: StringName) -> bool: return String(a) < String(b)
+	ids.sort_custom(by_name)
+	bosses.sort_custom(by_name)
+	ids.append_array(bosses)
 	return ids
 
 

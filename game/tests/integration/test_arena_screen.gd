@@ -17,8 +17,9 @@ func before_each() -> void:
 	add_child_autofree(arena)
 
 
-func test_lists_the_four_m0_encounters_with_enemy_names() -> void:
-	assert_eq(arena.encounter_ids.size(), 4)
+func test_lists_the_four_m0_encounters_and_the_boss_with_enemy_names() -> void:
+	assert_eq(arena.encounter_ids.size(), 5)
+	assert_eq(arena.encounter_ids.back(), &"c02_boss_asmodeus", "o chefe por último (T41)")
 	assert_eq(arena.chosen, arena.encounter_ids[0])
 	var label: String = arena.encounter_label(&"m0_easy_01")
 	assert_true(label.contains("Diabo de Lodo") and label.contains("Moscardo"), label)
