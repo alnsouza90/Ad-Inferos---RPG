@@ -31,7 +31,7 @@ const OBJECT_SIZE := Vector2(90, 110)
 const ENTRANCE_SIZE := Vector2(80, 120)
 const BUTTON_SIZE := Vector2(140, 32)
 ## The front layer of the scenery passes low before the party.
-const FRONT_DROP: float = 150.0
+const FRONT_DROP: float = 215.0
 ## Hard cut into the battle (D-359): guard pose, the camera comes a little
 ## closer and the background darkens.
 const CUT_TIME: float = 0.35
@@ -53,6 +53,15 @@ const COLOR_LIGHT_OFF := Color("33313A")
 const COLOR_DIM := Color(0.05, 0.047, 0.063, 0.8)
 const LIGHT_BAR_SIZE := Vector2(140, 6)
 const OVERLAY_MARGIN: float = 400.0
+## Drawn pieces of the corridor (T65): the entrance of each path kind.
+const PROPS_DIR: String = "res://assets/pixel/environments/circle_02"
+const ENTRANCE_PROPS: Dictionary = {
+	CorridorLook.STRAIGHT: "env_circle_02_entry_straight",
+	&"door": "env_circle_02_entry_door",
+	&"cave": "env_circle_02_entry_cave",
+	&"stairs": "env_circle_02_entry_stair",
+}
+const SOUL_DRAWINGS: int = 3
 const LIST_BUTTON_SIZE := Vector2(300, 28)
 
 ## A command was accepted that leaves this corridor (ChoosePath, or content
@@ -660,23 +669,69 @@ func _build_objects() -> void:
 	_content_view = null
 	var n: MapNode = ctrl.current_node()
 	if corridor.has_content() and not n.is_battle_like():
-		_content_view = _block(texts.type_name(n), COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
-		_content_view.position = Vector2(roundf(_world_x(corridor.content_at) - OBJECT_SIZE.x * 0.5), FEET_Y - OBJECT_SIZE.y)
+		var prop: Texture2D = _content_prop(n)
+		if prop != null:
+			_content_view = _prop_view(prop, texts.type_name(n))
+			_content_view.modulate = Color.WHITE if corridor.content_pending else Color(0.6, 0.6, 0.65)
+		else:
+			_content_view = _block(texts.type_name(n), COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
+		_content_view.position = Vector2(roundf(_world_x(corridor.content_at) - _content_view.size.x * 0.5), FEET_Y - _content_view.size.y)
 		_objects.add_child(_content_view)
 	for id: StringName in corridor.entrance_order():
 		var e: MapNode = ctrl.map.find(id)
 		var kind: StringName = CorridorLook.path_kind(id, _straight)
 		var text: String = texts.type_name(e) + "\n" + texts.path_name(kind)
-		var view := _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
+		var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
+		var view: Control = _prop_view(entrance, text) if entrance != null else _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
 		view.set_meta(&"text", text)
 		view.mouse_filter = Control.MOUSE_FILTER_STOP
 		view.gui_input.connect(func(event: InputEvent) -> void:
 			if _is_tap(event):
 				tap_entrance(id)
 				view.accept_event())
-		view.position = Vector2(roundf(_world_x(float(corridor.entrance_at[id])) - ENTRANCE_SIZE.x * 0.5), FEET_Y - ENTRANCE_SIZE.y)
+		view.position = Vector2(roundf(_world_x(float(corridor.entrance_at[id])) - view.size.x * 0.5), FEET_Y - view.size.y)
 		_objects.add_child(view)
 		_entrance_views[id] = view
+
+
+## The drawing of what waits in the corridor (T65, D-385): the tent of the
+## Temptation, the reliquary (open once taken), one of the souls (picked by
+## the node id, so a resumed game looks the same).
+func _content_prop(n: MapNode) -> Texture2D:
+	match n.type:
+		MapNode.TYPE_TEMPTATION:
+			return _prop("env_circle_02_tent")
+		MapNode.TYPE_RELIC:
+			return _prop("prop_reliquary_closed" if corridor.content_pending else "prop_reliquary_open")
+		MapNode.TYPE_SOUL:
+			return _prop("env_circle_02_soul_%d" % (RngStream.fnv1a32(String(n.id)) % SOUL_DRAWINGS + 1))
+	return null
+
+
+func _prop(file_name: String) -> Texture2D:
+	if file_name.is_empty():
+		return null
+	var path: String = "%s/%s.png" % [PROPS_DIR, file_name]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
+
+## A drawn piece standing on the ground, its name in small letters above it.
+func _prop_view(tex: Texture2D, text: String) -> Control:
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.size = tex.get_size()
+	var picture := TextureRect.new()
+	picture.texture = tex
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Part of the scenery: the filter of the circle tints it too (D-379).
+	picture.material = CircleLook.filter_material()
+	holder.add_child(picture)
+	var label := _label(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size = Vector2(maxf(tex.get_width(), 90.0), 24)
+	label.position = Vector2(roundf((tex.get_width() - label.size.x) * 0.5), -26)
+	holder.add_child(label)
+	return holder
 
 
 static func _is_tap(event: InputEvent) -> bool:

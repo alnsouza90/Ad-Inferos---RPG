@@ -1,0 +1,69 @@
+[gd_resource type="Resource" script_class="CharacterFrames" format=3]
+
+[ext_resource type="Script" path="res://scenes/battle/character_frames.gd" id="1_set"]
+[ext_resource type="Script" path="res://scenes/battle/frame_clip.gd" id="2_clip"]
+
+[sub_resource type="Resource" id="clip_idle"]
+script = ExtResource("2_clip")
+id = &"idle"
+sheet_path = "res://assets/pixel/characters/enemy_swarmling/enemy_swarmling_idle.png"
+frame_size = Vector2i(256, 256)
+columns = 5
+count = 5
+fps = 6
+looping = true
+anchor = Vector2(136, 244)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_windup"]
+script = ExtResource("2_clip")
+id = &"windup"
+sheet_path = "res://assets/pixel/characters/enemy_swarmling/enemy_swarmling_windup.png"
+frame_size = Vector2i(256, 256)
+columns = 3
+count = 3
+fps = 8
+looping = false
+anchor = Vector2(136, 244)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/pixel/characters/enemy_swarmling/enemy_swarmling_strike.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(136, 244)
+impact_frame = 0
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/pixel/characters/enemy_swarmling/enemy_swarmling_fall.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(136, 244)
+impact_frame = -1
+pose_time = 0.4
+
+[resource]
+script = ExtResource("1_set")
+character_id = &"enemy_swarmling"
+figure_height = 50.0
+display_scale = 1
+attack_style = &"melee"
+spell_style = &"orb"
+blessing_style = &"ring"
+weight = &"light"
+halo_center = Vector2(0, 0)
+halo_diameter = 0
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_fall")])

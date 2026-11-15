@@ -36,15 +36,17 @@ const BLOW_HOLD: float = 0.45
 ## The front layer of the scenery shows only in the corners of the battle,
 ## pushed down, so nothing covers the fighters (D-258).
 const FRONT_DROP: float = 110.0
-const FRONT_CORNER: float = 110.0
+const FRONT_CORNER: float = 64.0
 ## Shake and push of the impact camera were measured on the old 1920 stage.
 const CAMERA_REACH: float = 0.5
 ## The Lume (expedition light) on the left edge (D-257): a lantern that
 ## slides down an iron rod as the light fades.
-const LUME_X: float = 24.0
-const LUME_TOP: float = 34.0
-const LUME_BOTTOM: float = 230.0
-const LANTERN_SIZE := Vector2(22, 34)
+const LUME_X: float = 26.0
+const LUME_TOP: float = 70.0
+const LUME_BOTTOM: float = 236.0
+const LANTERN_SIZE := Vector2(31, 67)
+## Top of the iron rod the lantern slides on (the drawn piece, D-385).
+const ROD_TOP: float = 22.0
 ## The pieces of the panel (positions on the stage, from the approved
 ## preview v2) and the windows inside them, measured on the pieces.
 const ARCH_POS := Vector2(8, 366)
@@ -1285,23 +1287,24 @@ func _build_field() -> void:
 	_layout_field()
 
 
-## The Lume as in the approved preview (v2): an iron rod and a small
-## lantern with its flame, drawn by the engine until the drawn piece comes.
+## The Lume (D-257): the drawn iron rod with its notches and the lit
+## lantern that slides down it as the light fades (pieces of D-385).
 func _build_lume(holder: Control) -> void:
 	_lume_holder = Control.new()
 	_lume_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lume_holder.visible = false
 	holder.add_child(_lume_holder)
-	var rod := ColorRect.new()
+	var rod := TextureRect.new()
 	rod.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rod.color = PixelStyle.COLOR_LEAD_LIGHT
-	rod.position = Vector2(LUME_X - 1.0, LUME_TOP - LANTERN_SIZE.y * 0.5)
-	rod.size = Vector2(2, LUME_BOTTOM - LUME_TOP + LANTERN_SIZE.y)
+	rod.texture = PixelStyle.piece("ui_lume_rod")
+	if rod.texture != null:
+		rod.position = Vector2(roundf(LUME_X - rod.texture.get_width() * 0.5), ROD_TOP)
 	_lume_holder.add_child(rod)
-	_lantern = Control.new()
-	_lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_lantern.size = LANTERN_SIZE
-	_lantern.draw.connect(_draw_lantern)
+	var lantern := TextureRect.new()
+	lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lantern.texture = PixelStyle.piece("ui_lantern_on")
+	lantern.size = LANTERN_SIZE
+	_lantern = lantern
 	_lume_holder.add_child(_lantern)
 	_lume_label = Label.new()
 	_lume_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1310,12 +1313,6 @@ func _build_lume(holder: Control) -> void:
 	_lume_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_lume_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
 	_lume_holder.add_child(_lume_label)
-
-
-func _draw_lantern() -> void:
-	_lantern.draw_rect(Rect2(Vector2.ZERO, LANTERN_SIZE), PixelStyle.COLOR_LEAD_LIGHT)
-	_lantern.draw_rect(Rect2(Vector2(2, 2), LANTERN_SIZE - Vector2(4, 4)), PixelStyle.COLOR_IRON)
-	_draw_flame(_lantern, Vector2(LANTERN_SIZE.x * 0.5, LANTERN_SIZE.y * 0.5 + 6.0), 2)
 
 
 ## A small flame in whole pixels, as in the approved preview: a diamond of

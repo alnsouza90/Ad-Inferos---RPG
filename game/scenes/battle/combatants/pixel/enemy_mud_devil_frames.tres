@@ -16,6 +16,45 @@ anchor = Vector2(168, 256)
 impact_frame = -1
 pose_time = 0.4
 
+[sub_resource type="Resource" id="clip_strike"]
+script = ExtResource("2_clip")
+id = &"strike"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_strike.png"
+frame_size = Vector2i(256, 256)
+columns = 4
+count = 4
+fps = 8
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = 0
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_defend"]
+script = ExtResource("2_clip")
+id = &"defend"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_defend.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_fall"]
+script = ExtResource("2_clip")
+id = &"fall"
+sheet_path = "res://assets/pixel/characters/enemy_mud_devil/enemy_mud_devil_fall.png"
+frame_size = Vector2i(256, 256)
+columns = 1
+count = 1
+fps = 0
+looping = false
+anchor = Vector2(168, 256)
+impact_frame = -1
+pose_time = 0.4
+
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_mud_devil"
@@ -27,4 +66,4 @@ blessing_style = &"ring"
 weight = &"heavy"
 halo_center = Vector2(0, 0)
 halo_diameter = 0
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_strike"), SubResource("clip_defend"), SubResource("clip_fall")])

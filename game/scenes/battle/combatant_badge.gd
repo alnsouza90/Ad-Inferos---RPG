@@ -18,7 +18,8 @@ const MARK_DASH: float = 8.0
 const MARK_STEP: float = 12.0
 const MARK_WIDTH: float = 2.0
 const INTENT_SIZE: float = 22.0
-const INTENT_DISC: float = 30.0
+## The iron oculus around the intent (D-385): 35 pixels drawn.
+const INTENT_DISC: float = 35.0
 const CONDITION_SIZE: float = 16.0
 const PREVIEW_WIDTH: float = 120.0
 
@@ -224,9 +225,13 @@ func _draw_mark() -> void:
 	draw_rect(Rect2(MARK_HALF - MARK_WIDTH, -4, MARK_WIDTH, 7), color)
 
 
-## An iron disc with a blood rim, as in the approved preview (v2).
+## The drawn iron oculus (D-385), cracked in red when the intent hits
+## for a number; a plain disc if the piece is missing.
 func _draw_disc() -> void:
+	var piece: Texture2D = PixelStyle.piece("ui_oculus_cracked" if not _intent_value.text.is_empty() else "ui_oculus")
+	if piece != null:
+		_intent_disc.draw_texture(piece, ((Vector2(INTENT_DISC, INTENT_DISC) - piece.get_size()) * 0.5).floor())
+		return
 	var c := Vector2(INTENT_DISC, INTENT_DISC) * 0.5
-	var r: float = INTENT_DISC * 0.5
-	_intent_disc.draw_circle(c, r, PixelStyle.COLOR_BLOOD)
-	_intent_disc.draw_circle(c, r - 2.0, PixelStyle.COLOR_IRON)
+	_intent_disc.draw_circle(c, INTENT_DISC * 0.5, PixelStyle.COLOR_BLOOD)
+	_intent_disc.draw_circle(c, INTENT_DISC * 0.5 - 2.0, PixelStyle.COLOR_IRON)
