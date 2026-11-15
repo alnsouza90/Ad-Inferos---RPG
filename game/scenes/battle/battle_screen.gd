@@ -1034,6 +1034,9 @@ func _ensure_view(c: Combatant) -> CombatantView:
 	view.set_info_visible(false)
 	view.speed = SPEEDS[speed_index]
 	if view.player() != null:
+		# The fight in poses (T60, D-359): every character, saint or enemy,
+		# shows the safe last frame of each action and a slow idle.
+		view.player().pose_mode = true
 		view.player().outline_width = 1.0
 		CircleLook.light_figure(view.player(), c.is_saint())
 		# Painted frames (not pixel art yet) are shrunk with the smooth filter.

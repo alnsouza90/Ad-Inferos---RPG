@@ -175,3 +175,10 @@ func test_figures_are_spaced_and_portraits_use_the_bust() -> void:
 	var portrait: Texture2D = screen.portrait_texture()
 	assert_not_null(portrait)
 	assert_true(portrait.resource_path.ends_with("_bust.png"), "retrato pelo busto em tamanho cheio")
+
+
+## T60: the battle shows every character in poses; the walk does not.
+func test_battle_fights_in_poses() -> void:
+	var screen: BattleScreen = _battle(&"m0_hard_02")
+	for c: Combatant in screen.ctrl.state.party + screen.ctrl.state.enemies:
+		assert_true(screen.view_of(c.id).player().pose_mode, "%s em poses" % c.id)
