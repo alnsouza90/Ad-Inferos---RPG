@@ -11,6 +11,9 @@ signal clip_started(clip_id: StringName)
 ## Breathing over the idle loop: a slow stretch of the figure from its feet.
 const BREATH_AMOUNT: float = 0.012
 const BREATH_PERIOD: float = 3.2
+## Fight in poses (D-360): how many idle frames, and how many per second.
+const POSE_IDLE_FRAMES: int = 3
+const POSE_IDLE_FPS: float = 2.5
 ## A single drawn pose (Minos) pops in: it starts a little bigger.
 const POSE_POP: float = 0.06
 const POSE_POP_TIME: float = 0.15
@@ -19,6 +22,10 @@ const POSE_POP_TIME: float = 0.15
 static var _sheets: Dictionary = {}
 
 var frames: CharacterFrames
+## The fight in poses (T60, D-359, D-360): every action shows only its last,
+## safe frame, held; the idle steps slowly through a few of its frames and
+## the engine adds the breathing. The walk keeps whole clips (off).
+var pose_mode: bool = false
 var feet: Vector2 = Vector2.ZERO
 var display_height: float = 300.0
 ## Animation speed factor: 1 normal, 2 fast, 0 still (first frame only).
@@ -74,7 +81,24 @@ func play(clip_id: StringName) -> float:
 	_finished = false
 	queue_redraw()
 	clip_started.emit(clip_id)
-	return scaled(_clip.duration())
+	return scaled(duration_of(_clip))
+
+
+## Seconds of one pass of `clip` at normal speed; in the fight in poses an
+## action is its last frame, held for the pose time.
+func duration_of(clip: FrameClip) -> float:
+	if clip == null:
+		return 0.0
+	if pose_mode and not clip.looping:
+		return clip.pose_time
+	return clip.duration()
+
+
+## Seconds from the start of `clip` to its blow; a pose lands at once.
+func impact_of(clip: FrameClip) -> float:
+	if clip == null or pose_mode:
+		return 0.0
+	return clip.impact_time()
 
 
 ## Seconds at the current speed.
@@ -87,7 +111,22 @@ func clip_id() -> StringName:
 
 
 func frame() -> int:
-	return _clip.frame_at(_time) if _clip != null else 0
+	if _clip == null:
+		return 0
+	if pose_mode:
+		if not _clip.looping:
+			return _clip.count - 1
+		return pose_idle_frame(_clip, _time)
+	return _clip.frame_at(_time)
+
+
+## The idle of the fight (D-360): a few frames spread over the clip, slowly.
+static func pose_idle_frame(clip: FrameClip, time: float) -> int:
+	var shown: int = mini(POSE_IDLE_FRAMES, clip.count)
+	if shown <= 1:
+		return 0
+	var step: int = int(floor(maxf(time, 0.0) * POSE_IDLE_FPS)) % shown
+	return int(step * clip.count / shown)
 
 
 func is_finished() -> bool:
@@ -101,7 +140,7 @@ func advance(delta: float) -> void:
 	var before: int = frame()
 	_time += delta * speed
 	_breath_time += delta * speed
-	if not _clip.looping and not _finished and _time >= _clip.duration():
+	if not _clip.looping and not _finished and _time >= duration_of(_clip):
 		_finished = true
 		clip_finished.emit(_clip.id)
 	if frame() != before or _clip.id == &"idle" or _time < POSE_POP_TIME:

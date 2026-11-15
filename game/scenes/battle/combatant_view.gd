@@ -409,8 +409,8 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	# ...and its own release (Vertigo's shadow claws, D-247).
 	var strike_id: StringName = &"spell_strike" if _frames.has_clip(&"spell_strike") else &"strike"
 	var strike: FrameClip = _frames.clip(strike_id)
-	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
-	var release: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
+	var strike_time: float = _player.scaled(_player.duration_of(strike)) if strike != null else 0.0
+	var release: float = _player.scaled(_player.impact_of(strike)) if strike != null else 0.0
 	var hold: float = _player.scaled(HOLD_TIME)
 	# The orb flies and the crosses orbit before landing; the boss' own smoke
 	# and Vertigo's spell land at once.
@@ -453,7 +453,7 @@ func play_blessing(target_global: Vector2 = Vector2.INF) -> float:
 		return 0.0
 	_player.speed = speed
 	var windup: float = _player.play(&"windup") if _frames.has_clip(&"windup") else 0.0
-	var strike_time: float = _player.scaled(_frames.clip(&"strike").duration()) if _frames.has_clip(&"strike") else 0.0
+	var strike_time: float = _player.scaled(_player.duration_of(_frames.clip(&"strike"))) if _frames.has_clip(&"strike") else 0.0
 	var glow: float = _player.scaled(BLESSING_TIME)
 	var feet: Vector2 = target_global if target_global != Vector2.INF else feet_global()
 	var tw := create_tween()
@@ -515,7 +515,10 @@ func play_hit() -> float:
 	var recoil := home + Vector2(-14.0 if is_saint else 14.0, 0)
 	_body.modulate = Color(1.6, 0.5, 0.5)
 	if _player != null and not _down:
-		var clip_time: float = _player.play(&"hit") if _frames.has_clip(&"hit") else 0.0
+		# No pose of its own for the blow taken (D-368): in the fight in poses
+		# the guard shows, shaken and flashed by the weight of the blow.
+		var hit_id: StringName = &"hit" if _frames.has_clip(&"hit") else (&"defend" if _player.pose_mode and _frames.has_clip(&"defend") else &"")
+		var clip_time: float = _player.play(hit_id) if hit_id != &"" else 0.0
 		t = maxf(t, clip_time)
 		var hit_tw := create_tween()
 		# The colour comes back on its own clock: joined to the first step it
@@ -698,8 +701,8 @@ func _play_frame_attack(reach_px: float) -> float:
 		windup = maxf(windup, _player.scaled(BlowWeight.value(weight(), "anticipation")))
 	var freeze: float = blow_freeze()
 	var strike: FrameClip = _frames.clip(_melee_strike_id())
-	var strike_time: float = _player.scaled(strike.duration()) if strike != null else 0.0
-	var blow: float = _player.scaled(strike.impact_time()) if strike != null else 0.0
+	var strike_time: float = _player.scaled(_player.duration_of(strike)) if strike != null else 0.0
+	var blow: float = _player.scaled(_player.impact_of(strike)) if strike != null else 0.0
 	var dash: float = _player.scaled(DASH_MAX_TIME)
 	if blow > 0.0:
 		dash = minf(dash, blow)
