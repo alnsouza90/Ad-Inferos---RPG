@@ -8,4 +8,4 @@ enemy_swarm_mother,Mãe-Enxame,a,2|3|4|5,corporeal,summoner,1,34,1,,,,swarm_moth
 enemy_swarmling,Enxame,a,2|3|4|5,corporeal,brute,1,10,0,,,,swarmling_bite,enemy_swarmling,,,,,
 elite_minos,Minos,elite,2,corporeal,guard,1,72,2,,,,minos_coil|minos_summon|minos_tail_lash,elite_minos,,,,,
 elite_sin_vertigo,Vertigem,elite,2,spiritual,manipulator,1,80,0,stun,,,vertigo_enchant|vertigo_whirl|vertigo_veils,elite_sin_vertigo,,,,,
-boss_asmodeus,Asmodeu,boss,2,spiritual,boss,2,150,1,,,,asmodeus_seven_nights|asmodeus_ring|asmodeus_gale|asmodeus_enchant|asmodeus_breath|asmodeus_three_heads|asmodeus_lance,boss_asmodeus,0.5,0.66|0.33,1,1,enemy_shade_of_desire|enemy_shade_of_desire
+boss_asmodeus,Asmodeu,boss,2,spiritual,boss,2,150,1,,,,asmodeus_seven_nights|asmodeus_ring|asmodeus_gale|asmodeus_enchant|asmodeus_breath|asmodeus_three_heads|asmodeus_lance,boss_asmodeus,0.5,0.66|0.33,1,1,

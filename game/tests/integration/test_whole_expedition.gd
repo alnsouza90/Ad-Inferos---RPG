@@ -57,7 +57,7 @@ func test_the_camp_leads_to_leg_2_with_the_hard_pool_and_the_soul_meeting() -> v
 	assert_eq(soul[0].type, MapNode.TYPE_SOUL)
 	for n: MapNode in c.map.all_nodes():
 		if n.type == MapNode.TYPE_BATTLE:
-			assert_true(cat.encounter_pool(2, &"hard").has(n.encounter_id), "trecho 2: grupo difícil")
+			assert_true(cat.encounter_pool(2, &"hard").has(n.encounter_id) or cat.encounter_pool(2, &"easy").has(n.encounter_id), "trecho 2: metade fácil, metade difícil (D-421)")
 
 
 func test_leg_3_holds_the_fish_on_one_node_and_ends_at_the_vigil() -> void:

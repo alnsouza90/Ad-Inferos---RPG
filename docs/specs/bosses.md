@@ -113,7 +113,7 @@ Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
 | --- | --- |
 | Vida | [asmodeus_max_hp] = 150 |
 | Armadura | [asmodeus_armor] = 1 |
-| Tamanho | 2 posições (1 e 2) |
+| Tamanho | 2 posições (1 e 2); na tela, o desenho atual ampliado 2× (D-421) |
 | Ações por rodada | 1 (+1 com a garra 2 do Domínio) |
 | Fases | Limiares de vida: [0,5] → 2 fases; com a garra 3 do Domínio: [0,66, 0,33] → 3 fases |
 
@@ -140,7 +140,7 @@ Asmodeu segura a alma do Peregrino com um Domínio de **3 garras**, visível jun
 
 | Garra | Vantagem do chefe | Cede quando |
 | --- | --- | --- |
-| 1 · Escolta | A luta começa com 2 Sombras do Desejo nas posições 3 e 4 | A **primeira** vez que a companhia alcança o Peregrino no Círculo 2 (Tentação bem resolvida ou Encontro com a alma) |
+| 1 · ~~Escolta~~ | ~~A luta começa com 2 Sombras do Desejo nas posições 3 e 4~~ Asmodeu luta sozinho (D-421); o que esta garra passa a ser está em aberto | A **primeira** vez que a companhia alcança o Peregrino no Círculo 2 (Tentação bem resolvida ou Encontro com a alma) |
 | 2 · Ação a mais | +1 ação por rodada | A **segunda** vez |
 | 3 · Fase extra | 3 fases em vez de 2, com as Três cabeças e o Encanto do desejo | A companhia leva o **fígado do peixe** (§5.3) |
 

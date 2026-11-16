@@ -121,10 +121,11 @@ func _generate_leg(leg: int) -> LegMap:
 	var c: ExpeditionCatalog = catalog
 	var stream := RngStream.new(state.map_seed if leg == 1 else RngStream.hash32(state.map_seed ^ RngStream.fnv1a32("leg_%d" % leg)), RngStreams.MAP)
 	var generator := MapGenerator.new(c.constants, stream)
-	generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy" if leg == 1 else &"hard")
-	# Being simulated (T42): leg 2 drawing from both pools, half and half.
-	if (leg == 2 and c.constants.get_float_or(&"sim_leg2_mixed", 0.0) > 0.0) or (leg == 3 and c.constants.get_float_or(&"sim_leg3_mixed", 0.0) > 0.0):
-		generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy") + c.encounter_pool(ambush_encounter_circle, &"hard")
+	# Leg 1 draws from the easy pool; legs 2 and 3 from both, half and half
+	# (D-421, package G).
+	generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy")
+	if leg > 1:
+		generator.battle_encounters += c.encounter_pool(ambush_encounter_circle, &"hard")
 	generator.elite_encounters = c.encounter_pool(ambush_encounter_circle, &"elite")
 	generator.allow_elite = not generator.elite_encounters.is_empty()
 	generator.guardian_encounters = c.encounter_pool(ambush_encounter_circle, &"guardian")
@@ -1076,11 +1077,9 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 		var bosses: Array[StringName] = catalog.encounter_pool(ambush_encounter_circle, &"boss")
 		_start_battle(bosses[0], BOSS_SEED_KEY)
 		return &""
-	# Being simulated (T42): the rest also heals every saint a share of hp.
-	var rest_heal: float = c.get_float_or(&"sim_rest_heal_all", 0.0)
-	if rest_heal > 0.0:
-		for saint_id: StringName in state.party:
-			_heal_pct(saint_id, rest_heal)
+	# expedition §6 (D-421, package G): the rest also heals every saint.
+	for saint_id: StringName in state.party:
+		_heal_pct(saint_id, c.get_float(&"rest_heal_all_pct"))
 	if not refund:
 		state.provisions.erase(&"bread")
 	state.next_battle_fervor = mini(prayers, c.get_int(&"prayer_fervor_cap"))

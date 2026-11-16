@@ -83,7 +83,7 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 
 | Nó | Conteúdo |
 | --- | --- |
-| `node_battle` | Encontro comum do círculo (`encounters.csv`, grupo fácil no trecho 1, difícil nos trechos 2 e 3) |
+| `node_battle` | Encontro comum do círculo (`encounters.csv`): grupo fácil no trecho 1; nos trechos 2 e 3, sorteio entre os dois grupos, metade fácil e metade difícil (D-421) |
 | `node_elite` | Guardião ou Pecado Encarnado do círculo, com escolta |
 | `node_temptation` | Evento de Tentação (`narrative-system.md`) |
 | `node_soul` | Encontro com a alma (narrativa, sem combate) |
@@ -138,7 +138,8 @@ Ao chegar ao `node_camp`:
 | Oração | +1 de Fervor inicial no próximo combate (somando as Orações, no máximo +2); a emboscada deste Pouso conta como próximo combate (D-143) |
 | Atividade própria | Definida em `saints.csv` (`camp_skill`) |
 
-4. Depois das atividades, sorteio de emboscada: [ambush_chance] (25%), multiplicada pelo Lume e pela atividade própria (Guarda de Jorge); se a emboscada acontecer e a equipe levar Incenso, ela é anulada e o Incenso é gasto. Emboscada = combate comum do trecho seguinte, iniciado com a equipe como está; as Esmolas dela ficam garantidas ao voltar ao Pouso.
+4. Depois das atividades, o descanso cura cada santo [rest_heal_all_pct] (30%) da vida máxima (D-421).
+5. Depois, sorteio de emboscada: [ambush_chance] (25%), multiplicada pelo Lume e pela atividade própria (Guarda de Jorge); se a emboscada acontecer e a equipe levar Incenso, ela é anulada e o Incenso é gasto. Emboscada = combate comum do trecho seguinte, iniciado com a equipe como está; as Esmolas dela ficam garantidas ao voltar ao Pouso.
 
 ## 7. Vigília (antes do chefe)
 

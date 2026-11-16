@@ -117,3 +117,5 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Asmodeu sem escolta cai em 5 rodadas (100%); medir na T42 com a companhia gasta antes de mudar números; se fácil, aumentar a força dos golpes (D-410) | T42 | 15/11/2026 |
 | ~~Especial da fase 3 de Asmodeu (D-410): escolher entre as propostas tiradas das referências~~ As sete noites e Anel da invisibilidade (D-411); números aprovados (D-412) | Alan | 15/11/2026 |
 | ~~Como as garras do Domínio cedem ("alcançar o Peregrino"): alinhar com Alan o que está em `bosses.md` §5.2 e `narrative-system.md` §3.2~~ Regra mantida; o encontro físico com o Peregrino só na sala de Lúcifer (D-411) | Alan | 15/11/2026 |
+| Garra 1 do Domínio de Asmodeu sem a escolta (D-421): o que ela passa a dar | Alan | 16/11/2026 |
+| Asmodeu 2×: sombra cinza de chão que veio no desenho aparece embaixo dos pés; a coroa encosta no topo do campo | T44/T53 | 16/11/2026 |
