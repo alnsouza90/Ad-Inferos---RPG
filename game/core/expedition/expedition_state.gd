@@ -6,6 +6,12 @@ extends RefCounted
 ## is filled by the generator (T20).
 
 var circle: StringName = &""
+## Leg in progress, 1 to 3 (expedition §1, T42).
+var leg: int = 1
+## Times the company reached the Pilgrim in this expedition (Domínio, D-284,
+## bosses.md §5.2), and the fish's liver for the boss (§5.3).
+var dominion_reached: int = 0
+var has_liver: bool = false
 var map_seed: int = 0
 var map: Dictionary = {}
 ## Node the party is in (or just left, while walking to the next layer);
@@ -89,7 +95,8 @@ func light_band(constants: ConstantsDef) -> StringName:
 
 func to_dict() -> Dictionary:
 	return {
-		"circle": String(circle), "map_seed": map_seed, "map": map.duplicate(true),
+		"circle": String(circle), "leg": leg, "dominion_reached": dominion_reached, "has_liver": has_liver,
+		"map_seed": map_seed, "map": map.duplicate(true),
 		"current_node": String(current_node), "visited": _to_strings(visited), "light": light,
 		"provisions": _to_strings(provisions), "alms_unbanked": alms_unbanked, "alms_banked": alms_banked,
 		"party": _to_strings(party), "fallen_once": _to_strings(fallen_once),
@@ -103,6 +110,9 @@ func to_dict() -> Dictionary:
 static func from_dict(data: Dictionary) -> ExpeditionState:
 	var state := ExpeditionState.new()
 	state.circle = StringName(str(data.get("circle", "")))
+	state.leg = int(data.get("leg", 1))
+	state.dominion_reached = int(data.get("dominion_reached", 0))
+	state.has_liver = bool(data.get("has_liver", false))
 	state.map_seed = int(data.get("map_seed", 0))
 	var raw_map: Variant = data.get("map", {})
 	if raw_map is Dictionary:

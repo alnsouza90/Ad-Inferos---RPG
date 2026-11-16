@@ -22,6 +22,8 @@ var relics: Array[StringName] = []
 var faith_bonus: int = 0
 ## Battles ended standing in the current Dark Night (Fidelity, D-271).
 var fidelity_marks: int = 0
+## Experience earned (expedition §8, T42); levels come with the village.
+var xp: int = 0
 
 
 static func from_def(def: SaintDef) -> SaintStatus:
@@ -53,7 +55,7 @@ func to_dict() -> Dictionary:
 		"id": String(id), "max_hp": max_hp, "hp": hp, "desolation": desolation,
 		"spirit_state": String(spirit_state), "purified": purified, "injury": String(injury),
 		"relics": relics.map(func(r: StringName) -> String: return String(r)), "faith_bonus": faith_bonus,
-		"fidelity_marks": fidelity_marks,
+		"fidelity_marks": fidelity_marks, "xp": xp,
 	}
 
 
@@ -70,4 +72,5 @@ static func from_dict(data: Dictionary) -> SaintStatus:
 		s.relics.append(StringName(str(r)))
 	s.faith_bonus = int(data.get("faith_bonus", 0))
 	s.fidelity_marks = int(data.get("fidelity_marks", 0))
+	s.xp = int(data.get("xp", 0))
 	return s

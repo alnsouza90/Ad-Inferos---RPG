@@ -31,6 +31,10 @@ var elite_encounters: Array[StringName] = []
 var allow_elite: bool = false
 ## The circle's Guardian encounters (pool `guardian`); empty: no Guardian.
 var guardian_encounters: Array[StringName] = []
+## Leg 3 holds "O peixe do Tigre" in one variable node (D-414).
+var with_fish: bool = false
+const FISH_LEG: int = 3
+const CONTENT_FISH: StringName = &"fish_liver"
 
 
 func _init(p_constants: ConstantsDef, p_rng: RngStream) -> void:
@@ -44,10 +48,12 @@ func generate(leg: int, reserve: MapTemplateDef) -> LegMap:
 		var map: LegMap = _attempt(leg)
 		if map != null:
 			_add_guardian(map)
+			_add_fish(map)
 			_assign_encounters(map)
 			return map
 	var fallback: LegMap = LegMap.from_template(reserve)
 	_add_guardian(fallback)
+	_add_fish(fallback)
 	_assign_encounters(fallback)
 	return fallback
 
@@ -63,6 +69,22 @@ func _add_guardian(map: LegMap) -> void:
 	guardian.role = MapNode.ROLE_GUARDIAN
 	guardian.type = MapNode.TYPE_ELITE
 	map.layers.append([guardian])
+
+
+## D-414: one variable node of leg 3 becomes the fish's relic node, so it
+## lies on some paths only and the player chooses to go for it.
+func _add_fish(map: LegMap) -> void:
+	if map.leg != FISH_LEG or not with_fish:
+		return
+	var variables: Array[MapNode] = []
+	for n: MapNode in map.all_nodes():
+		if n.role == MapNode.ROLE_VARIABLE:
+			variables.append(n)
+	if variables.is_empty():
+		return
+	var fish: MapNode = variables[rng.pick_index(variables.size())]
+	fish.type = MapNode.TYPE_RELIC
+	fish.content = CONTENT_FISH
 
 
 ## True when the leg ends with the Guardian's own layer (D-407).

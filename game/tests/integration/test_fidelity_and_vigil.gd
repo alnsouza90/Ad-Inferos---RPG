@@ -146,7 +146,7 @@ func test_a_version_2_save_is_rebuilt_under_the_new_rules() -> void:
 	save["expedition"]["check"]["saints"]["saint_george"]["desolation"] = 999
 	assert_null(ExpeditionSave.restore(cat, save), "sem migração, o save antigo não abre")
 	var migrated: Dictionary = SaveMigrations.new().migrate(save)
-	assert_eq(int(migrated["save_version"]), 3)
+	assert_eq(int(migrated["save_version"]), SaveMigrations.CURRENT_VERSION)
 	var ctrl := ExpeditionSave.restore(cat, migrated)
 	assert_not_null(ctrl, "com a migração, abre")
 	assert_eq(JSON.stringify(ExpeditionSave._plain(ctrl.snapshot())), expected, "refeito com as regras novas")

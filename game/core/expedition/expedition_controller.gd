@@ -12,13 +12,19 @@ extends RefCounted
 ## in the corridor until the party reaches it (§2.3 item 4, D-185).
 
 ## New values only at the end: the phase is saved as a number.
-enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT, IN_RELIC, PENDING }
+enum Phase { AT_FORK, IN_BATTLE, IN_NODE, AT_CAMP, ENDED, IN_EVENT, IN_RELIC, PENDING, AT_VIGIL }
 
 const END_DEFEATED: StringName = &"defeated"
 const END_RETREATED: StringName = &"retreated"
 const END_PLANNED_RETREAT: StringName = &"planned_retreat"
-## M1 only: the leg ends after its camp (expedition §13).
+## M1 only: the leg ended after its camp (expedition §13); kept for old saves.
 const END_LEG_COMPLETE: StringName = &"leg_complete"
+## The boss was beaten: the circle is complete (expedition §1, T42).
+const END_CIRCLE_COMPLETE: StringName = &"circle_complete"
+## Legs of a circle (expedition §1): camps after legs 1 and 2, the Vigil and
+## the boss after leg 3.
+const LAST_LEG: int = 3
+const BOSS_SEED_KEY: StringName = &"boss"
 
 const ACTIVITY_VIGIL: StringName = &"vigil"
 const ACTIVITY_SHARE: StringName = &"share"
@@ -51,6 +57,10 @@ const EV_AMBUSH: StringName = &"ambush"
 const EV_RELIC_FOUND: StringName = &"relic_found"
 const EV_RELIC_PLACED: StringName = &"relic_placed"
 const EV_FIDELITY_MARK: StringName = &"fidelity_mark"
+const EV_LEG_STARTED: StringName = &"leg_started"
+const EV_LIVER_FOUND: StringName = &"liver_found"
+const EV_DOMINION: StringName = &"dominion_yielded"
+const EV_VIGIL_REACHED: StringName = &"vigil_reached"
 
 var catalog: ExpeditionCatalog
 var state: ExpeditionState
@@ -96,18 +106,47 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 	c.virtues = Virtues.start(p_catalog.constants)
 	for id: StringName in party:
 		c.saints[id] = SaintStatus.from_def(p_catalog.saint(id))
-	var generator := MapGenerator.new(p_catalog.constants, RngStream.new(map_seed, RngStreams.MAP))
-	generator.battle_encounters = p_catalog.encounter_pool(encounter_circle, &"easy")
-	# Elites in the variable node (expedition §2.1; T40): only where the
-	# circle has elite encounters, so the arena legs keep their maps.
-	generator.elite_encounters = p_catalog.encounter_pool(encounter_circle, &"elite")
-	generator.allow_elite = not generator.elite_encounters.is_empty()
-	generator.guardian_encounters = p_catalog.encounter_pool(encounter_circle, &"guardian")
 	c.ambush_encounter_circle = encounter_circle
-	c.map = generator.generate(1, p_catalog.reserves.get(1))
+	c.map = c._generate_leg(1)
 	c.state.map = c.map.to_dict()
 	c._initial = c.snapshot()
 	return c
+
+
+## The map of leg `leg` (expedition §2, §3): the easy pool in leg 1 and the
+## hard one after it; the circle's elites in the variable node, its Guardian
+## at the end of leg 1 and the fish in leg 3 (only where the circle has them,
+## so the arena legs keep their maps). Leg 1 keeps the stream of the M1 saves.
+func _generate_leg(leg: int) -> LegMap:
+	var c: ExpeditionCatalog = catalog
+	var stream := RngStream.new(state.map_seed if leg == 1 else RngStream.hash32(state.map_seed ^ RngStream.fnv1a32("leg_%d" % leg)), RngStreams.MAP)
+	var generator := MapGenerator.new(c.constants, stream)
+	generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy" if leg == 1 else &"hard")
+	generator.elite_encounters = c.encounter_pool(ambush_encounter_circle, &"elite")
+	generator.allow_elite = not generator.elite_encounters.is_empty()
+	generator.guardian_encounters = c.encounter_pool(ambush_encounter_circle, &"guardian")
+	generator.with_fish = not c.encounter_pool(ambush_encounter_circle, &"boss").is_empty()
+	return generator.generate(leg, c.reserves.get(leg))
+
+
+## The circle has its boss, so the expedition has three legs (T42); the
+## arena encounters have none and keep the one-leg shape of the M1.
+func has_full_circle() -> bool:
+	return not catalog.encounter_pool(ambush_encounter_circle, &"boss").is_empty()
+
+
+## Next leg after a camp (T42): a new map, the walk starts at its gate side.
+func _start_leg(leg: int) -> void:
+	state.leg = leg
+	map = _generate_leg(leg)
+	state.map = map.to_dict()
+	state.current_node = &""
+	state.visited.clear()
+	state.revealed_nodes.clear()
+	state.camp_reached = false
+	state.camp_rested = false
+	phase = Phase.AT_FORK
+	_emit(EV_LEG_STARTED, {"leg": leg})
 
 
 ## Seed of an expedition's map (expedition §2): derived from the campaign
@@ -350,6 +389,13 @@ func _open_content(target: MapNode) -> void:
 		_start_battle(target.encounter_id, target.id)
 	elif target.type == MapNode.TYPE_TEMPTATION and _start_event(target):
 		pass
+	elif target.type == MapNode.TYPE_SOUL and _start_event(target, &"soul_meeting"):
+		pass
+	elif target.content == MapGenerator.CONTENT_FISH:
+		# bosses.md §5.3: the fish's liver, kept until the boss.
+		state.has_liver = true
+		_emit(EV_LIVER_FOUND, {"node": target.id})
+		phase = Phase.IN_NODE
 	elif target.type == MapNode.TYPE_RELIC and _start_relic_node(target):
 		pass
 	else:
@@ -449,8 +495,8 @@ func _change_desolation(saint_id: StringName, amount: int, source: StringName) -
 ## The Temptation of the node: one of the circle's Temptations, drawn from a
 ## stream of its own (node seed, `events`). Without any, the node is a plain
 ## pass-through.
-func _start_event(n: MapNode) -> bool:
-	var picked: EventDef = _pick_event()
+func _start_event(n: MapNode, type: StringName = &"temptation") -> bool:
+	var picked: EventDef = _pick_event(type)
 	if picked == null:
 		return false
 	event = picked
@@ -460,8 +506,8 @@ func _start_event(n: MapNode) -> bool:
 
 
 ## The Temptation the current node holds (null when the circle has none).
-func _pick_event() -> EventDef:
-	var pool: Array[EventDef] = catalog.events_for(&"temptation", circle_number())
+func _pick_event(type: StringName = &"temptation") -> EventDef:
+	var pool: Array[EventDef] = catalog.events_for(type, circle_number())
 	if pool.is_empty():
 		return null
 	return pool[_event_rng().pick_index(pool.size())]
@@ -573,6 +619,13 @@ func _apply_outcome(out: Dictionary) -> StringName:
 				flags.append(id)
 		"start_battle":
 			return id
+		"dominion":
+			# bosses.md §5.2: the company reaches the Pilgrim; a claw yields
+			# (at most twice an expedition; the liver opens the third).
+			var cap: int = Dominion.REACH_ORDER.size()
+			if state.dominion_reached < cap:
+				state.dominion_reached += 1
+				_emit(EV_DOMINION, {"reached": state.dominion_reached})
 		_:
 			_emit(&"outcome_not_in_m1", out)
 	return &""
@@ -687,8 +740,8 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 	bs.light = state.light
 	bs.hazard = enc.hazard
 	if enc.type == &"boss":
-		# The Domínio yields with the Pilgrim reached and the liver (T42).
-		bs.setup_boss(Dominion.claws(0, false), false)
+		# The Domínio yields with the Pilgrim reached and the liver (§5.2, §5.3).
+		bs.setup_boss(Dominion.claws(state.dominion_reached, state.has_liver), state.has_liver)
 	bs.vigil_saints = state.vigil_saints.duplicate()
 	bs.prayer_fervor = state.next_battle_fervor
 	state.next_battle_fervor = 0
@@ -702,7 +755,10 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 ## Each battle has its own seed, derived from the map seed and the node, so
 ## a battle never depends on how many draws earlier battles made.
 func battle_seed(node_id: StringName) -> int:
-	return RngStream.hash32(state.map_seed ^ RngStream.fnv1a32(String(node_id)))
+	# Node ids repeat in every leg: legs 2 and 3 add the leg to the key (leg 1
+	# keeps the key of the M1 saves).
+	var key: String = String(node_id) if state.leg == 1 else "leg%d_%s" % [state.leg, node_id]
+	return RngStream.hash32(state.map_seed ^ RngStream.fnv1a32(key))
 
 
 func _enemy_def(enemy_id: StringName) -> EnemyDef:
@@ -756,12 +812,17 @@ func _resolve_battle() -> void:
 	state.provisions = bs.provisions.duplicate()
 	match result:
 		BattleController.Phase.VICTORY:
-			var key: StringName = &"desolation_battle_end_elite" if bs.encounter_type == &"elite" else &"desolation_battle_end_common"
+			var key: StringName = &"desolation_battle_end_common"
+			if bs.encounter_type == &"elite":
+				key = &"desolation_battle_end_elite"
+			elif bs.encounter_type == &"boss":
+				key = &"desolation_battle_end_boss"
 			for saint: Combatant in bs.party:
 				if _keeps_fidelity(bs, saint):
 					continue
 				bs.add_desolation(saint, battle_end_desolation(bs, c.get_int(key)), &"battle_end")
 			state.alms_unbanked += battle_alms(bs.encounter_type)
+			_award_xp(bs)
 		BattleController.Phase.RETREAT:
 			for saint: Combatant in bs.party:
 				bs.add_desolation(saint, c.get_int(&"desolation_emergency_retreat"), &"emergency_retreat")
@@ -779,7 +840,9 @@ func _resolve_battle() -> void:
 	_emit(EV_BATTLE_RESOLVED, {"result": _result_name(result), "alms": state.alms_unbanked - alms_before})
 	match result:
 		BattleController.Phase.VICTORY:
-			if state.pending_relic != &"":
+			if bs.encounter_type == &"boss":
+				_complete_circle()
+			elif state.pending_relic != &"":
 				_award_relic()
 			else:
 				_after_node()
@@ -812,10 +875,38 @@ func _settle_saints(bs: BattleState) -> void:
 			status.fidelity_marks = 0
 
 
+## expedition §8: experience for every saint who took part (D-414: XP is
+## kept now; levels come with the village).
+func _award_xp(bs: BattleState) -> void:
+	var key: StringName = &"xp_battle"
+	if bs.encounter_type == &"elite":
+		key = &"xp_elite"
+	elif bs.encounter_type == &"boss":
+		key = &"xp_boss"
+	for saint: Combatant in bs.party:
+		(saints[saint.id] as SaintStatus).xp += catalog.constants.get_int(key)
+
+
+## The boss is beaten (expedition §1, §8): the Alms carried are kept, the
+## first completion of the circle adds its reward, and the expedition ends.
+func _complete_circle() -> void:
+	var flag := StringName("%s_completed" % state.circle)
+	if not flags.has(flag):
+		flags.append(flag)
+		state.alms_unbanked += Damage.round_half_up(catalog.economy.get_float(&"reward_circle_first_clear") * circle_alms_multiplier())
+	state.alms_banked += state.alms_unbanked
+	state.alms_unbanked = 0
+	_end(END_CIRCLE_COMPLETE)
+
+
 ## Alms of a won battle (expedition §8): base × circle band × low Light.
 func battle_alms(encounter_type: StringName) -> int:
 	var e: ConstantsDef = catalog.economy
-	var base: float = e.get_float(&"reward_elite") if encounter_type == &"elite" else e.get_float(&"reward_battle")
+	var base: float = e.get_float(&"reward_battle")
+	if encounter_type == &"elite":
+		base = e.get_float(&"reward_elite")
+	elif encounter_type == &"boss":
+		base = e.get_float(&"reward_boss")
 	var value: float = base * circle_alms_multiplier() * ExpeditionLight.alms_multiplier(state.light, catalog.constants)
 	return Damage.round_half_up(value)
 
@@ -849,10 +940,14 @@ static func _result_name(result: BattleController.Phase) -> StringName:
 # --- flow ---------------------------------------------------------------------
 
 func _after_node() -> void:
-	if current_layer() >= map.layer_count():
-		_arrive_at_camp()
-	else:
+	if current_layer() < map.layer_count():
 		phase = Phase.AT_FORK
+	elif state.leg >= LAST_LEG and has_full_circle():
+		# expedition §7: after leg 3, the Vigil before the boss.
+		phase = Phase.AT_VIGIL
+		_emit(EV_VIGIL_REACHED, {"dominion": Dominion.claws(state.dominion_reached, state.has_liver).size()})
+	else:
+		_arrive_at_camp()
 
 
 ## Reaching the camp consecrates it and banks the Alms carried (§6 step 1);
@@ -870,11 +965,13 @@ func _arrive_at_camp() -> void:
 
 ## Reason the rest cannot be taken with these activities, or &"" (E05).
 func rest_problem(activities: Array[Dictionary]) -> StringName:
-	if phase != Phase.AT_CAMP:
+	var vigil: bool = phase == Phase.AT_VIGIL
+	if phase != Phase.AT_CAMP and not vigil:
 		return REJECT_WRONG_PHASE
-	if state.camp_rested:
+	if state.camp_rested and not vigil:
 		return REJECT_ALREADY_RESTED
-	if not state.provisions.has(&"bread"):
+	# expedition §7: the Vigil needs no Bread and offers only Vigil or Share.
+	if not vigil and not state.provisions.has(&"bread"):
 		return REJECT_NO_BREAD
 	var seen: Dictionary = {}
 	for a: Dictionary in activities:
@@ -883,7 +980,10 @@ func rest_problem(activities: Array[Dictionary]) -> StringName:
 			return REJECT_BAD_ACTIVITY
 		seen[saint_id] = true
 		var target := StringName(str(a.get("target", "")))
-		match StringName(str(a.get("activity", ""))):
+		var activity := StringName(str(a.get("activity", "")))
+		if vigil and activity != ACTIVITY_VIGIL and activity != ACTIVITY_SHARE:
+			return REJECT_BAD_ACTIVITY
+		match activity:
 			ACTIVITY_VIGIL, ACTIVITY_PRAYER:
 				pass
 			ACTIVITY_SHARE:
@@ -916,6 +1016,7 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 	if problem != &"":
 		return problem
 	command_log.append(cmd.to_dict())
+	var at_vigil: bool = phase == Phase.AT_VIGIL
 	state.camp_rested = true
 	# The Vigil prepares the Faith test until the next rest (D-270).
 	state.vigil_saints.clear()
@@ -965,6 +1066,12 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 						# next_battle_condition, reveal_next_layer, suffrage_bonus:
 						# their saints and systems arrive after the M1.
 						_emit(&"camp_skill_not_in_m1", {"skill": skill.id})
+	if at_vigil:
+		# expedition §7: no Bread, no ambush, no consecration; then the boss.
+		_emit(EV_CAMP_RESTED, {"prayer_fervor": 0, "vigil": true})
+		var bosses: Array[StringName] = catalog.encounter_pool(ambush_encounter_circle, &"boss")
+		_start_battle(bosses[0], BOSS_SEED_KEY)
+		return &""
 	if not refund:
 		state.provisions.erase(&"bread")
 	state.next_battle_fervor = mini(prayers, c.get_int(&"prayer_fervor_cap"))
@@ -1010,7 +1117,13 @@ func _leave_camp(cmd: ExpeditionCommand) -> StringName:
 	if cmd.mode != ExpeditionCommand.MODE_CONTINUE and cmd.mode != ExpeditionCommand.MODE_RETREAT:
 		return REJECT_UNKNOWN_COMMAND
 	command_log.append(cmd.to_dict())
-	_end(END_PLANNED_RETREAT if cmd.mode == ExpeditionCommand.MODE_RETREAT else END_LEG_COMPLETE)
+	if cmd.mode == ExpeditionCommand.MODE_RETREAT:
+		_end(END_PLANNED_RETREAT)
+	elif state.leg < LAST_LEG and has_full_circle():
+		_start_leg(state.leg + 1)
+	else:
+		# The arena legs keep the M1 shape: one leg and its camp (§13).
+		_end(END_LEG_COMPLETE)
 	return &""
 
 
