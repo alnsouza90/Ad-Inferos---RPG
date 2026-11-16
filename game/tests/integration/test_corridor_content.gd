@@ -56,7 +56,8 @@ func test_engage_starts_each_kind_of_content() -> void:
 	var expected: Dictionary = {
 		MapNode.TYPE_TEMPTATION: [ExpeditionController.Phase.IN_EVENT],
 		MapNode.TYPE_RELIC: [ExpeditionController.Phase.IN_RELIC, ExpeditionController.Phase.IN_BATTLE],
-		MapNode.TYPE_SOUL: [ExpeditionController.Phase.IN_NODE],
+		# T42: the soul meeting opens its event (provisional text until T43).
+		MapNode.TYPE_SOUL: [ExpeditionController.Phase.IN_EVENT],
 	}
 	for type: StringName in expected:
 		var c := _entered(type)

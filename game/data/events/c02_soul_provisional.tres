@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="EventDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/event_def.gd" id="1_potwu"]
+
+[resource]
+script = ExtResource("1_potwu")
+id = &"c02_soul_provisional"
+type = &"soul_meeting"
+circle = 2
+title_pt = "Encontro com a alma (texto na T43)"
+origin = &"game_fiction"
+pages = [{
+"speaker": "narrator",
+"text_pt": "[Texto do Encontro com a alma: a escrever na T43.]"
+}]
+options = [{
+"chance": {},
+"failure_pt": "",
+"id": "listen",
+"on_failure": [],
+"on_success": [],
+"outcomes": [{
+"amount": 0.0,
+"id": "",
+"target": "",
+"type": "dominion"
+}],
+"requires": [],
+"result_pt": "[Resultado: texto na T43.]",
+"safe": true,
+"success_pt": "",
+"text_pt": "[Ouvir a alma: texto na T43]"
+}]

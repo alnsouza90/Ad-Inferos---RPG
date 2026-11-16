@@ -31,6 +31,9 @@ var links: Array[int] = []
 ## Encounter of battle and elite nodes, chosen when the leg is generated so
 ## the content can be revealed in advance (§2.2).
 var encounter_id: StringName = &""
+## Special content of a node: &"fish_liver" is "O peixe do Tigre", the relic
+## node of leg 3 that gives the fish's liver (bosses.md §5.3, D-414).
+var content: StringName = &""
 
 
 static func make(p_layer: int, p_index: int) -> MapNode:
@@ -62,7 +65,7 @@ func is_battle_like() -> bool:
 func to_dict() -> Dictionary:
 	return {
 		"id": String(id), "layer": layer, "index": index, "role": String(role), "type": String(type),
-		"links": links.duplicate(), "encounter_id": String(encounter_id),
+		"links": links.duplicate(), "encounter_id": String(encounter_id), "content": String(content),
 	}
 
 
@@ -72,6 +75,7 @@ static func from_dict(data: Dictionary) -> MapNode:
 	n.role = StringName(str(data.get("role", "")))
 	n.type = StringName(str(data.get("type", "")))
 	n.encounter_id = StringName(str(data.get("encounter_id", "")))
+	n.content = StringName(str(data.get("content", "")))
 	var raw: Variant = data.get("links", [])
 	if raw is Array:
 		for v: Variant in raw:

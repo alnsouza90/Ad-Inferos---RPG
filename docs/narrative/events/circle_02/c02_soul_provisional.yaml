@@ -1,0 +1,17 @@
+# PROVISÓRIO (D-414): o Encontro com a alma do trecho 2 funciona com este
+# texto marcado até a T43, quando Alan escreve e aprova os Encontros.
+id: c02_soul_provisional
+type: soul_meeting
+circle: 2
+title_pt: "Encontro com a alma (texto na T43)"
+origin: game_fiction
+pages:
+  - speaker: narrator
+    text_pt: "[Texto do Encontro com a alma: a escrever na T43.]"
+options:
+  - id: listen
+    text_pt: "[Ouvir a alma: texto na T43]"
+    safe: true
+    result_pt: "[Resultado: texto na T43.]"
+    outcomes:
+      - { type: dominion }

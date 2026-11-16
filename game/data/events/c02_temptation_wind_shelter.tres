@@ -20,82 +20,96 @@ pages = [{
 "text_pt": "De dentro da tenda, nenhum som. Os santos se entreolham."
 }]
 options = [{
-"id": "follow_tracks",
-"text_pt": "Seguir os rastros pela tempestade",
-"safe": true,
-"result_pt": "A companhia dá as costas à tenda. Mais adiante, sob a areia, os rastros verdadeiros do Peregrino seguem contra o vento.",
-"success_pt": "",
-"failure_pt": "",
-"requires": [],
 "chance": {},
+"failure_pt": "",
+"id": "follow_tracks",
+"on_failure": [],
+"on_success": [],
 "outcomes": [{
-"type": "light",
+"amount": -5.0,
 "id": "",
 "target": "",
-"amount": -5.0
-}],
-"on_success": [],
-"on_failure": []
+"type": "light"
 }, {
-"id": "enter_tent",
-"text_pt": "Entrar na tenda atrás do Peregrino",
-"safe": false,
-"result_pt": "",
-"success_pt": "A tenda está vazia. Era só a voz, imitando os passos dele. A ilusão se desfaz, e os santos reencontram os rastros verdadeiros.",
-"failure_pt": "A tenda está vazia, mas o perfume pesa e o tempo escorre. Quando os santos saem, o vento já apagou os rastros; lá adiante, o Peregrino caminha mais só.",
+"amount": 0.0,
+"id": "",
+"target": "",
+"type": "dominion"
+}],
 "requires": [],
+"result_pt": "A companhia dá as costas à tenda. Mais adiante, sob a areia, os rastros verdadeiros do Peregrino seguem contra o vento.",
+"safe": true,
+"success_pt": "",
+"text_pt": "Seguir os rastros pela tempestade"
+}, {
 "chance": {
 "base": 0.5,
 "modifiers": [{
-"if": "saint_in_party",
+"add": 0.2,
+"consume": false,
 "id": "saint_benedict",
-"add": 0.2,
-"consume": false
+"if": "saint_in_party"
 }, {
-"if": "provision",
-"id": "holy_water",
 "add": 0.2,
-"consume": true
+"consume": true,
+"id": "holy_water",
+"if": "provision"
 }]
 },
-"outcomes": [],
-"on_success": [{
-"type": "desolation",
-"id": "",
-"target": "party",
-"amount": -15.0
-}],
+"failure_pt": "A tenda está vazia, mas o perfume pesa e o tempo escorre. Quando os santos saem, o vento já apagou os rastros; lá adiante, o Peregrino caminha mais só.",
+"id": "enter_tent",
 "on_failure": [{
-"type": "virtue",
+"amount": -1.0,
 "id": "virtue_hope",
 "target": "",
-"amount": -1.0
+"type": "virtue"
 }, {
-"type": "desolation",
+"amount": 15.0,
 "id": "",
 "target": "party",
-"amount": 15.0
-}]
+"type": "desolation"
+}],
+"on_success": [{
+"amount": -15.0,
+"id": "",
+"target": "party",
+"type": "desolation"
 }, {
-"id": "pray_for_pilgrim",
-"text_pt": "Rezar pelo Peregrino diante da tenda",
+"amount": 0.0,
+"id": "",
+"target": "",
+"type": "dominion"
+}],
+"outcomes": [],
+"requires": [],
+"result_pt": "",
 "safe": false,
-"result_pt": "A oração atravessa a tempestade. A tenda se desfaz em pano e areia, e os rastros verdadeiros reaparecem adiante.",
-"success_pt": "",
+"success_pt": "A tenda está vazia. Era só a voz, imitando os passos dele. A ilusão se desfaz, e os santos reencontram os rastros verdadeiros.",
+"text_pt": "Entrar na tenda atrás do Peregrino"
+}, {
+"chance": {},
 "failure_pt": "",
+"id": "pray_for_pilgrim",
+"on_failure": [],
+"on_success": [],
+"outcomes": [{
+"amount": -10.0,
+"id": "",
+"target": "party",
+"type": "desolation"
+}, {
+"amount": 0.0,
+"id": "",
+"target": "",
+"type": "dominion"
+}],
 "requires": [{
-"type": "virtue_at_least",
 "id": "virtue_faith",
+"type": "virtue_at_least",
 "value": 3.0
 }],
-"chance": {},
-"outcomes": [{
-"type": "desolation",
-"id": "",
-"target": "party",
-"amount": -10.0
-}],
-"on_success": [],
-"on_failure": []
+"result_pt": "A oração atravessa a tempestade. A tenda se desfaz em pano e areia, e os rastros verdadeiros reaparecem adiante.",
+"safe": false,
+"success_pt": "",
+"text_pt": "Rezar pelo Peregrino diante da tenda"
 }]
-requirements = []

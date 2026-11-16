@@ -63,6 +63,7 @@ func _run_legs(args: Dictionary, given: Dictionary) -> void:
 	_apply_overrides(game.catalog.constants, String(args.get("set", "")))
 	var sim := LegSimulator.new(game.load_expedition_catalog())
 	sim.incense_policy = StringName(args.get("incense", LegSimulator.INCENSE_REVEAL))
+	sim.whole_expedition = str(args.get("whole", "")) == "1"
 	if str(args.get("arena", "")) == "1":
 		sim.encounter_circle = EncounterDef.ARENA_CIRCLE
 	var policies: Array[StringName] = [SimPolicy.HEURISTIC, SimPolicy.RANDOM]

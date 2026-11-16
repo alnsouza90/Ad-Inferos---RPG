@@ -13,7 +13,11 @@ extends RefCounted
 ##   `rebuild`: loading replays it under the new rules, without the check,
 ##   and stops at the first command the new rules refuse (save-load §7).
 
-const CURRENT_VERSION: int = 3
+##   3 → 4 (T42): the expedition goes on after the first camp (legs 2 and 3,
+##   Vigil, boss) and saves the leg, the Domínio and the liver; old logs are
+##   rebuilt the same way as in 2 → 3.
+
+const CURRENT_VERSION: int = 4
 const CONTENT_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_relic", "node_soul"]
 
 ## n -> Callable taking a version-n save and returning version n + 1.
@@ -27,7 +31,7 @@ func _init(p_steps: Variant = null, p_current: int = CURRENT_VERSION) -> void:
 
 
 static func default_steps() -> Dictionary:
-	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3}
+	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3, 3: SaveMigrations.migrate_v2_to_v3}
 
 
 static func migrate_v2_to_v3(data: Dictionary) -> Dictionary:

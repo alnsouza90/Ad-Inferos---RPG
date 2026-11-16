@@ -25,6 +25,9 @@ const MAX_COMMANDS: int = 5000
 var catalog: ExpeditionCatalog
 var circle: StringName = &"circle_02"
 var kit: StringName = &"m1_kit"
+## Plays the whole expedition (three legs, Vigil and boss, T42) instead of
+## stopping at the first camp (--whole=1).
+var whole_expedition: bool = false
 ## Encounter pools: the game's (Circle 2) or the arena (--arena).
 var encounter_circle: int = GameData.EXPEDITION_ENCOUNTER_CIRCLE
 var incense_policy: StringName = INCENSE_REVEAL
@@ -60,6 +63,10 @@ func play_leg(battle_policy: StringName, path_policy: StringName, campaign_seed:
 	var history_seen := 0
 	for i: int in MAX_COMMANDS:
 		if ctrl.is_over():
+			break
+		if not whole_expedition and ctrl.state.leg > 1:
+			# Leg mode measures leg 1 only, as in the M1 (T31).
+			ctrl.ended_reason = ExpeditionController.END_LEG_COMPLETE
 			break
 		var cmd: ExpeditionCommand = _next(ctrl, policy, rng, path_policy)
 		if cmd == null:
@@ -122,6 +129,7 @@ func play_leg(battle_policy: StringName, path_policy: StringName, campaign_seed:
 		max_hp += s.max_hp
 		desolation += s.desolation
 	leg["end"] = ctrl.ended_reason
+	leg["last_leg"] = ctrl.state.leg
 	leg["dark_night_saints"] = dark_night.size()
 	leg["hp_left"] = float(hp) / float(maxi(max_hp, 1))
 	leg["desolation_end"] = float(desolation) / float(maxi(ctrl.state.party.size(), 1))
@@ -173,6 +181,12 @@ func _next(ctrl: ExpeditionController, policy: SimPolicy, rng: RngStream, path_p
 			if not ctrl.state.camp_rested and ctrl.rest_problem(_camp_plan(ctrl)) == &"":
 				return ExpeditionCommand.rest(_camp_plan(ctrl))
 			return ExpeditionCommand.leave_camp(ExpeditionCommand.MODE_CONTINUE)
+		ExpeditionController.Phase.AT_VIGIL:
+			# expedition §7: the saints most in need keep the Vigil; the others share.
+			var plan: Array[Dictionary] = []
+			for id: StringName in ctrl.state.party:
+				plan.append({"saint": id, "activity": ExpeditionController.ACTIVITY_VIGIL, "target": &""})
+			return ExpeditionCommand.rest(plan)
 	return null
 
 
