@@ -94,6 +94,10 @@ class Character:
     # Every clip of the character gets the warm skin (D-388).
     warm: bool = False
     figure_scale: float = FIGURE_SCALE
+    # Colour grade (D-416): gamma below 1 lifts the mid-tones; the three
+    # factors warm the colours (Bento, closer to George's palette).
+    grade_gamma: float = 1.0
+    grade_warm: tuple[float, float, float] = (1.0, 1.0, 1.0)
     clips: list["Clip"] = field(default_factory=list)
 
 
@@ -139,6 +143,8 @@ def read_characters() -> list[Character]:
                 palette=row["palette"],
                 halo=halo,
                 figure_scale=float(row.get("figure_scale") or FIGURE_SCALE),
+                grade_gamma=float(row.get("grade_gamma") or 1.0),
+                grade_warm=tuple(float(v) for v in (row.get("grade_warm") or "1|1|1").split("|")),
             )
     with CLIPS_CSV.open(encoding="utf-8") as f:
         for row in csv.DictReader(f):
@@ -315,6 +321,7 @@ def clean(clip: Clip, char: Character, colours: np.ndarray,
         for token in clip.cleanup:
             if token.startswith("specks="):
                 report["soltos"] += erase_specks(cell, int(token.split("=")[1]))
+        grade(cell, char)
     return _finish(cells, clip, char, colours, report)
 
 
@@ -330,6 +337,23 @@ SKIN_MAP = {
     "saint_therese": {"#DABBA5": "#C4A98D", "#C6A691": "#C4A98D", "#A08371": "#9A745A",
                       "#836A5C": "#765B47", "#5D4439": "#553327"},
 }
+
+
+def grade(cell: np.ndarray, char: "Character") -> None:
+    """Lifts the mid-tones and warms the colours of `char` in place (D-416);
+    the palette snap afterwards keeps every colour on the game palette."""
+    if char.grade_gamma == 1.0 and char.grade_warm == (1.0, 1.0, 1.0):
+        return
+    rgb = cell[:, :, :3].astype(np.float64) / 255.0
+    graded = np.power(rgb, char.grade_gamma) * np.array(char.grade_warm)
+    # The skin already has George's colours (warm_skin): left as it is, or
+    # the warmer tone tips it into the gold of the palette.
+    keep = np.zeros(cell.shape[:2], dtype=bool)
+    for target in SKIN_MAP.get(char.id, {}).values():
+        dst = np.array([int(target[k:k + 2], 16) for k in (1, 3, 5)])
+        keep |= np.abs(cell[:, :, :3].astype(np.int32) - dst).sum(axis=2) <= 2
+    graded[keep] = rgb[keep]
+    cell[:, :, :3] = np.clip(graded * 255.0 + 0.5, 0, 255).astype(np.uint8)
 
 
 def warm_skin(cell: np.ndarray, character: str) -> int:
@@ -398,6 +422,7 @@ def write_bust(char: Character, cell: np.ndarray, colours: np.ndarray) -> Path:
     binarize(full)
     if char.warm:
         warm_skin(full, char.id)
+    grade(full, char)
     if char.palette == "snap":
         snap_to_palette(full, colours)
     x0, y0, x1, _ = outline(full)

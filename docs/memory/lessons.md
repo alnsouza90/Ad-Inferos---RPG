@@ -69,6 +69,9 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 - **PixelLab, limite de pedidos:** o plano Tier 1 roda no máximo 8 trabalhos ao mesmo tempo (contando site, API e agente) e pede mais de 2 s entre envios; o 9º volta sem `job_id`. Envie em fila, esperando terminar (D-380).
 - **Sessão retomada mata a compilação do Godot:** o `setup_godot.sh` fica preso na trava. Apague `~/.cache/godot-4.7.2/building` e rode o script de novo.
 
+- **Filtro de cor num personagem (D-416):** depois do filtro vem o ajuste à paleta; um tom mais quente na pele vira o dourado da paleta (pontos amarelos no rosto e na mão de Bento). Deixe fora do filtro as cores que já foram trocadas pela pele de Jorge.
+- **PixelLab, limite de animação:** `animate_image_pixminimax` aceita quadros de no máximo 256 × 256; um chefe maior precisa ser desenhado mais alto dentro do quadro, em partes, ou ampliado 2×.
+
 ## Dados
 
 - Antes de criar uma constante nova, procure em `constants.csv`: na T20 quase entrou `map_generation_attempts`, mas `map_generation_retries` já existia.
