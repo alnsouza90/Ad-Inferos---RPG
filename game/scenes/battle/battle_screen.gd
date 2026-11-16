@@ -237,7 +237,9 @@ func tap(combatant_id: StringName) -> void:
 	var c: Combatant = ctrl.state.find(combatant_id)
 	if c == null:
 		return
-	_info_id = combatant_id
+	# The sheet on the right is the enemy's (D-411): the saint is on the left.
+	if not c.is_saint():
+		_info_id = combatant_id
 	if busy or ctrl.phase != BattleController.Phase.PARTY_TURN:
 		_refresh()
 		return
@@ -1038,8 +1040,20 @@ func _intercede_hint() -> String:
 
 
 ## The sheet on the right (DD): the tapped combatant, or the chosen saint.
+## The enemy on the right-hand sheet (D-411): the one last tapped, or the
+## first one standing; never a saint, who is shown in the arch on the left.
+func info_enemy() -> Combatant:
+	var tapped: Combatant = ctrl.state.find(_info_id) if _info_id != &"" else null
+	if tapped != null and not tapped.is_saint() and tapped.state != Combatant.State.DEAD:
+		return tapped
+	for e: Combatant in ctrl.state.enemies:
+		if e.is_alive_enemy():
+			return e
+	return null
+
+
 func _refresh_info() -> void:
-	var c: Combatant = ctrl.state.find(_info_id) if _info_id != &"" else selection.actor()
+	var c: Combatant = info_enemy()
 	if c == null:
 		_info.text = ""
 		_sheet_title.text = ""

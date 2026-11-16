@@ -85,6 +85,8 @@ Toda condição é um registro de dados com os mesmos campos. O motor de condiç
 | Força `strength` | token | pos | 3 | add | consumo `on_damaging_action` | — | — | `strength_boost` | Próxima ação +25% |
 | Provocação `taunt` | token | pos | 1 | refresh | — | `expire_round_end` | — | `taunt_redirect` | Atrai ataques de alvo único |
 | Encantado `enchanted` (Círculo 2) | duration | neg | 1 | refresh | — | `expire_after_rounds` (2 rodadas) | não | `enchanted_pull` | Ações inimigas de alvo único que alcançam o santo miram nele (a Provocação vence); a bênção de outro santo quebra e dá Firmeza (`bosses.md` §2.3) |
+| As sete noites `seven_nights` (Asmodeu) | duration | neg | 1 | refresh | — | `expire_after_rounds` (2 rodadas) | não | `seven_nights_strike` | Ao expirar num santo de pé, [seven_nights_damage] de dano direto; sai com a bênção de um companheiro ou passa a quem interceder (D-411) |
+| Invisível `hidden` (Asmodeu) | token | pos | 1 | refresh | — | `expire_round_end` | — | `hidden` | Não pode ser alvo de ataques de um alvo só (D-411) |
 | Duelo `duel` | permanent | neg (no inimigo) | 1 | refresh | — | — | não | `duel_mark` | §5 |
 | Congelamento `freeze` (Círculo 9) | duration | neg | 3 | add | tick `round_end` | — | não | `freeze_counter` | +1 se o santo não mudou de posição na rodada; mudar remove 1; com 3, perde a próxima ação e zera |
 | Fúria `fury` (Círculo 5, inimigos) | permanent | pos | 5 | add | — | — | — | `fury_counter` | +1 cada vez que o inimigo recebe dano; +10% de dano por pilha |

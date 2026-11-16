@@ -183,3 +183,61 @@ func test_B13_same_seed_and_log_give_the_same_fight_byte_by_byte() -> void:
 		again.execute(BattleCommand.from_dict(entry))
 	assert_eq(JSON.stringify(again.state.to_dict()), JSON.stringify(first.state.to_dict()))
 	assert_eq(again.history.size(), first.history.size())
+
+
+# --- the specials of phase 3 (D-411): As sete noites and the ring ------------------
+
+func _phase_3() -> BattleController:
+	var c: BattleController = _ctrl(Dominion.claws(0, false))
+	c.state.boss_phase = 3
+	c.state.intents.clear()
+	EnemyBrain.choose_intents(c.state)
+	return c
+
+
+func test_phase_3_brings_the_seven_nights_and_the_ring() -> void:
+	var c: BattleController = _phase_3()
+	var actions: Array = c.state.intents_of(c.state.boss()).map(func(i: Intent) -> StringName: return i.action_id)
+	assert_eq(actions, [&"asmodeus_seven_nights", &"asmodeus_ring"], "os dois especiais primeiro")
+	var two: BattleController = _ctrl(Dominion.claws(0, true))
+	assert_eq(two.state.boss_phase_count(), 2, "sem a garra da fase extra, não há fase 3 nem especiais")
+
+
+func test_the_seven_nights_strike_when_the_countdown_ends() -> void:
+	var c: BattleController = _ctrl(Dominion.claws(2, true))
+	var therese: Combatant = c.state.find(&"saint_therese")
+	c.state.in_enemy_phase = true
+	c.state.engine.apply(therese, &"seven_nights", 2)
+	c.state.in_enemy_phase = false
+	var hp: int = therese.hp
+	c.state.engine.end_round()
+	assert_true(therese.has_condition(&"seven_nights"), "ainda contando")
+	c.state.round_number += 1
+	c.state.engine.end_round()
+	c.state.round_number += 1
+	c.state.engine.end_round()
+	assert_false(therese.has_condition(&"seven_nights"))
+	assert_eq(therese.hp, maxi(0, hp - data.catalog.constants.get_int(&"seven_nights_damage")), "a marca fere")
+
+
+func test_a_companion_takes_the_mark_by_interceding_or_lifts_it_with_a_blessing() -> void:
+	var c: BattleController = _ctrl(Dominion.claws(2, true))
+	var benedict: Combatant = c.state.find(&"saint_benedict")
+	c.state.engine.apply(benedict, &"seven_nights", 2)
+	assert_true(c.execute(BattleCommand.intercede(&"saint_george", c.state.party_slot_of(benedict), &"seven_nights")).ok)
+	assert_false(benedict.has_condition(&"seven_nights"))
+	assert_true(c.state.find(&"saint_george").has_condition(&"seven_nights"), "Jorge toma a marca para si")
+	var other: BattleController = _ctrl(Dominion.claws(2, true))
+	var b2: Combatant = other.state.find(&"saint_benedict")
+	other.state.engine.apply(b2, &"seven_nights", 2)
+	assert_true(other.execute(BattleCommand.use_ability(&"saint_george", &"george_raised_shield", [other.state.party_slot_of(b2)] as Array[int])).ok)
+	assert_false(b2.has_condition(&"seven_nights"), "a bênção de um companheiro tira a marca")
+
+
+func test_the_ring_hides_asmodeus_from_single_target_attacks() -> void:
+	var c: BattleController = _ctrl(Dominion.claws(2, true))
+	var boss: Combatant = c.state.boss()
+	c.state.engine.apply(boss, &"hidden", 1)
+	var slot: int = c.state.enemy_slot_of(boss)
+	assert_eq(c.validate(BattleCommand.use_ability(&"saint_george", &"george_spear_thrust", [slot] as Array[int])), CommandResult.INVALID_TARGET, "a Estocada não o acha")
+	assert_eq(c.validate(BattleCommand.use_ability(&"saint_benedict", &"benedict_crux_sacra", [] as Array[int])), &"", "ataque em grupo ainda o atinge")

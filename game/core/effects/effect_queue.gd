@@ -79,9 +79,13 @@ func _run(entry: Dictionary) -> void:
 static func _break_enchantment(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:
 	if ctx.actor == null or not ctx.actor.is_saint() or target == ctx.actor or not target.is_saint():
 		return
-	if not target.has_condition(&"enchanted") or ctx.state.catalog.ability(ctx.source_id) == null:
+	if ctx.state.catalog.ability(ctx.source_id) == null or not _is_blessing(ctx, effect):
 		return
-	if not _is_blessing(ctx, effect):
+	# As sete noites (D-411) also yield to a companion's blessing.
+	if target.has_condition(&"seven_nights"):
+		ctx.state.engine.remove_all(target, &"seven_nights")
+		ctx.emit.call(&"condition_removed", {"target": target.id, "condition": &"seven_nights", "stacks": 1})
+	if not target.has_condition(&"enchanted"):
 		return
 	ctx.state.engine.remove_all(target, &"enchanted")
 	ctx.emit.call(&"condition_removed", {"target": target.id, "condition": &"enchanted", "stacks": 1})

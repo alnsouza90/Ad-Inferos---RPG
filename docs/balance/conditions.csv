@@ -10,3 +10,5 @@ freeze,duration,negative,3,add,none,round_end,none,false,freeze_counter,res://as
 fury,permanent,positive,5,add,none,none,none,false,fury_counter,res://assets/ui/icons/cond_fury.png,3,Fúria,+10% de dano por pilha.
 torpor,duration,negative,3,add,none,round_end,none,false,torpor_counter,res://assets/ui/icons/cond_torpor.png,3,Torpor,"Cresce a cada rodada sem milagre. Com 3, a equipe perde 1 de Fervor."
 enchanted,duration,negative,1,refresh,expire_after_rounds,none,none,false,enchanted_pull,res://assets/ui/icons/cond_enchanted.png,2,Encantado,Os inimigos miram este santo. Um companheiro que o cure ou abençoe quebra o encanto.
+seven_nights,duration,negative,1,refresh,expire_after_rounds,none,none,false,seven_nights_strike,res://assets/ui/icons/cond_seven_nights.png,1,As sete noites,"Marca de Asmodeu. Ao fim da contagem, fere. Um companheiro que interceda ou abençoe tira a marca."
+hidden,token,positive,1,refresh,expire_round_end,none,none,false,hidden,res://assets/ui/icons/cond_hidden.png,2,Invisível,Não pode ser alvo de ataques de um alvo só.

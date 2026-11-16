@@ -126,7 +126,8 @@ Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
 | 2 em diante | `asmodeus_gale` · Vendaval de Asmodeu (a cada 2 rodadas) | 2 santos adjacentes | Cobra a lição do círculo: a intenção mostra os dois santos e, no turno do chefe, eles trocam de lugar. As mesmas respostas valem: Clausura de Bento e **Firmar o pé** (§2.2), que dá Firmeza |
 | 2 em diante (D-410) | `asmodeus_three_heads` · Três cabeças | 3 golpes em santos ao acaso (RNG `battle`), posições 1 a 3 | [asmodeus_heads_damage] = 5 de Golpe cada |
 | Todas (D-410) | `asmodeus_enchant` · Encanto do desejo (recarga 3) | 1 santo | Aplica Encantado, como a Vertigem |
-| Última (só com a garra 3) | Especial da fase 3 (a definir, D-410) | — | Pesquisa nas referências em andamento |
+| Última (só com a garra 3, D-411) | `asmodeus_seven_nights` · As sete noites (recarga 4) | 1 santo, o de maior vida, sem marca | Marca de 2 rodadas; ao fim, [seven_nights_damage] = 20 de dano direto. Um companheiro tira a marca intercedendo (toma-a para si) ou abençoando. **[E]** Tobias 3,8: Asmodeu matou os sete maridos de Sara; a forma de jogo é **[J]** |
+| Última (só com a garra 3, D-411) | `asmodeus_ring` · Anel da invisibilidade (recarga 3) | si mesmo | Invisível até o fim da rodada seguinte: não pode ser alvo de ataques de um alvo só; ataques em grupo o atingem. **[T]** Goetia e Weyer: Asmodeu torna invisível; a forma de jogo é **[J]** |
 
 - O Vendaval do círculo **não** acontece na luta com Asmodeu: a lição vem pela ação dele, com intenção visível.
 - Troca de fase: o chefe recua, a silhueta pisca na cor do círculo e a fase nova aparece na barra (apresentação, T41).

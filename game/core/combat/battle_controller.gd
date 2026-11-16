@@ -411,7 +411,8 @@ func _resolve_targets(actor: Combatant, ability: AbilityDef, slots: Array[int]) 
 		&"enemy":
 			if slots.size() == 1 and ability.target_slots.has(slots[0]):
 				var enemy: Combatant = state.enemy_at(slots[0])
-				if enemy != null and enemy.is_alive_enemy():
+				# Invisible (Asmodeus' ring, D-411): no single-target attack.
+				if enemy != null and enemy.is_alive_enemy() and not enemy.has_condition(&"hidden"):
 					targets.append(enemy)
 		&"enemy_group":
 			if slots.is_empty():
@@ -444,7 +445,7 @@ func _resolve_chosen_slots(ability: AbilityDef, slots: Array[int]) -> Array[Comb
 	var available: Array[int] = []
 	for slot: int in ability.target_slots:
 		var enemy: Combatant = state.enemy_at(slot)
-		if enemy != null and enemy.is_alive_enemy():
+		if enemy != null and enemy.is_alive_enemy() and not enemy.has_condition(&"hidden"):
 			available.append(slot)
 	var required: int = mini(ability.target_count, available.size())
 	if required == 0 or slots.size() != required:
