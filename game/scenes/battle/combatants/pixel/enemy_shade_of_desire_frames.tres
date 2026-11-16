@@ -58,7 +58,7 @@ pose_time = 0.4
 [resource]
 script = ExtResource("1_set")
 character_id = &"enemy_shade_of_desire"
-figure_height = 148.0
+figure_height = 178.0
 display_scale = 1
 attack_style = &"outline"
 spell_style = &"outline"

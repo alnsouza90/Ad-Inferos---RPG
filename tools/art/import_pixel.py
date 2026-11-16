@@ -67,7 +67,7 @@ FEET_ROWS = 6
 # two sides (D-384). The feet stay on the same point of the 256 frame.
 # A character may have its own factor (`figure_scale` in the table): the
 # elites stand taller than the common enemies (D-405).
-FIGURE_SCALE = 0.6
+FIGURE_SCALE = 0.72
 # The bust for the portrait arch and the enemy sheet is cut from the idle
 # frame at full size, before the shrink: width, height, and how far the
 # corner sits left and above the halo point (saints) or the top of the
