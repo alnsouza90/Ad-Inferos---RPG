@@ -18,18 +18,19 @@ const FIELD_HEIGHT: float = 360.0
 ## Ground line of the field and height of a standing figure in pixel art
 ## (ADR-0013): the frames are shown at their natural size.
 const GROUND_Y: float = 338.0
-## The pixel figures are drawn at 0.6 of their PixelLab size (D-384): this
-## is the height of a standing saint, and of painted frames shrunk to match.
-const FIGURE_HEIGHT: float = 138.0
+## The pixel figures are drawn at 0.72 of their PixelLab size (D-415, was
+## 0.6 in D-384): this is the height of a standing saint, and of painted
+## frames shrunk to match.
+const FIGURE_HEIGHT: float = 166.0
 ## Intents over the enemies, all on one row (field y).
-const INTENT_ROW_Y: float = 150.0
+const INTENT_ROW_Y: float = 118.0
 const VIEW_WIDTH: float = 110.0
 ## Feet of the front saint and the front enemy, and the step between slots.
-## Four enemies and four saints fit in the 960 of the stage with room
-## between each figure and a wider gap between the two sides (D-384).
-const SAINT_FRONT_X: float = 400.0
-const ENEMY_FRONT_X: float = 560.0
-const SLOT_STEP: float = 112.0
+## Three saints and four enemies fit in the 960 of the stage with room
+## between each figure and a wider gap between the two sides (D-384, D-415).
+const SAINT_FRONT_X: float = 374.0
+const ENEMY_FRONT_X: float = 548.0
+const SLOT_STEP: float = 118.0
 ## Share of the two figures' widths kept apart when the attacker arrives.
 const CONTACT_SHARE: float = 0.3
 const BLOW_HOLD: float = 0.45
