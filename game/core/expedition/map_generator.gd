@@ -31,6 +31,9 @@ var elite_encounters: Array[StringName] = []
 var allow_elite: bool = false
 ## The circle's Guardian encounters (pool `guardian`); empty: no Guardian.
 var guardian_encounters: Array[StringName] = []
+## Being simulated (D-420): the Guardian at the START of leg 2, right after
+## the first camp, instead of the end of leg 1.
+var guardian_at_leg2_start: bool = false
 ## Leg 3 holds "O peixe do Tigre" in one variable node (D-414).
 var with_fish: bool = false
 const FISH_LEG: int = 3
@@ -61,7 +64,13 @@ func generate(leg: int, reserve: MapTemplateDef) -> LegMap:
 ## D-407: one more layer with the Guardian alone, linked from every node of
 ## the last layer, so every path faces it before the camp.
 func _add_guardian(map: LegMap) -> void:
-	if map.leg != GUARDIAN_LEG or guardian_encounters.is_empty():
+	if guardian_encounters.is_empty():
+		return
+	if guardian_at_leg2_start:
+		if map.leg == 2:
+			_prepend_guardian(map)
+		return
+	if map.leg != GUARDIAN_LEG:
 		return
 	for n: MapNode in map.layer_nodes(map.layer_count()):
 		n.links = [0] as Array[int]
@@ -87,12 +96,31 @@ func _add_fish(map: LegMap) -> void:
 	fish.content = CONTENT_FISH
 
 
-## True when the leg ends with the Guardian's own layer (D-407).
+## D-420 (simulated): the Guardian alone in a new first layer, linked to every
+## node of the old first one; the other layers move one down.
+func _prepend_guardian(map: LegMap) -> void:
+	for layer_list: Array in map.layers:
+		for n: MapNode in layer_list:
+			n.layer += 1
+			n.id = StringName("l%d_n%d" % [n.layer, n.index])
+	var guardian := MapNode.make(1, 0)
+	guardian.role = MapNode.ROLE_GUARDIAN
+	guardian.type = MapNode.TYPE_ELITE
+	for i: int in map.layers[0].size():
+		guardian.links.append(i)
+	map.layers.insert(0, [guardian])
+
+
+## True when the leg has the Guardian's own layer, at its end (D-407) or at
+## its start (D-420, simulated).
 static func has_guardian(map: LegMap) -> bool:
 	if map.layer_count() == 0:
 		return false
-	var last: Array[MapNode] = map.layer_nodes(map.layer_count())
-	return last.size() == 1 and last[0].role == MapNode.ROLE_GUARDIAN
+	for layer: int in [1, map.layer_count()]:
+		var nodes: Array[MapNode] = map.layer_nodes(layer)
+		if nodes.size() == 1 and nodes[0].role == MapNode.ROLE_GUARDIAN:
+			return true
+	return false
 
 
 ## Checks every path of `map` against the leg composition (E01) and the

@@ -128,6 +128,7 @@ func _generate_leg(leg: int) -> LegMap:
 	generator.elite_encounters = c.encounter_pool(ambush_encounter_circle, &"elite")
 	generator.allow_elite = not generator.elite_encounters.is_empty()
 	generator.guardian_encounters = c.encounter_pool(ambush_encounter_circle, &"guardian")
+	generator.guardian_at_leg2_start = c.constants.get_float_or(&"sim_guardian_leg2", 0.0) > 0.0
 	generator.with_fish = not c.encounter_pool(ambush_encounter_circle, &"boss").is_empty()
 	return generator.generate(leg, c.reserves.get(leg))
 
