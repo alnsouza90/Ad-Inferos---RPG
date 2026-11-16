@@ -112,8 +112,8 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | ~~T40: Minos e Vertigem no tamanho dos inimigos comuns na tela; tamanho dos elites e do chefe (pendência de D-233)~~ Minos 177 px e Vertigem 153 px (D-405); Asmodeu na T41 | Alan | 15/11/2026 |
 | ~~T40: Vertigem ainda fácil com 80 de vida (100%); trocar o Sopro Errante da escolta por um Diabo de Lodo ou medir na T42~~ Medir na T42 (D-406) | Alan | 15/11/2026 |
 | ~~Minos obrigatório no fim do trecho 1: 32,6% de derrotas no trecho no simulador; manter, enfraquecer Minos ou mover para o começo do trecho 2~~ Mantido com 72 (D-408) | Alan | 15/11/2026 |
-| Textos da luta com Asmodeu para revisar: "A fumaça do fígado do peixe sobe e Asmodeu perde força (Tobias 8,2).", "São Rafael prende Asmodeu (Tobias 8,3).", "Asmodeu foge." (`ui_text.csv`) | Alan | 15/11/2026 |
+| ~~Textos da luta com Asmodeu para revisar~~ Aprovados (D-412) | Alan | 15/11/2026 |
 | São Rafael como recorte de ouro na vitória com o fígado (arte do PixelLab, custo e permissão antes); barra de vida grande do chefe | Alan / T44 | 15/11/2026 |
 | Asmodeu sem escolta cai em 5 rodadas (100%); medir na T42 com a companhia gasta antes de mudar números; se fácil, aumentar a força dos golpes (D-410) | T42 | 15/11/2026 |
-| ~~Especial da fase 3 de Asmodeu (D-410): escolher entre as propostas tiradas das referências~~ As sete noites e Anel da invisibilidade (D-411); números a aprovar | Alan | 15/11/2026 |
+| ~~Especial da fase 3 de Asmodeu (D-410): escolher entre as propostas tiradas das referências~~ As sete noites e Anel da invisibilidade (D-411); números aprovados (D-412) | Alan | 15/11/2026 |
 | ~~Como as garras do Domínio cedem ("alcançar o Peregrino"): alinhar com Alan o que está em `bosses.md` §5.2 e `narrative-system.md` §3.2~~ Regra mantida; o encontro físico com o Peregrino só na sala de Lúcifer (D-411) | Alan | 15/11/2026 |
