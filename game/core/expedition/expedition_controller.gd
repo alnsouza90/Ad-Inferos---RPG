@@ -686,6 +686,9 @@ func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 	var bs := BattleState.create(catalog.battle_catalog, saint_defs, foes, state.provisions, enc.type, battle_seed(seed_key))
 	bs.light = state.light
 	bs.hazard = enc.hazard
+	if enc.type == &"boss":
+		# The Domínio yields with the Pilgrim reached and the liver (T42).
+		bs.setup_boss(Dominion.claws(0, false), false)
 	bs.vigil_saints = state.vigil_saints.duplicate()
 	bs.prayer_fervor = state.next_battle_fervor
 	state.next_battle_fervor = 0

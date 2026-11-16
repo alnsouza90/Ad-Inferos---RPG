@@ -4,6 +4,7 @@ extends RefCounted
 ## It knows no condition by name except through its `hook` (§4). Freeze,
 ## Fury and Torpor hooks belong to Circles 5 and 9 (M3) and are inert here.
 
+const SEVEN_NIGHTS_HOOK: StringName = &"seven_nights_strike"
 const STUN_HOOK: StringName = &"stun_cancel"
 const BLEED_HOOK: StringName = &"bleed_tick"
 const CORRUPTION_HOOK: StringName = &"corruption_tick"
@@ -139,6 +140,19 @@ func end_round() -> void:
 			if int(c.condition_expiry[condition_id]) <= state.round_number:
 				remove_all(c, condition_id)
 				emit.call(&"condition_expired", {"target": c.id, "condition": condition_id})
+				_on_expired(c, condition_id)
+
+
+## As sete noites (bosses.md §5.1, D-411): when the countdown ends on a
+## standing saint, the mark strikes; nobody interceded or blessed in time.
+func _on_expired(c: Combatant, condition_id: StringName) -> void:
+	var def: ConditionDef = def_of(condition_id)
+	if def == null or def.hook != SEVEN_NIGHTS_HOOK or not c.is_standing():
+		return
+	var lost: int = state.lose_hp(c, state.constants.get_int(&"seven_nights_damage"))
+	emit.call(&"seven_nights_strike", {"target": c.id, "amount": lost, "hp": c.hp})
+	if not c.is_standing():
+		emit.call(&"fell", {"target": c.id})
 
 
 func _decrement(c: Combatant, condition_id: StringName) -> void:

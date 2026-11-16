@@ -124,11 +124,15 @@ Escolta proposta: Sombra do Desejo (1), Vertigem (2), Sopro Errante (3).
 | Todas | `asmodeus_lance` · Estocada | 1 santo, posição 1 ou 2 | [asmodeus_lance_damage] = 12 de Golpe |
 | Todas | `asmodeus_breath` · Sopro violeta (recarga 2) | todos os santos | [asmodeus_breath_damage] = 4 de Exorcismo e +[asmodeus_breath_desolation] = 8 de desolação |
 | 2 em diante | `asmodeus_gale` · Vendaval de Asmodeu (a cada 2 rodadas) | 2 santos adjacentes | Cobra a lição do círculo: a intenção mostra os dois santos e, no turno do chefe, eles trocam de lugar. As mesmas respostas valem: Clausura de Bento e **Firmar o pé** (§2.2), que dá Firmeza |
-| Última (só com a garra 3) | `asmodeus_three_heads` · Três cabeças | 3 golpes em santos ao acaso (RNG `battle`), posições 1 a 3 | [asmodeus_heads_damage] = 5 de Golpe cada |
-| Última (só com a garra 3) | `asmodeus_enchant` · Encanto do desejo (recarga 3) | 1 santo | Aplica Encantado, como a Vertigem |
+| 2 em diante (D-410) | `asmodeus_three_heads` · Três cabeças | 3 golpes em santos ao acaso (RNG `battle`), posições 1 a 3 | [asmodeus_heads_damage] = 5 de Golpe cada |
+| Todas (D-410) | `asmodeus_enchant` · Encanto do desejo (recarga 3) | 1 santo | Aplica Encantado, como a Vertigem |
+| Última (só com a garra 3, D-411) | `asmodeus_seven_nights` · As sete noites (recarga 4) | 1 santo, o de maior vida, sem marca | Marca de 2 rodadas; ao fim, [seven_nights_damage] = 20 de dano direto. Um companheiro tira a marca intercedendo (toma-a para si) ou abençoando. **[E]** Tobias 3,8: Asmodeu matou os sete maridos de Sara; a forma de jogo é **[J]** |
+| Última (só com a garra 3, D-411) | `asmodeus_ring` · Anel da invisibilidade (recarga 3) | si mesmo | Invisível até o fim da rodada seguinte: não pode ser alvo de ataques de um alvo só; ataques em grupo o atingem. **[T]** Goetia e Weyer: Asmodeu torna invisível; a forma de jogo é **[J]** |
 
 - O Vendaval do círculo **não** acontece na luta com Asmodeu: a lição vem pela ação dele, com intenção visível.
 - Troca de fase: o chefe recua, a silhueta pisca na cor do círculo e a fase nova aparece na barra (apresentação, T41).
+
+**Implementado na T41 (D-409):** id `boss_asmodeus` (o da arte). A tabela não dá prioridades nem recarga para todas as ações; ficou assim, na ordem: Vendaval (1; fase 2 em diante, rodadas pares), Encanto do desejo (2; desde a fase 1, recarga 3, sem santo Encantado), Sopro violeta (3; recarga 2), Três cabeças (4; fase 2 em diante), Estocada (5). Alan mudou as fases em D-410. Com duas ações, a segunda é a próxima válida diferente da primeira. As posições do Vendaval de Asmodeu são sorteadas quando ele anuncia a ação e trocadas no turno dele. A Clausura não segura este Vendaval (D-402).
 
 ### 5.2 Domínio (D-284, D-393 (5))
 

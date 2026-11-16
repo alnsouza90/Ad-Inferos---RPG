@@ -53,6 +53,10 @@ func battle(encounter_id: String, seed: int) -> BattleState:
 		foes.append(catalog.enemies[enemy_id])
 	var state := BattleState.create(catalog, m0_party(), foes, [] as Array[StringName], enc.type, seed)
 	state.hazard = enc.hazard
+	if enc.type == &"boss":
+		# Claws held: --set=sim_dominion_reached=N and sim_liver=1 (default: all three).
+		var reached: int = int(catalog.constants.values.get("sim_dominion_reached", 0.0))
+		state.setup_boss(Dominion.claws(reached, float(catalog.constants.values.get("sim_liver", 0.0)) > 0.0), float(catalog.constants.values.get("sim_liver", 0.0)) > 0.0)
 	return state
 
 

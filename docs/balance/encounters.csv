@@ -15,3 +15,4 @@ c02_hard_04,2,hard,enemy_infernal_scarab,enemy_shade_of_desire,enemy_wandering_b
 c02_hard_05,2,hard,enemy_mud_devil,enemy_infernal_scarab,enemy_gadfly,enemy_gadfly,common,gale
 c02_elite_minos,2,guardian,enemy_mud_devil,enemy_infernal_scarab,elite_minos,,elite,gale
 c02_elite_vertigo,2,elite,enemy_shade_of_desire,elite_sin_vertigo,enemy_wandering_breath,,elite,gale
+c02_boss_asmodeus,2,boss,boss_asmodeus,,,,boss,

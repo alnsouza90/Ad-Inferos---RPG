@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/encounter_def.gd" id="1_6vqsq"]
+
+[resource]
+script = ExtResource("1_6vqsq")
+id = &"c02_boss_asmodeus"
+circle = 2
+pool = &"boss"
+slots = Array[StringName]([&"boss_asmodeus"])
+type = &"boss"

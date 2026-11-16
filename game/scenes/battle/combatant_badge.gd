@@ -37,6 +37,10 @@ var intent_height: float = 188.0
 var _intent_icon: TextureRect
 var _intent_value: Label
 var _intent_disc: Control
+## A boss's second intent (enemy-ai §6), beside the first; made on demand.
+var _extra_disc: Control
+var _extra_icon: TextureRect
+var _extra_value: Label
 var _conditions: HBoxContainer
 var _preview: Label
 
@@ -148,6 +152,34 @@ func show_preview(text: String) -> void:
 	_preview.text = text
 
 
+## The second intent of a boss that acts twice; null hides it.
+func set_extra_intent(tex: Texture2D, value_text: String) -> void:
+	if tex == null and _extra_disc == null:
+		return
+	if _extra_disc == null:
+		_extra_disc = Control.new()
+		_extra_disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_extra_disc.size = Vector2(INTENT_DISC, INTENT_DISC)
+		_extra_disc.draw.connect(func() -> void:
+			var piece: Texture2D = PixelStyle.piece("ui_oculus_cracked" if not _extra_value.text.is_empty() else "ui_oculus")
+			if piece != null:
+				_extra_disc.draw_texture(piece, ((Vector2(INTENT_DISC, INTENT_DISC) - piece.get_size()) * 0.5).floor()))
+		add_child(_extra_disc)
+		_extra_icon = _intent_icon.duplicate() as TextureRect
+		_extra_disc.add_child(_extra_icon)
+		_extra_value = _intent_value.duplicate() as Label
+		_extra_disc.add_child(_extra_value)
+		_layout()
+	_extra_icon.texture = tex
+	_extra_value.text = value_text
+	_extra_disc.visible = tex != null and not down
+	_extra_disc.queue_redraw()
+
+
+func extra_intent_shown() -> bool:
+	return _extra_disc != null and _extra_disc.visible
+
+
 func intent_shown() -> bool:
 	return _intent_disc.visible
 
@@ -182,6 +214,10 @@ func _layout() -> void:
 	if _intent_disc == null:
 		return
 	_intent_disc.position = Vector2(-INTENT_DISC * 0.5, -intent_height - INTENT_DISC * 0.5)
+	if _extra_disc != null:
+		# Two intents side by side, centred over the boss.
+		_intent_disc.position.x = -INTENT_DISC - 1.0
+		_extra_disc.position = Vector2(1.0, _intent_disc.position.y)
 	var width: float = _conditions.get_combined_minimum_size().x
 	_conditions.position = Vector2(-roundf(width * 0.5), -head_height - CONDITION_SIZE - 4.0)
 	_preview.position = Vector2(-PREVIEW_WIDTH * 0.5, -roundf(head_height * 0.55))

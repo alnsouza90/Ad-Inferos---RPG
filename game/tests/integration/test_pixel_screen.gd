@@ -182,3 +182,16 @@ func test_battle_fights_in_poses() -> void:
 	var screen: BattleScreen = _battle(&"m0_hard_02")
 	for c: Combatant in screen.ctrl.state.party + screen.ctrl.state.enemies:
 		assert_true(screen.view_of(c.id).player().pose_mode, "%s em poses" % c.id)
+
+
+## D-411: the sheet on the right is always an enemy's; the saint is the arch.
+func test_the_right_sheet_shows_an_enemy_never_a_saint() -> void:
+	var screen: BattleScreen = _battle()
+	var first: Combatant = screen.ctrl.state.enemies[0]
+	assert_eq(screen.info_enemy(), first, "sem toque, o primeiro inimigo")
+	screen.tap(screen.ctrl.state.party_at(2).id)
+	assert_eq(screen.info_enemy(), first, "tocar num santo não muda a ficha")
+	var other: Combatant = screen.ctrl.state.enemies[1]
+	screen.tap(other.id)
+	assert_eq(screen.info_enemy(), other)
+	assert_eq(screen.sheet_title(), screen.texts.name_of(other))

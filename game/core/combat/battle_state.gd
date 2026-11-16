@@ -29,6 +29,11 @@ var hazard: StringName = &""
 var gale_slots: Array[int] = []
 ## A saint stood firm this round (bosses.md §2.2): the swap does not happen.
 var gale_held: bool = false
+## Boss battle (bosses.md §5): the claws of the Domínio still holding, the
+## fish's liver, and the current phase (1-based) of the boss.
+var dominion_claws: Array[StringName] = []
+var has_liver: bool = false
+var boss_phase: int = 1
 ## Firmeza (bosses.md §2.4): tokens earned this round, and the Fervor they
 ## give at the start of the next one.
 var firmness_this_round: int = 0
@@ -125,6 +130,15 @@ func occupied_enemy_slots() -> int:
 	for c: Combatant in enemies:
 		total += c.size
 	return total
+
+
+## Every intent of an enemy (a boss can have several, enemy-ai §6).
+func intents_of(enemy: Combatant) -> Array[Intent]:
+	var result: Array[Intent] = []
+	for intent: Intent in intents:
+		if intent.enemy_id == enemy.id:
+			result.append(intent)
+	return result
 
 
 func intent_of(enemy: Combatant) -> Intent:
@@ -395,6 +409,69 @@ func earn_firmness() -> bool:
 	firmness_this_round += 1
 	firmness_pending += 1
 	return true
+
+
+# --- boss (bosses.md §5, enemy-ai §6) ------------------------------------------
+
+## The boss of the battle (family `boss`), or null.
+func boss() -> Combatant:
+	for c: Combatant in enemies:
+		if c.category == &"boss" and c.state != Combatant.State.DEAD:
+			return c
+	return null
+
+
+func boss_def() -> EnemyDef:
+	var b: Combatant = boss()
+	return catalog.enemies.get(b.def_id) if b != null else null
+
+
+## Sets up the Domínio before round 1: the escort enters while its claw holds.
+func setup_boss(claws: Array[StringName], liver: bool) -> void:
+	dominion_claws = claws.duplicate()
+	has_liver = liver
+	var def: EnemyDef = boss_def()
+	if def == null or not dominion_claws.has(Dominion.ESCORT):
+		return
+	for escort_id: StringName in def.dominion_escort:
+		var escort_def: EnemyDef = catalog.enemies.get(escort_id)
+		if escort_def != null and occupied_enemy_slots() + escort_def.size <= MAX_ENEMY_SLOTS:
+			add_enemy(escort_def)
+
+
+## Phase thresholds in use: the longer list while the extra-phase claw holds.
+func boss_thresholds() -> Array[float]:
+	var def: EnemyDef = boss_def()
+	if def == null:
+		return [] as Array[float]
+	if dominion_claws.has(Dominion.EXTRA_PHASE) and not def.dominion_phase_thresholds.is_empty():
+		return def.dominion_phase_thresholds
+	return def.phase_thresholds
+
+
+func boss_phase_count() -> int:
+	return boss_thresholds().size() + 1
+
+
+## Phase the boss's hp puts it in now (never goes back).
+func boss_phase_for_hp() -> int:
+	var b: Combatant = boss()
+	if b == null:
+		return boss_phase
+	var phase_now: int = 1
+	for t: float in boss_thresholds():
+		if b.hp <= b.max_hp * t:
+			phase_now += 1
+	return maxi(boss_phase, phase_now)
+
+
+## Actions the boss takes each round (enemy-ai §6).
+func boss_actions_per_round(c: Combatant) -> int:
+	var def: EnemyDef = catalog.enemies.get(c.def_id)
+	if def == null:
+		return 1
+	var extra: int = def.dominion_extra_actions if dominion_claws.has(Dominion.EXTRA_ACTION) else 0
+	return def.actions_per_round + extra
 
 
 ## Allies adjacent to the Clausura holder (not the holder itself).

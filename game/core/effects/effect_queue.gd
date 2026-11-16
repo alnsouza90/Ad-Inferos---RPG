@@ -28,6 +28,7 @@ func _init(limit: int) -> void:
 	register(&"desolation", DesolationEffect.new())
 	register(&"summon", SummonEffect.new())
 	register(&"self_damage", SelfDamageEffect.new())
+	register(&"gale_swap", GaleSwapEffect.new())
 
 
 func register(type: StringName, handler: EffectHandler) -> void:
@@ -78,9 +79,13 @@ func _run(entry: Dictionary) -> void:
 static func _break_enchantment(ctx: EffectContext, effect: EffectDef, target: Combatant) -> void:
 	if ctx.actor == null or not ctx.actor.is_saint() or target == ctx.actor or not target.is_saint():
 		return
-	if not target.has_condition(&"enchanted") or ctx.state.catalog.ability(ctx.source_id) == null:
+	if ctx.state.catalog.ability(ctx.source_id) == null or not _is_blessing(ctx, effect):
 		return
-	if not _is_blessing(ctx, effect):
+	# As sete noites (D-411) also yield to a companion's blessing.
+	if target.has_condition(&"seven_nights"):
+		ctx.state.engine.remove_all(target, &"seven_nights")
+		ctx.emit.call(&"condition_removed", {"target": target.id, "condition": &"seven_nights", "stacks": 1})
+	if not target.has_condition(&"enchanted"):
 		return
 	ctx.state.engine.remove_all(target, &"enchanted")
 	ctx.emit.call(&"condition_removed", {"target": target.id, "condition": &"enchanted", "stacks": 1})
@@ -121,6 +126,12 @@ static func resolve_targets(ctx: EffectContext, effect: EffectDef) -> Array[Comb
 			for c: Combatant in _foes_of(ctx):
 				if c.is_standing():
 					result.append(c)
+		&"random_party":
+			# One of the action's targets, drawn on the battle stream
+			# (Asmodeus' three heads, bosses.md §5.1).
+			var standing: Array[Combatant] = ctx.targets.filter(func(c: Combatant) -> bool: return c.is_standing())
+			if not standing.is_empty():
+				result.append(standing[ctx.state.rng.battle().pick_index(standing.size())])
 		_:
 			result = ctx.targets.duplicate()
 	return result

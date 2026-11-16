@@ -65,6 +65,8 @@ const ACTION_SIZE := Vector2(126, 24)
 ## Two small actions share a row: Swap and Pass, Interceder and the gift.
 const HALF_ACTION_SIZE := Vector2(64, 24)
 const GALE_LABEL_WIDTH: float = 200.0
+## Pause on the liver's smoke and on a boss's change of phase.
+const BOSS_SCENE_SECONDS: float = 0.8
 const HOOK_POS := Vector2(566, 446)
 const HOOK_STEP: float = 28.0
 const HOOK_TEXT := Rect2(4, 62, 26, 24)
@@ -235,7 +237,9 @@ func tap(combatant_id: StringName) -> void:
 	var c: Combatant = ctrl.state.find(combatant_id)
 	if c == null:
 		return
-	_info_id = combatant_id
+	# The sheet on the right is the enemy's (D-411): the saint is on the left.
+	if not c.is_saint():
+		_info_id = combatant_id
 	if busy or ctrl.phase != BattleController.Phase.PARTY_TURN:
 		_refresh()
 		return
@@ -532,6 +536,10 @@ func _after_events() -> void:
 	if ctrl.is_over():
 		selection.reset()
 		_result_label.text = texts.t(StringName("result_%s" % _result_key()))
+		# bosses.md §5.3: Raphael binds Asmodeus (with the liver) or he flees.
+		for ev: BattleEvent in ctrl.history:
+			if ev.type == BattleController.EV_BOSS_DEFEATED:
+				_result_label.text += "\n" + texts.t(&"boss_bound" if bool(ev.data["bound"]) else &"boss_fled")
 		_result_overlay.visible = true
 	else:
 		var actor: Combatant = selection.actor()
@@ -571,6 +579,19 @@ func _animate(ev: BattleEvent) -> float:
 			return _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &"")
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""
+		&"liver_smoke":
+			_hint.text = texts.t(&"boss_liver_smoke")
+			var smoke_view: CombatantView = view_of(StringName(str(d["boss"])))
+			if smoke_view != null:
+				smoke_view.float_text(texts.t(&"boss_liver_smoke_short"), COLOR_SPIRIT)
+			return _scaled(BOSS_SCENE_SECONDS, factor)
+		&"boss_phase_changed":
+			var boss: Combatant = ctrl.state.boss()
+			var boss_view: CombatantView = view_of(boss.id) if boss != null else null
+			if boss_view != null:
+				boss_view.float_text(texts.t(&"boss_phase_float", {"phase": d["phase"], "of": d["of"]}), COLOR_SPIRIT)
+			_on_impact(boss_view.position if boss_view != null else Vector2.ZERO, 1.0, AnimationStyle.SPIRITUAL)
+			return _scaled(BOSS_SCENE_SECONDS, factor)
 		&"damage_dealt", &"bleed_tick", &"self_damaged":
 			var lunge: float = 0.0
 			var source: StringName = StringName(str(d.get("source", "")))
@@ -805,6 +826,11 @@ func _show(view: CombatantView, c: Combatant) -> void:
 	if intent_obj != null and intent_obj.kind == Intent.KIND_ACTION and intent_obj.preview_value > 0:
 		value = str(intent_obj.preview_value)
 	badge.set_intent(HudStyle.intent_icon(intent_obj) if not ctrl.is_over() else null, value)
+	if not c.is_saint():
+		var more: Array[Intent] = ctrl.state.intents_of(c)
+		var extra: Intent = more[1] if more.size() > 1 else null
+		var extra_value: String = str(extra.preview_value) if extra != null and extra.kind == Intent.KIND_ACTION and extra.preview_value > 0 else ""
+		badge.set_extra_intent(HudStyle.intent_icon(extra) if extra != null and not ctrl.is_over() else null, extra_value)
 	var entries: Array[Dictionary] = []
 	var ids: Array[StringName] = texts.sorted_conditions(c)
 	for i: int in mini(ids.size(), BattleTexts.MAX_CONDITIONS_SHOWN):
@@ -1014,8 +1040,20 @@ func _intercede_hint() -> String:
 
 
 ## The sheet on the right (DD): the tapped combatant, or the chosen saint.
+## The enemy on the right-hand sheet (D-411): the one last tapped, or the
+## first one standing; never a saint, who is shown in the arch on the left.
+func info_enemy() -> Combatant:
+	var tapped: Combatant = ctrl.state.find(_info_id) if _info_id != &"" else null
+	if tapped != null and not tapped.is_saint() and tapped.state != Combatant.State.DEAD:
+		return tapped
+	for e: Combatant in ctrl.state.enemies:
+		if e.is_alive_enemy():
+			return e
+	return null
+
+
 func _refresh_info() -> void:
-	var c: Combatant = ctrl.state.find(_info_id) if _info_id != &"" else selection.actor()
+	var c: Combatant = info_enemy()
 	if c == null:
 		_info.text = ""
 		_sheet_title.text = ""
@@ -1033,9 +1071,15 @@ func _refresh_info() -> void:
 		first += " · " + texts.desolation(c)
 	lines.append(first)
 	if not c.is_saint():
-		var intent_text: String = texts.intent(ctrl.state.intent_of(c))
+		var parts: Array[String] = []
+		for intent: Intent in ctrl.state.intents_of(c):
+			parts.append(texts.intent(intent))
+		var intent_text: String = " · ".join(parts)
 		if not intent_text.is_empty():
 			lines.append(texts.t(&"intent_details", {"intent": intent_text}))
+		if c.category == &"boss":
+			# bosses.md §5: the phase and the claws of the Domínio, visible.
+			lines.append(texts.t(&"boss_status", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count(), "claws": ctrl.state.dominion_claws.size()}))
 	lines.append(texts.conditions_details(c))
 	_info.text = "\n".join(lines)
 

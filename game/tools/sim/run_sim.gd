@@ -19,6 +19,7 @@ func _init() -> void:
 		_run_legs(args, given)
 		return
 	var data: SimData = SimData.load_all()
+	_apply_overrides(data.catalog.constants, String(args.get("set", "")))
 	var encounter_ids: Array[String] = data.encounter_ids(String(args["encounters"]))
 	if encounter_ids.is_empty():
 		printerr("Nenhum encontro começa com '%s'." % args["encounters"])

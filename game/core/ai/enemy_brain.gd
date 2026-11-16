@@ -12,11 +12,23 @@ const SINGLE: StringName = &"single"
 static func choose_intents(state: BattleState) -> void:
 	state.intents.clear()
 	for enemy: Combatant in state.enemies:
-		if enemy.is_alive_enemy():
-			state.intents.append(choose(state, enemy))
+		if not enemy.is_alive_enemy():
+			continue
+		var first: Intent = choose(state, enemy)
+		state.intents.append(first)
+		# A boss with more actions announces each one, all different (§6).
+		var used: Array[StringName] = [first.action_id]
+		for i: int in range(1, state.boss_actions_per_round(enemy) if enemy.category == &"boss" else 1):
+			if first.kind != Intent.KIND_ACTION:
+				break
+			var more: Intent = choose(state, enemy, used)
+			if more.kind != Intent.KIND_ACTION:
+				break
+			state.intents.append(more)
+			used.append(more.action_id)
 
 
-static func choose(state: BattleState, enemy: Combatant) -> Intent:
+static func choose(state: BattleState, enemy: Combatant, skip: Array[StringName] = []) -> Intent:
 	if enemy.has_condition(&"stun"):
 		return Intent.idle(enemy.id, Intent.KIND_STUNNED)
 	var def: EnemyDef = state.catalog.enemies.get(enemy.def_id)
@@ -24,6 +36,8 @@ static func choose(state: BattleState, enemy: Combatant) -> Intent:
 		return Intent.idle(enemy.id, Intent.KIND_WAIT)
 	var slot: int = state.enemy_slot_of(enemy)
 	for action: EnemyActionDef in def.actions:
+		if skip.has(action.id):
+			continue
 		if not action.use_slots.has(slot) or not cooldown_ready(state, enemy, action):
 			continue
 		if not conditions_met(state, enemy, action):
@@ -84,6 +98,8 @@ static func conditions_met(state: BattleState, enemy: Combatant, action: EnemyAc
 				ok = not state.party.any(func(c: Combatant) -> bool: return c.is_standing() and c.has_condition(StringName(str(param))))
 			"free_enemy_slot":
 				ok = state.occupied_enemy_slots() < BattleState.MAX_ENEMY_SLOTS
+			"phase_at_least":
+				ok = state.boss_phase >= int(param)
 			_:
 				ok = false
 		if not ok:
