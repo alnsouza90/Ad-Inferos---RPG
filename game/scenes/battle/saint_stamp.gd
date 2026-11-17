@@ -100,6 +100,8 @@ func play(stamp_shape: StringName, chest: Vector2, feet: Vector2, factor: float)
 			tween.tween_property(_picture, "scale", Vector2.ONE, arrive).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 			tween.tween_property(_picture, "modulate:a", 1.0, arrive * 0.5)
 			tween.chain()
+	# What follows runs one step after the other.
+	tween.set_parallel(false)
 	if stamp_shape != RING:
 		tween.tween_interval(hold)
 		# It fades with gaps, like a print wearing off.

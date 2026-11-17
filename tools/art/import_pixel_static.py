@@ -92,7 +92,7 @@ STAMPS = {
 # The stamps of the saints' abilities (D-452): one drawing each, moved by the
 # engine (SaintStamp), with how many times each is enlarged; the shield is the whole frame of the first sheet, its
 # lower half mirrored from the upper (the sheet cut it).
-ABILITY_STAMPS = {"shield": 2, "cross": 1, "ring": 1}
+ABILITY_STAMPS = {"shield": 2, "cross": 1, "ring": 1, "petals": 1}
 STAMP_HEIGHT = 220
 STAMP_WHITE = (0xF1, 0xEC, 0xE0, 255)
 STAMP_THRESHOLD = 150

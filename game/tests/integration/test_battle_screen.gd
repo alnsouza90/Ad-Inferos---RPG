@@ -313,7 +313,7 @@ func test_each_saint_has_the_stamp_of_its_abilities() -> void:
 	assert_eq(SaintStamp.shape_for(&"saint_benedict", AbilityIcon.RELIEF), SaintStamp.RING)
 	assert_eq(SaintStamp.shape_for(&"saint_therese", AbilityIcon.HEAL), SaintStamp.PETALS)
 	assert_eq(SaintStamp.shape_for(&"saint_george", AbilityIcon.STRIKE), &"", "o golpe de lança não tem estampa")
-	for shape: StringName in [SaintStamp.SHIELD, SaintStamp.CROSS, SaintStamp.RING]:
+	for shape: StringName in [SaintStamp.SHIELD, SaintStamp.CROSS, SaintStamp.RING, SaintStamp.PETALS]:
 		assert_not_null(SaintStamp.texture_of(shape), String(shape))
 
 
