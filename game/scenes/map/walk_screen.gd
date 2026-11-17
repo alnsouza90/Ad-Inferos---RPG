@@ -939,7 +939,7 @@ func _build() -> void:
 ## desolation), the mini-map of the leg always in view (a touch opens the
 ## whole map), the alforje, and what stands here with its buttons.
 func _build_panel() -> void:
-	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
+	_stage.add_child(PixelStyle.stone_panel(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
 	var top: float = FIELD_HEIGHT
 	_light_label = _label("")
 	_light_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -1003,25 +1003,25 @@ func lantern_y() -> float:
 
 ## A small card: the saint's bust, name, life and desolation.
 func _build_saint_card(saint_id: StringName, at: Vector2) -> void:
-	_stage.add_child(PixelStyle.plate(Rect2(at, CARD_SIZE), PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT))
+	_stage.add_child(PixelStyle.iron_plate(Rect2(at, CARD_SIZE)))
 	var bust := TextureRect.new()
 	var path: String = BattleScreen.BUST_PATH % [saint_id, saint_id]
 	bust.texture = load(path) as Texture2D if ResourceLoader.exists(path) else null
 	bust.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bust.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bust.position = at + Vector2(3, 3)
-	bust.size = Vector2(48, CARD_SIZE.y - 6.0)
+	bust.position = at + Vector2(8, 8)
+	bust.size = Vector2(44, CARD_SIZE.y - 16.0)
 	bust.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(bust)
 	var name_label := _label(texts.saint_name(saint_id))
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	PixelStyle.title(name_label)
-	name_label.position = at + Vector2(56, 2)
+	name_label.position = at + Vector2(56, 6)
 	name_label.size = Vector2(CARD_SIZE.x - 58.0, 14)
 	_stage.add_child(name_label)
 	var bars := Control.new()
-	bars.position = at + Vector2(56, 22)
-	bars.size = Vector2(CARD_SIZE.x - 62.0, 40)
+	bars.position = at + Vector2(56, 26)
+	bars.size = Vector2(CARD_SIZE.x - 66.0, 40)
 	bars.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bars.draw.connect(_draw_card_bars.bind(bars, saint_id))
 	_stage.add_child(bars)
@@ -1056,13 +1056,24 @@ func _build_strip(at: Vector2) -> void:
 	_strip.focus_mode = Control.FOCUS_NONE
 	_strip.pressed.connect(press_minimap)
 	_strip.draw.connect(_draw_strip)
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+		_strip.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	_stage.add_child(_strip)
 
 
 func _draw_strip() -> void:
+	# The iron rail (D-441) with the gate, a medallion per layer and the camp.
+	var rail: Texture2D = PixelStyle.piece("ui_rail")
+	if rail != null:
+		var x: float = 0.0
+		while x < STRIP_SIZE.x:
+			var w: float = minf(rail.get_width(), STRIP_SIZE.x - x)
+			_strip.draw_texture_rect_region(rail, Rect2(x, 30, w, rail.get_height()), Rect2(0, 0, w, rail.get_height()))
+			x += w
 	var font: Font = PixelStyle.title_font()
 	_strip.draw_string(font, Vector2(6, 12), texts.t(&"walk_strip_title", {"leg": ctrl.state.leg}), HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
 	var icons: Array[String] = [MiniMapView.GATE_ICON]
+	var lit: Array[bool] = [true]
 	var current: Array[bool] = [ctrl.state.current_node == &""]
 	for layer: int in range(1, ctrl.map.layer_count() + 1):
 		var taken: MapNode = null
@@ -1070,22 +1081,23 @@ func _draw_strip() -> void:
 			if n.id == ctrl.state.current_node or ctrl.state.visited.has(n.id):
 				taken = n
 		icons.append(MiniMapView.ICONS.get(taken.type, "") if taken != null else "")
+		lit.append(taken != null)
 		current.append(taken != null and taken.id == ctrl.state.current_node)
 	icons.append(MiniMapView.CAMP_ICON)
+	lit.append(ctrl.phase == ExpeditionController.Phase.AT_CAMP)
 	current.append(ctrl.phase == ExpeditionController.Phase.AT_CAMP)
 	var step: float = (STRIP_SIZE.x - 12.0) / icons.size()
+	var medal: Texture2D = PixelStyle.piece("ui_medallion")
 	for i: int in icons.size():
-		var centre := Vector2(6 + step * (i + 0.5), 46)
-		if i > 0:
-			_strip.draw_line(Vector2(centre.x - step + 17, centre.y), Vector2(centre.x - 17, centre.y), PixelStyle.COLOR_LEAD_LIGHT)
+		var centre := Vector2(roundf(6 + step * (i + 0.5)), 47)
+		if medal != null:
+			_strip.draw_texture(medal, (centre - medal.get_size() * 0.5).round(), Color.WHITE if lit[i] else Color(0.6, 0.6, 0.65))
 		var tex: Texture2D = HudStyle.icon(icons[i])
 		if tex != null:
-			_strip.draw_texture(tex, (centre - Vector2(16, 16)).round())
-		else:
-			_strip.draw_rect(Rect2(centre - Vector2(6, 6), Vector2(12, 12)), PixelStyle.COLOR_LEAD)
+			_strip.draw_texture_rect(tex, Rect2(centre - Vector2(12, 12), Vector2(24, 24)), false, Color.WHITE if lit[i] else Color(0.45, 0.45, 0.5))
 		if current[i]:
-			_strip.draw_rect(Rect2(centre - Vector2(18, 18), Vector2(36, 36)), PixelStyle.COLOR_GOLD, false)
-	_strip.draw_string(PixelStyle.text_font(), Vector2(0, STRIP_SIZE.y - 4), texts.t(&"walk_strip_open"), HORIZONTAL_ALIGNMENT_CENTER, STRIP_SIZE.x, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GREY)
+			_strip.draw_arc(centre, 17.0, 0.0, TAU, 24, PixelStyle.COLOR_AMBER, 2.0)
+	_strip.draw_string(PixelStyle.text_font(), Vector2(0, STRIP_SIZE.y - 2), texts.t(&"walk_strip_open"), HORIZONTAL_ALIGNMENT_CENTER, STRIP_SIZE.x, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GREY)
 
 
 func _build_provisions_overlay() -> void:
@@ -1094,9 +1106,9 @@ func _build_provisions_overlay() -> void:
 	_provisions_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_provisions_overlay.visible = false
 	_stage.add_child(_provisions_overlay)
-	_provisions_overlay.add_child(PixelStyle.plate(Rect2(PACK_POS, Vector2(LIST_BUTTON_SIZE.x + 16.0, 170)), PixelStyle.COLOR_IRON, PixelStyle.COLOR_GOLD))
+	_provisions_overlay.add_child(PixelStyle.iron_plate(Rect2(PACK_POS, Vector2(LIST_BUTTON_SIZE.x + 24.0, 170))))
 	_provisions_list = VBoxContainer.new()
-	_provisions_list.position = PACK_POS + Vector2(8, 6)
+	_provisions_list.position = PACK_POS + Vector2(12, 10)
 	_provisions_list.add_theme_constant_override("separation", 4)
 	_provisions_overlay.add_child(_provisions_list)
 
@@ -1117,10 +1129,14 @@ func _build_minimap_overlay() -> void:
 		dim.add_theme_stylebox_override(state_name, dim_style)
 	dim.pressed.connect(close_minimap)
 	_minimap_overlay.add_child(dim)
-	_minimap_overlay.add_child(PixelStyle.plate(Rect2(30, 44, 900, 440)))
+	var tablet := TextureRect.new()
+	tablet.texture = PixelStyle.piece("ui_map_tablet")
+	tablet.position = Vector2(50, 50)
+	tablet.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_minimap_overlay.add_child(tablet)
 	_minimap = MiniMapView.new()
-	_minimap.position = Vector2(50, 60)
-	_minimap.size = Vector2(860, 400)
+	_minimap.position = Vector2(150, 110)
+	_minimap.size = Vector2(660, 320)
 	_minimap.mouse_filter = Control.MOUSE_FILTER_STOP
 	_minimap.setup(ctrl, texts)
 	_minimap_overlay.add_child(_minimap)

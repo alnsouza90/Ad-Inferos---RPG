@@ -61,7 +61,8 @@ const LANCET_TEXT := Rect2(7, 56, 51, 84)
 ## at its foot and the name and description go to a note in the corner of
 ## the field when it is touched (D-440).
 const LANCET_PIPS_Y: float = 143.0
-const NOTE_RECT := Rect2(50, 62, 300, 66)
+const NOTE_RECT := Rect2(50, 62, 300, 74)
+const NOTE_BOSS_DROP: float = 42.0
 const ROSE_POS := Vector2(400, 372)
 ## The miracle's name and cost, to the right of the rose (D-436).
 const MIRACLE_LABEL := Rect2(481, 384, 58, 90)
@@ -85,7 +86,11 @@ const SHEET_X: float = 812.0
 const SHEET_ICON := Vector2(24, 24)
 ## The big bar of a boss under the top line (D-436): name, life, phase and
 ## the claws of the Domínio.
-const BOSS_BAR := Rect2(250, 58, 460, 30)
+const BOSS_BAR := Rect2(240, 54, 480, 46)
+## The claws at each end of the boss bar, and where its slot is (top, height),
+## in pixels of ui_boss_bar.
+const BOSS_BAR_END: float = 36.0
+const BOSS_BAR_SLOT := Vector2(12.0, 8.0)
 const OVERLAY_WIDTH: float = 300.0
 const OVERLAY_MARGIN: float = 400.0
 const COLOR_BACKGROUND := Color("0D0C10")
@@ -780,22 +785,28 @@ func _draw_boss_bar() -> void:
 	if boss == null:
 		return
 	var w: float = BOSS_BAR.size.x
-	_boss_bar.draw_rect(Rect2(Vector2.ZERO, BOSS_BAR.size), PixelStyle.COLOR_PITCH)
-	_boss_bar.draw_rect(Rect2(Vector2.ZERO, BOSS_BAR.size), PixelStyle.COLOR_LEAD_LIGHT, false)
 	var font: Font = PixelStyle.title_font()
 	var name_text: String = texts.name_of(boss)
-	_boss_bar.draw_string(font, Vector2(0, 13), name_text, HORIZONTAL_ALIGNMENT_CENTER, w, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
+	_boss_bar.draw_string(font, Vector2(0, 9), name_text, HORIZONTAL_ALIGNMENT_CENTER, w, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
 	var phase: String = texts.t(&"boss_phase_float", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count()})
-	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(6, 12), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
+	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(44, 9), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
+	# The iron bar with claws at the ends (D-441): ends kept, middle stretched.
+	var frame: Texture2D = PixelStyle.piece("ui_boss_bar")
+	var top: float = 12.0
+	if frame != null:
+		var end_w: float = BOSS_BAR_END
+		var fh: float = frame.get_height()
+		_boss_bar.draw_texture_rect_region(frame, Rect2(0, top, end_w, fh), Rect2(0, 0, end_w, fh))
+		_boss_bar.draw_texture_rect_region(frame, Rect2(end_w, top, w - end_w * 2.0, fh), Rect2(end_w, 0, frame.get_width() - end_w * 2.0, fh))
+		_boss_bar.draw_texture_rect_region(frame, Rect2(w - end_w, top, end_w, fh), Rect2(frame.get_width() - end_w, 0, end_w, fh))
 	var share: float = clampf(float(boss.hp) / maxf(float(boss.max_hp), 1.0), 0.0, 1.0)
-	var bar := Rect2(6, 18, w - 12, 7)
-	_boss_bar.draw_rect(bar, PixelStyle.COLOR_IRON)
+	var bar := Rect2(BOSS_BAR_END, top + BOSS_BAR_SLOT.x, w - BOSS_BAR_END * 2.0, BOSS_BAR_SLOT.y)
 	_boss_bar.draw_rect(Rect2(bar.position, Vector2(roundf(bar.size.x * share), bar.size.y)), PixelStyle.COLOR_BLOOD)
 	# The claws of the Domínio still holding (bosses.md §5), at the right.
 	var grip: Texture2D = PixelStyle.piece("ui_claw_grip")
 	if grip != null:
 		for i: int in ctrl.state.dominion_claws.size():
-			_boss_bar.draw_texture_rect(grip, Rect2(w - 16 - i * 14, 1, 13, 16), false)
+			_boss_bar.draw_texture_rect(grip, Rect2(w - 58 - i * 14, -2, 13, 16), false)
 
 
 ## Whether the big boss bar is shown (tests).
@@ -1164,6 +1175,8 @@ func _refresh_note() -> void:
 	_note.visible = def != null
 	if def == null:
 		return
+	# Under the boss's bar when there is one.
+	_note.position.y = NOTE_RECT.position.y + (NOTE_BOSS_DROP if boss_bar_shown() else 0.0)
 	var title: String = def.name_pt
 	var cost: int = ctrl.effective_cost(selection.actor(), def)
 	if cost > 0:
@@ -1680,21 +1693,29 @@ func _draw_flame(on: Control, at: Vector2, size_px: int = 1) -> void:
 
 
 func _build_top_bar() -> void:
+	var band := TextureRect.new()
+	band.texture = PixelStyle.piece("ui_top_band")
+	band.stretch_mode = TextureRect.STRETCH_TILE
+	band.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	band.position = Vector2(-OVERLAY_MARGIN, 0)
+	band.size = Vector2(STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, 16)
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(band)
 	_round_label = _label(Vector2(180, 4), Vector2(600, 14))
 	PixelStyle.title(_round_label)
 	_hint = _label(Vector2(230, 20), Vector2(500, 36))
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_note = PixelStyle.plate(NOTE_RECT, PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT)
+	_note = PixelStyle.iron_plate(NOTE_RECT)
 	_note.visible = false
 	_stage.add_child(_note)
 	_note_title = Label.new()
-	_note_title.position = Vector2(6, 2)
-	_note_title.size = Vector2(NOTE_RECT.size.x - 12.0, 14)
+	_note_title.position = Vector2(10, 6)
+	_note_title.size = Vector2(NOTE_RECT.size.x - 20.0, 14)
 	PixelStyle.title(_note_title)
 	_note.add_child(_note_title)
 	_note_text = Label.new()
-	_note_text.position = Vector2(6, 18)
-	_note_text.size = Vector2(NOTE_RECT.size.x - 12.0, NOTE_RECT.size.y - 20.0)
+	_note_text.position = Vector2(10, 22)
+	_note_text.size = Vector2(NOTE_RECT.size.x - 20.0, NOTE_RECT.size.y - 28.0)
 	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_note.add_child(_note_text)
 	_boss_bar = Control.new()
@@ -1712,7 +1733,7 @@ func _build_top_bar() -> void:
 ## the chosen saint and its actions on the left, the tapped combatant in a
 ## broken frame on the right.
 func _build_bottom() -> void:
-	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
+	_stage.add_child(PixelStyle.stone_panel(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
 	_build_hero_panel()
 	_build_sheet_panel()
 
@@ -1795,6 +1816,7 @@ func fervor_flames() -> int:
 ## DD's sheet: the tapped enemy (or saint) in the broken frame, with its
 ## life, intent and conditions; "Encerrar turno" in its corner.
 func _build_sheet_panel() -> void:
+	_stage.add_child(PixelStyle.iron_plate(Rect2(SHEET_X - 8.0, 364, STAGE_SIZE.x - SHEET_X + 2.0, 134)))
 	_piece("ui_broken_frame", FRAME_POS)
 	_sheet_picture = TextureRect.new()
 	_sheet_picture.position = FRAME_POS + FRAME_WINDOW.position
@@ -1876,7 +1898,14 @@ func _tile(index: int, icon_name: String, action: Callable) -> Button:
 	var col: int = index % 3
 	var row: int = index / 3
 	var pos: Vector2 = ACTION_POS + Vector2(col * (ACTION_TILE.x + ACTION_GAP), row * (ACTION_TILE.y + ACTION_GAP))
+	var frame := _piece("ui_tile_frame", pos - Vector2(2, 2))
+	frame.size = ACTION_TILE + Vector2(4, 4)
+	frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	var button: Button = _button(pos, ACTION_TILE, action)
+	# The iron frame is the button's edge; the button itself is only its icon
+	# and name (D-441).
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+		button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	button.icon = HudStyle.icon(icon_name)
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP

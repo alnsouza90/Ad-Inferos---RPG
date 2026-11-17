@@ -673,8 +673,7 @@ func _build_seat(field: Control, saint_id: StringName, seat: Dictionary) -> void
 
 
 func _build_panel() -> void:
-	var panel: Panel = PixelStyle.plate(Rect2(0, PANEL_TOP, STAGE_SIZE.x, STAGE_SIZE.y - PANEL_TOP))
-	_stage.add_child(panel)
+	_stage.add_child(PixelStyle.stone_panel(Rect2(0, PANEL_TOP, STAGE_SIZE.x, STAGE_SIZE.y - PANEL_TOP)))
 	for saint_id: StringName in ctrl.state.party:
 		_build_card(saint_id)
 	_info = _label("")

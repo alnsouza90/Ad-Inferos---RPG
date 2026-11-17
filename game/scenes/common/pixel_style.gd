@@ -28,6 +28,9 @@ const COLOR_AMBER := Color("E07B1F")
 const COLOR_VIOLET := Color("8A6BB0")
 const COLOR_HEAL := Color("8FB573")
 
+## Corners of the iron plate that never stretch (pixels of ui_plate9).
+const PLATE_MARGIN: int = 14
+
 static var _title_font: Font
 static var _text_font: Font
 static var _textures: Dictionary = {}
@@ -115,6 +118,34 @@ static func plate(rect: Rect2, fill: Color = COLOR_IRON, edge: Color = COLOR_LEA
 	panel.size = rect.size
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return panel
+
+
+## The stone of the panel (D-441): dark chapel stone under an iron band,
+## repeated sideways over `rect`.
+static func stone_panel(rect: Rect2) -> TextureRect:
+	var stone := TextureRect.new()
+	stone.texture = piece("ui_panel_stone")
+	stone.stretch_mode = TextureRect.STRETCH_TILE
+	stone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	stone.position = rect.position
+	stone.size = rect.size
+	stone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return stone
+
+
+## An iron plate with riveted corners that stretches to `rect` (D-441):
+## the note, the sheet, the cards, the opened alforje.
+static func iron_plate(rect: Rect2) -> NinePatchRect:
+	var plate := NinePatchRect.new()
+	plate.texture = piece("ui_plate9")
+	plate.patch_margin_left = PLATE_MARGIN
+	plate.patch_margin_top = PLATE_MARGIN
+	plate.patch_margin_right = PLATE_MARGIN
+	plate.patch_margin_bottom = PLATE_MARGIN
+	plate.position = rect.position
+	plate.size = rect.size
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return plate
 
 
 ## Tint of the portrait arch by the saint's spiritual state (D-258 (5)):
