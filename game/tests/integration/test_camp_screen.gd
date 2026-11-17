@@ -203,7 +203,7 @@ func test_cards_show_portrait_hit_points_and_desolation() -> void:
 		assert_not_null(s.activity_button(id, ExpeditionController.ACTIVITY_OWN), "atividade própria de %s" % id)
 	assert_eq(s.activity_button(&"saint_george", ExpeditionController.ACTIVITY_OWN).text, "Guarda")
 	assert_true(s.fixed_button(CampScreen.FIXED_REST).text.contains("1 Pão"), "Descansar mostra o custo")
-	assert_eq(s.stage_position(), LegacyStage.position_for(CampScreen.STAGE_SIZE, s.size), "palco antigo pela metade, centralizado (T65)")
+	assert_eq(s.stage_position(), ((s.size - CampScreen.STAGE_SIZE) * 0.5).floor(), "na grade de 960 × 540, centralizado (D-429)")
 
 
 func test_every_camp_text_exists_in_the_data() -> void:
@@ -220,3 +220,32 @@ func test_every_camp_text_exists_in_the_data() -> void:
 		keys.append("camp_reason_%s" % code)
 	for key: String in keys:
 		assert_true(data.ui.has_text(StringName(key)), "ui_text.csv tem '%s'" % key)
+
+
+# --- D-429, D-432: the saints sit around the fire; touch shows their card -------------
+
+func test_touching_a_sitting_saint_shows_their_card_in_the_panel() -> void:
+	var c := _camp()
+	var s := _screen(c)
+	assert_eq(s.selected, c.state.party[0], "começa com o primeiro santo")
+	for id: StringName in c.state.party:
+		assert_gt(s.seat_rect(id).size.x, 0.0, "%s sentado no Pouso" % id)
+	s.select_saint(&"saint_therese")
+	assert_eq(s.selected, &"saint_therese")
+	assert_true(s.activity_button(&"saint_therese", ExpeditionController.ACTIVITY_VIGIL).is_visible_in_tree(), "as ações de Teresinha aparecem")
+	assert_false(s.activity_button(&"saint_george", ExpeditionController.ACTIVITY_VIGIL).is_visible_in_tree(), "as de Jorge saem")
+
+
+func test_the_halo_shows_the_spiritual_state() -> void:
+	var c := _camp()
+	var george: SaintStatus = c.saints[&"saint_george"]
+	var therese: SaintStatus = c.saints[&"saint_therese"]
+	var benedict: SaintStatus = c.saints[&"saint_benedict"]
+	george.spirit_state = Desolation.DARK_NIGHT
+	therese.spirit_state = Desolation.CONSOLATION
+	benedict.spirit_state = Desolation.NORMAL
+	benedict.desolation = 90
+	var s := _screen(c)
+	assert_eq(s.halo_of(&"saint_george"), &"eclipse", "Noite Escura: eclipse")
+	assert_eq(s.halo_of(&"saint_therese"), &"disk", "Consolação: disco (com raios e clareira)")
+	assert_eq(s.halo_of(&"saint_benedict"), &"covered", "desolação alta: coberta")

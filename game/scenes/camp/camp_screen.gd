@@ -1,27 +1,61 @@
 class_name CampScreen
 extends Control
-## The camp (screens §5, expedition §6): the camp scenery, one card per saint
-## with portrait, hit points, desolation and injury, and the activity buttons
-## (Vigil, Share, Prayer, the saint's own skill; Share and some skills ask
-## whom). Fixed buttons: Rest (shows the cost of 1 Bread), Continue and
-## Planned retreat, each confirmed by a second tap. After resting, the result
-## shows what changed and the ambush roll. The screen only sends commands
-## (Rest, LeaveCamp) and reads the state (architecture §3.2).
+## The camp (screens §5, expedition §6) and the Vigil (§7) on the pixel grid
+## (D-429): the scenery in layers with a slow parallax, the animated fire in
+## the ring of stones and the saints sitting around it, each in their own
+## camp pose (`<id>_camp.png`, D-423) with the halo of their spiritual state
+## (D-432). Touching a saint shows, in the panel below (the "chapel"), the
+## saint's portrait, hit points, desolation and the activities they may take
+## (Vigil, Share, Prayer, their own skill; Share and some skills ask whom).
+## Fixed buttons: Rest (shows the cost of 1 Bread), Continue and Planned
+## retreat, each confirmed by a second tap. After resting, the result shows
+## what changed and the ambush roll. The screen only sends commands (Rest,
+## LeaveCamp) and reads the state (architecture §3.2).
 
-const STAGE_SIZE := Vector2(1920, 1080)
-const ART_PATH: String = "res://assets/environments/camp/env_circle_%02d_camp.png"
-const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_portrait.png"
-const CARD_SIZE := Vector2(580, 640)
-const CARD_Y: float = 150.0
-const CARD_STEP: float = 610.0
-const PORTRAIT_SIZE := Vector2(210, 280)
-const ACTIVITY_SIZE := Vector2(266, 70)
-const TARGET_SIZE := Vector2(266, 60)
-const FIXED_SIZE := Vector2(420, 100)
-const COLOR_BACKGROUND := Color(0.06, 0.05, 0.06)
-const COLOR_CARD := Color(0.07, 0.06, 0.07, 0.86)
+const STAGE_SIZE := Vector2(960, 540)
+const FIELD_SIZE := Vector2(960, 360)
+const ENV_PATH: String = "res://assets/pixel/environments/%s/env_%s_%s_%s.png"
+const POSE_PATH: String = "res://assets/pixel/characters/%s/%s_camp.png"
+const PORTRAIT_PATH: String = "res://assets/pixel/characters/%s/%s_portrait.png"
+const FIRE_PATH: String = "res://assets/pixel/vfx/camp_fire.png"
+const HALO_PATH: String = "res://assets/pixel/vfx/halo_%s.png"
+## The layers are drawn 2× (one pixel of the art is two of the screen) and
+## pushed down so the ring of stones of each scene sits where the fire burns.
+const LAYER_DROP: Dictionary = {&"camp": 74.0, &"vigil": 42.0}
+## Parallax of the back, middle and front layers while the scene breathes.
+const PARALLAX_BACK: float = 0.5
+const PARALLAX_FRONT: float = 1.6
+const SWAY_PIXELS: float = 6.0
+const SWAY_SECONDS: float = 7.0
+## Where the fire burns (its base, in each scene) and its frames.
+const FIRE_BASE: Dictionary = {&"camp": Vector2(480, 318), &"vigil": Vector2(488, 318)}
+const FIRE_FRAME: int = 64
+const FIRE_FRAMES: int = 8
+const FIRE_FPS: float = 9.0
+const FIRE_SCALE: float = 2.0
+## Seats around the fire, in party order: feet (centre, bottom), mirrored to
+## face the fire. The third sits further back, beyond the stones (D-432).
+const SEATS: Array[Dictionary] = [
+	{"feet": Vector2(232, 340), "mirror": false},
+	{"feet": Vector2(668, 340), "mirror": true},
+	{"feet": Vector2(392, 286), "mirror": false},
+	{"feet": Vector2(120, 330), "mirror": false},
+]
+## Centre of the halo over each camp pose, in pixels of the pose (facing
+## right); a saint without an entry gets one over the top of the pose.
+const HALO_POINTS: Dictionary = {
+	&"saint_george": Vector2(57, 13),
+	&"saint_benedict": Vector2(66, 28),
+	&"saint_therese": Vector2(86, 10),
+}
+const PANEL_TOP: float = 360.0
+const PORTRAIT_SCALE: float = 0.5
+const ACTIVITY_SIZE := Vector2(92, 18)
+const TARGET_SIZE := Vector2(92, 16)
+const FIXED_SIZE := Vector2(132, 20)
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 const COLOR_DIM := Color(0, 0, 0, 0.8)
+const COLOR_UNSELECTED := Color(0.78, 0.74, 0.72)
 const ACTIVITIES: Array[StringName] = [
 	ExpeditionController.ACTIVITY_VIGIL, ExpeditionController.ACTIVITY_SHARE,
 	ExpeditionController.ACTIVITY_PRAYER, ExpeditionController.ACTIVITY_OWN,
@@ -44,8 +78,17 @@ var choices: Dictionary = {}
 var asking_target: StringName = &""
 ## Fixed button armed by a first tap (the second confirms).
 var armed: StringName = &""
+## The saint whose card the panel shows (touched in the scene).
+var selected: StringName = &""
 
 var _stage: Control
+var _scenery: ParallaxScenery
+var _front: ParallaxScenery
+var _fire: TextureRect
+var _fire_glow: TextureRect
+var _seats: Dictionary = {}
+var _clock: float = 0.0
+var _halo_settings: HaloSettings
 var _light: Label
 var _alms: Label
 var _bread: Label
@@ -77,10 +120,19 @@ func _notification(what: int) -> void:
 
 # --- player input (also called by the tests) ------------------------------------
 
+## Touching a saint in the scene shows their card in the panel.
+func select_saint(saint_id: StringName) -> void:
+	if not _cards.has(saint_id):
+		return
+	selected = saint_id
+	refresh()
+
+
 func choose_activity(saint_id: StringName, activity: StringName) -> void:
 	if not _can_plan():
 		return
 	armed = &""
+	selected = saint_id
 	choices[saint_id] = {"activity": activity, "target": &""}
 	asking_target = saint_id if _needs_target(saint_id, activity) else &""
 	_info.text = _activity_desc(saint_id, activity)
@@ -146,6 +198,8 @@ func refresh() -> void:
 	_bread.text = data.ui.text(&"camp_bread", {"count": ctrl.state.provisions.count(&"bread")})
 	for saint_id: StringName in _cards:
 		_refresh_card(saint_id)
+		(_cards[saint_id]["root"] as Control).visible = saint_id == selected
+		_refresh_seat(saint_id)
 	var rest_button: Button = _fixed[FIXED_REST]
 	rest_button.disabled = not _can_plan()
 	for key: StringName in _fixed:
@@ -206,6 +260,18 @@ func result_text() -> String:
 
 func stage_position() -> Vector2:
 	return _stage.position if _stage != null else Vector2.ZERO
+
+
+## The halo shown over a sitting saint ("disk", "covered", "eclipse"; with
+## "rays" and the clearing in Consolation), for the tests.
+func halo_of(saint_id: StringName) -> StringName:
+	var seat: Dictionary = _seats.get(saint_id, {})
+	return seat.get("halo_kind", &"") if not seat.is_empty() else &""
+
+
+func seat_rect(saint_id: StringName) -> Rect2:
+	var seat: Dictionary = _seats.get(saint_id, {})
+	return (seat["button"] as Control).get_rect() if not seat.is_empty() else Rect2()
 
 
 # --- flow ------------------------------------------------------------------------
@@ -374,9 +440,50 @@ func _refresh_card(saint_id: StringName) -> void:
 	(card["choice"] as Label).text = summary
 
 
+## The sitting saint: brighter when chosen, and the halo of their state
+## (Art Bible §4.3, D-432): disk; covered from desolation 75 on; eclipse in
+## the Dark Night; disk with rays and the clearing on the ground in
+## Consolation.
+func _refresh_seat(saint_id: StringName) -> void:
+	var seat: Dictionary = _seats.get(saint_id, {})
+	if seat.is_empty():
+		return
+	(seat["pose"] as CanvasItem).modulate = Color.WHITE if saint_id == selected else COLOR_UNSELECTED
+	var status: SaintStatus = ctrl.saints[saint_id]
+	var kind: StringName = &"disk"
+	if status.spirit_state == Desolation.DARK_NIGHT:
+		kind = &"eclipse"
+	elif status.spirit_state != Desolation.CONSOLATION and status.desolation >= _halo_settings.fade_start:
+		kind = &"covered"
+	seat["halo_kind"] = kind
+	(seat["halo"] as TextureRect).texture = _texture(HALO_PATH % kind)
+	var consolation: bool = status.spirit_state == Desolation.CONSOLATION
+	(seat["rays"] as CanvasItem).visible = consolation
+	(seat["clearing"] as CanvasItem).visible = consolation
+
+
+func _process(delta: float) -> void:
+	if _scenery == null:
+		return
+	_clock += delta
+	# The scene breathes: the far and near layers drift against each other.
+	var sway: float = roundf(sin(_clock * TAU / SWAY_SECONDS) * SWAY_PIXELS)
+	_scenery.set_shift(sway)
+	_front.set_shift(sway)
+	if _fire != null:
+		var frame: int = int(_clock * FIRE_FPS) % FIRE_FRAMES
+		(_fire.texture as AtlasTexture).region = Rect2(frame * FIRE_FRAME, 0, FIRE_FRAME, FIRE_FRAME)
+	if _fire_glow != null:
+		_fire_glow.modulate.a = 0.55 + 0.08 * sin(_clock * 11.0) + 0.05 * sin(_clock * 23.0)
+	for id: StringName in _seats:
+		var rays: CanvasItem = _seats[id]["rays"]
+		if rays.visible:
+			(rays as Control).rotation += delta * _halo_settings.rays_spin_speed
+
+
 func _center_stage() -> void:
 	if _stage != null:
-		LegacyStage.place(_stage, STAGE_SIZE, _screen_size())
+		_stage.position = ((_screen_size() - STAGE_SIZE) * 0.5).floor()
 
 
 ## Never centre on a zero size (the T17 phone bug, lessons.md).
@@ -386,13 +493,30 @@ func _screen_size() -> Vector2:
 	return get_viewport_rect().size if is_inside_tree() else STAGE_SIZE
 
 
+func _texture(path: String) -> Texture2D:
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
+
+func _layer(part: String) -> String:
+	var circle: String = String(ctrl.state.circle)
+	return ENV_PATH % [circle, circle, _scene(), part]
+
+
+func _scene() -> StringName:
+	return &"vigil" if is_vigil() else &"camp"
+
+
+func _fire_base() -> Vector2:
+	return FIRE_BASE[_scene()]
+
+
 func _build() -> void:
-	var ui_theme := Theme.new()
-	ui_theme.default_font_size = 28
-	theme = ui_theme
+	theme = PixelStyle.theme()
 	clip_contents = true
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_halo_settings = load("res://scenes/battle/halo_settings_pixel.tres") as HaloSettings
 	var background := ColorRect.new()
-	background.color = COLOR_BACKGROUND
+	background.color = PixelStyle.COLOR_PITCH
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(background)
@@ -400,52 +524,164 @@ func _build() -> void:
 	_stage.size = STAGE_SIZE
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stage)
-	var art := TextureRect.new()
-	var path: String = ART_PATH % ctrl.circle_number()
-	if ResourceLoader.exists(path):
-		art.texture = load(path) as Texture2D
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_SCALE
-	var art_width: float = STAGE_SIZE.y * 2560.0 / 1080.0
-	art.size = Vector2(art_width, STAGE_SIZE.y)
-	art.position = Vector2((STAGE_SIZE.x - art_width) * 0.5, 0)
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(art)
+	_build_field()
+	_build_panel()
+	_build_result()
+	if not ctrl.state.party.is_empty():
+		selected = ctrl.state.party[0]
+
+
+func _build_field() -> void:
+	var field := Control.new()
+	field.size = FIELD_SIZE
+	field.clip_contents = true
+	field.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(field)
+	_scenery = ParallaxScenery.new()
+	_scenery.size = FIELD_SIZE
+	_scenery.drop = LAYER_DROP[_scene()]
+	_scenery.setup([{"path": _layer("back"), "parallax": PARALLAX_BACK}, {"path": _layer("mid"), "parallax": 1.0}])
+	field.add_child(_scenery)
+	_fire_glow = TextureRect.new()
+	_fire_glow.texture = SpellEffect.glow_texture()
+	_fire_glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_fire_glow.size = Vector2(300, 220)
+	_fire_glow.position = _fire_base() - Vector2(150, 150)
+	_fire_glow.modulate = Color(1.0, 0.55, 0.15, 0.55)
+	_fire_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var glow_mat := CanvasItemMaterial.new()
+	glow_mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	_fire_glow.material = glow_mat
+	field.add_child(_fire_glow)
+	for i: int in ctrl.state.party.size():
+		_build_seat(field, ctrl.state.party[i], SEATS[mini(i, SEATS.size() - 1)])
+	var sheet: Texture2D = _texture(FIRE_PATH)
+	if sheet != null:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = sheet
+		atlas.region = Rect2(0, 0, FIRE_FRAME, FIRE_FRAME)
+		_fire = TextureRect.new()
+		_fire.texture = atlas
+		_fire.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_fire.size = Vector2(FIRE_FRAME, FIRE_FRAME) * FIRE_SCALE
+		_fire.position = _fire_base() - Vector2(FIRE_FRAME * FIRE_SCALE * 0.5, FIRE_FRAME * FIRE_SCALE - 8)
+		_fire.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		field.add_child(_fire)
+	field.add_child(_embers())
+	_front = ParallaxScenery.new()
+	_front.size = FIELD_SIZE
+	_front.drop = LAYER_DROP[_scene()]
+	_front.setup([{"path": _layer("front"), "parallax": PARALLAX_FRONT}])
+	field.add_child(_front)
 	var bar := ColorRect.new()
 	bar.color = Color(0, 0, 0, 0.55)
-	bar.size = Vector2(STAGE_SIZE.x, 110)
+	bar.size = Vector2(FIELD_SIZE.x, 18)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(bar)
-	var title := _label(data.ui.text(&"camp_vigil_title" if is_vigil() else &"node_camp"), 40)
-	title.position = Vector2(70, 26)
-	title.size = Vector2(300, 60)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_stage.add_child(title)
-	_light = _label("", 28)
-	_light.position = Vector2(380, 34)
-	_light.size = Vector2(260, 50)
-	_stage.add_child(_light)
-	_alms = _label("", 28)
-	_alms.position = Vector2(640, 34)
-	_alms.size = Vector2(800, 50)
-	_stage.add_child(_alms)
-	_bread = _label("", 28)
-	_bread.position = Vector2(1460, 34)
-	_bread.size = Vector2(390, 50)
-	_stage.add_child(_bread)
-	for i: int in ctrl.state.party.size():
-		_build_card(ctrl.state.party[i], Vector2(40 + i * CARD_STEP, CARD_Y))
-	_info = _label("", 28)
+	field.add_child(bar)
+	var title := _label(data.ui.text(&"camp_vigil_title" if is_vigil() else &"node_camp"))
+	PixelStyle.title(title)
+	title.position = Vector2(8, 1)
+	field.add_child(title)
+	_light = _label("")
+	_light.position = Vector2(140, 3)
+	field.add_child(_light)
+	_alms = _label("")
+	_alms.position = Vector2(300, 3)
+	field.add_child(_alms)
+	_bread = _label("")
+	_bread.position = Vector2(860, 3)
+	field.add_child(_bread)
+
+
+## A few embers rising from the fire (the fire is drawn; these move).
+func _embers() -> CPUParticles2D:
+	var embers := CPUParticles2D.new()
+	embers.position = _fire_base() - Vector2(0, 40)
+	embers.amount = 10
+	embers.lifetime = 1.6
+	embers.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	embers.emission_rect_extents = Vector2(18, 4)
+	embers.direction = Vector2(0, -1)
+	embers.spread = 18.0
+	embers.gravity = Vector2(0, -12)
+	embers.initial_velocity_min = 16.0
+	embers.initial_velocity_max = 30.0
+	embers.scale_amount_min = 2.0
+	embers.scale_amount_max = 2.0
+	embers.color = PixelStyle.COLOR_AMBER
+	var fade := Gradient.new()
+	fade.set_color(0, Color(1, 1, 1, 1))
+	fade.set_color(1, Color(1, 1, 1, 0))
+	embers.color_ramp = fade
+	return embers
+
+
+func _build_seat(field: Control, saint_id: StringName, seat: Dictionary) -> void:
+	var tex: Texture2D = _texture(POSE_PATH % [saint_id, saint_id])
+	var pose_size: Vector2 = tex.get_size() if tex != null else Vector2(80, 120)
+	var mirror: bool = seat["mirror"]
+	var feet: Vector2 = seat["feet"]
+	var top_left := Vector2(roundf(feet.x - pose_size.x * 0.5), feet.y - pose_size.y)
+	var clearing := TextureRect.new()
+	clearing.texture = _texture(HALO_PATH % "clearing")
+	clearing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if clearing.texture != null:
+		clearing.position = Vector2(roundf(feet.x - clearing.texture.get_width() * 0.5), feet.y - clearing.texture.get_height() + 4)
+	field.add_child(clearing)
+	var pose := TextureRect.new()
+	pose.texture = tex
+	pose.flip_h = mirror
+	pose.position = top_left
+	pose.size = pose_size
+	pose.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	field.add_child(pose)
+	var point: Vector2 = HALO_POINTS.get(saint_id, Vector2(pose_size.x * 0.5, 6.0))
+	if mirror:
+		point.x = pose_size.x - point.x
+	var center: Vector2 = top_left + point
+	var rays := TextureRect.new()
+	rays.texture = _halo_settings.rays
+	rays.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if rays.texture != null:
+		rays.size = rays.texture.get_size()
+		rays.pivot_offset = rays.size * 0.5
+		rays.position = (center - rays.size * 0.5).round()
+	field.add_child(rays)
+	var halo := TextureRect.new()
+	halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	halo.texture = _texture(HALO_PATH % "disk")
+	if halo.texture != null:
+		halo.position = (center - halo.texture.get_size() * 0.5).round()
+	field.add_child(halo)
+	# Halo behind the head: the pose is drawn again on top of it.
+	field.move_child(halo, pose.get_index())
+	field.move_child(rays, halo.get_index())
+	var button := Button.new()
+	button.flat = true
+	button.focus_mode = Control.FOCUS_NONE
+	button.position = top_left
+	button.size = pose_size
+	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	button.pressed.connect(select_saint.bind(saint_id))
+	field.add_child(button)
+	_seats[saint_id] = {"pose": pose, "halo": halo, "rays": rays, "clearing": clearing, "button": button, "halo_kind": &"disk"}
+
+
+func _build_panel() -> void:
+	var panel: Panel = PixelStyle.plate(Rect2(0, PANEL_TOP, STAGE_SIZE.x, STAGE_SIZE.y - PANEL_TOP))
+	_stage.add_child(panel)
+	for saint_id: StringName in ctrl.state.party:
+		_build_card(saint_id)
+	_info = _label("")
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_info.position = Vector2(80, 806)
-	_info.size = Vector2(1760, 96)
-	_info.add_theme_color_override("font_shadow_color", Color.BLACK)
+	_info.position = Vector2(560, PANEL_TOP + 8)
+	_info.size = Vector2(392, 96)
 	_stage.add_child(_info)
 	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 40)
-	row.position = Vector2(0, 920)
-	row.size = Vector2(STAGE_SIZE.x, FIXED_SIZE.y)
+	row.add_theme_constant_override("separation", 4)
+	row.position = Vector2(540, STAGE_SIZE.y - FIXED_SIZE.y - 10)
 	_stage.add_child(row)
 	var rest: String = data.ui.text(&"camp_vigil_rest") if is_vigil() else data.ui.text(&"camp_rest", {"cost": data.ui.text(&"camp_rest_cost")})
 	for entry: Array in [[FIXED_REST, rest, press_rest], [FIXED_CONTINUE, _continue_text(), press_continue], [FIXED_RETREAT, data.ui.text(&"camp_retreat"), press_retreat]]:
@@ -454,52 +690,40 @@ func _build() -> void:
 		button.visible = entry[0] == FIXED_REST or not is_vigil()
 		row.add_child(button)
 		_fixed[entry[0]] = button
-	_build_result()
 
 
-func _build_card(saint_id: StringName, at: Vector2) -> void:
-	var card := Panel.new()
-	var style := StyleBoxFlat.new()
-	style.bg_color = COLOR_CARD
-	style.set_corner_radius_all(14)
-	card.add_theme_stylebox_override("panel", style)
-	card.position = at
-	card.size = CARD_SIZE
-	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(card)
+## The chapel below: one card per saint, only the chosen one shown.
+func _build_card(saint_id: StringName) -> void:
+	var root := Control.new()
+	root.position = Vector2(0, PANEL_TOP)
+	root.size = Vector2(540, STAGE_SIZE.y - PANEL_TOP)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(root)
 	var portrait := TextureRect.new()
-	var path: String = PORTRAIT_PATH % [saint_id, saint_id]
-	if ResourceLoader.exists(path):
-		portrait.texture = load(path) as Texture2D
+	portrait.texture = _texture(PORTRAIT_PATH % [saint_id, saint_id])
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.position = Vector2(14, 14)
-	portrait.size = PORTRAIT_SIZE
+	portrait.size = Vector2(192, 256) * PORTRAIT_SCALE
+	portrait.position = Vector2(10, 22)
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(portrait)
-	var name_label := _label(_saint_name(saint_id), 32)
-	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	name_label.position = Vector2(240, 20)
-	name_label.size = Vector2(320, 50)
-	card.add_child(name_label)
-	var stats := _label("", 26)
-	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	stats.position = Vector2(240, 80)
-	stats.size = Vector2(320, 160)
-	card.add_child(stats)
-	var choice := _label("", 24)
-	choice.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	choice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	choice.position = Vector2(240, 236)
-	choice.size = Vector2(320, 60)
-	choice.modulate = COLOR_CHOSEN
-	card.add_child(choice)
+	root.add_child(portrait)
+	var name_label := _label(_saint_name(saint_id))
+	PixelStyle.title(name_label)
+	name_label.position = Vector2(118, 6)
+	root.add_child(name_label)
+	var stats := _label("")
+	stats.position = Vector2(118, 24)
+	root.add_child(stats)
+	var choice := _label("")
+	choice.position = Vector2(118, 74)
+	choice.add_theme_color_override("font_color", COLOR_CHOSEN)
+	root.add_child(choice)
 	var grid := GridContainer.new()
 	grid.columns = 2
-	grid.position = Vector2(16, 310)
-	grid.add_theme_constant_override("h_separation", 16)
-	grid.add_theme_constant_override("v_separation", 12)
-	card.add_child(grid)
+	grid.position = Vector2(300, 8)
+	grid.add_theme_constant_override("h_separation", 4)
+	grid.add_theme_constant_override("v_separation", 4)
+	root.add_child(grid)
 	var buttons: Dictionary = {}
 	for activity: StringName in ACTIVITIES:
 		if activity == ExpeditionController.ACTIVITY_OWN and _skill(saint_id) == null:
@@ -511,10 +735,10 @@ func _build_card(saint_id: StringName, at: Vector2) -> void:
 		grid.add_child(button)
 		buttons[activity] = button
 	var targets := HBoxContainer.new()
-	targets.position = Vector2(16, 480)
-	targets.add_theme_constant_override("separation", 16)
+	targets.position = Vector2(300, 60)
+	targets.add_theme_constant_override("separation", 4)
 	targets.visible = false
-	card.add_child(targets)
+	root.add_child(targets)
 	for other: StringName in ctrl.state.party:
 		if other == saint_id:
 			continue
@@ -522,7 +746,7 @@ func _build_card(saint_id: StringName, at: Vector2) -> void:
 		target_button.set_meta(&"saint", other)
 		target_button.pressed.connect(choose_target.bind(saint_id, other))
 		targets.add_child(target_button)
-	_cards[saint_id] = {"stats": stats, "choice": choice, "activities": buttons, "targets": targets, "portrait": portrait}
+	_cards[saint_id] = {"root": root, "stats": stats, "choice": choice, "activities": buttons, "targets": targets, "portrait": portrait}
 
 
 func _build_result() -> void:
@@ -534,23 +758,22 @@ func _build_result() -> void:
 	dim.color = COLOR_DIM
 	dim.size = STAGE_SIZE
 	_result.add_child(dim)
-	_result_text = _label("", 32)
+	_result_text = _label("")
 	_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_result_text.position = Vector2(260, 200)
-	_result_text.size = Vector2(1400, 560)
+	_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_result_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_result_text.position = Vector2(130, 100)
+	_result_text.size = Vector2(700, 280)
 	_result.add_child(_result_text)
 	var button := _button(data.ui.text(&"event_next"), FIXED_SIZE)
-	button.position = Vector2((STAGE_SIZE.x - FIXED_SIZE.x) * 0.5, 820)
+	button.position = Vector2((STAGE_SIZE.x - FIXED_SIZE.x) * 0.5, 410)
 	button.pressed.connect(press_result_continue)
 	_result.add_child(button)
 
 
-func _label(text: String, font_size: int) -> Label:
+func _label(text: String) -> Label:
 	var label := Label.new()
 	label.text = text
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", font_size)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label
 
@@ -560,4 +783,6 @@ func _button(text: String, button_size: Vector2) -> Button:
 	button.text = text
 	button.custom_minimum_size = button_size
 	button.size = button_size
+	button.focus_mode = Control.FOCUS_NONE
+	button.clip_text = true
 	return button
