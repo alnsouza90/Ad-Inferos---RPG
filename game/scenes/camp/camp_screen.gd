@@ -28,11 +28,14 @@ const PARALLAX_FRONT: float = 1.6
 const SWAY_PIXELS: float = 6.0
 const SWAY_SECONDS: float = 7.0
 ## Where the fire burns (its base, in each scene) and its frames.
-const FIRE_BASE: Dictionary = {&"camp": Vector2(480, 318), &"vigil": Vector2(488, 318)}
+const FIRE_BASE: Dictionary = {&"camp": Vector2(482, 322), &"vigil": Vector2(488, 332)}
 const FIRE_FRAME: int = 64
 const FIRE_FRAMES: int = 8
 const FIRE_FPS: float = 9.0
-const FIRE_SCALE: float = 2.0
+## One pixel of the fire is one of the screen, like the saints (D-434).
+const FIRE_SCALE: float = 1.0
+## Rows of the fire frame below the logs (empty), so the logs rest on the ring.
+const FIRE_FOOT_GAP: float = 6.0
 ## Seats around the fire, in party order: feet (centre, bottom), mirrored to
 ## face the fire. The third sits further back, beyond the stones (D-432).
 const SEATS: Array[Dictionary] = [
@@ -545,8 +548,8 @@ func _build_field() -> void:
 	_fire_glow = TextureRect.new()
 	_fire_glow.texture = SpellEffect.glow_texture()
 	_fire_glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_fire_glow.size = Vector2(300, 220)
-	_fire_glow.position = _fire_base() - Vector2(150, 150)
+	_fire_glow.size = Vector2(220, 160)
+	_fire_glow.position = _fire_base() - Vector2(110, 110)
 	_fire_glow.modulate = Color(1.0, 0.55, 0.15, 0.55)
 	_fire_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var glow_mat := CanvasItemMaterial.new()
@@ -564,7 +567,7 @@ func _build_field() -> void:
 		_fire.texture = atlas
 		_fire.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		_fire.size = Vector2(FIRE_FRAME, FIRE_FRAME) * FIRE_SCALE
-		_fire.position = _fire_base() - Vector2(FIRE_FRAME * FIRE_SCALE * 0.5, FIRE_FRAME * FIRE_SCALE - 8)
+		_fire.position = (_fire_base() - Vector2(FIRE_FRAME * FIRE_SCALE * 0.5, (FIRE_FRAME - FIRE_FOOT_GAP) * FIRE_SCALE)).round()
 		_fire.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		field.add_child(_fire)
 	field.add_child(_embers())
@@ -596,18 +599,18 @@ func _build_field() -> void:
 ## A few embers rising from the fire (the fire is drawn; these move).
 func _embers() -> CPUParticles2D:
 	var embers := CPUParticles2D.new()
-	embers.position = _fire_base() - Vector2(0, 40)
+	embers.position = _fire_base() - Vector2(0, 30)
 	embers.amount = 10
 	embers.lifetime = 1.6
 	embers.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	embers.emission_rect_extents = Vector2(18, 4)
+	embers.emission_rect_extents = Vector2(10, 3)
 	embers.direction = Vector2(0, -1)
 	embers.spread = 18.0
 	embers.gravity = Vector2(0, -12)
 	embers.initial_velocity_min = 16.0
 	embers.initial_velocity_max = 30.0
-	embers.scale_amount_min = 2.0
-	embers.scale_amount_max = 2.0
+	embers.scale_amount_min = 1.0
+	embers.scale_amount_max = 1.0
 	embers.color = PixelStyle.COLOR_AMBER
 	var fade := Gradient.new()
 	fade.set_color(0, Color(1, 1, 1, 1))
