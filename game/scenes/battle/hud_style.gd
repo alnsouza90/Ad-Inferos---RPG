@@ -47,6 +47,13 @@ const CONDITION_ICONS: Dictionary = {
 	&"stun": "icon_condition_stun",
 	&"bleed": "icon_condition_wound",
 	&"corruption": "icon_condition_corruption",
+	&"ward": "icon_condition_guard",
+	&"strength": "icon_condition_strength",
+	&"taunt": "icon_condition_marked",
+	&"duel": "icon_condition_marked",
+	&"enchanted": "icon_condition_enchanted",
+	&"seven_nights": "icon_condition_seven_nights",
+	&"hidden": "icon_condition_hidden",
 }
 
 static var _font: Font

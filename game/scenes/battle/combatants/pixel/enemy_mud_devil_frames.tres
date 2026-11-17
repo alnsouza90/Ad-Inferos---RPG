@@ -90,6 +90,6 @@ attack_style = &"melee"
 spell_style = &"orb"
 blessing_style = &"ring"
 weight = &"heavy"
-halo_center = Vector2(0, 0)
+halo_center = Vector2(124, 129)
 halo_diameter = 0
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_strike_alt"), SubResource("clip_defend"), SubResource("clip_fall")])
