@@ -384,3 +384,12 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Prancha de Rafael:** com o filtro do círculo a 55% (o mesmo da prancha do casal) e o olho de Rafael em ouro.
   - **Cena da vitória com o fígado:** uma coluna de luz dourada desce ao lado de Asmodeu; Rafael aparece em ouro chapado, pisca e vira o desenho que Alan fez no PixelLab, com contorno dourado de 1 pixel e auréola; corta para a prancha com "São Rafael prende Asmodeu (Tobias 8,3)."; de volta ao campo, Asmodeu pisca em ouro e some; então o resultado. Rafael fica com 190 px de altura, ao lado de Asmodeu. A cena foi testada no motor, mas a sequência ainda espera a aprovação de Alan.
   - **Gasto desta leva:** 41 gerações.
+- **D-453 · 17/11/2026 · Alan** — Revisão da T44 parte 3:
+  - **Prancha de Rafael:** ganhou contorno dourado e auréola (com o `edit_image` do PixelLab, cerca de 25 gerações) e depois o filtro do círculo a 55%; o ouro (contorno, auréola, olho) fica fora do filtro.
+  - **Cena da vitória com o fígado:** sai a coluna de luz. Rafael pisca em ouro para aparecer e para sumir, ao lado de Asmodeu já derrotado (caído). Asmodeu não pisca nem some.
+  - **Escudo de Jorge:** desenhado de novo, sozinho (das 4 variantes, a terceira), com 79 px, e cai sobre o corpo de quem ele protege, não sobre o rosto.
+  - **Cruz de Bento:** aprovada.
+  - **Anel de Bento:** cortado ao meio; a metade de trás passa atrás das pernas, para envolver o santo.
+  - **Pétalas de Teresinha:** menores (metade), em cinco cachos, vermelhas, com só um brilho dourado.
+  - **Tintas dos inimigos:** aprovadas como folhas de 6 quadros, numa grade de 3 por 2 (a fileira única cortava os quadros). O corte saiu na terceira tentativa (a segunda falhou por erro do agente).
+  - **Gasto desta revisão:** cerca de 65 gerações.

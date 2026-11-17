@@ -142,9 +142,10 @@ const INSTANT_OUT: float = 0.3
 const INSTANT_LABEL := Rect2(0, 40, 960, 30)
 ## Drawn above the fighters while they last (z order inside the field).
 const OVERLAY_Z: int = 3
-## Saint Raphael at the victory with the liver (bosses.md §5.3, D-452):
-## a column of gold light beside Asmodeus, Raphael in flat gold flickers and
-## becomes himself, the story panel, then Asmodeus flickers gold and goes.
+## Saint Raphael at the victory with the liver (bosses.md §5.3, D-452,
+## D-453): beside the defeated Asmodeus, Raphael flickers in flat gold and
+## becomes himself (gold edge, halo); the story panel; then he flickers in
+## gold again and is gone.
 const RAPHAEL_PATH: String = "res://assets/pixel/characters/archangel_raphael/archangel_raphael.png"
 const RAPHAEL_GOLD_PATH: String = "res://assets/pixel/characters/archangel_raphael/archangel_raphael_gold.png"
 const RAPHAEL_PANEL_PATH: String = "res://assets/events/circle_02/scene_raphael_binds.png"
@@ -153,9 +154,6 @@ const RAPHAEL_PANEL_PATH: String = "res://assets/events/circle_02/scene_raphael_
 const RAPHAEL_GAP: float = 70.0
 const RAPHAEL_HALO_CENTER := Vector2(52, 4)
 const RAPHAEL_HALO_SIZE: float = 40.0
-## Widths and strengths of the three bands of the column of light.
-const LIGHT_BANDS: Array[Vector2] = [Vector2(110, 0.25), Vector2(78, 0.35), Vector2(50, 0.55)]
-const LIGHT_IN: float = 0.4
 const FLICKER_STEP: float = 0.08
 const FLICKERS: int = 3
 const BECOME: float = 0.35
@@ -163,8 +161,7 @@ const RAPHAEL_HOLD: float = 0.8
 const PANEL_FADE: float = 0.4
 const PANEL_HOLD: float = 3.5
 const PANEL_CAPTION := Rect2(40, 492, 880, 30)
-const BOSS_GOLD := Color(1.6, 1.25, 0.35)
-const BOSS_FADE: float = 0.4
+const RAPHAEL_FADE: float = 0.3
 const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
@@ -266,6 +263,9 @@ var _frames: Dictionary = {}
 var _camera: ImpactCamera
 var _dim: ColorRect
 var _stamp_dark: ColorRect
+## What of an ability stamp passes behind the fighters (the far half of
+## Benedict's ring, D-453).
+var _stamps_behind: Control
 var _stamp: TextureRect
 var _instant_bg: ColorRect
 var _instant_label: Label
@@ -834,7 +834,7 @@ func _schedule_saint_stamp(actor: Combatant, ability_id: StringName, target_id: 
 		stamp.z_index = OVERLAY_Z
 		_field.add_child(stamp)
 		var to_field: Transform2D = _field.get_global_transform().affine_inverse()
-		stamp.play(stamp_shape, to_field * target.chest_global(), to_field * target.feet_global(), factor)
+		stamp.play(stamp_shape, to_field * target.chest_global(), to_field * target.feet_global(), factor, _stamps_behind)
 	if delay > 0.0:
 		get_tree().create_timer(delay).timeout.connect(place)
 	else:
@@ -867,14 +867,6 @@ func _play_raphael() -> bool:
 	var figure_tex: Texture2D = load(RAPHAEL_PATH)
 	var right: float = boss_feet.x - RAPHAEL_GAP
 	var at := Vector2(roundf(right - figure_tex.get_width()), GROUND_Y - figure_tex.get_height())
-	var centre: float = at.x + figure_tex.get_width() * 0.5
-	var light: Array[ColorRect] = []
-	for band: Vector2 in LIGHT_BANDS:
-		var column := ColorRect.new()
-		column.color = Color(PixelStyle.COLOR_GOLD, band.y)
-		column.position = Vector2(roundf(centre - band.x * 0.5), -OVERLAY_MARGIN)
-		column.size = Vector2(band.x, GROUND_Y + OVERLAY_MARGIN)
-		light.append(column)
 	var halo := TextureRect.new()
 	halo.texture = _halo_settings.disk if _halo_settings != null else null
 	halo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -887,7 +879,7 @@ func _play_raphael() -> bool:
 	gold.texture = load(RAPHAEL_GOLD_PATH)
 	gold.position = at
 	_raphael_nodes.clear()
-	for item: Control in light + [halo, figure, gold]:
+	for item: Control in [halo, figure, gold]:
 		item.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		item.z_index = OVERLAY_Z
 		item.modulate.a = 0.0
@@ -912,13 +904,8 @@ func _play_raphael() -> bool:
 		_stage.add_child(item)
 		_raphael_nodes.append(item)
 	var tween := create_tween()
-	# The light comes down, Raphael appears in flat gold and flickers.
-	for column: ColorRect in light:
-		tween.parallel().tween_property(column, "modulate:a", 1.0, LIGHT_IN / factor)
-	for i: int in FLICKERS:
-		tween.tween_property(gold, "modulate:a", 1.0, FLICKER_STEP / factor)
-		tween.tween_property(gold, "modulate:a", 0.2, FLICKER_STEP / factor)
-	tween.tween_property(gold, "modulate:a", 1.0, FLICKER_STEP / factor)
+	# Raphael appears in flat gold, flickering, beside the defeated Asmodeus.
+	_flicker(tween, gold, factor)
 	# The gold becomes the archangel as Alan drew him, with his halo.
 	tween.tween_property(figure, "modulate:a", 1.0, BECOME / factor)
 	tween.parallel().tween_property(halo, "modulate:a", 1.0, BECOME / factor)
@@ -927,17 +914,15 @@ func _play_raphael() -> bool:
 	# The story panel: Raphael binds Asmodeus (Tobit 8:3).
 	tween.tween_property(panel, "modulate:a", 1.0, PANEL_FADE / factor)
 	tween.parallel().tween_property(caption, "modulate:a", 1.0, PANEL_FADE / factor)
-	tween.tween_callback(func() -> void:
-		for item: CanvasItem in [halo, figure, gold] + light:
-			item.visible = false)
 	tween.tween_interval(PANEL_HOLD / factor)
 	tween.tween_property(panel, "modulate:a", 0.0, PANEL_FADE / factor)
 	tween.parallel().tween_property(caption, "modulate:a", 0.0, PANEL_FADE / factor)
-	# Back on the field Asmodeus lies fallen; he flickers gold and is gone.
-	for i: int in FLICKERS:
-		tween.tween_property(boss_view, "modulate", BOSS_GOLD, FLICKER_STEP / factor)
-		tween.tween_property(boss_view, "modulate", Color.WHITE, FLICKER_STEP / factor)
-	tween.tween_property(boss_view, "modulate", Color(BOSS_GOLD, 0.0), BOSS_FADE / factor)
+	# Back on the field he turns to gold again, flickers and is gone.
+	tween.tween_property(gold, "modulate:a", 1.0, BECOME / factor)
+	tween.parallel().tween_property(figure, "modulate:a", 0.0, BECOME / factor)
+	tween.parallel().tween_property(halo, "modulate:a", 0.0, BECOME / factor)
+	_flicker(tween, gold, factor)
+	tween.tween_property(gold, "modulate:a", 0.0, RAPHAEL_FADE / factor)
 	tween.tween_callback(func() -> void:
 		for item: CanvasItem in _raphael_nodes:
 			if is_instance_valid(item):
@@ -947,6 +932,14 @@ func _play_raphael() -> bool:
 		_result_overlay.visible = true
 		_refresh())
 	return true
+
+
+## The gold flickers: on, dim, on... and stays on.
+func _flicker(tween: Tween, item: CanvasItem, factor: float) -> void:
+	for i: int in FLICKERS:
+		tween.tween_property(item, "modulate:a", 1.0, FLICKER_STEP / factor)
+		tween.tween_property(item, "modulate:a", 0.2, FLICKER_STEP / factor)
+	tween.tween_property(item, "modulate:a", 1.0, FLICKER_STEP / factor)
 
 
 ## True while Raphael's scene plays (tests).
@@ -1941,6 +1934,9 @@ func _build_field() -> void:
 	_dim.color = Color(0.02, 0.01, 0.02, 0.0)
 	_dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field.add_child(_dim)
+	_stamps_behind = Control.new()
+	_stamps_behind.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_field.add_child(_stamps_behind)
 	_fighters = Control.new()
 	_fighters.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fighters.size = _field.size

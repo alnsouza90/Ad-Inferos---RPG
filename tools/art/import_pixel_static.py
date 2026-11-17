@@ -71,7 +71,7 @@ ANIMATED = {
 # 2x, only their top rows, laid under the feet.
 FLOOR_SLAB_ROWS = 44
 EVENT_ART = {
-    "scene_raphael_binds": ROOT / "art_source/events/circle_02/scene_raphael_binds_px_v01.png",
+    "scene_raphael_binds": ROOT / "art_source/events/circle_02/scene_raphael_binds_px_v02.png",
     "event_c02_soul_lovers": ROOT / "art_source/events/circle_02/event_c02_soul_lovers_px_v01.png",
 }
 EVENTS_OUT = ROOT / "game/assets/events/circle_02"
@@ -90,9 +90,11 @@ STAMPS = {
     "saint_george": ROOT / "art_source/vfx/stamps/stamp_saint_george_src_v01.png",
 }
 # The stamps of the saints' abilities (D-452): one drawing each, moved by the
-# engine (SaintStamp), with how many times each is enlarged; the shield is the whole frame of the first sheet, its
+# engine (SaintStamp), with the share each is shrunk to; the first shield was the whole frame of the first sheet, its
 # lower half mirrored from the upper (the sheet cut it).
-ABILITY_STAMPS = {"shield": 2, "cross": 1, "ring": 1, "petals": 1}
+ABILITY_STAMPS = {"shield": 0.75, "cross": 1.0, "ring": 1.0, "petals": 0.5}
+# Sources in use (D-453): the shield drawn again on its own, the petals shrunk.
+ABILITY_STAMP_VERSIONS = {"shield": 2}
 STAMP_HEIGHT = 220
 STAMP_WHITE = (0xF1, 0xEC, 0xE0, 255)
 STAMP_THRESHOLD = 150
@@ -217,9 +219,10 @@ def main() -> None:
     for name, (count, side, height) in ANIMATED.items():
         save(animated_strip(C02 / f"env_circle_02_{name}_px_v01.png", count, side, height), SCENERY_OUT / f"env_circle_02_{name}.png")
     for name, times in ABILITY_STAMPS.items():
-        piece = tidy(Image.open(ROOT / f"art_source/vfx/stamps/stamp_{name}_px_v01.png"))
+        version = ABILITY_STAMP_VERSIONS.get(name, 1)
+        source = Image.open(ROOT / f"art_source/vfx/stamps/stamp_{name}_px_v{version:02d}.png")
+        piece = tidy(source.crop(source.getbbox()), times) if times < 1.0 else tidy(source)
         piece = piece.crop(piece.getbbox())
-        piece = piece.resize((piece.width * times, piece.height * times), Image.NEAREST)
         save(piece, ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     for name, source in STAMPS.items():
         save(stamp(source), ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")

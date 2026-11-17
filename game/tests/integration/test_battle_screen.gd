@@ -327,9 +327,9 @@ func test_george_shield_drops_on_the_one_he_protects() -> void:
 	assert_eq(screen.saint_stamps_shown(), [] as Array[StringName], "a estampa some")
 
 
-## bosses.md §5.3 (D-452): with the liver, Raphael appears in gold beside
-## Asmodeus, becomes himself, the story panel shows, Asmodeus goes; then
-## the result.
+## bosses.md §5.3 (D-452, D-453): with the liver, Raphael flickers in gold
+## beside the defeated Asmodeus, becomes himself, the story panel shows, he
+## flickers in gold and goes; then the result.
 func test_raphael_binds_asmodeus_before_the_result() -> void:
 	var screen := _screen(&"c02_boss_asmodeus", 3)
 	screen.speed_index = 1
@@ -340,8 +340,3 @@ func test_raphael_binds_asmodeus_before_the_result() -> void:
 	assert_true(screen.result_shown())
 	assert_false(screen.raphael_shown())
 	assert_false(screen.busy)
-	var asmodeus: CombatantView = null
-	for c: Combatant in screen.ctrl.state.enemies:
-		if c.category == &"boss":
-			asmodeus = screen.view_of(c.id)
-	assert_almost_eq(asmodeus.modulate.a, 0.0, 0.01, "Asmodeu pisca em ouro e some")
