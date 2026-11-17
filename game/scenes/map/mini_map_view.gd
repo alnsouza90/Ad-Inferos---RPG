@@ -9,14 +9,13 @@ extends Control
 ## icon of its type and its name under it; the links are corridors of small
 ## squares, lit where the party walked; the room where it stands glows.
 ## Sizes on the 960 × 540 grid (T65, ADR-0013).
-const ROOM_SIZE := Vector2(52, 52)
+const ROOM_SIZE := Vector2(48, 48)
+const COLOR_DARK_ROOM := Color(0.55, 0.55, 0.6)
 const LABEL_SIZE := Vector2(110, 30)
-const ICON_SIZE: float = 38.0
-const STEP_SIZE: float = 10.0
+const ICON_SIZE: float = 32.0
+const STEP_SIZE: float = 6.0
 const STEPS_PER_LINK: int = 4
 const COLOR_STEP := Color("33313A")
-const COLOR_STEP_WALKED := Color("8A8791")
-const COLOR_ROOM := Color("0D0C10")
 const COLOR_ROOM_EDGE := Color("55525D")
 const COLOR_VISITED := Color("8A8791")
 const COLOR_CURRENT := Color("D9A520")
@@ -27,7 +26,7 @@ const ICONS: Dictionary = {
 	MapNode.TYPE_SOUL: "icon_node_soul",
 	MapNode.TYPE_RELIC: "icon_node_relic",
 }
-const GATE_ICON: String = "icon_node_camp"
+const GATE_ICON: String = "icon_node_gate"
 const CAMP_ICON: String = "icon_node_camp"
 
 var ctrl: ExpeditionController
@@ -36,6 +35,8 @@ var texts: WalkTexts
 var centres: Dictionary = {}
 var _gate_centre := Vector2.ZERO
 var _camp_centre := Vector2.ZERO
+## Where the company stands now (the lantern hangs there).
+var _current_centre := Vector2.INF
 ## node id -> Label (tests read the text shown for each node).
 var _labels: Dictionary = {}
 
@@ -51,6 +52,7 @@ func rebuild() -> void:
 		child.queue_free()
 	centres.clear()
 	_labels.clear()
+	_current_centre = Vector2.INF
 	var columns: int = ctrl.map.layer_count() + 2
 	var step_x: float = size.x / columns
 	_gate_centre = Vector2(step_x * 0.5, size.y * 0.5)
@@ -85,27 +87,27 @@ func _node_color(n: MapNode) -> Color:
 
 
 func _add_box(centre: Vector2, text: String, edge: Color, icon_name: String) -> Label:
-	var room := Panel.new()
-	var style := StyleBoxFlat.new()
-	style.bg_color = COLOR_ROOM
-	style.border_color = edge
-	style.set_border_width_all(3 if edge == COLOR_CURRENT else 2)
-	style.anti_aliasing = false
-	room.add_theme_stylebox_override("panel", style)
+	# A medallion of forged iron with the node's icon (D-441): lit where the
+	# company has been, dark ahead.
+	var room := TextureRect.new()
+	room.texture = PixelStyle.piece("ui_medallion")
 	room.size = ROOM_SIZE
-	room.position = centre - ROOM_SIZE * 0.5
+	room.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	room.position = (centre - ROOM_SIZE * 0.5).round()
 	room.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var dark: bool = edge == COLOR_ROOM_EDGE
+	room.modulate = COLOR_DARK_ROOM if dark else Color.WHITE
 	add_child(room)
 	var icon := TextureRect.new()
 	icon.texture = HudStyle.icon(icon_name)
-	# Painted icons, much bigger than they show: smooth filter.
-	icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.size = Vector2(ICON_SIZE, ICON_SIZE)
-	icon.position = (ROOM_SIZE - icon.size) * 0.5
+	icon.position = ((ROOM_SIZE - icon.size) * 0.5).round()
 	room.add_child(icon)
+	if edge == COLOR_CURRENT:
+		_current_centre = centre
 	var label := Label.new()
 	label.text = text
 	label.size = LABEL_SIZE
@@ -139,6 +141,11 @@ func _draw() -> void:
 			_corridor(centres[n.id], centres[next.id], walked_pairs)
 		if n.layer == ctrl.map.layer_count():
 			_corridor(centres[n.id], _camp_centre, walked_pairs)
+	if _current_centre != Vector2.INF:
+		draw_arc(_current_centre, ROOM_SIZE.x * 0.5 - 2.0, 0.0, TAU, 32, PixelStyle.COLOR_AMBER, 2.0)
+		var lantern: Texture2D = PixelStyle.piece("ui_lantern_on")
+		if lantern != null:
+			draw_texture(lantern, (_current_centre + Vector2(ROOM_SIZE.x * 0.4, -lantern.get_height() - 4.0)).round())
 
 
 func _corridor(from: Vector2, to: Vector2, walked_pairs: Dictionary) -> void:
@@ -148,7 +155,9 @@ func _corridor(from: Vector2, to: Vector2, walked_pairs: Dictionary) -> void:
 	var finish: Vector2 = to - dir * ROOM_SIZE.x * 0.6
 	for k: int in STEPS_PER_LINK:
 		var at: Vector2 = start.lerp(finish, (k + 0.5) / STEPS_PER_LINK)
+		# Chiselled pebbles (D-441): lit amber like the lantern's light where
+		# the company walked.
 		var rect := Rect2(at - Vector2.ONE * STEP_SIZE * 0.5, Vector2.ONE * STEP_SIZE)
 		draw_rect(Rect2(rect.position.round() - Vector2.ONE, rect.size + Vector2(2, 2)), PixelStyle.COLOR_PITCH)
 		rect.position = rect.position.round()
-		draw_rect(rect, COLOR_STEP_WALKED if lit else COLOR_STEP)
+		draw_rect(rect, PixelStyle.COLOR_AMBER if lit else COLOR_STEP)

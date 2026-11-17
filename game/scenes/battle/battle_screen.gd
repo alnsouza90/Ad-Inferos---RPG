@@ -57,23 +57,43 @@ const PORTRAIT_FROM_HEAD := Vector2(26, 22)
 const LANCET_POS := Vector2(118, 380)
 const LANCET_STEP: float = 68.0
 const LANCET_TEXT := Rect2(7, 56, 51, 84)
-const ROSE_POS := Vector2(400, 380)
-const RACK_POS := Vector2(396, 478)
+## The lancet shows only its mosaic; the cost is a row of marks on the iron
+## at its foot and the name and description go to a note in the corner of
+## the field when it is touched (D-440).
+const LANCET_PIPS_Y: float = 143.0
+const NOTE_RECT := Rect2(50, 62, 300, 74)
+const NOTE_BOSS_DROP: float = 42.0
+const NAMEPLATE := Rect2(112, 361, 428, 17)
+const ROSE_POS := Vector2(400, 372)
+## The miracle's name and cost, to the right of the rose (D-436).
+const MIRACLE_LABEL := Rect2(481, 384, 58, 90)
+const RACK_POS := Vector2(386, 478)
 ## Where the flame of each candle of the rack burns (pixels of the piece).
 const CANDLE_FLAMES: Array[Vector2] = [Vector2(22, 2), Vector2(42, 11), Vector2(63, -1), Vector2(85, 9), Vector2(107, 3), Vector2(127, 6)]
-const ACTION_POS := Vector2(566, 368)
-const ACTION_SIZE := Vector2(126, 24)
-## Two small actions share a row: Swap and Pass, Interceder and the gift.
-const HALF_ACTION_SIZE := Vector2(64, 24)
+## The common actions and the alforje, as tiles with their icon (D-436).
+const ACTION_POS := Vector2(542, 370)
+const ACTION_TILE := Vector2(54, 48)
+const ACTION_GAP: float = 2.0
+## The alforje opened: its slots over the field, above the tiles (D-412).
+const PACK_POS := Vector2(470, 236)
+const PACK_SLOT := Vector2(48, 40)
+const PACK_COLUMNS: int = 4
 const GALE_LABEL_WIDTH: float = 200.0
 ## Pause on the liver's smoke and on a boss's change of phase.
 const BOSS_SCENE_SECONDS: float = 0.8
-const HOOK_POS := Vector2(566, 446)
-const HOOK_STEP: float = 28.0
-const HOOK_TEXT := Rect2(4, 62, 26, 24)
 const FRAME_POS := Vector2(712, 372)
 const FRAME_WINDOW := Rect2(14, 14, 64, 90)
 const SHEET_X: float = 812.0
+const SHEET_ICON := Vector2(24, 24)
+## The big bar of a boss under the top line (D-436): name, life, phase and
+## the claws of the Domínio.
+const BOSS_BAR := Rect2(240, 54, 480, 46)
+## The claws at each end of the boss bar, and where its slot is (top, height),
+## in pixels of ui_boss_bar.
+const BOSS_BAR_END: float = 36.0
+const BOSS_BAR_SLOT := Vector2(12.0, 8.0)
+## Where the slot of the bar starts inside the claws.
+const BOSS_BAR_FILL_INSET: float = 33.0
 const OVERLAY_WIDTH: float = 300.0
 const OVERLAY_MARGIN: float = 400.0
 const COLOR_BACKGROUND := Color("0D0C10")
@@ -100,6 +120,7 @@ const ART_DIR: String = "res://scenes/battle/combatants"
 const PIXEL_ART_DIR: String = "res://scenes/battle/combatants/pixel"
 const BUST_PATH: String = "res://assets/pixel/characters/%s/%s_bust.png"
 const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_portrait.png"
+const SAINT_PORTRAIT_PATH: String = "res://assets/pixel/characters/%s/%s_portrait.png"
 ## The painted halo (the animation test screen still uses it) and the one
 ## of the pixel grid.
 const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
@@ -153,7 +174,6 @@ var _scenery_back: ParallaxScenery
 var _scenery_front: Array[ParallaxScenery] = []
 var _front_corners: Array[Control] = []
 var _miracle_label: Label
-var _hooks: Control
 var _speed_button: Button
 var _pause_button: Button
 var _hint: Label
@@ -190,6 +210,12 @@ var _portrait_frame: TextureRect
 var _actor_detail: Label
 var _stats: Label
 var _sheet_title: Label
+var _sheet_icons: HBoxContainer
+var _boss_bar: Control
+var _note: Control
+var _note_title: Label
+var _note_text: Label
+var _pack_capacity: int = 0
 var _sheet_picture: TextureRect
 ## combatant id -> CombatantBadge (bars, mark, intent, conditions).
 var _badges: Dictionary = {}
@@ -751,9 +777,51 @@ func _refresh_top() -> void:
 		_round_label.text = texts.t(&"round_clock", {"round": ctrl.state.round_number, "amount": at_end})
 	_fervor_label.text = texts.t(&"fervor", {"amount": ctrl.fervor.amount, "max": cap})
 	_fervor_flames.queue_redraw()
+	_boss_bar.visible = ctrl.state.boss() != null
+	_boss_bar.queue_redraw()
 	_speed_button.text = texts.t(SPEED_KEYS[speed_index])
 	_pause_button.text = texts.t(&"pause")
 	_refresh_lume()
+
+
+func _draw_boss_bar() -> void:
+	var boss: Combatant = ctrl.state.boss() if ctrl != null else null
+	if boss == null:
+		return
+	var w: float = BOSS_BAR.size.x
+	var font: Font = PixelStyle.title_font()
+	var name_text: String = texts.name_of(boss)
+	# The name on a small dark plate centred over the bar; the phase and the
+	# claws on the same line, at the ends (D-442).
+	var name_w: float = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TITLE_SIZE).x + 16.0
+	var plate := Rect2(roundf((w - name_w) * 0.5), 0, roundf(name_w), 14)
+	_boss_bar.draw_rect(plate, PixelStyle.COLOR_PITCH)
+	_boss_bar.draw_rect(plate, PixelStyle.COLOR_LEAD_LIGHT, false)
+	_boss_bar.draw_string(font, Vector2(plate.position.x, 11), name_text, HORIZONTAL_ALIGNMENT_CENTER, plate.size.x, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
+	var phase: String = texts.t(&"boss_phase_float", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count()})
+	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(BOSS_BAR_END, 11), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
+	# The iron bar with claws at the ends (D-441): ends kept, middle stretched.
+	var frame: Texture2D = PixelStyle.piece("ui_boss_bar")
+	var top: float = 12.0
+	if frame != null:
+		var end_w: float = BOSS_BAR_END
+		var fh: float = frame.get_height()
+		_boss_bar.draw_texture_rect_region(frame, Rect2(0, top, end_w, fh), Rect2(0, 0, end_w, fh))
+		_boss_bar.draw_texture_rect_region(frame, Rect2(end_w, top, w - end_w * 2.0, fh), Rect2(end_w, 0, frame.get_width() - end_w * 2.0, fh))
+		_boss_bar.draw_texture_rect_region(frame, Rect2(w - end_w, top, end_w, fh), Rect2(frame.get_width() - end_w, 0, end_w, fh))
+	var share: float = clampf(float(boss.hp) / maxf(float(boss.max_hp), 1.0), 0.0, 1.0)
+	var bar := Rect2(BOSS_BAR_FILL_INSET, top + BOSS_BAR_SLOT.x, w - BOSS_BAR_FILL_INSET * 2.0, BOSS_BAR_SLOT.y)
+	_boss_bar.draw_rect(Rect2(bar.position, Vector2(roundf(bar.size.x * share), bar.size.y)), PixelStyle.COLOR_BLOOD)
+	# The claws of the Domínio still holding (bosses.md §5), at the right.
+	var grip: Texture2D = PixelStyle.piece("ui_claw_grip")
+	if grip != null:
+		for i: int in ctrl.state.dominion_claws.size():
+			_boss_bar.draw_texture_rect(grip, Rect2(w - BOSS_BAR_END - 14 - i * 14, -3, 13, 16), false)
+
+
+## Whether the big boss bar is shown (tests).
+func boss_bar_shown() -> bool:
+	return _boss_bar != null and _boss_bar.visible
 
 
 ## The lantern slides down the rod as the Lume fades (D-257).
@@ -885,11 +953,16 @@ func _refresh_controls() -> void:
 	for i: int in ABILITY_SLOTS:
 		var button: Button = _ability_buttons[i]
 		if not open or i >= actor.equipped.size():
+			_dress_lancet(button as PieceButton, &"")
 			_set_button(button, "", &"", true, false)
 			continue
 		var id: StringName = actor.equipped[i]
 		var chosen: bool = selection.mode == BattleSelection.Mode.ABILITY and selection.ability_id == id
+		_dress_lancet(button as PieceButton, AbilityIcon.of(ctrl.state.catalog.ability(id)))
+		(button as PieceButton).pips = ctrl.effective_cost(actor, ctrl.state.catalog.ability(id))
+		(button as PieceButton).pips_y = LANCET_PIPS_Y
 		_set_button(button, _ability_label(actor, id), selection.ability_reason(id, false), false, chosen)
+	_dress_rose(actor)
 	if open:
 		_set_button(_miracle_button, _ability_label(actor, actor.miracle, true), selection.ability_reason(actor.miracle, true), false, selection.mode == BattleSelection.Mode.MIRACLE)
 		_set_button(_swap_button, texts.t(&"swap"), selection.swap_reason(), false, selection.mode == BattleSelection.Mode.SWAP)
@@ -897,7 +970,7 @@ func _refresh_controls() -> void:
 		_set_button(_intercede_button, texts.t(&"intercede"), selection.intercede_reason(), false, selection.mode == BattleSelection.Mode.INTERCEDE)
 		_set_button(_give_button, texts.t(&"give_consolation"), selection.give_consolation_reason(), false, selection.mode == BattleSelection.Mode.GIVE_CONSOLATION)
 		_set_button(_stand_firm_button, texts.t(&"stand_firm"), selection.stand_firm_reason(), false, selection.mode == BattleSelection.Mode.STAND_FIRM)
-		_set_button(_provisions_button, texts.t(&"provisions"), _provisions_reason(), false, selection.mode == BattleSelection.Mode.PROVISION)
+		_set_button(_provisions_button, texts.t(&"pack_count", {"count": ctrl.state.provisions.size()}), _provisions_reason(), false, selection.mode == BattleSelection.Mode.PROVISION or _provision_menu.visible)
 	else:
 		_set_button(_miracle_button, texts.t(&"miracle"), &"", true, false)
 		_set_button(_swap_button, texts.t(&"swap"), &"", true, false)
@@ -905,7 +978,7 @@ func _refresh_controls() -> void:
 		_set_button(_intercede_button, texts.t(&"intercede"), &"", true, false)
 		_set_button(_give_button, texts.t(&"give_consolation"), &"", true, false)
 		_set_button(_stand_firm_button, texts.t(&"stand_firm"), &"", true, false)
-		_set_button(_provisions_button, texts.t(&"provisions"), &"", true, false)
+		_set_button(_provisions_button, texts.t(&"pack_count", {"count": ctrl.state.provisions.size()}), &"", true, false)
 	# Without a Vendaval in this battle the button is only noise.
 	_stand_firm_button.visible = ctrl.state.hazard == &"gale"
 	_miracle_label.text = _miracle_button.text
@@ -915,12 +988,23 @@ func _refresh_controls() -> void:
 	_refresh_provision_menu(open)
 
 
+## The one portrait of a saint, everywhere (D-442); null without one.
+static func saint_portrait(def_id: StringName) -> Texture2D:
+	var path: String = SAINT_PORTRAIT_PATH % [def_id, def_id]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
+
 ## The head of the saint, cut from its idle frame around the head point
 ## (as in the approved preview); a saint without frames keeps the painted
 ## portrait.
 func _portrait_of(actor: Combatant) -> Texture2D:
 	if actor == null:
 		return null
+	# The saint's portrait in pixel art (D-431), the same one the camp and the
+	# walk show in the arch (D-442).
+	var drawn: Texture2D = saint_portrait(actor.def_id)
+	if drawn != null:
+		return drawn
 	var bust: Texture2D = _bust_of(actor)
 	if bust != null:
 		return bust
@@ -944,11 +1028,39 @@ func _ability_label(actor: Combatant, id: StringName, is_miracle: bool = false) 
 	return label
 
 
+## The mosaic of the ability's kind in the lancet (D-436); the plain glass
+## for an empty slot.
+func _dress_lancet(button: PieceButton, kind: StringName) -> void:
+	if kind == &"":
+		button.setup(PixelStyle.piece("ui_lancet_on"), PixelStyle.piece("ui_lancet_chosen"), PixelStyle.piece("ui_lancet_off"), Rect2())
+		button.pips = 0
+		button.set_meta(&"kind", &"")
+		return
+	button.setup(AbilityIcon.lancet(kind, "on"), AbilityIcon.lancet(kind, "chosen"), AbilityIcon.lancet(kind, "off"), Rect2())
+	button.set_meta(&"kind", kind)
+
+
+## The medallion of the chosen saint's miracle in the rose (D-438); the
+## plain rose for a saint without one.
+func _dress_rose(actor: Combatant) -> void:
+	var rose: PieceButton = _miracle_button as PieceButton
+	var on: Texture2D = AbilityIcon.rose(actor.def_id, "on") if actor != null else null
+	if on == null:
+		rose.setup(PixelStyle.piece("ui_rose_on"), PixelStyle.piece("ui_rose_on"), PixelStyle.piece("ui_rose_off"), Rect2())
+		return
+	rose.setup(on, on, AbilityIcon.rose(actor.def_id, "off"), Rect2())
+
+
+## The mosaic shown in a lancet (tests): its kind, or &"" for plain glass.
+func lancet_kind(index: int) -> StringName:
+	return StringName(str(_ability_buttons[index].get_meta(&"kind", &"")))
+
+
 ## Empty label hides the button text; a reason greys it out and is shown
-## under the name (screens §3).
+## under the name (screens §3); the small tiles show it in the hint.
 func _set_button(button: Button, label: String, reason: StringName, off: bool, chosen: bool) -> void:
 	var text: String = label
-	if reason != &"" and not label.is_empty():
+	if reason != &"" and not label.is_empty() and button.icon == null:
 		text += "\n(" + texts.reason(reason) + ")"
 	button.text = text
 	button.disabled = off or reason != &""
@@ -977,33 +1089,70 @@ func _unique_provisions() -> Array[StringName]:
 	return ids
 
 
-## One hook with its bag per kind of provision the company carries, with
-## the amount (Art Bible: the provisions are always in view).
+## The alforje opened (D-412): one slot per unit it holds, full or empty;
+## a full slot shows the provision and is touched to use it.
 func _refresh_provision_menu(open: bool) -> void:
-	for child: Node in _hooks.get_children():
-		_hooks.remove_child(child)
+	for child: Node in _provision_menu.get_children():
+		_provision_menu.remove_child(child)
 		child.queue_free()
 	if not open:
 		_provision_menu.visible = false
-	var ids: Array[StringName] = _unique_provisions()
-	for i: int in ids.size():
-		var id: StringName = ids[i]
-		var hook := PieceButton.new()
-		hook.setup(PixelStyle.piece("ui_hook_bag"), null, null, HOOK_TEXT)
-		hook.show_plate = false
-		hook.position = Vector2(i * HOOK_STEP, 0)
-		hook.set_meta(&"provision", id)
-		hook.text = str(ctrl.state.provisions.count(id))
-		hook.disabled = not open or selection.provision_reason(id) != &""
-		hook.chosen = open and selection.mode == BattleSelection.Mode.PROVISION and selection.provision_id == id
-		hook.modulate = Color(0.5, 0.5, 0.55) if hook.disabled else Color.WHITE
-		hook.pressed.connect(press_provision.bind(id))
-		_hooks.add_child(hook)
+	if not _provision_menu.visible:
+		return
+	var slots: int = maxi(pack_capacity(), ctrl.state.provisions.size())
+	var rows: int = int(ceil(float(slots) / PACK_COLUMNS))
+	var plate_size := Vector2(PACK_COLUMNS * (PACK_SLOT.x + 4.0) + 8.0, rows * (PACK_SLOT.y + 4.0) + 24.0)
+	_provision_menu.add_child(PixelStyle.plate(Rect2(Vector2.ZERO, plate_size), PixelStyle.COLOR_IRON, PixelStyle.COLOR_GOLD))
+	var title := Label.new()
+	title.text = texts.t(&"pack_title", {"count": ctrl.state.provisions.size(), "of": slots})
+	title.position = Vector2(8, 3)
+	PixelStyle.title(title)
+	_provision_menu.add_child(title)
+	for i: int in slots:
+		var id: StringName = ctrl.state.provisions[i] if i < ctrl.state.provisions.size() else &""
+		var slot := Button.new()
+		slot.position = Vector2(8 + (i % PACK_COLUMNS) * (PACK_SLOT.x + 4.0), 20 + (i / PACK_COLUMNS) * (PACK_SLOT.y + 4.0))
+		slot.size = PACK_SLOT
+		slot.focus_mode = Control.FOCUS_NONE
+		if id == &"":
+			slot.disabled = true
+			slot.text = texts.t(&"pack_empty")
+		else:
+			slot.icon = HudStyle.icon("icon_item_%s" % id)
+			slot.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			slot.set_meta(&"provision", id)
+			slot.tooltip_text = texts.provision_name(id)
+			slot.disabled = selection.provision_reason(id) != &""
+			slot.modulate = COLOR_CHOSEN if selection.mode == BattleSelection.Mode.PROVISION and selection.provision_id == id else Color.WHITE
+			slot.pressed.connect(press_provision.bind(id))
+		_provision_menu.add_child(slot)
 
 
-## How many hooks hang in the panel (tests).
+## Slots of the alforje: given by the expedition (the Gate's level), else
+## the first level's (the arena).
+func pack_capacity() -> int:
+	if _pack_capacity > 0:
+		return _pack_capacity
+	return FieldProvisions.capacity(1, ctrl.state.constants)
+
+
+func set_pack_capacity(slots: int) -> void:
+	_pack_capacity = slots
+
+
+## How many kinds of provision the opened alforje shows (tests).
 func provision_hook_count() -> int:
-	return _hooks.get_child_count()
+	var kinds: Array[StringName] = []
+	for child: Node in _provision_menu.get_children():
+		var id: StringName = StringName(str(child.get_meta(&"provision", &""))) if child.has_meta(&"provision") else &""
+		if id != &"" and not kinds.has(id):
+			kinds.append(id)
+	return kinds.size()
+
+
+## Whether the alforje is open (tests).
+func pack_open() -> bool:
+	return _provision_menu.visible
 
 
 func _refresh_hint() -> void:
@@ -1024,10 +1173,7 @@ func _refresh_hint() -> void:
 		else:
 			key = &"hint_choose_target"
 	_hint.text = texts.t(key, args)
-	if selection.mode == BattleSelection.Mode.ABILITY and not ctrl.is_over():
-		var def: AbilityDef = ctrl.state.catalog.ability(selection.ability_id)
-		if def != null and not def.desc_pt.is_empty():
-			_hint.text = def.desc_pt + "\n" + _hint.text
+	_refresh_note()
 	if selection.mode == BattleSelection.Mode.PROVISION and not ctrl.is_over():
 		_hint.text = texts.provision_name(selection.provision_id) + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.INTERCEDE and not ctrl.is_over():
@@ -1036,6 +1182,33 @@ func _refresh_hint() -> void:
 		_hint.text = texts.t(&"give_consolation_desc") + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.STAND_FIRM and not ctrl.is_over():
 		_hint.text = texts.t(&"stand_firm_desc", {"fervor": ctrl.state.constants.get_int(&"firmness_fervor")}) + "\n" + _hint.text
+
+
+## The note in the corner (D-440): the touched ability's or miracle's name,
+## cost and description, so the lancet keeps its glass clear.
+func _refresh_note() -> void:
+	var def: AbilityDef = null
+	if not ctrl.is_over() and selection.actor() != null:
+		if selection.mode == BattleSelection.Mode.ABILITY:
+			def = ctrl.state.catalog.ability(selection.ability_id)
+		elif selection.mode == BattleSelection.Mode.MIRACLE:
+			def = ctrl.state.catalog.ability(selection.actor().miracle)
+	_note.visible = def != null
+	if def == null:
+		return
+	# Under the boss's bar when there is one.
+	_note.position.y = NOTE_RECT.position.y + (NOTE_BOSS_DROP if boss_bar_shown() else 0.0)
+	var title: String = def.name_pt
+	var cost: int = ctrl.effective_cost(selection.actor(), def)
+	if cost > 0:
+		title += " · " + texts.t(&"cost_badge", {"cost": cost})
+	_note_title.text = title
+	_note_text.text = def.desc_pt
+
+
+## The note's words (tests): name and cost, then the description.
+func note_text() -> String:
+	return "%s\n%s" % [_note_title.text, _note_text.text] if _note.visible else ""
 
 
 ## What the pending Interceder takes, or what the action does.
@@ -1068,11 +1241,13 @@ func info_enemy() -> Combatant:
 func _refresh_info() -> void:
 	var c: Combatant = info_enemy()
 	if c == null:
+		_refresh_sheet_icons(null)
 		_info.text = ""
 		_sheet_title.text = ""
 		_sheet_picture.texture = null
 		return
 	_sheet_title.text = texts.name_of(c)
+	_refresh_sheet_icons(c)
 	var bust: Texture2D = _bust_of(c)
 	_sheet_picture.texture = bust if bust != null else _head_picture(c.id, FRAME_WINDOW.size)
 	var lines: Array[String] = []
@@ -1095,6 +1270,39 @@ func _refresh_info() -> void:
 			lines.append(texts.t(&"boss_status", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count(), "claws": ctrl.state.dominion_claws.size()}))
 	lines.append(texts.conditions_details(c))
 	_info.text = "\n".join(lines)
+
+
+## The intents (in their oculus colours) and the conditions of the sheet's
+## combatant as icons, in that order (D-436).
+func _refresh_sheet_icons(c: Combatant) -> void:
+	for child: Node in _sheet_icons.get_children():
+		_sheet_icons.remove_child(child)
+		child.queue_free()
+	if c == null:
+		return
+	var icons: Array[Texture2D] = []
+	if not c.is_saint() and not ctrl.is_over():
+		for intent: Intent in ctrl.state.intents_of(c):
+			var tex: Texture2D = HudStyle.intent_icon(intent)
+			if tex != null:
+				icons.append(tex)
+	for id: StringName in texts.sorted_conditions(c):
+		var tex: Texture2D = HudStyle.condition_icon(id)
+		if tex != null:
+			icons.append(tex)
+	for tex: Texture2D in icons:
+		var rect := TextureRect.new()
+		rect.texture = tex
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		rect.custom_minimum_size = SHEET_ICON
+		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_sheet_icons.add_child(rect)
+
+
+## Icons on the sheet (tests).
+func sheet_icon_count() -> int:
+	return _sheet_icons.get_child_count()
 
 
 ## Head and shoulders at full size, cut by the pixel art tool before the
@@ -1506,12 +1714,39 @@ func _draw_flame(on: Control, at: Vector2, size_px: int = 1) -> void:
 
 
 func _build_top_bar() -> void:
-	_round_label = _label(Vector2(180, 4), Vector2(600, 14))
+	var band := TextureRect.new()
+	band.texture = PixelStyle.piece("ui_top_band")
+	band.stretch_mode = TextureRect.STRETCH_TILE
+	band.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	band.position = Vector2(-OVERLAY_MARGIN, 0)
+	band.size = Vector2(STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, 16)
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(band)
+	_round_label = _label(Vector2(180, 18), Vector2(600, 14))
 	PixelStyle.title(_round_label)
-	_hint = _label(Vector2(230, 20), Vector2(500, 36))
+	_hint = _label(Vector2(230, 32), Vector2(500, 24))
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_pause_button = _button(Vector2(778, 4), Vector2(52, 26), press_pause)
-	_speed_button = _button(Vector2(834, 4), Vector2(122, 26), press_speed)
+	_note = PixelStyle.iron_plate(NOTE_RECT)
+	_note.visible = false
+	_stage.add_child(_note)
+	_note_title = Label.new()
+	_note_title.position = Vector2(10, 6)
+	_note_title.size = Vector2(NOTE_RECT.size.x - 20.0, 14)
+	PixelStyle.title(_note_title)
+	_note.add_child(_note_title)
+	_note_text = Label.new()
+	_note_text.position = Vector2(10, 22)
+	_note_text.size = Vector2(NOTE_RECT.size.x - 20.0, NOTE_RECT.size.y - 28.0)
+	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note.add_child(_note_text)
+	_boss_bar = Control.new()
+	_boss_bar.position = BOSS_BAR.position
+	_boss_bar.size = BOSS_BAR.size
+	_boss_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_boss_bar.draw.connect(_draw_boss_bar)
+	_stage.add_child(_boss_bar)
+	_pause_button = _button(Vector2(778, 18), Vector2(52, 26), press_pause)
+	_speed_button = _button(Vector2(834, 18), Vector2(122, 26), press_speed)
 	_build_dev_row()
 
 
@@ -1519,7 +1754,7 @@ func _build_top_bar() -> void:
 ## the chosen saint and its actions on the left, the tapped combatant in a
 ## broken frame on the right.
 func _build_bottom() -> void:
-	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
+	_stage.add_child(PixelStyle.stone_panel(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
 	_build_hero_panel()
 	_build_sheet_panel()
 
@@ -1534,14 +1769,19 @@ func _build_hero_panel() -> void:
 	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_portrait.visible = false
 	_stage.add_child(_portrait)
+	# A dark nameplate on the iron band of the stone (D-442): the saint's
+	# name, slot, life and desolation read on it, not over the bars.
+	_stage.add_child(PixelStyle.plate(Rect2(NAMEPLATE.position, NAMEPLATE.size), PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT))
 	_actor_label = _label(Vector2(118, 362), Vector2(150, 16))
 	_actor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	PixelStyle.title(_actor_label)
-	_actor_detail = _label(Vector2(250, 365), Vector2(120, 12))
+	_actor_detail = _label(Vector2(250, 365), Vector2(56, 12))
 	_actor_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_actor_detail.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
-	_stats = _label(Vector2(372, 365), Vector2(190, 12))
-	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	# Life and desolation next to the slot, over the top of the rose (the
+	# tiles of the actions took the right side, D-436).
+	_stats = _label(Vector2(306, 365), Vector2(234, 12))
+	_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_stats.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
 	for i: int in ABILITY_SLOTS:
 		var lancet := PieceButton.new()
@@ -1556,7 +1796,7 @@ func _build_hero_panel() -> void:
 	rose.pressed.connect(press_miracle)
 	_stage.add_child(rose)
 	_miracle_button = rose
-	_miracle_label = _label(ROSE_POS + Vector2(82, 2), Vector2(80, 76))
+	_miracle_label = _label(MIRACLE_LABEL.position, MIRACLE_LABEL.size)
 	_miracle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_miracle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_piece("ui_candle_rack", RACK_POS)
@@ -1565,26 +1805,20 @@ func _build_hero_panel() -> void:
 	_fervor_flames.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fervor_flames.draw.connect(_draw_fervor)
 	_stage.add_child(_fervor_flames)
-	_fervor_label = _label(Vector2(480, 462), Vector2(82, 12))
+	_fervor_label = _label(Vector2(456, 462), Vector2(82, 12))
 	_fervor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_fervor_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
-	var half_step := Vector2(HALF_ACTION_SIZE.x + 2.0, 0)
-	var row_step := Vector2(0, ACTION_SIZE.y + 2.0)
-	_swap_button = _button(ACTION_POS, HALF_ACTION_SIZE, press_swap)
-	_pass_button = _button(ACTION_POS + half_step, HALF_ACTION_SIZE, press_pass)
-	_intercede_button = _button(ACTION_POS + row_step, HALF_ACTION_SIZE, press_intercede)
-	_give_button = _button(ACTION_POS + row_step + half_step, HALF_ACTION_SIZE, press_give_consolation)
-	# The provisions hang on their hooks, always in view: the old button
-	# only keeps its place in the flow (press_provisions) and names the row.
-	_provisions_button = _button(ACTION_POS + row_step * 2.0, HALF_ACTION_SIZE, press_provisions)
-	_stand_firm_button = _button(ACTION_POS + row_step * 2.0 + half_step, HALF_ACTION_SIZE, press_stand_firm)
-	_provisions_button.flat = true
-	_provisions_button.focus_mode = Control.FOCUS_NONE
-	_hooks = Control.new()
-	_hooks.position = HOOK_POS
-	_hooks.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(_hooks)
+	_swap_button = _tile(0, "icon_action_swap", press_swap)
+	_pass_button = _tile(1, "icon_action_pass", press_pass)
+	_intercede_button = _tile(2, "icon_action_intercede", press_intercede)
+	_give_button = _tile(3, "icon_action_consolation", press_give_consolation)
+	_stand_firm_button = _tile(4, "icon_action_firmness", press_stand_firm)
+	# The alforje (D-298, D-412): a tile that opens its slots.
+	_provisions_button = _tile(5, "icon_item_alms", press_provisions)
+	_provisions_button.icon = PixelStyle.piece("ui_hook_bag")
+	_provisions_button.expand_icon = true
 	_provision_menu = Control.new()
+	_provision_menu.position = PACK_POS
 	_provision_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_provision_menu.visible = false
 	_stage.add_child(_provision_menu)
@@ -1606,6 +1840,7 @@ func fervor_flames() -> int:
 ## DD's sheet: the tapped enemy (or saint) in the broken frame, with its
 ## life, intent and conditions; "Encerrar turno" in its corner.
 func _build_sheet_panel() -> void:
+	_stage.add_child(PixelStyle.iron_plate(Rect2(SHEET_X - 8.0, 364, STAGE_SIZE.x - SHEET_X + 2.0, 134)))
 	_piece("ui_broken_frame", FRAME_POS)
 	_sheet_picture = TextureRect.new()
 	_sheet_picture.position = FRAME_POS + FRAME_WINDOW.position
@@ -1617,7 +1852,14 @@ func _build_sheet_panel() -> void:
 	_sheet_title = _label(Vector2(SHEET_X, 368), Vector2(144, 16))
 	_sheet_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	PixelStyle.title(_sheet_title)
-	_info = _label(Vector2(SHEET_X, 386), Vector2(144, 112))
+	# The intents and conditions of the sheet as icons (D-436); the words
+	# stay below for the details.
+	_sheet_icons = HBoxContainer.new()
+	_sheet_icons.position = Vector2(SHEET_X, 385)
+	_sheet_icons.add_theme_constant_override("separation", 2)
+	_sheet_icons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(_sheet_icons)
+	_info = _label(Vector2(SHEET_X, 420), Vector2(144, 80))
 	_info.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info.clip_text = true
@@ -1672,6 +1914,29 @@ func _button(pos: Vector2, button_size: Vector2, action: Callable) -> Button:
 	button.clip_text = true
 	button.pressed.connect(action)
 	_stage.add_child(button)
+	return button
+
+
+## A tile of the action grid: the icon over the name (D-436).
+func _tile(index: int, icon_name: String, action: Callable) -> Button:
+	var col: int = index % 3
+	var row: int = index / 3
+	var pos: Vector2 = ACTION_POS + Vector2(col * (ACTION_TILE.x + ACTION_GAP), row * (ACTION_TILE.y + ACTION_GAP))
+	var frame := _piece("ui_tile_frame", pos - Vector2(2, 2))
+	frame.size = ACTION_TILE + Vector2(4, 4)
+	frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	var button: Button = _button(pos, ACTION_TILE, action)
+	# The iron frame is the button's edge; the button itself is only its icon
+	# and name (D-441).
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+		button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	button.icon = HudStyle.icon(icon_name)
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	button.expand_icon = false
+	button.add_theme_constant_override("icon_max_width", 32)
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.focus_mode = Control.FOCUS_NONE
 	return button
 
 

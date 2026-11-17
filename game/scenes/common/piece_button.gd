@@ -20,6 +20,13 @@ var text_area := Rect2()
 var text_color: Color = PixelStyle.COLOR_BONE
 var plate_color: Color = PixelStyle.COLOR_PITCH
 var show_plate: bool = true
+## Small amber marks on the bottom of the piece (an ability's cost in
+## Fervor, D-440): the name and the words stay off the glass.
+var pips: int = 0:
+	set(value):
+		pips = value
+		queue_redraw()
+var pips_y: float = 0.0
 
 
 func _init() -> void:
@@ -54,6 +61,12 @@ func _draw() -> void:
 	var tex: Texture2D = piece()
 	if tex != null:
 		draw_texture(tex, Vector2.ZERO)
+	if pips > 0:
+		var pip_color: Color = PixelStyle.COLOR_LEAD_LIGHT if disabled else PixelStyle.COLOR_AMBER
+		var left: float = floorf(size.x * 0.5 - (pips * 8 - 2) * 0.5)
+		for i: int in pips:
+			draw_rect(Rect2(left + i * 8, pips_y, 6, 6), PixelStyle.COLOR_PITCH)
+			draw_rect(Rect2(left + i * 8 + 1, pips_y + 1, 4, 4), pip_color)
 	if text.is_empty() or text_area.size.x <= 0.0:
 		return
 	var font: Font = PixelStyle.text_font()

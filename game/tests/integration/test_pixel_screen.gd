@@ -98,20 +98,30 @@ func test_panel_has_the_cathedral_pieces() -> void:
 		assert_eq(lancet.size, Vector2(lancet.piece().get_size()), "lanceta em tamanho natural")
 	var rose := screen._miracle_button as PieceButton
 	assert_not_null(rose, "milagre na rosácea")
-	assert_eq(rose.piece_disabled, PixelStyle.piece("ui_rose_off"), "rosácea apagada quando não dá")
+	var actor: Combatant = screen.selection.actor()
+	assert_eq(rose.piece_disabled, AbilityIcon.rose(actor.def_id, "off"), "rosácea do milagre do santo, apagada quando não dá (D-438)")
+	assert_eq(screen.lancet_kind(0), AbilityIcon.of(screen.ctrl.state.catalog.ability(actor.equipped[0])), "mosaico do tipo da habilidade (D-436)")
 	assert_eq(screen.fervor_flames(), mini(screen.ctrl.fervor.amount, BattleScreen.CANDLE_FLAMES.size()), "uma chama por Fervor no porta-velas")
 	assert_eq(screen._portrait_frame.texture, PixelStyle.piece("ui_portrait_arch"), "retrato no arco")
 
 
-func test_provisions_hang_on_hooks() -> void:
+func test_the_alforje_opens_its_slots() -> void:
 	var screen := BattleScreen.new()
 	screen.speed_index = BattleScreen.SPEED_INSTANT
 	var provisions: Array[StringName] = [&"bread", &"bread", &"candle"]
 	screen.setup(data, BattleController.new(data.battle(&"m0_easy_01", SEED, provisions)))
 	add_child_autofree(screen)
-	assert_eq(screen.provision_hook_count(), 2, "um gancho por tipo de provisão")
-	var hook := screen._hooks.get_child(0) as PieceButton
-	assert_eq(hook.text, "2", "com a quantidade")
+	screen.tap(screen.ctrl.state.party[0].id)
+	assert_false(screen.pack_open(), "o alforje começa fechado")
+	assert_string_contains(screen._provisions_button.text, "3", "o botão mostra quantas provisões")
+	screen.press_provisions()
+	assert_true(screen.pack_open(), "ao tocar, abre (D-412)")
+	assert_eq(screen.provision_hook_count(), 2, "Pão e Vela nas casas")
+	var empty: int = 0
+	for child: Node in screen._provision_menu.get_children():
+		if child is Button and (child as Button).text == screen.texts.t(&"pack_empty"):
+			empty += 1
+	assert_eq(empty, screen.pack_capacity() - provisions.size(), "as casas vazias aparecem")
 
 
 func test_lancet_states() -> void:
@@ -174,7 +184,7 @@ func test_figures_are_spaced_and_portraits_use_the_bust() -> void:
 		assert_between(feet.x, 0.0, BattleScreen.STAGE_SIZE.x, "%s dentro dos 960" % c.id)
 	var portrait: Texture2D = screen.portrait_texture()
 	assert_not_null(portrait)
-	assert_true(portrait.resource_path.ends_with("_bust.png"), "retrato pelo busto em tamanho cheio")
+	assert_true(portrait.resource_path.ends_with("_portrait.png"), "o mesmo retrato em pixel da caminhada e do Pouso (D-442)")
 
 
 ## T60: the battle shows every character in poses; the walk does not.
@@ -195,3 +205,40 @@ func test_the_right_sheet_shows_an_enemy_never_a_saint() -> void:
 	screen.tap(other.id)
 	assert_eq(screen.info_enemy(), other)
 	assert_eq(screen.sheet_title(), screen.texts.name_of(other))
+
+
+# --- T44 part 1 (D-436) -------------------------------------------------------------
+
+func test_a_boss_has_the_big_bar_and_a_common_battle_does_not() -> void:
+	var common: BattleScreen = _battle()
+	assert_false(common.boss_bar_shown(), "luta comum sem a barra grande")
+	var screen := BattleScreen.new()
+	screen.speed_index = BattleScreen.SPEED_INSTANT
+	var state: BattleState = data.battle(&"c02_boss_asmodeus", SEED)
+	state.setup_boss(Dominion.claws(0, false), false)
+	screen.setup(data, BattleController.new(state))
+	add_child_autofree(screen)
+	assert_true(screen.boss_bar_shown(), "Asmodeu com a barra grande")
+
+
+func test_the_sheet_shows_the_intent_as_an_icon() -> void:
+	var screen: BattleScreen = _battle()
+	assert_gt(screen.sheet_icon_count(), 0, "a intenção do inimigo aparece como ícone")
+
+
+func test_the_lancet_keeps_its_glass_clear_and_the_note_tells_the_ability() -> void:
+	var screen: BattleScreen = _battle()
+	var actor: Combatant = screen.selection.actor()
+	var lancet := screen._ability_buttons[0] as PieceButton
+	assert_eq(lancet.text_area.size, Vector2.ZERO, "nenhuma palavra sobre o mosaico (D-440)")
+	assert_eq(screen.note_text(), "", "a observação só aparece ao tocar")
+	screen.press_ability(0)
+	var def: AbilityDef = screen.ctrl.state.catalog.ability(actor.equipped[0])
+	assert_string_contains(screen.note_text(), def.name_pt)
+	assert_string_contains(screen.note_text(), def.desc_pt)
+
+
+func test_george_strikes_with_a_red_shield() -> void:
+	var data_def: AbilityDef = data.catalog.ability(&"george_shield_bash")
+	assert_eq(AbilityIcon.of(data_def), AbilityIcon.SHIELD_STRIKE)
+	assert_not_null(AbilityIcon.lancet(AbilityIcon.SHIELD_STRIKE, "on"))

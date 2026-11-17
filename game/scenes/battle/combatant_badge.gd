@@ -10,6 +10,11 @@ extends Control
 const BAR_WIDTH: float = 64.0
 const BAR_HEIGHT: float = 4.0
 const BAR_GAP: float = 6.0
+## The iron capsule of the bar (pixels of ui_bar_frame): its ends, and how
+## far its slot starts above the bar; the desolation marks go under it.
+const BAR_FRAME_END: float = 6.0
+const BAR_FRAME_ABOVE: float = 5.0
+const BAR_FRAME_BELOW: float = 9.0
 const PIPS: int = 10
 const PIP_SIZE: float = 4.0
 const PIP_GAP: float = 2.0
@@ -229,13 +234,30 @@ func _draw() -> void:
 	draw_rect(Rect2(left - 1, y - 1, BAR_WIDTH + 2, BAR_HEIGHT + 2), PixelStyle.COLOR_PITCH)
 	if not down:
 		draw_rect(Rect2(left, y, roundf(BAR_WIDTH * hp_share), BAR_HEIGHT), PixelStyle.COLOR_BLOOD)
+	_draw_bar_frame(left, y)
 	if is_saint:
-		var py: float = y + BAR_HEIGHT + 2.0
+		var py: float = y + BAR_HEIGHT + BAR_FRAME_BELOW
 		for i: int in PIPS:
 			var px: float = left + i * (PIP_SIZE + PIP_GAP) + 3.0
 			draw_rect(Rect2(px - 1, py - 1, PIP_SIZE + 2, PIP_SIZE + 2), PixelStyle.COLOR_PITCH)
 			draw_rect(Rect2(px, py, PIP_SIZE, PIP_SIZE), PixelStyle.COLOR_VIOLET if i < desolation_pips else PixelStyle.COLOR_LEAD)
 	_draw_mark()
+
+
+## The iron capsule around the life bar (D-441): its rounded ends kept,
+## its middle stretched to the bar.
+func _draw_bar_frame(left: float, y: float) -> void:
+	var frame: Texture2D = PixelStyle.piece("ui_bar_frame")
+	if frame == null:
+		return
+	var end_w: float = BAR_FRAME_END
+	var fw: float = frame.get_width()
+	var fh: float = frame.get_height()
+	var x: float = left - end_w
+	var top: float = y - BAR_FRAME_ABOVE
+	draw_texture_rect_region(frame, Rect2(x, top, end_w, fh), Rect2(0, 0, end_w, fh))
+	draw_texture_rect_region(frame, Rect2(x + end_w, top, BAR_WIDTH, fh), Rect2(end_w, 0, fw - end_w * 2.0, fh))
+	draw_texture_rect_region(frame, Rect2(x + end_w + BAR_WIDTH, top, end_w, fh), Rect2(fw - end_w, 0, end_w, fh))
 
 
 ## Dashed bracket on the ground (DD): gold for who acts, light for who can

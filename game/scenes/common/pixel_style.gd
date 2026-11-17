@@ -28,6 +28,11 @@ const COLOR_AMBER := Color("E07B1F")
 const COLOR_VIOLET := Color("8A6BB0")
 const COLOR_HEAL := Color("8FB573")
 
+## Corners of the iron plate that never stretch (pixels of ui_plate9).
+const PLATE_MARGIN: int = 14
+## Corners of the iron button that never stretch (pixels of ui_button).
+const BUTTON_MARGIN: int = 8
+
 static var _title_font: Font
 static var _text_font: Font
 static var _textures: Dictionary = {}
@@ -73,25 +78,30 @@ static func theme() -> Theme:
 	return t
 
 
+## The approved forged-iron button (ui_button, D-368, D-442) for every plain
+## button: its riveted corners kept, its middle stretched; pressed shows the
+## pressed piece, disabled is darker.
 static func button_box(state: StringName) -> StyleBox:
 	if state == &"focus":
 		return StyleBoxEmpty.new()
-	var box := StyleBoxFlat.new()
-	box.bg_color = COLOR_PITCH
-	box.border_color = COLOR_LEAD_LIGHT
-	box.set_border_width_all(1)
-	box.anti_aliasing = false
-	box.content_margin_left = 4
-	box.content_margin_right = 4
-	box.content_margin_top = 1
-	box.content_margin_bottom = 1
+	var tex: Texture2D = piece("ui_button_pressed" if state == &"pressed" else "ui_button")
+	if tex == null:
+		return StyleBoxEmpty.new()
+	var box := StyleBoxTexture.new()
+	box.texture = tex
+	box.texture_margin_left = BUTTON_MARGIN
+	box.texture_margin_right = BUTTON_MARGIN
+	box.texture_margin_top = BUTTON_MARGIN
+	box.texture_margin_bottom = BUTTON_MARGIN
+	box.content_margin_left = 6
+	box.content_margin_right = 6
+	box.content_margin_top = 2
+	box.content_margin_bottom = 2
 	match state:
 		&"hover":
-			box.border_color = COLOR_GREY
-		&"pressed":
-			box.border_color = COLOR_GOLD
+			box.modulate_color = Color(1.12, 1.08, 1.0)
 		&"disabled":
-			box.border_color = COLOR_LEAD
+			box.modulate_color = Color(0.55, 0.55, 0.6)
 	return box
 
 
@@ -115,6 +125,34 @@ static func plate(rect: Rect2, fill: Color = COLOR_IRON, edge: Color = COLOR_LEA
 	panel.size = rect.size
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return panel
+
+
+## The stone of the panel (D-441): dark chapel stone under an iron band,
+## repeated sideways over `rect`.
+static func stone_panel(rect: Rect2) -> TextureRect:
+	var stone := TextureRect.new()
+	stone.texture = piece("ui_panel_stone")
+	stone.stretch_mode = TextureRect.STRETCH_TILE
+	stone.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	stone.position = rect.position
+	stone.size = rect.size
+	stone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return stone
+
+
+## An iron plate with riveted corners that stretches to `rect` (D-441):
+## the note, the sheet, the cards, the opened alforje.
+static func iron_plate(rect: Rect2) -> NinePatchRect:
+	var plate := NinePatchRect.new()
+	plate.texture = piece("ui_plate9")
+	plate.patch_margin_left = PLATE_MARGIN
+	plate.patch_margin_top = PLATE_MARGIN
+	plate.patch_margin_right = PLATE_MARGIN
+	plate.patch_margin_bottom = PLATE_MARGIN
+	plate.position = rect.position
+	plate.size = rect.size
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return plate
 
 
 ## Tint of the portrait arch by the saint's spiritual state (D-258 (5)):

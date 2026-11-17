@@ -23,12 +23,15 @@ intercede_desc,Tomar para si a desolação ou uma condição de um aliado.
 intercede_take_desolation,Tomar {amount} de desolação de {saint}.
 intercede_take_condition,Tomar todo o {condition} de {saint}.
 intercede_more,Toque em Interceder para tomar outra coisa.
-stand_firm,Firmar o pé
-stand_firm_desc,Firmar o pé: a troca do Vendaval não acontece. Firmeza: +{fervor} de Fervor na próxima rodada.
+stand_firm,Firmeza
+stand_firm_desc,Firmeza contra o Vendaval: a troca não acontece. +{fervor} de Fervor na próxima rodada.
 gale_mark,Vendaval
 gale_held_firm,Vendaval: firme
 give_consolation_desc,Dar a Consolação a um companheiro; quem dá volta ao normal.
 provisions,Provisões
+pack_count,Alforje {count}
+pack_title,Alforje · {count} de {of}
+pack_empty,vazio
 end_turn,Encerrar turno
 cost_badge,{cost} Fervor
 confirm,Confirmar
@@ -171,6 +174,11 @@ walk_cost_alms,Esmolas {amount}
 walk_content_hidden,Conteúdo oculto
 walk_content_enemies,{pool}: {enemies}
 walk_provisions,Provisões ({count})
+walk_pack,Alforje · {count} de {of}
+walk_card_hp,Vida
+walk_card_desolation,Desol.
+walk_strip_title,Trecho {leg} · mini-mapa
+walk_strip_open,toque: mapa inteiro
 walk_provision_line,{provision} ×{count}
 walk_no_provisions,Sem provisões
 walk_choose_saint,{provision}: em quem?

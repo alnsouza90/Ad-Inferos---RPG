@@ -170,6 +170,7 @@ func _show_battle() -> void:
 	battle.setup(data, ctrl.battle)
 	battle.light = ctrl.state.light
 	battle.light_max = ctrl.catalog.constants.get_int(&"light_start")
+	battle.set_pack_capacity(FieldProvisions.capacity(ctrl.state.gate_level, ctrl.catalog.constants))
 	battle.executor = run_battle
 	battle.back_requested.connect(show_phase)
 	_replace(battle)

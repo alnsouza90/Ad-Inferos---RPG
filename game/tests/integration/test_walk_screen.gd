@@ -523,3 +523,47 @@ func test_every_walk_text_exists_in_the_data() -> void:
 		keys.append("walk_end_%s" % reason)
 	for key: String in keys:
 		assert_true(data.ui.has_text(StringName(key)), "ui_text.csv tem '%s'" % key)
+
+
+# --- T44 part 1 (D-436): the panel of the walk --------------------------------------
+
+func test_the_panel_shows_a_card_per_saint_and_the_strip_opens_the_map() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	assert_eq(w._cards.size(), c.state.party.size(), "uma mini-ficha por santo")
+	assert_false(w.minimap_open())
+	w._strip.pressed.emit()
+	assert_true(w.minimap_open(), "tocar no mini-mapa abre o mapa inteiro")
+
+
+func test_the_alforje_shows_its_slots() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	var slots: int = FieldProvisions.capacity(c.state.gate_level, c.catalog.constants)
+	assert_string_contains(w._provisions_button.text, "%d de %d" % [c.state.provisions.size(), slots])
+	w.press_provisions()
+	assert_true(w.provisions_open())
+	var grid: GridContainer = null
+	for child: Node in w._provisions_list.get_children():
+		if child is GridContainer:
+			grid = child
+	assert_not_null(grid, "as casas do alforje")
+	assert_eq(grid.get_child_count(), slots, "cheias e vazias")
+
+
+func test_the_lume_is_a_lantern_on_a_rod_that_goes_down() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	var full: float = w.lantern_y()
+	c.state.light = 20
+	w._refresh()
+	assert_gt(w.lantern_y(), full, "com menos Lume, a lamparina desce (D-257)")
+
+
+func test_arrows_blink_where_the_company_can_go_then_fade() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	assert_true(w.arrow_hints().has(&"forward"), "no começo, a seta para a frente pisca (D-442)")
+	assert_false(w.arrow_hints().has(&"back"), "no começo do corredor não se volta")
+	w._process(BattleScreen.STAGE_SIZE.x)
+	assert_eq(w.arrow_hints().size(), 0, "depois de um tempo, as setas somem")

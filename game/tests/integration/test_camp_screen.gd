@@ -249,3 +249,10 @@ func test_the_halo_shows_the_spiritual_state() -> void:
 	assert_eq(s.halo_of(&"saint_george"), &"eclipse", "Noite Escura: eclipse")
 	assert_eq(s.halo_of(&"saint_therese"), &"disk", "Consolação: disco (com raios e clareira)")
 	assert_eq(s.halo_of(&"saint_benedict"), &"covered", "desolação alta: coberta")
+
+
+func test_the_camp_shows_the_same_portrait_as_the_battle() -> void:
+	var c := _camp()
+	var s := _screen(c)
+	for id: StringName in c.state.party:
+		assert_eq(s.portrait_of(id), BattleScreen.saint_portrait(id), "o mesmo retrato, no arco (D-442)")

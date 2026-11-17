@@ -16,7 +16,6 @@ const STAGE_SIZE := Vector2(960, 540)
 const FIELD_SIZE := Vector2(960, 360)
 const ENV_PATH: String = "res://assets/pixel/environments/%s/env_%s_%s_%s.png"
 const POSE_PATH: String = "res://assets/pixel/characters/%s/%s_camp.png"
-const PORTRAIT_PATH: String = "res://assets/pixel/characters/%s/%s_portrait.png"
 const FIRE_PATH: String = "res://assets/pixel/vfx/camp_fire.png"
 const HALO_PATH: String = "res://assets/pixel/vfx/halo_%s.png"
 ## The layers are drawn 2× (one pixel of the art is two of the screen) and
@@ -52,10 +51,15 @@ const HALO_POINTS: Dictionary = {
 	&"saint_therese": Vector2(86, 10),
 }
 const PANEL_TOP: float = 360.0
-const PORTRAIT_SCALE: float = 0.5
-const ACTIVITY_SIZE := Vector2(92, 18)
-const TARGET_SIZE := Vector2(92, 16)
-const FIXED_SIZE := Vector2(132, 20)
+## The arch of the portrait in the card (as in the battle's panel).
+const ARCH_POS := Vector2(6, 6)
+## The activities right beside the portrait, centred on it (D-443); the
+## name and state of the saint after them.
+const GRID_X: float = 118.0
+const NAME_X: float = 362.0
+const ACTIVITY_SIZE := Vector2(116, 28)
+const TARGET_SIZE := Vector2(116, 26)
+const FIXED_SIZE := Vector2(136, 30)
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 const COLOR_DIM := Color(0, 0, 0, 0.8)
 const COLOR_UNSELECTED := Color(0.78, 0.74, 0.72)
@@ -673,18 +677,17 @@ func _build_seat(field: Control, saint_id: StringName, seat: Dictionary) -> void
 
 
 func _build_panel() -> void:
-	var panel: Panel = PixelStyle.plate(Rect2(0, PANEL_TOP, STAGE_SIZE.x, STAGE_SIZE.y - PANEL_TOP))
-	_stage.add_child(panel)
+	_stage.add_child(PixelStyle.stone_panel(Rect2(0, PANEL_TOP, STAGE_SIZE.x, STAGE_SIZE.y - PANEL_TOP)))
 	for saint_id: StringName in ctrl.state.party:
 		_build_card(saint_id)
 	_info = _label("")
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_info.position = Vector2(560, PANEL_TOP + 8)
-	_info.size = Vector2(392, 96)
+	_info.position = Vector2(540, PANEL_TOP + 12)
+	_info.size = Vector2(410, 90)
 	_stage.add_child(_info)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
-	row.position = Vector2(540, STAGE_SIZE.y - FIXED_SIZE.y - 10)
+	row.position = Vector2(536, STAGE_SIZE.y - FIXED_SIZE.y - 10)
 	_stage.add_child(row)
 	var rest: String = data.ui.text(&"camp_vigil_rest") if is_vigil() else data.ui.text(&"camp_rest", {"cost": data.ui.text(&"camp_rest_cost")})
 	for entry: Array in [[FIXED_REST, rest, press_rest], [FIXED_CONTINUE, _continue_text(), press_continue], [FIXED_RETREAT, data.ui.text(&"camp_retreat"), press_retreat]]:
@@ -702,28 +705,34 @@ func _build_card(saint_id: StringName) -> void:
 	root.size = Vector2(540, STAGE_SIZE.y - PANEL_TOP)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(root)
+	var arch := TextureRect.new()
+	arch.texture = PixelStyle.piece("ui_portrait_arch")
+	arch.position = ARCH_POS
+	arch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(arch)
+	# The same portrait as in the battle, always in the arch (D-442).
 	var portrait := TextureRect.new()
-	portrait.texture = _texture(PORTRAIT_PATH % [saint_id, saint_id])
+	portrait.texture = BattleScreen.saint_portrait(saint_id)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.size = Vector2(192, 256) * PORTRAIT_SCALE
-	portrait.position = Vector2(10, 22)
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	portrait.size = BattleScreen.PORTRAIT_WINDOW.size
+	portrait.position = ARCH_POS + BattleScreen.PORTRAIT_WINDOW.position
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(portrait)
 	var name_label := _label(_saint_name(saint_id))
 	PixelStyle.title(name_label)
-	name_label.position = Vector2(118, 6)
+	name_label.position = Vector2(NAME_X, 44)
 	root.add_child(name_label)
 	var stats := _label("")
-	stats.position = Vector2(118, 24)
+	stats.position = Vector2(NAME_X, 62)
 	root.add_child(stats)
 	var choice := _label("")
-	choice.position = Vector2(118, 74)
+	choice.position = Vector2(NAME_X, 112)
 	choice.add_theme_color_override("font_color", COLOR_CHOSEN)
 	root.add_child(choice)
 	var grid := GridContainer.new()
 	grid.columns = 2
-	grid.position = Vector2(300, 8)
+	grid.position = Vector2(GRID_X, ARCH_POS.y + 85.0 - (ACTIVITY_SIZE.y * 2.0 + 4.0) * 0.5)
 	grid.add_theme_constant_override("h_separation", 4)
 	grid.add_theme_constant_override("v_separation", 4)
 	root.add_child(grid)
@@ -738,7 +747,7 @@ func _build_card(saint_id: StringName) -> void:
 		grid.add_child(button)
 		buttons[activity] = button
 	var targets := HBoxContainer.new()
-	targets.position = Vector2(300, 60)
+	targets.position = Vector2(GRID_X, ARCH_POS.y + 85.0 + ACTIVITY_SIZE.y + 10.0)
 	targets.add_theme_constant_override("separation", 4)
 	targets.visible = false
 	root.add_child(targets)
