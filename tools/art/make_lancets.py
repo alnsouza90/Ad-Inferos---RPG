@@ -48,6 +48,20 @@ def lit(img: Image.Image, state: str) -> Image.Image:
     return img
 
 
+def shield_strike(mosaic: Image.Image) -> Image.Image:
+    """The shield of Amparo in a blood tint (D-440): only the grey and bone
+    glass of the shield turns red; the violet and blue ground stays."""
+    out = mosaic.copy()
+    px = out.load()
+    for y in range(out.height):
+        for x in range(out.width):
+            r, g, b, a = px[x, y]
+            if a and max(r, g, b) - min(r, g, b) < 40 and max(r, g, b) > 60:
+                light = (r + g + b) / 3 / 255
+                px[x, y] = (int(90 + 140 * light), int(28 + 40 * light), int(28 + 30 * light), a)
+    return out
+
+
 def lancet(mosaic: Image.Image, state: str) -> Image.Image:
     frame = Image.open(UI / "ui_lancet_on.png").convert("RGBA")
     x0, y0, x1, y1 = GLASS
@@ -78,6 +92,9 @@ def main() -> None:
         mosaic = Image.open(SRC / f"mosaic_{kind}.png").convert("RGBA")
         for state in ("off", "on", "chosen"):
             lancet(mosaic, state).save(UI / "lancets" / f"lancet_{kind}_{state}.png", optimize=True)
+    shield = shield_strike(Image.open(SRC / "mosaic_ward.png").convert("RGBA"))
+    for state in ("off", "on", "chosen"):
+        lancet(shield, state).save(UI / "lancets" / f"lancet_shield_strike_{state}.png", optimize=True)
     for saint, file_name in ROSES.items():
         medallion = Image.open(SRC / file_name).convert("RGBA")
         for state in ("off", "on"):

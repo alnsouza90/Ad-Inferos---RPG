@@ -224,3 +224,21 @@ func test_a_boss_has_the_big_bar_and_a_common_battle_does_not() -> void:
 func test_the_sheet_shows_the_intent_as_an_icon() -> void:
 	var screen: BattleScreen = _battle()
 	assert_gt(screen.sheet_icon_count(), 0, "a intenção do inimigo aparece como ícone")
+
+
+func test_the_lancet_keeps_its_glass_clear_and_the_note_tells_the_ability() -> void:
+	var screen: BattleScreen = _battle()
+	var actor: Combatant = screen.selection.actor()
+	var lancet := screen._ability_buttons[0] as PieceButton
+	assert_eq(lancet.text_area.size, Vector2.ZERO, "nenhuma palavra sobre o mosaico (D-440)")
+	assert_eq(screen.note_text(), "", "a observação só aparece ao tocar")
+	screen.press_ability(0)
+	var def: AbilityDef = screen.ctrl.state.catalog.ability(actor.equipped[0])
+	assert_string_contains(screen.note_text(), def.name_pt)
+	assert_string_contains(screen.note_text(), def.desc_pt)
+
+
+func test_george_strikes_with_a_red_shield() -> void:
+	var data_def: AbilityDef = data.catalog.ability(&"george_shield_bash")
+	assert_eq(AbilityIcon.of(data_def), AbilityIcon.SHIELD_STRIKE)
+	assert_not_null(AbilityIcon.lancet(AbilityIcon.SHIELD_STRIKE, "on"))

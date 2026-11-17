@@ -549,3 +549,12 @@ func test_the_alforje_shows_its_slots() -> void:
 			grid = child
 	assert_not_null(grid, "as casas do alforje")
 	assert_eq(grid.get_child_count(), slots, "cheias e vazias")
+
+
+func test_the_lume_is_a_lantern_on_a_rod_that_goes_down() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	var full: float = w.lantern_y()
+	c.state.light = 20
+	w._refresh()
+	assert_gt(w.lantern_y(), full, "com menos Lume, a lamparina desce (D-257)")

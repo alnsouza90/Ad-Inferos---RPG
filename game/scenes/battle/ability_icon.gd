@@ -15,6 +15,12 @@ const CLEANSE: StringName = &"cleanse"
 const RAISE: StringName = &"raise"
 const DISPLACE: StringName = &"displace"
 const STRIP: StringName = &"strip"
+## A shield blow: the shield in a blood tint, apart from the shield that
+## protects (D-440).
+const SHIELD_STRIKE: StringName = &"shield_strike"
+## Abilities whose drawing is not the one of their main effect (Alan,
+## D-440): George's Golpe de Escudo strikes with the shield, not the spear.
+const DRAWN_AS: Dictionary = {&"george_shield_bash": SHIELD_STRIKE}
 const LANCET_PATH: String = "res://assets/pixel/ui/lancets/lancet_%s_%s.png"
 const ROSE_PATH: String = "res://assets/pixel/ui/roses/rose_%s_%s.png"
 
@@ -22,6 +28,8 @@ const ROSE_PATH: String = "res://assets/pixel/ui/roses/rose_%s_%s.png"
 static func of(def: AbilityDef) -> StringName:
 	if def == null:
 		return STRIKE
+	if DRAWN_AS.has(def.id):
+		return DRAWN_AS[def.id]
 	for e: EffectDef in def.effects:
 		var kind: StringName = _kind_of(e)
 		if kind != &"":

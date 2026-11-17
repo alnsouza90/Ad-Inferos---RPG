@@ -48,10 +48,7 @@ const COLOR_OBJECT_DONE := Color("2B2A27")
 const COLOR_STRAIGHT := Color("654E3D")
 const COLOR_DETOUR := Color("33313A")
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
-const COLOR_LIGHT_ON := Color("E07B1F")
-const COLOR_LIGHT_OFF := Color("33313A")
 const COLOR_DIM := Color(0.05, 0.047, 0.063, 0.8)
-const LIGHT_BAR_SIZE := Vector2(140, 6)
 const OVERLAY_MARGIN: float = 400.0
 ## Drawn pieces of the corridor (T65): the entrance of each path kind.
 const PROPS_DIR: String = "res://assets/pixel/environments/circle_02"
@@ -116,7 +113,7 @@ var _content_view: Control
 var _entrance_views: Dictionary = {}
 var _info: Label
 var _action_box: HBoxContainer
-var _light_fill: ColorRect
+var _lantern: TextureRect
 var _light_label: Label
 var _alms_label: Label
 var _provisions_button: Button
@@ -610,7 +607,10 @@ func _refresh() -> void:
 	_info.text = _panel_text()
 	if not busy and holding == 0 and walking_to < 0.0:
 		_fill_actions()
-	_light_fill.size.x = LIGHT_BAR_SIZE.x * clampf(ctrl.state.light / float(ExpeditionLight.LIGHT_MAX), 0.0, 1.0)
+	var share: float = clampf(ctrl.state.light / float(ExpeditionLight.LIGHT_MAX), 0.0, 1.0)
+	# The lantern slides down its rod as the Lume fades, as in the battle
+	# (D-257, D-440).
+	_lantern.position = Vector2(BattleScreen.LUME_X - BattleScreen.LANTERN_SIZE.x * 0.5, roundf(BattleScreen.LUME_BOTTOM - (BattleScreen.LUME_BOTTOM - BattleScreen.LUME_TOP) * share) - BattleScreen.LANTERN_SIZE.y * 0.5)
 	_light_label.text = texts.light(ctrl)
 	_alms_label.text = texts.alms(ctrl)
 	_provisions_button.text = texts.t(&"walk_pack", {"count": ctrl.state.provisions.size(), "of": FieldProvisions.capacity(ctrl.state.gate_level, ctrl.catalog.constants)})
@@ -927,6 +927,7 @@ func _build() -> void:
 	_dark.size = _field_clip.size
 	_dark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field_clip.add_child(_dark)
+	_build_lume()
 	_build_panel()
 	_build_provisions_overlay()
 	_build_minimap_overlay()
@@ -940,38 +941,22 @@ func _build() -> void:
 func _build_panel() -> void:
 	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
 	var top: float = FIELD_HEIGHT
-	var lantern := TextureRect.new()
-	lantern.texture = PixelStyle.piece("ui_lantern_on")
-	lantern.position = Vector2(12, top + 10)
-	lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(lantern)
 	_light_label = _label("")
 	_light_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_light_label.position = Vector2(50, top + 10)
-	_light_label.size = Vector2(LIGHT_BAR_SIZE.x, 12)
+	_light_label.position = Vector2(16, top + 14)
+	_light_label.size = Vector2(180, 12)
 	_light_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
 	_stage.add_child(_light_label)
-	var light_back := ColorRect.new()
-	light_back.color = COLOR_LIGHT_OFF
-	light_back.position = Vector2(50, top + 24)
-	light_back.size = LIGHT_BAR_SIZE
-	light_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(light_back)
-	_light_fill = ColorRect.new()
-	_light_fill.color = COLOR_LIGHT_ON
-	_light_fill.size = LIGHT_BAR_SIZE
-	_light_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	light_back.add_child(_light_fill)
 	var purse := TextureRect.new()
 	purse.texture = HudStyle.icon("icon_item_alms")
-	purse.position = Vector2(46, top + 36)
+	purse.position = Vector2(12, top + 36)
 	purse.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(purse)
 	_alms_label = _label("")
 	_alms_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_alms_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_alms_label.position = Vector2(80, top + 40)
-	_alms_label.size = Vector2(120, 24)
+	_alms_label.position = Vector2(46, top + 40)
+	_alms_label.size = Vector2(156, 24)
 	_stage.add_child(_alms_label)
 	for i: int in ctrl.state.party.size():
 		_build_saint_card(ctrl.state.party[i], Vector2(CARDS_X + i * (CARD_SIZE.x + 8.0), top + 10))
@@ -993,6 +978,27 @@ func _build_panel() -> void:
 	_action_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	_action_box.add_theme_constant_override("separation", 10)
 	_stage.add_child(_action_box)
+
+
+## The Lume on the left edge of the field, as in the battle (D-257): a
+## lantern on an iron rod.
+func _build_lume() -> void:
+	var rod := TextureRect.new()
+	rod.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rod.texture = PixelStyle.piece("ui_lume_rod")
+	if rod.texture != null:
+		rod.position = Vector2(roundf(BattleScreen.LUME_X - rod.texture.get_width() * 0.5), BattleScreen.ROD_TOP)
+	_field_clip.add_child(rod)
+	_lantern = TextureRect.new()
+	_lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_lantern.texture = PixelStyle.piece("ui_lantern_on")
+	_lantern.size = BattleScreen.LANTERN_SIZE
+	_field_clip.add_child(_lantern)
+
+
+## Height of the lantern on its rod (tests): lower as the Lume fades.
+func lantern_y() -> float:
+	return _lantern.position.y
 
 
 ## A small card: the saint's bust, name, life and desolation.

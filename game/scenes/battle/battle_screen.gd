@@ -57,6 +57,11 @@ const PORTRAIT_FROM_HEAD := Vector2(26, 22)
 const LANCET_POS := Vector2(118, 380)
 const LANCET_STEP: float = 68.0
 const LANCET_TEXT := Rect2(7, 56, 51, 84)
+## The lancet shows only its mosaic; the cost is a row of marks on the iron
+## at its foot and the name and description go to a note in the corner of
+## the field when it is touched (D-440).
+const LANCET_PIPS_Y: float = 143.0
+const NOTE_RECT := Rect2(50, 62, 300, 66)
 const ROSE_POS := Vector2(400, 372)
 ## The miracle's name and cost, to the right of the rose (D-436).
 const MIRACLE_LABEL := Rect2(481, 384, 58, 90)
@@ -198,6 +203,9 @@ var _stats: Label
 var _sheet_title: Label
 var _sheet_icons: HBoxContainer
 var _boss_bar: Control
+var _note: Control
+var _note_title: Label
+var _note_text: Label
 var _pack_capacity: int = 0
 var _sheet_picture: TextureRect
 ## combatant id -> CombatantBadge (bars, mark, intent, conditions).
@@ -930,6 +938,8 @@ func _refresh_controls() -> void:
 		var id: StringName = actor.equipped[i]
 		var chosen: bool = selection.mode == BattleSelection.Mode.ABILITY and selection.ability_id == id
 		_dress_lancet(button as PieceButton, AbilityIcon.of(ctrl.state.catalog.ability(id)))
+		(button as PieceButton).pips = ctrl.effective_cost(actor, ctrl.state.catalog.ability(id))
+		(button as PieceButton).pips_y = LANCET_PIPS_Y
 		_set_button(button, _ability_label(actor, id), selection.ability_reason(id, false), false, chosen)
 	_dress_rose(actor)
 	if open:
@@ -990,10 +1000,11 @@ func _ability_label(actor: Combatant, id: StringName, is_miracle: bool = false) 
 ## for an empty slot.
 func _dress_lancet(button: PieceButton, kind: StringName) -> void:
 	if kind == &"":
-		button.setup(PixelStyle.piece("ui_lancet_on"), PixelStyle.piece("ui_lancet_chosen"), PixelStyle.piece("ui_lancet_off"), LANCET_TEXT)
+		button.setup(PixelStyle.piece("ui_lancet_on"), PixelStyle.piece("ui_lancet_chosen"), PixelStyle.piece("ui_lancet_off"), Rect2())
+		button.pips = 0
 		button.set_meta(&"kind", &"")
 		return
-	button.setup(AbilityIcon.lancet(kind, "on"), AbilityIcon.lancet(kind, "chosen"), AbilityIcon.lancet(kind, "off"), LANCET_TEXT)
+	button.setup(AbilityIcon.lancet(kind, "on"), AbilityIcon.lancet(kind, "chosen"), AbilityIcon.lancet(kind, "off"), Rect2())
 	button.set_meta(&"kind", kind)
 
 
@@ -1130,10 +1141,7 @@ func _refresh_hint() -> void:
 		else:
 			key = &"hint_choose_target"
 	_hint.text = texts.t(key, args)
-	if selection.mode == BattleSelection.Mode.ABILITY and not ctrl.is_over():
-		var def: AbilityDef = ctrl.state.catalog.ability(selection.ability_id)
-		if def != null and not def.desc_pt.is_empty():
-			_hint.text = def.desc_pt + "\n" + _hint.text
+	_refresh_note()
 	if selection.mode == BattleSelection.Mode.PROVISION and not ctrl.is_over():
 		_hint.text = texts.provision_name(selection.provision_id) + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.INTERCEDE and not ctrl.is_over():
@@ -1142,6 +1150,31 @@ func _refresh_hint() -> void:
 		_hint.text = texts.t(&"give_consolation_desc") + "\n" + _hint.text
 	if selection.mode == BattleSelection.Mode.STAND_FIRM and not ctrl.is_over():
 		_hint.text = texts.t(&"stand_firm_desc", {"fervor": ctrl.state.constants.get_int(&"firmness_fervor")}) + "\n" + _hint.text
+
+
+## The note in the corner (D-440): the touched ability's or miracle's name,
+## cost and description, so the lancet keeps its glass clear.
+func _refresh_note() -> void:
+	var def: AbilityDef = null
+	if not ctrl.is_over() and selection.actor() != null:
+		if selection.mode == BattleSelection.Mode.ABILITY:
+			def = ctrl.state.catalog.ability(selection.ability_id)
+		elif selection.mode == BattleSelection.Mode.MIRACLE:
+			def = ctrl.state.catalog.ability(selection.actor().miracle)
+	_note.visible = def != null
+	if def == null:
+		return
+	var title: String = def.name_pt
+	var cost: int = ctrl.effective_cost(selection.actor(), def)
+	if cost > 0:
+		title += " · " + texts.t(&"cost_badge", {"cost": cost})
+	_note_title.text = title
+	_note_text.text = def.desc_pt
+
+
+## The note's words (tests): name and cost, then the description.
+func note_text() -> String:
+	return "%s\n%s" % [_note_title.text, _note_text.text] if _note.visible else ""
 
 
 ## What the pending Interceder takes, or what the action does.
@@ -1651,6 +1684,19 @@ func _build_top_bar() -> void:
 	PixelStyle.title(_round_label)
 	_hint = _label(Vector2(230, 20), Vector2(500, 36))
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note = PixelStyle.plate(NOTE_RECT, PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT)
+	_note.visible = false
+	_stage.add_child(_note)
+	_note_title = Label.new()
+	_note_title.position = Vector2(6, 2)
+	_note_title.size = Vector2(NOTE_RECT.size.x - 12.0, 14)
+	PixelStyle.title(_note_title)
+	_note.add_child(_note_title)
+	_note_text = Label.new()
+	_note_text.position = Vector2(6, 18)
+	_note_text.size = Vector2(NOTE_RECT.size.x - 12.0, NOTE_RECT.size.y - 20.0)
+	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note.add_child(_note_text)
 	_boss_bar = Control.new()
 	_boss_bar.position = BOSS_BAR.position
 	_boss_bar.size = BOSS_BAR.size
