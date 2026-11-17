@@ -8,24 +8,30 @@ extends Control
 ## the second sends ChooseOption; the result text and what changed follow.
 ## The screen only sends commands and reads the state (architecture §3.2).
 
-const STAGE_SIZE := Vector2(1920, 1080)
+## On the pixel grid (D-448): the fonts, the iron plate and the iron buttons
+## of every other screen.
+const STAGE_SIZE := Vector2(960, 540)
 const ART_PATH: String = "res://assets/events/circle_%02d/event_%s.png"
 ## Without its own illustration, the circle's scenery, darkened.
 const FALLBACK_PATH: String = "res://assets/environments/circles/circle_%02d/t1/env_circle_%02d_t1_back.png"
 const FALLBACK_TINT := Color(0.45, 0.42, 0.45)
-const BOX_RECT := Rect2(80, 712, 1760, 320)
-const TAB_SIZE := Vector2(460, 64)
-const OPTION_SIZE := Vector2(860, 150)
-const OPTION_POS := Vector2(980, 150)
-const BUTTON_SIZE := Vector2(300, 90)
-const COLOR_BACKGROUND := Color(0.06, 0.05, 0.06)
-const COLOR_BOX := Color(0.08, 0.06, 0.07, 0.9)
-const COLOR_TAB := Color(0.3, 0.22, 0.28, 0.95)
-const COLOR_OPTION := Color(0.16, 0.12, 0.15, 0.94)
+## The text plate in the lower third, over the darker band the story panels
+## keep for it; the options stand inside it, on the right, so they never
+## cover the illustration (D-448).
+const BOX_RECT := Rect2(16, 392, 928, 132)
+const TAB_SIZE := Vector2(170, 26)
+const TEXT_MARGIN := Vector2(18, 16)
+const OPTIONS_WIDTH: float = 330.0
+const OPTION_HEIGHT: float = 30.0
+const BUTTON_SIZE := Vector2(130, 30)
+## The story is read in Jersey 10 at twice its size (a whole multiple, so it
+## stays sharp); the options, the hint and the origin keep the size of every
+## other button and panel, so three options with their chances fit.
+const STORY_SIZE: int = PixelStyle.TEXT_SIZE * 2
+const COLOR_BACKGROUND := PixelStyle.COLOR_PITCH
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
-## Slant of the narrator's lines (no italic font in the project yet); the
-## FontVariation docs slant with the x axis (1, slant).
-const ITALIC_SKEW: float = 0.2
+## The narrator speaks in the grey of the lead; the souls and demons in bone.
+const COLOR_NARRATOR := PixelStyle.COLOR_GREY
 
 ## Emitted when the player leaves the result: the controller is already in
 ## its next phase (back to the walk, a battle, the camp).
@@ -46,14 +52,13 @@ var _stage: Control
 var _background: TextureRect
 var _title: Label
 var _origin: Label
-var _tab: Panel
+var _tab: Control
 var _speaker: Label
 var _text: Label
 var _hint: Label
 var _next_button: Button
 var _options_box: VBoxContainer
 var _option_buttons: Dictionary = {}
-var _italic: FontVariation
 var _result_shown: bool = false
 var _before: Dictionary = {}
 
@@ -247,18 +252,18 @@ func _refresh() -> void:
 	if _stage == null or event == null:
 		return
 	if _result_shown:
-		_show_line(EventTexts.NARRATOR, _result_text())
 		_options_box.visible = false
+		_show_line(EventTexts.NARRATOR, _result_text())
 		_next_button.visible = true
 		_next_button.text = texts.t(&"event_continue")
 		_hint.text = ""
 		return
 	var page: Dictionary = event.pages[page_index] if page_count() > 0 else {}
-	_show_line(StringName(str(page.get("speaker", EventTexts.NARRATOR))), str(page.get("text_pt", "")))
 	var at_options: bool = options_shown()
 	_next_button.visible = not at_options
 	_next_button.text = texts.t(&"event_next")
 	_options_box.visible = at_options
+	_show_line(StringName(str(page.get("speaker", EventTexts.NARRATOR))), str(page.get("text_pt", "")))
 	for id: StringName in _option_buttons:
 		(_option_buttons[id] as Button).modulate = COLOR_CHOSEN if id == selected_option else Color.WHITE
 	if at_options:
@@ -272,10 +277,12 @@ func _show_line(speaker_id: StringName, line: String) -> void:
 	_tab.visible = name_text != ""
 	_speaker.text = name_text
 	_text.text = line
-	if name_text == "":
-		_text.add_theme_font_override("font", _italic)
-	else:
-		_text.remove_theme_font_override("font")
+	_text.add_theme_color_override("font_color", COLOR_NARRATOR if name_text == "" else PixelStyle.COLOR_BONE)
+	# Beside the options the text keeps to the left part of the plate.
+	var width: float = BOX_RECT.size.x - TEXT_MARGIN.x * 2.0
+	if _options_box.visible:
+		width -= OPTIONS_WIDTH + TEXT_MARGIN.x
+	_text.size.x = width
 
 
 func _build_options() -> void:
@@ -286,14 +293,9 @@ func _build_options() -> void:
 		var detail: String = texts.option_detail(option, ctx)
 		if detail != "":
 			label += "\n" + detail
-		var button := _button(label, OPTION_SIZE)
+		var button := _button(label, Vector2(OPTIONS_WIDTH, OPTION_HEIGHT))
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.disabled = ctrl.option_problem(id) != &""
-		var style := StyleBoxFlat.new()
-		style.bg_color = COLOR_OPTION
-		style.set_corner_radius_all(12)
-		style.set_content_margin_all(16)
-		button.add_theme_stylebox_override("normal", style)
 		button.pressed.connect(tap_option.bind(id))
 		_options_box.add_child(button)
 		_option_buttons[id] = button
@@ -301,7 +303,7 @@ func _build_options() -> void:
 
 func _center_stage() -> void:
 	if _stage != null:
-		LegacyStage.place(_stage, STAGE_SIZE, _screen_size())
+		_stage.position = ((_screen_size() - STAGE_SIZE) * 0.5).floor()
 
 
 ## Never centre on a zero size (the T17 phone bug, lessons.md).
@@ -322,13 +324,8 @@ func _art() -> Texture2D:
 
 
 func _build() -> void:
-	var ui_theme := Theme.new()
-	ui_theme.default_font_size = 30
-	theme = ui_theme
+	theme = PixelStyle.theme()
 	clip_contents = true
-	_italic = FontVariation.new()
-	_italic.base_font = ThemeDB.fallback_font
-	_italic.variation_transform = Transform2D(Vector2(1, ITALIC_SKEW), Vector2(0, 1), Vector2.ZERO)
 	var background := ColorRect.new()
 	background.color = COLOR_BACKGROUND
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -342,65 +339,52 @@ func _build() -> void:
 	_background.texture = _art()
 	_background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_background.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_background.size = STAGE_SIZE
 	_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if not ResourceLoader.exists(ART_PATH % [event.circle, event.id]):
 		_background.modulate = FALLBACK_TINT
 	_stage.add_child(_background)
-	_title = _label(event.title_pt, 38)
+	_title = _label(event.title_pt, PixelStyle.BIG_TITLE_SIZE)
+	PixelStyle.title(_title, PixelStyle.COLOR_BONE, PixelStyle.BIG_TITLE_SIZE)
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_title.position = Vector2(80, 50)
-	_title.size = Vector2(880, 60)
-	_title.add_theme_color_override("font_shadow_color", Color.BLACK)
+	_title.position = Vector2(20, 12)
+	_title.size = Vector2(600, 30)
 	_stage.add_child(_title)
-	_origin = _label(texts.origin(event.origin), 22)
+	_origin = _label(texts.origin(event.origin), PixelStyle.TEXT_SIZE)
 	_origin.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_origin.position = Vector2(STAGE_SIZE.x - 680, 40)
-	_origin.size = Vector2(600, 40)
-	_origin.modulate = Color(1, 1, 1, 0.7)
-	_origin.add_theme_color_override("font_shadow_color", Color.BLACK)
+	_origin.position = Vector2(STAGE_SIZE.x - 320, 16)
+	_origin.size = Vector2(300, 14)
+	_origin.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
 	_stage.add_child(_origin)
-	_options_box = VBoxContainer.new()
-	_options_box.position = OPTION_POS
-	_options_box.add_theme_constant_override("separation", 18)
-	_stage.add_child(_options_box)
-	_build_options()
-	var box := Panel.new()
-	var box_style := StyleBoxFlat.new()
-	box_style.bg_color = COLOR_BOX
-	box_style.set_corner_radius_all(14)
-	box.add_theme_stylebox_override("panel", box_style)
-	box.position = BOX_RECT.position
-	box.size = BOX_RECT.size
-	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(box)
-	_tab = Panel.new()
-	var tab_style := StyleBoxFlat.new()
-	tab_style.bg_color = COLOR_TAB
-	tab_style.set_corner_radius_all(10)
-	_tab.add_theme_stylebox_override("panel", tab_style)
-	_tab.position = BOX_RECT.position + Vector2(30, -TAB_SIZE.y + 8)
-	_tab.size = TAB_SIZE
-	_tab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(PixelStyle.iron_plate(BOX_RECT))
+	_tab = PixelStyle.iron_plate(Rect2(BOX_RECT.position + Vector2(18, -TAB_SIZE.y + 6), TAB_SIZE))
 	_stage.add_child(_tab)
-	_speaker = _label("", 30)
+	_speaker = _label("", PixelStyle.TITLE_SIZE)
+	PixelStyle.title(_speaker, PixelStyle.COLOR_AMBER)
 	_speaker.size = TAB_SIZE
 	_speaker.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_tab.add_child(_speaker)
-	_text = _label("", 32)
+	_text = _label("", STORY_SIZE)
 	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text.position = BOX_RECT.position + Vector2(40, 36)
-	_text.size = Vector2(BOX_RECT.size.x - 80, BOX_RECT.size.y - 130)
+	_text.position = BOX_RECT.position + TEXT_MARGIN
+	_text.size = Vector2(BOX_RECT.size.x - TEXT_MARGIN.x * 2.0, BOX_RECT.size.y - 50)
 	_stage.add_child(_text)
-	_hint = _label("", 26)
+	_options_box = VBoxContainer.new()
+	_options_box.position = Vector2(BOX_RECT.end.x - OPTIONS_WIDTH - TEXT_MARGIN.x, BOX_RECT.position.y + 12)
+	_options_box.add_theme_constant_override("separation", 4)
+	_stage.add_child(_options_box)
+	_build_options()
+	_hint = _label("", PixelStyle.TEXT_SIZE)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_hint.position = BOX_RECT.position + Vector2(40, BOX_RECT.size.y - 80)
-	_hint.size = Vector2(1100, 60)
-	_hint.modulate = Color(1, 1, 1, 0.75)
+	_hint.position = Vector2(BOX_RECT.position.x + TEXT_MARGIN.x, BOX_RECT.end.y - 26)
+	_hint.size = Vector2(500, 14)
+	_hint.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
 	_stage.add_child(_hint)
 	_next_button = _button("", BUTTON_SIZE)
-	_next_button.position = BOX_RECT.end - BUTTON_SIZE - Vector2(30, 24)
+	_next_button.add_theme_font_size_override("font_size", STORY_SIZE)
+	_next_button.position = BOX_RECT.end - BUTTON_SIZE - Vector2(14, 12)
 	_next_button.pressed.connect(press_next)
 	_stage.add_child(_next_button)
 

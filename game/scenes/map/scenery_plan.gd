@@ -33,6 +33,17 @@ const SOULS_CROWD: String = "env_circle_02_souls_crowd"
 const THRONE: String = "env_circle_02_t1_mid"
 const FRONTS: Array[String] = ["env_circle_02_t1_front", "env_circle_02_t2_front", "env_circle_02_t3_front"]
 const WALK_FRONT: String = "env_circle_02_t1_front"
+## How far each middle sits below the bottom of the field so that its
+## walkable ground lies under the feet (D-448, measured on the layers: the
+## plain and the broken towers end in a dark cliff, the cloister and the
+## rock wall end above the ground line).
+const SINK: Dictionary = {
+	PLAIN: 40.0,
+	T2_MID: 36.0,
+	T3_MID: 24.0,
+	ROCK_WALL: 26.0,
+	THRONE: 14.0,
+}
 ## The generic places of each leg (proposal v2): {back, mid}.
 const GENERIC: Array = [
 	[[T1_BACK, PLAIN], [STORM, ROCK_WALL]],
@@ -175,4 +186,4 @@ static func path(file_name: String) -> String:
 static func _add(layers: Array[Dictionary], file_name: String, parallax: float, once: bool = false) -> void:
 	if file_name.is_empty():
 		return
-	layers.append({"path": path(file_name), "parallax": parallax, "once": once})
+	layers.append({"path": path(file_name), "parallax": parallax, "once": once, "sink": float(SINK.get(file_name, 0.0))})

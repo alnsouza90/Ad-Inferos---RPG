@@ -862,9 +862,10 @@ func _strip_view(tex: Texture2D, text: String) -> Control:
 		return _block(text, COLOR_OBJECT, OBJECT_SIZE)
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Without the circle's filter (D-448): the souls and the fish keep the
+	# colours Alan approved.
 	var picture := AnimatedStrip.new()
 	picture.setup(tex, STRIP_FRAMES)
-	picture.material = CircleLook.filter_material()
 	holder.size = picture.size
 	holder.add_child(picture)
 	var label := _label(text)

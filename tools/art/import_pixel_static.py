@@ -128,6 +128,9 @@ PROPS = {
     "prop_reliquary_closed": ROOT / "art_source/environments/props/pixel/prop_reliquary_closed_px_v01.png",
     "prop_reliquary_open": ROOT / "art_source/environments/props/pixel/prop_reliquary_open_px_v01.png",
 }
+# Props shown 2x (D-448): the tent was smaller than a saint; a pavilion
+# someone walks into stands taller than them.
+DOUBLED_PROPS = {"env_circle_02_tent"}
 SOULS = (C02 / "env_circle_02_souls_px_v01.png", [(0, 0, 79, 91), (86, 23, 88, 89), (171, 18, 71, 93)])
 ICONS_SRC = ROOT / "art_source/ui/pixel/icons"
 ICONS_OUT = ROOT / "game/assets/pixel/icons"
@@ -157,7 +160,10 @@ def main() -> None:
         piece = Image.open(PIXEL_UI / sheet).crop((x, y, x + w, y + h))
         save(tidy(piece, scale), UI_OUT / f"{name}.png")
     for name, source in PROPS.items():
-        save(tidy(Image.open(source)), SCENERY_OUT / f"{name}.png")
+        piece = tidy(Image.open(source))
+        if name in DOUBLED_PROPS:
+            piece = piece.resize((piece.width * 2, piece.height * 2), Image.NEAREST)
+        save(piece, SCENERY_OUT / f"{name}.png")
     for i, (x, y, w, h) in enumerate(SOULS[1]):
         save(tidy(Image.open(SOULS[0]).crop((x, y, x + w, y + h))), SCENERY_OUT / f"env_circle_02_soul_{i + 1}.png")
     for source in sorted(ICONS_SRC.glob("*.png")):

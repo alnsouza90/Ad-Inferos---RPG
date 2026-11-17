@@ -137,3 +137,11 @@ func test_without_an_open_way_the_corridor_ends_in_its_passage() -> void:
 	assert_eq(float(two.entrance_at[two.entrance_order().back()]), CorridorWalk.STRAIGHT_AT)
 	var open := CorridorWalk.make(false, false, [&"l2_n0", &"l2_n1"] as Array[StringName], &"l2_n1")
 	assert_eq(float(open.entrance_at[&"l2_n0"]), lerpf(CorridorWalk.DETOURS_FROM, CorridorWalk.DETOURS_TO, 0.5))
+
+
+func test_every_middle_sinks_until_its_ground_is_under_the_feet() -> void:
+	var the_look: Dictionary = SceneryPlan.look(_legs(1)[0], null)
+	for layer: Dictionary in SceneryPlan.back_layers(the_look):
+		var file: String = str(layer["path"]).get_file().get_basename()
+		assert_eq(float(layer["sink"]), float(SceneryPlan.SINK.get(file, 0.0)), file)
+	assert_gt(float(SceneryPlan.SINK[SceneryPlan.PLAIN]), 0.0, "a planície acaba num barranco escuro: desce")

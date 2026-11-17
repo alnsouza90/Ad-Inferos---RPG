@@ -11,6 +11,9 @@ var _textures: Array[Texture2D] = []
 var _parallax: Array[float] = []
 ## Unique pieces (D-445 rule 1) are drawn once, never repeated sideways.
 var _once: Array[bool] = []
+## Pixels each layer sits lower than the bottom, so that its walkable ground
+## meets the feet (D-448).
+var _sink: Array[float] = []
 ## Pixels the layers are pushed down: the battle shows only the top of the
 ## front layer, in the corners (D-258).
 var drop: float = 0.0:
@@ -21,14 +24,15 @@ var _camera_x: float = 0.0
 var _shift: float = 0.0
 
 
-## `layers`: [{"path": String, "parallax": float, "once": bool}]; a missing
-## file is skipped.
+## `layers`: [{"path": String, "parallax": float, "once": bool, "sink":
+## float}]; a missing file is skipped.
 func setup(layers: Array[Dictionary], filter: Material = null) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	material = filter
 	_textures.clear()
 	_parallax.clear()
 	_once.clear()
+	_sink.clear()
 	for layer: Dictionary in layers:
 		var path: String = str(layer.get("path", ""))
 		if not ResourceLoader.exists(path):
@@ -36,6 +40,7 @@ func setup(layers: Array[Dictionary], filter: Material = null) -> void:
 		_textures.append(load(path) as Texture2D)
 		_parallax.append(float(layer.get("parallax", 1.0)))
 		_once.append(bool(layer.get("once", false)))
+		_sink.append(float(layer.get("sink", 0.0)))
 	queue_redraw()
 
 
@@ -70,7 +75,7 @@ func _draw() -> void:
 	for i: int in _textures.size():
 		var tex: Texture2D = _textures[i]
 		var w: float = tex.get_width()
-		var y: float = size.y - tex.get_height() + drop
+		var y: float = size.y - tex.get_height() + drop + _sink[i]
 		var offset: float = layer_offset(i)
 		# The layer is centred on the control when the camera is at 0.
 		var origin: float = floorf((size.x - w) * 0.5) + offset
