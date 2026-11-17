@@ -321,8 +321,10 @@ func test_entrances_stand_in_the_final_stretch_and_the_straight_one_last() -> vo
 		var w := _new_walk(c)
 		var ids: Array[StringName] = w.entrance_ids()
 		assert_eq(ids.size(), c.map.layer_nodes(1).size(), "do Portão, todos os nós da camada 1")
-		assert_eq(ids.back(), w.straight_entrance(), "semente %d: o reto fica no fim" % seed)
-		assert_eq(float(w.corridor.entrance_at[ids.back()]), CorridorWalk.STRAIGHT_AT)
+		# D-446: the open way (when the place goes on) stands at the very end.
+		if w.straight_entrance() != &"":
+			assert_eq(ids.back(), w.straight_entrance(), "semente %d: o reto fica no fim" % seed)
+			assert_eq(float(w.corridor.entrance_at[ids.back()]), CorridorWalk.STRAIGHT_AT)
 		var straight: int = 0
 		for id: StringName in ids:
 			assert_gt(float(w.corridor.entrance_at[id]), CorridorWalk.CONTENT_AT, "depois do conteúdo")
@@ -331,7 +333,9 @@ func test_entrances_stand_in_the_final_stretch_and_the_straight_one_last() -> vo
 			assert_false(text.contains("["), "sem texto faltando: %s" % text)
 			if text.contains(data.ui.text(&"walk_path_straight")):
 				straight += 1
-		assert_eq(straight, 1, "semente %d: exatamente um caminho reto" % seed)
+		assert_eq(straight, 1 if w.straight_entrance() != &"" else 0, "semente %d: no máximo um caminho reto" % seed)
+		for id: StringName in ids:
+			assert_eq(w.passage_of(id), SceneryPlan.passage(c.map, null, c.map.find(id)))
 
 
 func test_a_refused_command_shows_the_reason_and_nothing_changes() -> void:
@@ -349,6 +353,9 @@ func test_the_straight_entrance_is_the_generator_straight_link() -> void:
 	_finish_node(ctrl, walk)
 	if ctrl.phase != ExpeditionController.Phase.AT_FORK:
 		pass_test("expedição terminou no primeiro nó")
+		return
+	if walk.straight_entrance() == &"":
+		pass_test("o lugar muda aqui: só passagens fechadas (D-446)")
 		return
 	var origin: MapNode = ctrl.current_node()
 	var expected: int = MapGenerator.nearest_index(origin.index, ctrl.map.layer_nodes(origin.layer).size(), ctrl.map.layer_nodes(origin.layer + 1).size())
@@ -567,3 +574,80 @@ func test_arrows_blink_where_the_company_can_go_then_fade() -> void:
 	assert_false(w.arrow_hints().has(&"back"), "no começo do corredor não se volta")
 	w._process(BattleScreen.STAGE_SIZE.x)
 	assert_eq(w.arrow_hints().size(), 0, "depois de um tempo, as setas somem")
+
+
+# --- scenery of each place (D-445, D-446) ----------------------------------------
+
+func test_each_corridor_shows_the_scenery_of_its_place() -> void:
+	assert_eq(walk.scenery_look(), SceneryPlan.look(ctrl.map, null))
+	assert_eq(walk.scenery_look()["piece"], SceneryPlan.THRONE, "o trono ao longe só na chegada ao círculo")
+	var id: StringName = walk.entrance_ids()[0]
+	_enter(walk, id)
+	var w := _new_walk(ctrl)
+	assert_eq(w.scenery_look(), SceneryPlan.look(ctrl.map, ctrl.map.find(id)))
+
+
+func test_the_souls_in_the_wind_wait_and_a_touch_talks_to_them() -> void:
+	var w := _corridor_with(MapNode.TYPE_SOUL)
+	assert_true(w.content_shown())
+	assert_eq(w.scenery_look()["crowd"], SceneryPlan.SOULS_CROWD)
+	w.walk_by(1.0)
+	var couple: Control = w._content_view
+	assert_true(couple.get_child(0) is AnimatedStrip, "o casal se mexe no vento")
+	var tap := InputEventMouseButton.new()
+	tap.button_index = MOUSE_BUTTON_LEFT
+	tap.pressed = false
+	couple.gui_input.emit(tap)
+	assert_eq(sent.size(), 1)
+	assert_eq(sent[0].type, ExpeditionCommand.ENGAGE_NODE)
+
+
+func test_the_fish_leaps_from_the_river_and_is_gone_once_taken() -> void:
+	var n: MapNode = ctrl.map.find(walk.entrance_ids()[0])
+	n.type = MapNode.TYPE_RELIC
+	n.content = MapGenerator.CONTENT_FISH
+	_enter(walk, n.id)
+	var w := _new_walk(ctrl)
+	assert_eq(w.scenery_look()["mid"], SceneryPlan.TIGRIS)
+	assert_true(w.content_shown())
+	assert_lt(w._content_view.position.y + w._content_view.size.y, WalkScreen.FEET_Y, "salta acima do chão, da água")
+	w.walk_by(1.0)
+	w.press_engage()
+	if ctrl.phase == ExpeditionController.Phase.IN_RELIC:
+		ctrl.execute(ExpeditionCommand.place_relic(&""))
+	if ctrl.phase != ExpeditionController.Phase.AT_FORK:
+		pass_test("o nó levou para outra tela")
+		return
+	var after := _new_walk(ctrl)
+	assert_false(after.content_shown(), "pego o item, o peixe some")
+
+
+func test_a_door_stands_in_a_built_wall_and_the_open_way_has_no_drawing() -> void:
+	for id: StringName in walk.entrance_ids():
+		var view: Control = walk._entrance_views[id]
+		match walk.passage_of(id):
+			SceneryPlan.OPEN:
+				assert_false(view.get_children().any(func(c: Node) -> bool: return c is TextureRect), "seguir em frente sem imagem")
+			SceneryPlan.DOOR:
+				var wall: TextureRect = view.get_child(0) as TextureRect
+				assert_not_null(wall)
+				assert_true(wall.texture.resource_path.ends_with(SceneryPlan.WALL + ".png"), "porta só em muro")
+
+
+func test_the_company_comes_in_by_the_passage_it_took() -> void:
+	var id: StringName = walk.entrance_ids()[0]
+	var kind: StringName = walk.passage_of(id)
+	_enter(walk, id)
+	assert_eq(walk.left_by, kind)
+	var w := WalkScreen.new()
+	w.speed_index = 0
+	w.entered_by = kind
+	w.setup(data, ctrl)
+	add_child_autofree(w)
+	if kind == SceneryPlan.OPEN:
+		assert_lt(w._party.position.x, 0.0, "entra pela esquerda")
+	else:
+		assert_almost_eq(w._dark.color.a, 1.0, 0.001, "abre do escuro, do outro lado")
+	await wait_seconds(WalkScreen.PASSAGE_TIME + 0.2)
+	assert_almost_eq(w._party.position.x, 0.0, 0.5)
+	assert_almost_eq(w._dark.color.a, 0.0, 0.01)

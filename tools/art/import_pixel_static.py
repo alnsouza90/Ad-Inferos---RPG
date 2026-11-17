@@ -38,12 +38,43 @@ UI_PIECES = {
     "ui_candle_rack": ("ui_b.png", 14, 189, 150, 53),
 }
 
-# Scenery layers the game shows now: leg 1 and the boss arena. The other
-# converted layers stay in art_source until their screens use them.
+# Scenery layers the game shows (D-445, D-446): the sets of the three legs,
+# the common skies and middles they mix, and the boss arena.
 SCENERY = [
     "t1_back", "t1_mid", "t1_front",
+    "t2_mid", "t2_front",
+    "t3_back", "t3_mid", "t3_front",
+    "common_back_storm", "common_back_storm_eye",
+    "common_mid_plain", "common_mid_rock_wall",
     "boss_back", "boss_mid", "boss_front",
 ]
+# Layers drawn at half size and shown 2x (D-446): name -> rows cut from the
+# bottom, so that each one meets the ground line as in the approved previews.
+DOUBLED_LAYERS = {
+    "jury_hall": 34,
+    "tigris": 62,
+    "souls_crowd": 0,
+    # The way to Minos (D-448): the paving of the wall under the feet; its
+    # door is cut 22 rows higher still, so that it stands on the feet line.
+    "jury_wall": 22,
+}
+# The door of the jury hall (D-448): only its arch and leaves, cut from the
+# generated piece (left, top, right, bottom on the source), its colours taken
+# to those of the wall, so it fits into one bay of the wall without a seam.
+JURY_DOOR_BOX = (52, 92, 140, 230)
+# Animated pieces (D-446): name -> (frames, frame side, height in the game).
+ANIMATED = {
+    "couple": (8, 256, 150),
+    "fish": (8, 192, 110),
+}
+# The purple slabs as the floor of the jury hall (D-446, option B): shown
+# 2x, only their top rows, laid under the feet.
+FLOOR_SLAB_ROWS = 44
+EVENT_ART = {
+    "event_c02_soul_lovers": ROOT / "art_source/events/circle_02/event_c02_soul_lovers_px_v01.png",
+}
+EVENTS_OUT = ROOT / "game/assets/events/circle_02"
+EVENT_SIZE = (1920, 1080)
 
 
 def save(image: Image.Image, path: Path) -> None:
@@ -97,9 +128,16 @@ PROPS = {
     "env_circle_02_entry_straight": C02 / "env_circle_02_entry_straight_px_v01.png",
     "env_circle_02_tent": C02 / "env_circle_02_tent_px_v01.png",
     "env_circle_02_camp": C02 / "env_circle_02_camp_px_v01.png",
+    "env_circle_02_wall": C02 / "env_circle_02_prop_wall_px_v01.png",
+    "env_circle_02_arcade": C02 / "env_circle_02_prop_arcade_px_v01.png",
+    "env_circle_02_pinnacle": C02 / "env_circle_02_prop_pinnacle_px_v01.png",
+    "env_circle_02_slabs": C02 / "env_circle_02_prop_floor_slabs_px_v01.png",
     "prop_reliquary_closed": ROOT / "art_source/environments/props/pixel/prop_reliquary_closed_px_v01.png",
     "prop_reliquary_open": ROOT / "art_source/environments/props/pixel/prop_reliquary_open_px_v01.png",
 }
+# Props shown 2x (D-448): the tent was smaller than a saint; a pavilion
+# someone walks into stands taller than them.
+DOUBLED_PROPS = {"env_circle_02_tent"}
 SOULS = (C02 / "env_circle_02_souls_px_v01.png", [(0, 0, 79, 91), (86, 23, 88, 89), (171, 18, 71, 93)])
 ICONS_SRC = ROOT / "art_source/ui/pixel/icons"
 ICONS_OUT = ROOT / "game/assets/pixel/icons"
@@ -129,7 +167,10 @@ def main() -> None:
         piece = Image.open(PIXEL_UI / sheet).crop((x, y, x + w, y + h))
         save(tidy(piece, scale), UI_OUT / f"{name}.png")
     for name, source in PROPS.items():
-        save(tidy(Image.open(source)), SCENERY_OUT / f"{name}.png")
+        piece = tidy(Image.open(source))
+        if name in DOUBLED_PROPS:
+            piece = piece.resize((piece.width * 2, piece.height * 2), Image.NEAREST)
+        save(piece, SCENERY_OUT / f"{name}.png")
     for i, (x, y, w, h) in enumerate(SOULS[1]):
         save(tidy(Image.open(SOULS[0]).crop((x, y, x + w, y + h))), SCENERY_OUT / f"env_circle_02_soul_{i + 1}.png")
     for source in sorted(ICONS_SRC.glob("*.png")):
@@ -142,6 +183,59 @@ def main() -> None:
     for layer in SCENERY:
         source = SCENERY_SOURCE / f"env_circle_02_{layer}_px_v01.png"
         save(Image.open(source).convert("RGBA"), SCENERY_OUT / f"env_circle_02_{layer}.png")
+    for layer, cut in DOUBLED_LAYERS.items():
+        image = tidy(Image.open(SCENERY_SOURCE / f"env_circle_02_{layer}_px_v01.png"))
+        image = image.resize((image.width * 2, image.height * 2), Image.NEAREST)
+        save(image.crop((0, 0, image.width, image.height - cut)), SCENERY_OUT / f"env_circle_02_{layer}.png")
+    save(jury_door(), SCENERY_OUT / "env_circle_02_jury_door.png")
+    slabs = tidy(Image.open(C02 / "env_circle_02_prop_floor_slabs_px_v01.png"))
+    slabs = slabs.crop(slabs.getbbox())
+    slabs = slabs.resize((slabs.width * 2, slabs.height * 2), Image.NEAREST)
+    save(slabs.crop((0, 0, slabs.width, FLOOR_SLAB_ROWS)), SCENERY_OUT / "env_circle_02_jury_floor.png")
+    for name, (count, side, height) in ANIMATED.items():
+        save(animated_strip(C02 / f"env_circle_02_{name}_px_v01.png", count, side, height), SCENERY_OUT / f"env_circle_02_{name}.png")
+    for name, source in EVENT_ART.items():
+        save(event_art(source), EVENTS_OUT / f"{name}.png")
+
+
+def jury_door() -> Image.Image:
+    """The arch and leaves of the door, each colour channel scaled so the
+    stone matches the mean of the wall, back in the palette, shown 2x."""
+    wall = np.array(Image.open(C02 / "env_circle_02_jury_wall_px_v01.png").convert("RGBA")).astype(float)
+    door = Image.open(C02 / "env_circle_02_jury_door_px_v01.png").convert("RGBA").crop(JURY_DOOR_BOX)
+    cell = np.array(door).astype(float)
+    wall_mean = wall[wall[:, :, 3] > 0][:, :3].mean(0)
+    door_mean = cell[cell[:, :, 3] > 0][:, :3].mean(0)
+    cell[:, :, :3] = np.clip(cell[:, :, :3] * (wall_mean / door_mean), 0, 255)
+    image = tidy(Image.fromarray(cell.round().astype(np.uint8), "RGBA"))
+    return image.resize((image.width * 2, image.height * 2), Image.NEAREST)
+
+
+def animated_strip(source: Path, count: int, side: int, height: int) -> Image.Image:
+    """The frames cut to the box they share, shrunk to `height` by area and
+    tidied, in one row."""
+    sheet = Image.open(source).convert("RGBA")
+    frames = [sheet.crop((i * side, 0, (i + 1) * side, side)) for i in range(count)]
+    box = frames[0].getbbox()
+    for frame in frames[1:]:
+        b = frame.getbbox()
+        box = (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
+    scale = height / (box[3] - box[1])
+    cells = [tidy(frame.crop(box), scale) for frame in frames]
+    strip = Image.new("RGBA", (cells[0].width * count, cells[0].height), (0, 0, 0, 0))
+    for i, cell in enumerate(cells):
+        strip.paste(cell, (i * cell.width, 0))
+    return strip
+
+
+def event_art(source: Path) -> Image.Image:
+    """A story panel in pixel (D-446): 4x by nearest, cut to the event
+    screen from the middle."""
+    image = Image.open(source).convert("RGBA")
+    image = image.resize((image.width * 4, image.height * 4), Image.NEAREST)
+    left = (image.width - EVENT_SIZE[0]) // 2
+    top = (image.height - EVENT_SIZE[1]) // 2
+    return image.crop((left, top, left + EVENT_SIZE[0], top + EVENT_SIZE[1]))
 
 
 if __name__ == "__main__":

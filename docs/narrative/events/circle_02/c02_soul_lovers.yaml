@@ -1,0 +1,33 @@
+# RASCUNHO do agente, aprovado por Alan (17/11/2026, D-447): o Encontro com a
+# alma do Círculo 2 (substitui o provisório de D-414). Inspirado em Dante,
+# Inferno, Canto V (os dois amantes levados pela tempestade), sem os nomes do
+# poema (writing-guide §3 regra 10) e sem citação literal: as falas só ecoam o
+# poema (a prece pela paz, a leitura do livro, "não há dor maior"). A ligação
+# com o Peregrino ("outro vivo passou por aqui") é criação do jogo (D-362).
+# Prancha: o modelo de Alan em pixel com o filtro violeta (D-447).
+id: c02_soul_lovers
+type: soul_meeting
+circle: 2
+title_pt: "Os que o vento não separa"
+origin: game_fiction
+pages:
+  - speaker: narrator
+    text_pt: "No meio do vento, duas almas não se soltam. O furacão as arrasta juntas, e juntas elas voltam, sempre, ao mesmo lugar."
+  - speaker: soul_lover
+    text_pt: "Vós andais pelo ar escuro e não sois daqui. Se ainda pudéssemos pedir alguma coisa, pediríamos paz para vós, porque tivestes pena de nós."
+  - speaker: soul_lover
+    text_pt: "Líamos juntos um livro, num dia sem cuidado, sobre um amor que não era nosso. Uma página nos venceu. Naquele dia não lemos mais adiante."
+  - speaker: narrator
+    text_pt: "Ele não diz nada. Chora, com o rosto escondido no ombro dela."
+  - speaker: soul_lover
+    text_pt: "Não há dor maior do que lembrar o tempo feliz dentro da miséria. Outro vivo passou por aqui antes de vós. Ouviu nossa história e achou-a bela. Dizei a ele que não é."
+options:
+  - id: listen
+    text_pt: "Ouvir até o fim"
+    result_pt: "A alma se cala. O vento as leva de novo, abraçadas. Mais adiante, os rastros do Peregrino se afastam do furacão, como se ele também tivesse ouvido o fim."
+    outcomes:
+      - { type: virtue, id: virtue_charity, amount: 1 }
+      - { type: dominion }
+  - id: follow_tracks
+    text_pt: "Seguir os rastros sem parar"
+    result_pt: "Os santos baixam a cabeça e seguem. Atrás deles, o vento retoma as duas almas."

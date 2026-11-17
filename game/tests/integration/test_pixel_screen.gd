@@ -242,3 +242,12 @@ func test_george_strikes_with_a_red_shield() -> void:
 	var data_def: AbilityDef = data.catalog.ability(&"george_shield_bash")
 	assert_eq(AbilityIcon.of(data_def), AbilityIcon.SHIELD_STRIKE)
 	assert_not_null(AbilityIcon.lancet(AbilityIcon.SHIELD_STRIKE, "on"))
+
+
+func test_the_battle_stays_in_the_place_of_the_corridor() -> void:
+	var screen := BattleScreen.new()
+	screen.speed_index = BattleScreen.SPEED_INSTANT
+	screen.scenery_look = {"back": "", "mid": SceneryPlan.JURY_HALL, "front": "", "crowd": "", "ground": SceneryPlan.JURY_FLOOR, "piece": ""}
+	screen.setup(data, BattleController.new(data.battle(&"m0_easy_01", SEED)))
+	add_child_autofree(screen)
+	assert_eq(screen.scenery_layer_count(), 2, "salão do júri e o piso de lajes, sem céu nem frente")

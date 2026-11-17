@@ -130,7 +130,7 @@ func test_origin_label_and_illustration() -> void:
 	assert_eq(s.origin_shown(), data.ui.text(&"origin_game_fiction"))
 	assert_not_null(s.background_texture(), "ilustração do evento ao fundo")
 	assert_gt(s.size.x, 0.0)
-	assert_eq(s.stage_position(), LegacyStage.position_for(EventScreen.STAGE_SIZE, s.size), "palco antigo pela metade, centralizado (T65)")
+	assert_eq(s.stage_position(), ((s.size - EventScreen.STAGE_SIZE) * 0.5).floor(), "na grade de 960 × 540, centralizado (D-448)")
 
 
 # --- options: requirement and chance written on the button ---------------------------
@@ -205,3 +205,15 @@ func test_every_event_text_exists_in_the_data() -> void:
 				keys.append("speaker_%s" % speaker)
 	for key: String in keys:
 		assert_true(data.ui.has_text(StringName(key)), "ui_text.csv tem '%s'" % key)
+
+
+func test_the_event_is_drawn_like_the_other_pixel_screens() -> void:
+	var s := _screen(_first_event())
+	assert_eq(s.theme.default_font, PixelStyle.text_font(), "a mesma fonte do jogo (D-448)")
+	_to_options(s)
+	await wait_frames(3)
+	var plate := Rect2(s._stage.global_position + EventScreen.BOX_RECT.position, EventScreen.BOX_RECT.size)
+	for id: StringName in s.option_ids():
+		var button: Button = s._option_buttons[id]
+		assert_eq(button.get_theme_stylebox(&"normal"), s.theme.get_stylebox(&"normal", &"Button"), "botão de ferro")
+		assert_true(plate.encloses(button.get_global_rect()), "a opção fica dentro da placa, sem cobrir a ilustração: %s em %s" % [button.get_global_rect(), plate])
