@@ -378,3 +378,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Instante de ícone:** na Consolação, o campo vira ouro liso, o santo fica em tinta preta e o nome do estado aparece no alto; na Noite Escura, o mesmo em preto, com o santo contornado em osso (0,12 s, 0,7 s e 0,3 s).
   - **Auréola na luta igual à do Pouso:** coberta a partir de 75, eclipse na Noite Escura, raios e clareira no chão na Consolação (`HaloLook.kind` e `HaloLook.clearing`).
   - Os tempos são de apresentação e ficam no código da tela, como os outros.
+- **D-451 · 17/11/2026 · Alan** — T44 parte 2 aprovada: as estampas, os instantes de ícone e as auréolas na luta. A estampa fica **no centro** do campo. No instante da Consolação, a auréola **some no ouro** (é só um instante). Duração em 1×: cerca de 1,1 s para o instante e 1 s para a estampa; metade disso em 2×; no instantâneo não aparecem.
