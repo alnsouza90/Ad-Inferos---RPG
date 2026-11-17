@@ -746,6 +746,16 @@ func _animate(ev: BattleEvent) -> float:
 		&"fell", &"enemy_died":
 			var view: CombatantView = view_of(d["target"])
 			return view.play_fall() if view != null else 0.0
+		&"interceded":
+			# D-268: a thread of gold from the one who intercedes to the one he helps.
+			var giver: CombatantView = view_of(StringName(str(d["actor"])))
+			var helped: CombatantView = view_of(StringName(str(d["target"])))
+			if giver != null and helped != null and factor > 0.0:
+				var thread := GoldenThread.new()
+				thread.z_index = OVERLAY_Z
+				_field.add_child(thread)
+				var to_field: Transform2D = _field.get_global_transform().affine_inverse()
+				return thread.play(to_field * giver.halo_global(), to_field * helped.halo_global(), factor)
 		&"gale_swapped":
 			# D-402, D-455: the wind sweeps over the two saints it swaps.
 			var slots: Array = d.get("slots", [])
@@ -1005,6 +1015,15 @@ func _play_ink_at(ink: StringName, at: Vector2) -> void:
 	_field.add_child(splash)
 	_field.move_child(splash, _badges_layer.get_index())
 	splash.play(ink, at, factor)
+
+
+## The golden threads playing now (tests).
+func threads_shown() -> int:
+	var count: int = 0
+	for child: Node in _field.get_children():
+		if child is GoldenThread:
+			count += 1
+	return count
 
 
 ## The ink splashes playing now (tests).
