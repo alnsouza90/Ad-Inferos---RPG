@@ -100,7 +100,14 @@ ABILITY_STAMP_VERSIONS = {"shield": 2}
 # and two rows on a flat light grey; each cell is cleaned and laid in a row.
 # name -> (source, anchor): "centre" keeps each cell as drawn; "bottom" sets
 # every cell's drawing on the same ground line (the stain rises from it).
-INK_SHEETS = {"slash": ("ink_slash_px_v01.png", "centre"), "stain": ("ink_stain_px_v01.png", "bottom"), "pool": ("ink_pool_px_v01.png", "bottom")}
+INK_SHEETS = {"slash": ("ink_slash_px_v01.png", "centre"), "stain": ("ink_stain_px_v01.png", "bottom"), "pool": ("ink_pool_px_v01.png", "bottom"), "wind": ("ink_wind_px_v01.png", "centre")}
+# Sheets that came in another grid (columns, rows).
+INK_GRIDS = {"wind": (2, 3)}
+# Sheets shown larger (the wind sweeps over two saints).
+INK_TIMES = {"wind": 2}
+# Two-colour sheets: light pixels to bone, the rest to the circle's violet
+# (the nearest palette colour would grey the violet out).
+INK_TWO_TONES = {"wind": ((0xE4, 0xDD, 0xCF), (0x8A, 0x6B, 0xB0), 190)}
 INK_GRID = (3, 2)
 INK_BACKGROUND_TOLERANCE = 40
 # Row of a grounded cell that stands on the feet (the rest hangs below).
@@ -235,7 +242,11 @@ def main() -> None:
         piece = piece.crop(piece.getbbox())
         save(piece, ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     for name, (file_name, anchor) in INK_SHEETS.items():
-        save(ink_strip(ROOT / "art_source/vfx/stamps" / file_name, anchor), ROOT / f"game/assets/pixel/vfx/ink_{name}.png")
+        strip = ink_strip(ROOT / "art_source/vfx/stamps" / file_name, anchor, INK_GRIDS.get(name, INK_GRID))
+        if name in INK_TWO_TONES:
+            strip = two_tones(strip, ROOT / "art_source/vfx/stamps" / file_name, INK_GRIDS.get(name, INK_GRID), *INK_TWO_TONES[name])
+        times = INK_TIMES.get(name, 1)
+        save(strip.resize((strip.width * times, strip.height * times), Image.NEAREST), ROOT / f"game/assets/pixel/vfx/ink_{name}.png")
     for name, source in STAMPS.items():
         save(stamp(source), ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     figure, gold = raphael()
@@ -296,7 +307,7 @@ def raphael() -> tuple[Image.Image, Image.Image]:
     return figure, Image.fromarray(flat, "RGBA")
 
 
-def ink_strip(source: Path, anchor: str = "centre") -> Image.Image:
+def ink_strip(source: Path, anchor: str = "centre", grid: tuple[int, int] = INK_GRID) -> Image.Image:
     """The six cells of the grid, the flat grey around them made empty, all
     cells the same size, in one row (reading order)."""
     sheet = np.array(Image.open(source).convert("RGBA"))
@@ -304,7 +315,7 @@ def ink_strip(source: Path, anchor: str = "centre") -> Image.Image:
     empty = np.abs(sheet[:, :, :3].astype(int) - background).sum(2) <= INK_BACKGROUND_TOLERANCE
     sheet[empty] = 0
     image = Image.fromarray(sheet, "RGBA")
-    columns, rows = INK_GRID
+    columns, rows = grid
     cell_w, cell_h = image.width // columns, image.height // rows
     cells = [tidy(image.crop((c * cell_w, r * cell_h, (c + 1) * cell_w, (r + 1) * cell_h))) for r in range(rows) for c in range(columns)]
     if anchor == "bottom":
@@ -323,6 +334,24 @@ def ink_strip(source: Path, anchor: str = "centre") -> Image.Image:
     for i, cell in enumerate(cells):
         strip.paste(cell, (i * cell_w, 0))
     return strip
+
+
+def two_tones(strip: Image.Image, source: Path, grid: tuple[int, int], light: tuple, dark: tuple, threshold: int) -> Image.Image:
+    """Recolours the cleaned strip from the source's own brightness: its
+    light strokes bone, its darker strokes violet."""
+    sheet = Image.open(source).convert("L")
+    columns, rows = grid
+    cell_w, cell_h = sheet.width // columns, sheet.height // rows
+    grey = Image.new("L", (cell_w * columns * rows, cell_h))
+    for i in range(columns * rows):
+        r, c = divmod(i, columns)
+        grey.paste(sheet.crop((c * cell_w, r * cell_h, (c + 1) * cell_w, (r + 1) * cell_h)), (i * cell_w, 0))
+    cell = np.array(strip)
+    shade = np.array(grey)
+    opaque = cell[:, :, 3] > 0
+    cell[opaque & (shade >= threshold), :3] = light
+    cell[opaque & (shade < threshold), :3] = dark
+    return Image.fromarray(cell, "RGBA")
 
 
 def stamp(source: Path) -> Image.Image:

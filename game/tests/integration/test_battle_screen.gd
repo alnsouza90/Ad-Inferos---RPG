@@ -350,7 +350,7 @@ func test_an_enemy_blow_leaves_the_ink_slash_on_the_saint() -> void:
 	assert_eq(screen._ink_of(enemy, &"saint_george", &"strike"), InkSplash.SLASH)
 	assert_eq(screen._ink_of(&"saint_george", enemy, &"strike"), &"", "o santo não deixa tinta")
 	assert_eq(screen._ink_of(enemy, &"saint_george", &"spirit"), InkSplash.STAIN, "o dano espiritual sobe do chão")
-	for ink: StringName in [InkSplash.SLASH, InkSplash.STAIN, InkSplash.POOL]:
+	for ink: StringName in [InkSplash.SLASH, InkSplash.STAIN, InkSplash.POOL, InkSplash.WIND]:
 		assert_not_null(InkSplash.texture_of(ink), String(ink))
 	screen._play_ink(InkSplash.SLASH, screen.view_of(&"saint_george"))
 	assert_eq(screen.inks_shown(), [InkSplash.SLASH] as Array[StringName])

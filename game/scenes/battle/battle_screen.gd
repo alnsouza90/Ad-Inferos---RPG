@@ -162,6 +162,8 @@ const PANEL_FADE: float = 0.4
 const PANEL_HOLD: float = 3.5
 const PANEL_CAPTION := Rect2(40, 492, 880, 30)
 const RAPHAEL_FADE: float = 0.3
+## The Vendaval's wind sweeps at about chest height over the saints.
+const WIND_HEIGHT: float = 90.0
 const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
@@ -744,6 +746,12 @@ func _animate(ev: BattleEvent) -> float:
 		&"fell", &"enemy_died":
 			var view: CombatantView = view_of(d["target"])
 			return view.play_fall() if view != null else 0.0
+		&"gale_swapped":
+			# D-402, D-455: the wind sweeps over the two saints it swaps.
+			var slots: Array = d.get("slots", [])
+			if slots.size() == 2:
+				var mid: float = (_saint_x(int(slots[0])) + _saint_x(int(slots[1]))) * 0.5
+				_play_ink_at(InkSplash.WIND, Vector2(mid, GROUND_Y - WIND_HEIGHT))
 		&"moved", &"swapped", &"summoned":
 			_sync_views(factor > 0.0)
 			if ev.type == &"summoned":
@@ -981,15 +989,22 @@ func _ink_of(source: StringName, target_id: StringName, damage_type: StringName)
 
 
 func _play_ink(ink: StringName, view: CombatantView) -> void:
+	if view == null:
+		return
+	var spot: Vector2 = view.feet_global() if InkSplash.GROUNDED.has(ink) else view.chest_global()
+	_play_ink_at(ink, _field.get_global_transform().affine_inverse() * spot)
+
+
+## `ink` at `at` in the field's coordinates.
+func _play_ink_at(ink: StringName, at: Vector2) -> void:
 	var factor: float = SPEEDS[speed_index]
-	if ink == &"" or view == null or factor <= 0.0 or InkSplash.texture_of(ink) == null:
+	if ink == &"" or factor <= 0.0 or InkSplash.texture_of(ink) == null:
 		return
 	var splash := InkSplash.new()
 	# Over the fighters, under their bars and intents.
 	_field.add_child(splash)
 	_field.move_child(splash, _badges_layer.get_index())
-	var spot: Vector2 = view.feet_global() if InkSplash.GROUNDED.has(ink) else view.chest_global()
-	splash.play(ink, _field.get_global_transform().affine_inverse() * spot, factor)
+	splash.play(ink, at, factor)
 
 
 ## The ink splashes playing now (tests).

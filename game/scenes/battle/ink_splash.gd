@@ -9,6 +9,8 @@ const SLASH: StringName = &"slash"
 const STAIN: StringName = &"stain"
 ## A summoning: a pool of ink opens where the new enemy comes out.
 const POOL: StringName = &"pool"
+## The Vendaval: curved lines of wind sweep over the two saints it swaps.
+const WIND: StringName = &"wind"
 ## Inks drawn on the ground line (their cells sit on the bottom).
 const GROUNDED: Array[StringName] = [STAIN, POOL]
 ## Row of a grounded cell that stands on the feet (tools/art INK_GROUND_LINE).
