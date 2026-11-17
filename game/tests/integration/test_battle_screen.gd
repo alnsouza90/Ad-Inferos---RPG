@@ -340,3 +340,16 @@ func test_raphael_binds_asmodeus_before_the_result() -> void:
 	assert_true(screen.result_shown())
 	assert_false(screen.raphael_shown())
 	assert_false(screen.busy)
+
+
+## D-454: a corporeal enemy's blow leaves the ink slash on the saint.
+func test_an_enemy_blow_leaves_the_ink_slash_on_the_saint() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	var enemy: StringName = screen.ctrl.state.enemies[0].id
+	assert_eq(screen._ink_of(enemy, &"saint_george", &"strike"), InkSplash.SLASH)
+	assert_eq(screen._ink_of(&"saint_george", enemy, &"strike"), &"", "o santo não deixa tinta")
+	screen._play_ink(InkSplash.SLASH, screen.view_of(&"saint_george"))
+	assert_eq(screen.inks_shown(), [InkSplash.SLASH] as Array[StringName])
+	await wait_seconds(InkSplash.FRAMES / InkSplash.FPS + 0.2)
+	assert_eq(screen.inks_shown(), [] as Array[StringName], "a tinta some")

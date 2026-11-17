@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bijyfdbu1w4sh"
-path="res://.godot/imported/stamp_petals.png-72149bac8b8f0d68a47bcc6a5f38f432.ctex"
+uid="uid://b2ox13f4xemtp"
+path="res://.godot/imported/stamp_petal.png-ec62b7533e7066ba3f0effe5879e3d4d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/vfx/stamp_petals.png"
-dest_files=["res://.godot/imported/stamp_petals.png-72149bac8b8f0d68a47bcc6a5f38f432.ctex"]
+source_file="res://assets/pixel/vfx/stamp_petal.png"
+dest_files=["res://.godot/imported/stamp_petal.png-ec62b7533e7066ba3f0effe5879e3d4d.ctex"]
 
 [params]
 

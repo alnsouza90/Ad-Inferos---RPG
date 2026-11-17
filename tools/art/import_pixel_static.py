@@ -92,9 +92,15 @@ STAMPS = {
 # The stamps of the saints' abilities (D-452): one drawing each, moved by the
 # engine (SaintStamp), with the share each is shrunk to; the first shield was the whole frame of the first sheet, its
 # lower half mirrored from the upper (the sheet cut it).
-ABILITY_STAMPS = {"shield": 0.75, "cross": 1.0, "ring": 1.0, "petals": 0.5}
-# Sources in use (D-453): the shield drawn again on its own, the petals shrunk.
+ABILITY_STAMPS = {"shield": 0.75, "cross": 1.0, "ring": 1.0, "petal": 0.6}
+# Sources in use (D-453, D-454): the shield drawn again on its own; one
+# petal cut from the sheet of petals, scattered by the engine.
 ABILITY_STAMP_VERSIONS = {"shield": 2}
+# The enemies' ink (D-454): sheets of six frames in a grid of three columns
+# and two rows on a flat light grey; each cell is cleaned and laid in a row.
+INK_SHEETS = {"slash": "ink_slash_px_v01.png"}
+INK_GRID = (3, 2)
+INK_BACKGROUND_TOLERANCE = 40
 STAMP_HEIGHT = 220
 STAMP_WHITE = (0xF1, 0xEC, 0xE0, 255)
 STAMP_THRESHOLD = 150
@@ -224,6 +230,8 @@ def main() -> None:
         piece = tidy(source.crop(source.getbbox()), times) if times < 1.0 else tidy(source)
         piece = piece.crop(piece.getbbox())
         save(piece, ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
+    for name, file_name in INK_SHEETS.items():
+        save(ink_strip(ROOT / "art_source/vfx/stamps" / file_name), ROOT / f"game/assets/pixel/vfx/ink_{name}.png")
     for name, source in STAMPS.items():
         save(stamp(source), ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     figure, gold = raphael()
@@ -282,6 +290,23 @@ def raphael() -> tuple[Image.Image, Image.Image]:
     flat = np.zeros_like(cell)
     flat[edge | body] = GOLD
     return figure, Image.fromarray(flat, "RGBA")
+
+
+def ink_strip(source: Path) -> Image.Image:
+    """The six cells of the grid, the flat grey around them made empty, all
+    cells the same size, in one row (reading order)."""
+    sheet = np.array(Image.open(source).convert("RGBA"))
+    background = sheet[0, 0, :3].astype(int)
+    empty = np.abs(sheet[:, :, :3].astype(int) - background).sum(2) <= INK_BACKGROUND_TOLERANCE
+    sheet[empty] = 0
+    image = Image.fromarray(sheet, "RGBA")
+    columns, rows = INK_GRID
+    cell_w, cell_h = image.width // columns, image.height // rows
+    cells = [tidy(image.crop((c * cell_w, r * cell_h, (c + 1) * cell_w, (r + 1) * cell_h))) for r in range(rows) for c in range(columns)]
+    strip = Image.new("RGBA", (cell_w * len(cells), cell_h), (0, 0, 0, 0))
+    for i, cell in enumerate(cells):
+        strip.paste(cell, (i * cell_w, 0))
+    return strip
 
 
 def stamp(source: Path) -> Image.Image:

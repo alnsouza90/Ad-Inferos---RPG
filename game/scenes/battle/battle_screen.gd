@@ -705,11 +705,13 @@ func _animate(ev: BattleEvent) -> float:
 				return lunge
 			_set_hp(target_id, int(d["hp"]))
 			var number: String = texts.t(&"preview_damage", {"amount": d["amount"]})
+			var ink: StringName = _ink_of(source, target_id, StringName(str(d.get("type", ""))))
 			if lunge > 0.0:
 				# The target reacts when the blow lands, after the wait.
-				_pending_hit = {"target": target_id, "text": number}
+				_pending_hit = {"target": target_id, "text": number, "ink": ink}
 				return lunge
 			view.float_text(number, COLOR_DAMAGE)
+			_play_ink(ink, view)
 			return view.play_hit()
 		&"healed", &"revived":
 			var view: CombatantView = view_of(d["target"])
@@ -961,7 +963,37 @@ func _react(hit: Dictionary) -> float:
 	if view == null:
 		return 0.0
 	view.float_text(hit["text"], COLOR_DAMAGE)
+	_play_ink(StringName(str(hit.get("ink", ""))), view)
 	return view.play_hit()
+
+
+## The enemy's ink on a saint it hits (D-454): a corporeal enemy's blow
+## leaves the slash; other kinds wait for their sheets.
+func _ink_of(source: StringName, target_id: StringName, damage_type: StringName) -> StringName:
+	var attacker: Combatant = ctrl.state.find(source)
+	var target: Combatant = ctrl.state.find(target_id)
+	if attacker == null or target == null or attacker.is_saint() or not target.is_saint():
+		return &""
+	return InkSplash.SLASH if damage_type == &"strike" else &""
+
+
+func _play_ink(ink: StringName, view: CombatantView) -> void:
+	var factor: float = SPEEDS[speed_index]
+	if ink == &"" or view == null or factor <= 0.0 or InkSplash.texture_of(ink) == null:
+		return
+	var splash := InkSplash.new()
+	splash.z_index = OVERLAY_Z
+	_field.add_child(splash)
+	splash.play(ink, _field.get_global_transform().affine_inverse() * view.chest_global(), factor)
+
+
+## The ink splashes playing now (tests).
+func inks_shown() -> Array[StringName]:
+	var shown: Array[StringName] = []
+	for child: Node in _field.get_children():
+		if child is InkSplash:
+			shown.append((child as InkSplash).kind)
+	return shown
 
 
 ## Plays the action of `actor_id` on `target_id` in its style (D-233) and

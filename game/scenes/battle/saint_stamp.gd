@@ -5,7 +5,8 @@ extends Control
 ## George's shield drops onto the body of the one he protects and slams with
 ## dust; Benedict's cross flares on the one he exorcises and wears off; his
 ## ring wraps the legs (its back half behind the figure) and rises; Therese's
-## small red petals fall around the one she heals, with a glint of gold.
+## red petals fall scattered around the one she heals while a crown of short
+## gold rays shines around them for a moment (D-454).
 ## Presentation only.
 
 const PATH: String = "res://assets/pixel/vfx/stamp_%s.png"
@@ -13,6 +14,9 @@ const SHIELD: StringName = &"shield"
 const CROSS: StringName = &"cross"
 const RING: StringName = &"ring"
 const PETALS: StringName = &"petals"
+## The file of each drawing when it differs from the shape (one petal,
+## scattered by the engine).
+const FILES: Dictionary = {PETALS: &"petal"}
 ## Which drawing each saint shows for each kind of ability (AbilityIcon).
 const SHAPES: Dictionary = {
 	&"saint_george": {AbilityIcon.WARD: SHIELD},
@@ -31,12 +35,20 @@ const START_SCALE: float = 0.5
 ## The ring rises this far from the feet while it narrows.
 const RING_RISE: float = 60.0
 const RING_END_SCALE: float = 0.55
-## Clusters of petals around the target, their spread and fall, the red
-## they keep and the glint of gold halfway (D-453).
-const PETAL_CLUSTERS: Array[Vector2] = [Vector2(-34, -10), Vector2(0, -40), Vector2(30, 0), Vector2(-14, 26), Vector2(22, 44)]
-const PETAL_FALL: float = 50.0
+## Where each petal starts around the target's chest (scattered on
+## purpose, as in the consultant's preview E2), how far they fall, how much
+## they drift sideways, and their red (D-454).
+const PETAL_SPOTS: Array[Vector2] = [Vector2(-30, -20), Vector2(10, -36), Vector2(36, -14), Vector2(-8, -50), Vector2(22, -60), Vector2(-40, -42), Vector2(48, -48)]
+const PETAL_FALL: float = 90.0
+const PETAL_DRIFT: float = 10.0
 const PETAL_STAGGER: float = 0.06
-const PETAL_RED := Color("8B1E1E")
+const PETAL_RED := Color("8E1C1C")
+## The crown of gold rays around the healed one: how many, from and to
+## which distance of the chest, and their thickness.
+const RAY_COUNT: int = 10
+const RAY_FROM: float = 40.0
+const RAY_TO: float = 52.0
+const RAY_WIDTH: float = 2.0
 ## Dust and chips thrown where the shield slams.
 const DUST_COUNT: int = 6
 const DUST_SIZE := Vector2(3, 3)
@@ -52,7 +64,7 @@ static func shape_for(saint_def_id: StringName, kind: StringName) -> StringName:
 
 
 static func texture_of(stamp_shape: StringName) -> Texture2D:
-	var path: String = PATH % stamp_shape
+	var path: String = PATH % FILES.get(stamp_shape, stamp_shape)
 	return load(path) as Texture2D if stamp_shape != &"" and ResourceLoader.exists(path) else null
 
 
@@ -79,7 +91,8 @@ func play(stamp_shape: StringName, chest: Vector2, feet: Vector2, factor: float,
 		_:
 			_play_flare(tex, chest, arrive, hold, leave)
 	var total: float = arrive + hold + leave
-	create_tween().tween_callback(_finish).set_delay(total + (PETAL_STAGGER * PETAL_CLUSTERS.size()) / factor)
+	var stagger: float = PETAL_STAGGER * PETAL_SPOTS.size() / factor if stamp_shape == PETALS else 0.0
+	create_tween().tween_callback(_finish).set_delay(total + stagger)
 	return total
 
 
@@ -141,20 +154,35 @@ func _play_ring(tex: Texture2D, feet: Vector2, behind: Control, arrive: float, h
 
 
 func _play_petals(tex: Texture2D, chest: Vector2, arrive: float, hold: float, leave: float) -> void:
-	for i: int in PETAL_CLUSTERS.size():
+	for i: int in PETAL_SPOTS.size():
 		var picture: TextureRect = _piece(tex)
-		var start: Vector2 = (chest + PETAL_CLUSTERS[i] - picture.size * 0.5 - Vector2(0, PETAL_FALL)).round()
+		picture.flip_h = i % 2 == 1
+		var start: Vector2 = (chest + PETAL_SPOTS[i] - picture.size * 0.5).round()
 		picture.position = start
 		picture.modulate = Color(PETAL_RED, 0.0)
-		var delay: float = PETAL_STAGGER * i * (arrive / ARRIVE)
+		var drift: float = PETAL_DRIFT if i % 2 == 0 else -PETAL_DRIFT
 		var tween := create_tween()
-		tween.tween_interval(delay)
+		tween.tween_interval(PETAL_STAGGER * i * (arrive / ARRIVE))
 		tween.tween_property(picture, "modulate:a", 1.0, arrive * 0.5)
-		tween.parallel().tween_property(picture, "position:y", start.y + PETAL_FALL, arrive + hold + leave)
-		# A glint of gold as they fall, then the red again.
-		tween.parallel().tween_property(picture, "modulate", Color(PixelStyle.COLOR_GOLD, 1.0), hold * 0.3).set_delay(arrive)
-		tween.parallel().tween_property(picture, "modulate", Color(PETAL_RED, 1.0), hold * 0.3).set_delay(arrive + hold * 0.3)
+		tween.parallel().tween_property(picture, "position", (start + Vector2(drift, PETAL_FALL)).round(), arrive + hold + leave)
 		tween.parallel().tween_property(picture, "modulate:a", 0.0, leave).set_delay(arrive + hold)
+	# For a moment, short gold rays shine around the one she heals.
+	var rays := Control.new()
+	rays.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rays.position = chest.round()
+	rays.draw.connect(func() -> void:
+		for k: int in RAY_COUNT:
+			var angle: float = TAU * float(k) / float(RAY_COUNT)
+			var way := Vector2(cos(angle), sin(angle))
+			rays.draw_line((way * RAY_FROM).round(), (way * RAY_TO).round(), PixelStyle.COLOR_GOLD, RAY_WIDTH))
+	rays.modulate.a = 0.0
+	add_child(rays)
+	_pieces.append(rays)
+	var glow := create_tween()
+	glow.tween_interval(arrive)
+	glow.tween_property(rays, "modulate:a", 1.0, hold * 0.2)
+	glow.tween_interval(hold * 0.6)
+	glow.tween_property(rays, "modulate:a", 0.0, hold * 0.2 + leave * 0.3)
 
 
 ## It fades with gaps, like a print wearing off.
