@@ -184,7 +184,7 @@ func test_figures_are_spaced_and_portraits_use_the_bust() -> void:
 		assert_between(feet.x, 0.0, BattleScreen.STAGE_SIZE.x, "%s dentro dos 960" % c.id)
 	var portrait: Texture2D = screen.portrait_texture()
 	assert_not_null(portrait)
-	assert_true(portrait.resource_path.ends_with("_bust.png"), "retrato pelo busto em tamanho cheio")
+	assert_true(portrait.resource_path.ends_with("_portrait.png"), "o mesmo retrato em pixel da caminhada e do Pouso (D-442)")
 
 
 ## T60: the battle shows every character in poses; the walk does not.

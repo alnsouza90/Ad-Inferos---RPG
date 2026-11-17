@@ -558,3 +558,12 @@ func test_the_lume_is_a_lantern_on_a_rod_that_goes_down() -> void:
 	c.state.light = 20
 	w._refresh()
 	assert_gt(w.lantern_y(), full, "com menos Lume, a lamparina desce (D-257)")
+
+
+func test_arrows_blink_where_the_company_can_go_then_fade() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	assert_true(w.arrow_hints().has(&"forward"), "no começo, a seta para a frente pisca (D-442)")
+	assert_false(w.arrow_hints().has(&"back"), "no começo do corredor não se volta")
+	w._process(BattleScreen.STAGE_SIZE.x)
+	assert_eq(w.arrow_hints().size(), 0, "depois de um tempo, as setas somem")

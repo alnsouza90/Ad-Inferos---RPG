@@ -63,13 +63,24 @@ const LIST_BUTTON_SIZE := Vector2(300, 28)
 ## The panel of the walk (D-436): the saints' cards, the mini-map strip and
 ## the alforje.
 const CARDS_X: float = 210.0
-const CARD_SIZE := Vector2(140, 80)
+const CARD_SIZE := Vector2(140, 92)
+const CARD_ARCH_POS := Vector2(4, 3)
+const CARD_ARCH_SCALE: float = 0.5
 const STRIP_X: float = 660.0
 const STRIP_SIZE := Vector2(290, 80)
 const PACK_BUTTON_SIZE := Vector2(124, 56)
 const PACK_POS := Vector2(16, 186)
 const PACK_SLOT := Vector2(48, 40)
 const PACK_COLUMNS: int = 4
+## The arrows that show where the company can go (D-442): how long they
+## stay, how fast they blink, their size and distance from the edges.
+const ARROW_SECONDS: float = 3.5
+const ARROW_BLINK_HZ: float = 1.5
+const ARROW_SIZE: float = 18.0
+const ARROW_SPACING: float = 14.0
+const ARROW_MARGIN: float = 64.0
+const ARROW_EPSILON: float = 0.001
+const ARROW_OVER_ENTRANCE: float = 34.0
 
 ## A command was accepted that leaves this corridor (ChoosePath, or content
 ## that opens its own screen): the flow shows the next phase.
@@ -121,6 +132,8 @@ var _provisions_overlay: Control
 var _provisions_list: VBoxContainer
 var _cards: Dictionary = {}
 var _strip: Button
+var _arrows: Control
+var _arrow_time: float = 0.0
 var _minimap_overlay: Control
 var _minimap: MiniMapView
 var _straight: StringName = &""
@@ -148,6 +161,9 @@ func _notification(what: int) -> void:
 
 
 func _process(delta: float) -> void:
+	if _arrow_time > 0.0:
+		_arrow_time = 0.0 if busy or holding != 0 or walking_to >= 0.0 else maxf(_arrow_time - delta, 0.0)
+		_arrows.queue_redraw()
 	if busy or corridor == null:
 		return
 	var step: float = _speed() * delta / CORRIDOR_LENGTH
@@ -220,6 +236,7 @@ func arrive() -> void:
 		_guard_then_idle()
 	elif corridor.at_pending_content():
 		_reached_content()
+	_show_arrows()
 
 
 ## Holding the finger: 1 walks forward, -1 walks back (D-178).
@@ -466,6 +483,7 @@ func _walk(delta: float) -> void:
 ## what stands here.
 func _stopped() -> void:
 	_set_moving(false)
+	_show_arrows()
 	var here: StringName = corridor.entrance_here() if ctrl.phase == ExpeditionController.Phase.AT_FORK else &""
 	selected_entrance = here
 	var n: MapNode = ctrl.current_node()
@@ -928,6 +946,11 @@ func _build() -> void:
 	_dark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field_clip.add_child(_dark)
 	_build_lume()
+	_arrows = Control.new()
+	_arrows.size = _field_clip.size
+	_arrows.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_arrows.draw.connect(_draw_arrows)
+	_field_clip.add_child(_arrows)
 	_build_panel()
 	_build_provisions_overlay()
 	_build_minimap_overlay()
@@ -959,7 +982,7 @@ func _build_panel() -> void:
 	_alms_label.size = Vector2(156, 24)
 	_stage.add_child(_alms_label)
 	for i: int in ctrl.state.party.size():
-		_build_saint_card(ctrl.state.party[i], Vector2(CARDS_X + i * (CARD_SIZE.x + 8.0), top + 10))
+		_build_saint_card(ctrl.state.party[i], Vector2(CARDS_X + i * (CARD_SIZE.x + 8.0), top + 6))
 	_build_strip(Vector2(STRIP_X, top + 10))
 	_provisions_button = _button("", PACK_BUTTON_SIZE)
 	_provisions_button.position = Vector2(16, top + 106)
@@ -969,7 +992,7 @@ func _build_panel() -> void:
 	_stage.add_child(_provisions_button)
 	_info = _label("")
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_info.position = Vector2(150, top + 100)
+	_info.position = Vector2(150, top + 104)
 	_info.size = Vector2(800, 30)
 	_stage.add_child(_info)
 	_action_box = HBoxContainer.new()
@@ -978,6 +1001,71 @@ func _build_panel() -> void:
 	_action_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	_action_box.add_theme_constant_override("separation", 10)
 	_stage.add_child(_action_box)
+
+
+## The ways the company can go now blink for a moment and fade (D-442):
+## arrows at the edges of the field to walk on or back, and over each
+## entrance at a fork.
+func _show_arrows() -> void:
+	_arrow_time = ARROW_SECONDS
+	if _arrows != null:
+		_arrows.queue_redraw()
+
+
+## Directions shown by the arrows now (tests): "back", "forward",
+## "entrance" (one per entrance at a fork).
+func arrow_hints() -> Array[StringName]:
+	var hints: Array[StringName] = []
+	if _arrow_time <= 0.0 or corridor == null:
+		return hints
+	if corridor.position > ARROW_EPSILON:
+		hints.append(&"back")
+	if corridor.position < corridor.limit_ahead() - ARROW_EPSILON:
+		hints.append(&"forward")
+	if ctrl.phase == ExpeditionController.Phase.AT_FORK:
+		for id: StringName in _entrance_views:
+			hints.append(&"entrance")
+	return hints
+
+
+func _draw_arrows() -> void:
+	var hints: Array[StringName] = arrow_hints()
+	if hints.is_empty():
+		return
+	# Blinking, and fading in the last second.
+	var alpha: float = (0.7 + 0.3 * sin(_arrow_time * TAU * ARROW_BLINK_HZ)) * clampf(_arrow_time, 0.0, 1.0)
+	var mid_y: float = roundf(FIELD_HEIGHT * 0.5)
+	if hints.has(&"back"):
+		_draw_chevron(Vector2(ARROW_MARGIN, mid_y), Vector2.LEFT, alpha)
+	if hints.has(&"forward"):
+		_draw_chevron(Vector2(STAGE_SIZE.x - ARROW_MARGIN, mid_y), Vector2.RIGHT, alpha)
+	if ctrl.phase == ExpeditionController.Phase.AT_FORK:
+		var to_local: Transform2D = _arrows.get_global_transform().affine_inverse()
+		for id: StringName in _entrance_views:
+			var view: Control = _entrance_views[id]
+			var top: Vector2 = to_local * (view.get_global_rect().position + Vector2(view.size.x * 0.5, -ARROW_OVER_ENTRANCE))
+			_draw_chevron(top.round(), Vector2.DOWN, alpha)
+
+
+## A chevron in amber with a dark edge, in whole pixels (the game's arrows).
+func _draw_chevron(tip: Vector2, dir: Vector2, alpha: float) -> void:
+	var side := Vector2(-dir.y, dir.x)
+	for k: int in 2:
+		var at: Vector2 = tip - dir * k * ARROW_SPACING
+		var points := PackedVector2Array([at, at - dir * ARROW_SIZE + side * ARROW_SIZE, at - dir * (ARROW_SIZE - 4.0) , at - dir * ARROW_SIZE - side * ARROW_SIZE])
+		_arrows.draw_colored_polygon(_grow(points, 2.0), Color(PixelStyle.COLOR_PITCH, alpha))
+		_arrows.draw_colored_polygon(points, Color(PixelStyle.COLOR_AMBER, alpha))
+
+
+func _grow(points: PackedVector2Array, by: float) -> PackedVector2Array:
+	var centre := Vector2.ZERO
+	for q: Vector2 in points:
+		centre += q
+	centre /= points.size()
+	var out := PackedVector2Array()
+	for q: Vector2 in points:
+		out.append(q + (q - centre).normalized() * by)
+	return out
 
 
 ## The Lume on the left edge of the field, as in the battle (D-257): a
@@ -1004,13 +1092,21 @@ func lantern_y() -> float:
 ## A small card: the saint's bust, name, life and desolation.
 func _build_saint_card(saint_id: StringName, at: Vector2) -> void:
 	_stage.add_child(PixelStyle.iron_plate(Rect2(at, CARD_SIZE)))
+	# The same portrait as in the battle and the camp, in the arch at half
+	# size (D-442).
+	var arch := TextureRect.new()
+	arch.texture = PixelStyle.piece("ui_portrait_arch")
+	arch.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arch.position = at + CARD_ARCH_POS
+	arch.size = (arch.texture.get_size() * CARD_ARCH_SCALE).round() if arch.texture != null else Vector2.ZERO
+	arch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(arch)
 	var bust := TextureRect.new()
-	var path: String = BattleScreen.BUST_PATH % [saint_id, saint_id]
-	bust.texture = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	bust.texture = BattleScreen.saint_portrait(saint_id)
 	bust.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bust.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bust.position = at + Vector2(8, 8)
-	bust.size = Vector2(44, CARD_SIZE.y - 16.0)
+	bust.position = at + CARD_ARCH_POS + (BattleScreen.PORTRAIT_WINDOW.position * CARD_ARCH_SCALE).round()
+	bust.size = (BattleScreen.PORTRAIT_WINDOW.size * CARD_ARCH_SCALE).round()
 	bust.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(bust)
 	var name_label := _label(texts.saint_name(saint_id))

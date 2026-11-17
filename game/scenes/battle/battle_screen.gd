@@ -63,6 +63,7 @@ const LANCET_TEXT := Rect2(7, 56, 51, 84)
 const LANCET_PIPS_Y: float = 143.0
 const NOTE_RECT := Rect2(50, 62, 300, 74)
 const NOTE_BOSS_DROP: float = 42.0
+const NAMEPLATE := Rect2(112, 361, 428, 17)
 const ROSE_POS := Vector2(400, 372)
 ## The miracle's name and cost, to the right of the rose (D-436).
 const MIRACLE_LABEL := Rect2(481, 384, 58, 90)
@@ -91,6 +92,8 @@ const BOSS_BAR := Rect2(240, 54, 480, 46)
 ## in pixels of ui_boss_bar.
 const BOSS_BAR_END: float = 36.0
 const BOSS_BAR_SLOT := Vector2(12.0, 8.0)
+## Where the slot of the bar starts inside the claws.
+const BOSS_BAR_FILL_INSET: float = 33.0
 const OVERLAY_WIDTH: float = 300.0
 const OVERLAY_MARGIN: float = 400.0
 const COLOR_BACKGROUND := Color("0D0C10")
@@ -117,6 +120,7 @@ const ART_DIR: String = "res://scenes/battle/combatants"
 const PIXEL_ART_DIR: String = "res://scenes/battle/combatants/pixel"
 const BUST_PATH: String = "res://assets/pixel/characters/%s/%s_bust.png"
 const PORTRAIT_PATH: String = "res://assets/characters/saints/%s/portrait/%s_portrait.png"
+const SAINT_PORTRAIT_PATH: String = "res://assets/pixel/characters/%s/%s_portrait.png"
 ## The painted halo (the animation test screen still uses it) and the one
 ## of the pixel grid.
 const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
@@ -787,9 +791,15 @@ func _draw_boss_bar() -> void:
 	var w: float = BOSS_BAR.size.x
 	var font: Font = PixelStyle.title_font()
 	var name_text: String = texts.name_of(boss)
-	_boss_bar.draw_string(font, Vector2(0, 9), name_text, HORIZONTAL_ALIGNMENT_CENTER, w, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
+	# The name on a small dark plate centred over the bar; the phase and the
+	# claws on the same line, at the ends (D-442).
+	var name_w: float = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TITLE_SIZE).x + 16.0
+	var plate := Rect2(roundf((w - name_w) * 0.5), 0, roundf(name_w), 14)
+	_boss_bar.draw_rect(plate, PixelStyle.COLOR_PITCH)
+	_boss_bar.draw_rect(plate, PixelStyle.COLOR_LEAD_LIGHT, false)
+	_boss_bar.draw_string(font, Vector2(plate.position.x, 11), name_text, HORIZONTAL_ALIGNMENT_CENTER, plate.size.x, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
 	var phase: String = texts.t(&"boss_phase_float", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count()})
-	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(44, 9), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
+	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(BOSS_BAR_END, 11), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
 	# The iron bar with claws at the ends (D-441): ends kept, middle stretched.
 	var frame: Texture2D = PixelStyle.piece("ui_boss_bar")
 	var top: float = 12.0
@@ -800,13 +810,13 @@ func _draw_boss_bar() -> void:
 		_boss_bar.draw_texture_rect_region(frame, Rect2(end_w, top, w - end_w * 2.0, fh), Rect2(end_w, 0, frame.get_width() - end_w * 2.0, fh))
 		_boss_bar.draw_texture_rect_region(frame, Rect2(w - end_w, top, end_w, fh), Rect2(frame.get_width() - end_w, 0, end_w, fh))
 	var share: float = clampf(float(boss.hp) / maxf(float(boss.max_hp), 1.0), 0.0, 1.0)
-	var bar := Rect2(BOSS_BAR_END, top + BOSS_BAR_SLOT.x, w - BOSS_BAR_END * 2.0, BOSS_BAR_SLOT.y)
+	var bar := Rect2(BOSS_BAR_FILL_INSET, top + BOSS_BAR_SLOT.x, w - BOSS_BAR_FILL_INSET * 2.0, BOSS_BAR_SLOT.y)
 	_boss_bar.draw_rect(Rect2(bar.position, Vector2(roundf(bar.size.x * share), bar.size.y)), PixelStyle.COLOR_BLOOD)
 	# The claws of the Domínio still holding (bosses.md §5), at the right.
 	var grip: Texture2D = PixelStyle.piece("ui_claw_grip")
 	if grip != null:
 		for i: int in ctrl.state.dominion_claws.size():
-			_boss_bar.draw_texture_rect(grip, Rect2(w - 58 - i * 14, -2, 13, 16), false)
+			_boss_bar.draw_texture_rect(grip, Rect2(w - BOSS_BAR_END - 14 - i * 14, -3, 13, 16), false)
 
 
 ## Whether the big boss bar is shown (tests).
@@ -978,12 +988,23 @@ func _refresh_controls() -> void:
 	_refresh_provision_menu(open)
 
 
+## The one portrait of a saint, everywhere (D-442); null without one.
+static func saint_portrait(def_id: StringName) -> Texture2D:
+	var path: String = SAINT_PORTRAIT_PATH % [def_id, def_id]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
+
 ## The head of the saint, cut from its idle frame around the head point
 ## (as in the approved preview); a saint without frames keeps the painted
 ## portrait.
 func _portrait_of(actor: Combatant) -> Texture2D:
 	if actor == null:
 		return null
+	# The saint's portrait in pixel art (D-431), the same one the camp and the
+	# walk show in the arch (D-442).
+	var drawn: Texture2D = saint_portrait(actor.def_id)
+	if drawn != null:
+		return drawn
 	var bust: Texture2D = _bust_of(actor)
 	if bust != null:
 		return bust
@@ -1701,9 +1722,9 @@ func _build_top_bar() -> void:
 	band.size = Vector2(STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, 16)
 	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(band)
-	_round_label = _label(Vector2(180, 4), Vector2(600, 14))
+	_round_label = _label(Vector2(180, 18), Vector2(600, 14))
 	PixelStyle.title(_round_label)
-	_hint = _label(Vector2(230, 20), Vector2(500, 36))
+	_hint = _label(Vector2(230, 32), Vector2(500, 24))
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_note = PixelStyle.iron_plate(NOTE_RECT)
 	_note.visible = false
@@ -1724,8 +1745,8 @@ func _build_top_bar() -> void:
 	_boss_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_bar.draw.connect(_draw_boss_bar)
 	_stage.add_child(_boss_bar)
-	_pause_button = _button(Vector2(778, 4), Vector2(52, 26), press_pause)
-	_speed_button = _button(Vector2(834, 4), Vector2(122, 26), press_speed)
+	_pause_button = _button(Vector2(778, 18), Vector2(52, 26), press_pause)
+	_speed_button = _button(Vector2(834, 18), Vector2(122, 26), press_speed)
 	_build_dev_row()
 
 
@@ -1748,6 +1769,9 @@ func _build_hero_panel() -> void:
 	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_portrait.visible = false
 	_stage.add_child(_portrait)
+	# A dark nameplate on the iron band of the stone (D-442): the saint's
+	# name, slot, life and desolation read on it, not over the bars.
+	_stage.add_child(PixelStyle.plate(Rect2(NAMEPLATE.position, NAMEPLATE.size), PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT))
 	_actor_label = _label(Vector2(118, 362), Vector2(150, 16))
 	_actor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	PixelStyle.title(_actor_label)
