@@ -107,7 +107,7 @@ func press_rest() -> void:
 		return
 	if armed != FIXED_REST:
 		armed = FIXED_REST
-		_info.text = data.ui.text(&"camp_confirm_rest")
+		_info.text = data.ui.text(&"camp_vigil_confirm" if is_vigil() else &"camp_confirm_rest")
 		refresh()
 		return
 	armed = &""
@@ -150,7 +150,9 @@ func refresh() -> void:
 	rest_button.disabled = not _can_plan()
 	for key: StringName in _fixed:
 		(_fixed[key] as Button).modulate = COLOR_CHOSEN if key == armed else Color.WHITE
-	if ctrl.state.camp_rested and armed == &"" and not _result.visible:
+	if is_vigil() and armed == &"" and not _result.visible and _info.text == "":
+		_info.text = data.ui.text(&"camp_vigil_info")
+	elif ctrl.state.camp_rested and armed == &"" and not _result.visible and not is_vigil():
 		_info.text = data.ui.text(&"camp_reason_already_rested")
 
 
@@ -209,7 +211,15 @@ func stage_position() -> Vector2:
 # --- flow ------------------------------------------------------------------------
 
 func _can_plan() -> bool:
+	if is_vigil():
+		return true
 	return ctrl.phase == ExpeditionController.Phase.AT_CAMP and not ctrl.state.camp_rested
+
+
+## The Vigil before the boss (expedition §7): the same screen, only Vigil
+## and Share, no Bread, no ambush, no way back.
+func is_vigil() -> bool:
+	return ctrl.phase == ExpeditionController.Phase.AT_VIGIL
 
 
 func _needs_target(saint_id: StringName, activity: StringName) -> bool:
@@ -224,6 +234,13 @@ func _needs_target(saint_id: StringName, activity: StringName) -> bool:
 func _skill(saint_id: StringName) -> CampSkillDef:
 	var def: SaintDef = data.saints.get(saint_id)
 	return def.camp_skill if def != null else null
+
+
+## "Seguir" names the next leg when there is one (T42).
+func _continue_text() -> String:
+	if ctrl.state.leg < ExpeditionController.LAST_LEG and ctrl.has_full_circle():
+		return data.ui.text(&"camp_continue_leg", {"leg": ctrl.state.leg + 1})
+	return data.ui.text(&"camp_continue")
 
 
 func _leave(key: StringName, mode: StringName, confirm_key: StringName) -> void:
@@ -275,7 +292,7 @@ func _show_result() -> void:
 	if alms != 0:
 		lines.append(t.text(&"event_change_alms", {"delta": EventTexts.signed(alms)}))
 	lines.append("")
-	lines.append(t.text(_ambush_key()))
+	lines.append(t.text(&"camp_vigil_after" if ctrl.phase == ExpeditionController.Phase.IN_BATTLE and ctrl.battle.state.encounter_type == &"boss" else _ambush_key()))
 	_result_text.text = "\n".join(lines)
 	_result.visible = true
 	refresh()
@@ -399,7 +416,7 @@ func _build() -> void:
 	bar.size = Vector2(STAGE_SIZE.x, 110)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(bar)
-	var title := _label(data.ui.text(&"node_camp"), 40)
+	var title := _label(data.ui.text(&"camp_vigil_title" if is_vigil() else &"node_camp"), 40)
 	title.position = Vector2(70, 26)
 	title.size = Vector2(300, 60)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -430,10 +447,11 @@ func _build() -> void:
 	row.position = Vector2(0, 920)
 	row.size = Vector2(STAGE_SIZE.x, FIXED_SIZE.y)
 	_stage.add_child(row)
-	var cost: String = data.ui.text(&"camp_rest", {"cost": data.ui.text(&"camp_rest_cost")})
-	for entry: Array in [[FIXED_REST, cost, press_rest], [FIXED_CONTINUE, data.ui.text(&"camp_continue"), press_continue], [FIXED_RETREAT, data.ui.text(&"camp_retreat"), press_retreat]]:
+	var rest: String = data.ui.text(&"camp_vigil_rest") if is_vigil() else data.ui.text(&"camp_rest", {"cost": data.ui.text(&"camp_rest_cost")})
+	for entry: Array in [[FIXED_REST, rest, press_rest], [FIXED_CONTINUE, _continue_text(), press_continue], [FIXED_RETREAT, data.ui.text(&"camp_retreat"), press_retreat]]:
 		var button := _button(str(entry[1]), FIXED_SIZE)
 		button.pressed.connect(entry[2] as Callable)
+		button.visible = entry[0] == FIXED_REST or not is_vigil()
 		row.add_child(button)
 		_fixed[entry[0]] = button
 	_build_result()
@@ -485,6 +503,8 @@ func _build_card(saint_id: StringName, at: Vector2) -> void:
 	var buttons: Dictionary = {}
 	for activity: StringName in ACTIVITIES:
 		if activity == ExpeditionController.ACTIVITY_OWN and _skill(saint_id) == null:
+			continue
+		if is_vigil() and activity != ExpeditionController.ACTIVITY_VIGIL and activity != ExpeditionController.ACTIVITY_SHARE:
 			continue
 		var button := _button(_activity_name(saint_id, activity), ACTIVITY_SIZE)
 		button.pressed.connect(choose_activity.bind(saint_id, activity))
