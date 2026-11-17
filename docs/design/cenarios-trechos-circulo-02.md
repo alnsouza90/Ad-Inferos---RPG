@@ -82,7 +82,8 @@ Pedido de Alan (17/11/2026): a passagem de um nó para o outro tem de ser suave 
   - **Encontro com alma:** o lugar do caminho, com a multidão de almas atrás e o casal no chão. Tocar no casal é o mesmo que "Falar".
   - **Relíquia:** o céu do caminho com a parede de rocha. Se o caminho já está no claustro, fica no claustro.
   - **Elite:** o céu vira o olho da tempestade, sobre o mesmo meio. Isso não conta como mudança de lugar.
-  - **Minos:** o salão do júri com o piso de lajes roxas. Chega-se sempre por uma porta num muro, e essa porta fica no fim do corredor anterior.
+  - **Minos:** o salão do júri com o piso de lajes roxas.
+  - **Caminho até Minos (D-448, opção B):** os nós que levam a Minos correm ao longo do muro de fora do salão do júri (mesma pedra, colunas e lajes), sob a tempestade e sem pedras soltas na frente. A porta, gerada na mesma pedra, fica encaixada entre duas colunas do muro, no fim do corredor; ao entrar, a tela escurece e abre no salão.
   - **Peixe do Tigre:** T3 fundo + margem do Tigre. O peixe salta do rio e some depois de pego.
 - **Trono:** aparece uma vez só, na chegada ao círculo (o corredor que sai do Portão do trecho 1), desenhado uma vez, sem se repetir para os lados.
 - **Passagens:**
@@ -92,4 +93,4 @@ Pedido de Alan (17/11/2026): a passagem de um nó para o outro tem de ser suave 
 - **Frente:**
   - a luta mostra a frente do trecho nos cantos;
   - a caminhada usa as pedras baixas do trecho 1, porque as frentes dos trechos 2 e 3 são altas e esconderiam a companhia.
-- **Medido em 60 partidas inteiras:** cerca de 73% dos corredores seguem por um caminho aberto. Os outros mudam de lugar por porta, caverna ou escada.
+- **Medido em 60 partidas inteiras:** cerca de 64% dos corredores seguem por um caminho aberto (73% antes do muro do júri, que é um lugar próprio). Os outros mudam de lugar por porta, caverna ou escada.

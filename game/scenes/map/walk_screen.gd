@@ -785,6 +785,9 @@ func _build_objects() -> void:
 				tap_entrance(id)
 				view.accept_event())
 		view.position = Vector2(roundf(_world_x(float(corridor.entrance_at[id])) - view.size.x * 0.5), FEET_Y - view.size.y)
+		if view.get_meta(&"jury_door", false):
+			# Into a bay of the wall, at the wall's foot (D-448).
+			view.position = Vector2(roundf(SceneryPlan.jury_bay_x(_world_x(float(corridor.entrance_at[id]))) - view.size.x * 0.5), FEET_Y - SceneryPlan.JURY_DOOR_FOOT - view.size.y)
 		_objects.add_child(view)
 		_entrance_views[id] = view
 
@@ -831,7 +834,9 @@ func _entrance_view(kind: StringName, text: String) -> Control:
 		# The door of the jury hall is part of its wall (D-448).
 		var jury_door: Texture2D = _prop(SceneryPlan.JURY_DOOR)
 		if jury_door != null:
-			return _prop_view(jury_door, text)
+			var door: Control = _prop_view(jury_door, text)
+			door.set_meta(&"jury_door", true)
+			return door
 	var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
 	if entrance == null:
 		return _block(text, COLOR_DETOUR, ENTRANCE_SIZE)

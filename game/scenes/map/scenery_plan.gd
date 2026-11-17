@@ -30,6 +30,12 @@ const JURY_FLOOR: String = "env_circle_02_jury_floor"
 ## into the same masonry (D-448).
 const JURY_WALL: String = "env_circle_02_jury_wall"
 const JURY_DOOR: String = "env_circle_02_jury_door"
+## Centres of the bays between the buttresses of the wall, in one copy of
+## the layer (2x pixels); copies alternate mirrored (ParallaxScenery).
+const JURY_WALL_BAYS: Array[float] = [229.0, 479.0, 729.0]
+const JURY_WALL_WIDTH: float = 960.0
+## The foot of the wall stands this far behind the feet, across the paving.
+const JURY_DOOR_FOOT: float = 40.0
 const TIGRIS: String = "env_circle_02_tigris"
 const SOULS_CROWD: String = "env_circle_02_souls_crowd"
 ## The throne of Minos far away: a unique piece, drawn once, only at the
@@ -98,9 +104,27 @@ static func look(map: LegMap, n: MapNode) -> Dictionary:
 		# The way to Minos runs along the outer wall of the jury hall and
 		# ends at its door (D-448, option B).
 		inherited["mid"] = JURY_WALL
+		# A paved courtyard: no loose rocks in front.
+		inherited["front"] = ""
 		if inherited["back"] != STORM_EYE:
 			inherited["back"] = STORM
 	return inherited
+
+
+## The centre of the bay of the jury wall nearest to world `x` (the layer's
+## copy k starts at k * width at camera 0, every second copy mirrored), so
+## the door sits between two buttresses (D-448).
+static func jury_bay_x(x: float) -> float:
+	var best: float = x
+	var best_gap: float = INF
+	var k0: int = int(floorf(x / JURY_WALL_WIDTH))
+	for k: int in range(k0 - 1, k0 + 2):
+		for c: float in JURY_WALL_BAYS:
+			var centre: float = k * JURY_WALL_WIDTH + (c if posmod(k, 2) == 0 else JURY_WALL_WIDTH - c)
+			if absf(centre - x) < best_gap:
+				best = centre
+				best_gap = absf(centre - x)
+	return best
 
 
 ## True when the Guardian's hall is the next place after `n`.

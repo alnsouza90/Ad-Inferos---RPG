@@ -54,7 +54,14 @@ DOUBLED_LAYERS = {
     "jury_hall": 34,
     "tigris": 62,
     "souls_crowd": 0,
+    # The way to Minos (D-448): the paving of the wall under the feet; its
+    # door is cut 22 rows higher still, so that it stands on the feet line.
+    "jury_wall": 22,
 }
+# The door of the jury hall (D-448): only its arch and leaves, cut from the
+# generated piece (left, top, right, bottom on the source), its colours taken
+# to those of the wall, so it fits into one bay of the wall without a seam.
+JURY_DOOR_BOX = (52, 92, 140, 230)
 # Animated pieces (D-446): name -> (frames, frame side, height in the game).
 ANIMATED = {
     "couple": (8, 256, 150),
@@ -180,6 +187,7 @@ def main() -> None:
         image = tidy(Image.open(SCENERY_SOURCE / f"env_circle_02_{layer}_px_v01.png"))
         image = image.resize((image.width * 2, image.height * 2), Image.NEAREST)
         save(image.crop((0, 0, image.width, image.height - cut)), SCENERY_OUT / f"env_circle_02_{layer}.png")
+    save(jury_door(), SCENERY_OUT / "env_circle_02_jury_door.png")
     slabs = tidy(Image.open(C02 / "env_circle_02_prop_floor_slabs_px_v01.png"))
     slabs = slabs.crop(slabs.getbbox())
     slabs = slabs.resize((slabs.width * 2, slabs.height * 2), Image.NEAREST)
@@ -188,6 +196,19 @@ def main() -> None:
         save(animated_strip(C02 / f"env_circle_02_{name}_px_v01.png", count, side, height), SCENERY_OUT / f"env_circle_02_{name}.png")
     for name, source in EVENT_ART.items():
         save(event_art(source), EVENTS_OUT / f"{name}.png")
+
+
+def jury_door() -> Image.Image:
+    """The arch and leaves of the door, each colour channel scaled so the
+    stone matches the mean of the wall, back in the palette, shown 2x."""
+    wall = np.array(Image.open(C02 / "env_circle_02_jury_wall_px_v01.png").convert("RGBA")).astype(float)
+    door = Image.open(C02 / "env_circle_02_jury_door_px_v01.png").convert("RGBA").crop(JURY_DOOR_BOX)
+    cell = np.array(door).astype(float)
+    wall_mean = wall[wall[:, :, 3] > 0][:, :3].mean(0)
+    door_mean = cell[cell[:, :, 3] > 0][:, :3].mean(0)
+    cell[:, :, :3] = np.clip(cell[:, :, :3] * (wall_mean / door_mean), 0, 255)
+    image = tidy(Image.fromarray(cell.round().astype(np.uint8), "RGBA"))
+    return image.resize((image.width * 2, image.height * 2), Image.NEAREST)
 
 
 def animated_strip(source: Path, count: int, side: int, height: int) -> Image.Image:

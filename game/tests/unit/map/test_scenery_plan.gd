@@ -103,9 +103,10 @@ func test_the_open_way_keeps_the_place_and_closed_ones_fit_the_scenery() -> void
 						assert_true(SceneryPlan.CLOSED_ANYWHERE.has(kind), String(kind))
 				assert_lte(open, 1)
 				with_open += open
-	# Most screens go on along an open way; the place changes now and then.
+	# Most screens go on along an open way; the place changes now and then
+	# (the way to Minos along the jury wall is a place of its own, D-448).
 	gut.p("%d de %d corredores com caminho aberto" % [with_open, corridors])
-	assert_gt(float(with_open) / corridors, 0.65, "%d de %d corredores com caminho aberto" % [with_open, corridors])
+	assert_gt(float(with_open) / corridors, 0.6, "%d de %d corredores com caminho aberto" % [with_open, corridors])
 
 
 func test_battles_stand_in_a_common_place_of_the_way() -> void:
