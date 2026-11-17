@@ -17,7 +17,11 @@ extends RefCounted
 ##   Vigil, boss) and saves the leg, the Domínio and the liver; old logs are
 ##   rebuilt the same way as in 2 → 3.
 
-const CURRENT_VERSION: int = 4
+##   4 → 5 (T42, D-435): reaching a camp consecrates it in the flags
+##   (`<circle>_camp_<leg>`), kept across expeditions and after a defeat;
+##   old logs are rebuilt the same way.
+
+const CURRENT_VERSION: int = 5
 const CONTENT_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_relic", "node_soul"]
 
 ## n -> Callable taking a version-n save and returning version n + 1.
@@ -31,7 +35,7 @@ func _init(p_steps: Variant = null, p_current: int = CURRENT_VERSION) -> void:
 
 
 static func default_steps() -> Dictionary:
-	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3, 3: SaveMigrations.migrate_v2_to_v3}
+	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3, 3: SaveMigrations.migrate_v2_to_v3, 4: SaveMigrations.migrate_v2_to_v3}
 
 
 static func migrate_v2_to_v3(data: Dictionary) -> Dictionary:

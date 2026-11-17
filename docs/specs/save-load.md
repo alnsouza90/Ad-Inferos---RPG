@@ -127,6 +127,8 @@ Ao carregar: criar o combate com a semente e o retrato inicial, reaplicar os com
 - Cada migração é uma função `migrate_v{n}_to_v{n+1}(data: Dictionary) -> Dictionary` em `autoload/save_migrations.gd`, com teste próprio.
 - Se a mudança de regra impedir a reconstrução de um combate gravado, a migração **reinicia esse combate** a partir do retrato inicial (o jogador perde apenas os comandos daquele combate) e registra o fato.
 - **Versão 3 (T62, D-396):** as regras novas de desolação mudam o resultado dos comandos já gravados, então o retrato de conferência antigo nunca bate. A migração marca a expedição com `"rebuild": true`; ao carregar, o log é refeito com as regras novas, sem a conferência, e para no primeiro comando que elas recusarem (o resto se perde). O próximo salvamento já grava a versão 3 normal.
+- **Versão 4 (T42):** a expedição inteira (trechos 2 e 3, Vigília, chefe); refeita do mesmo jeito.
+- **Versão 5 (T42, D-435):** chegar a um Pouso grava a consagração nas bandeiras (`<círculo>_camp_<trecho>`); refeita do mesmo jeito.
 
 ## 8. Casos de teste obrigatórios
 
