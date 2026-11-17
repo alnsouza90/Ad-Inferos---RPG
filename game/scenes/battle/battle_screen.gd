@@ -746,6 +746,9 @@ func _animate(ev: BattleEvent) -> float:
 			return view.play_fall() if view != null else 0.0
 		&"moved", &"swapped", &"summoned":
 			_sync_views(factor > 0.0)
+			if ev.type == &"summoned":
+				# D-455: the new enemy comes out of a pool of ink.
+				_play_ink(InkSplash.POOL, view_of(StringName(str(d["enemy"]))))
 			return _scaled(MOVE_TIME, factor)
 	return 0.0
 

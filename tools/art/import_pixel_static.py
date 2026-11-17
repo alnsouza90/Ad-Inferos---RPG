@@ -100,7 +100,7 @@ ABILITY_STAMP_VERSIONS = {"shield": 2}
 # and two rows on a flat light grey; each cell is cleaned and laid in a row.
 # name -> (source, anchor): "centre" keeps each cell as drawn; "bottom" sets
 # every cell's drawing on the same ground line (the stain rises from it).
-INK_SHEETS = {"slash": ("ink_slash_px_v01.png", "centre"), "stain": ("ink_stain_px_v01.png", "bottom")}
+INK_SHEETS = {"slash": ("ink_slash_px_v01.png", "centre"), "stain": ("ink_stain_px_v01.png", "bottom"), "pool": ("ink_pool_px_v01.png", "bottom")}
 INK_GRID = (3, 2)
 INK_BACKGROUND_TOLERANCE = 40
 # Row of a grounded cell that stands on the feet (the rest hangs below).

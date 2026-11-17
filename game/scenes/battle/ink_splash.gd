@@ -7,8 +7,10 @@ const PATH: String = "res://assets/pixel/vfx/ink_%s.png"
 const SLASH: StringName = &"slash"
 ## A spirit's action: a stain rises from the ground under the saint.
 const STAIN: StringName = &"stain"
+## A summoning: a pool of ink opens where the new enemy comes out.
+const POOL: StringName = &"pool"
 ## Inks drawn on the ground line (their cells sit on the bottom).
-const GROUNDED: Array[StringName] = [STAIN]
+const GROUNDED: Array[StringName] = [STAIN, POOL]
 ## Row of a grounded cell that stands on the feet (tools/art INK_GROUND_LINE).
 const GROUND_LINE: float = 92.0
 const FRAMES: int = 6
