@@ -142,6 +142,29 @@ const INSTANT_OUT: float = 0.3
 const INSTANT_LABEL := Rect2(0, 40, 960, 30)
 ## Drawn above the fighters while they last (z order inside the field).
 const OVERLAY_Z: int = 3
+## Saint Raphael at the victory with the liver (bosses.md §5.3, D-452):
+## a column of gold light beside Asmodeus, Raphael in flat gold flickers and
+## becomes himself, the story panel, then Asmodeus flickers gold and goes.
+const RAPHAEL_PATH: String = "res://assets/pixel/characters/archangel_raphael/archangel_raphael.png"
+const RAPHAEL_GOLD_PATH: String = "res://assets/pixel/characters/archangel_raphael/archangel_raphael_gold.png"
+const RAPHAEL_PANEL_PATH: String = "res://assets/events/circle_02/scene_raphael_binds.png"
+## Gap between Raphael's right edge and Asmodeus' feet, and where his halo
+## stands on the drawing (measured on it).
+const RAPHAEL_GAP: float = 70.0
+const RAPHAEL_HALO_CENTER := Vector2(52, 4)
+const RAPHAEL_HALO_SIZE: float = 40.0
+## Widths and strengths of the three bands of the column of light.
+const LIGHT_BANDS: Array[Vector2] = [Vector2(110, 0.25), Vector2(78, 0.35), Vector2(50, 0.55)]
+const LIGHT_IN: float = 0.4
+const FLICKER_STEP: float = 0.08
+const FLICKERS: int = 3
+const BECOME: float = 0.35
+const RAPHAEL_HOLD: float = 0.8
+const PANEL_FADE: float = 0.4
+const PANEL_HOLD: float = 3.5
+const PANEL_CAPTION := Rect2(40, 492, 880, 30)
+const BOSS_GOLD := Color(1.6, 1.25, 0.35)
+const BOSS_FADE: float = 0.4
 const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
@@ -246,6 +269,9 @@ var _stamp_dark: ColorRect
 var _stamp: TextureRect
 var _instant_bg: ColorRect
 var _instant_label: Label
+## Raphael's scene played (it plays once, at the end of the boss battle).
+var _raphael_played: bool = false
+var _raphael_nodes: Array[CanvasItem] = []
 var _flash: ColorRect
 var _lantern: Control
 var _lume_label: Label
@@ -587,9 +613,14 @@ func _after_events() -> void:
 		selection.reset()
 		_result_label.text = texts.t(StringName("result_%s" % _result_key()))
 		# bosses.md §5.3: Raphael binds Asmodeus (with the liver) or he flees.
+		var bound: bool = false
 		for ev: BattleEvent in ctrl.history:
 			if ev.type == BattleController.EV_BOSS_DEFEATED:
-				_result_label.text += "\n" + texts.t(&"boss_bound" if bool(ev.data["bound"]) else &"boss_fled")
+				bound = bool(ev.data["bound"])
+				_result_label.text += "\n" + texts.t(&"boss_bound" if bound else &"boss_fled")
+		if bound and not _raphael_played and _play_raphael():
+			_refresh()
+			return
 		_result_overlay.visible = true
 	else:
 		var actor: Combatant = selection.actor()
@@ -628,7 +659,11 @@ func _animate(ev: BattleEvent) -> float:
 			if actor != null and actor_view != null and StringName(str(d["ability"])) == actor.miracle:
 				actor_view.next_windup = MIRACLE_WINDUP
 				stamp_time = _play_stamp(actor.def_id)
-			return maxf(stamp_time, _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &""))
+			var first_target: StringName = StringName(str(targets[0])) if not targets.is_empty() else &""
+			var blow: float = _act(d["actor"], _style_of_ability(d["ability"]), first_target)
+			if actor != null:
+				_schedule_saint_stamp(actor, StringName(str(d["ability"])), first_target if first_target != &"" else actor.id, blow)
+			return maxf(stamp_time, blow)
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""
 		&"enemy_action_started":
@@ -783,6 +818,140 @@ func _play_instant(view: CombatantView, state: StringName) -> float:
 			figure.outline_width = float(kept["width"])
 			figure.outline_pulse = bool(kept["pulse"]))
 	return (INSTANT_IN + INSTANT_HOLD + INSTANT_OUT) / factor
+
+
+## D-452: the stamp of a saint's ability lands on its target with the blow.
+func _schedule_saint_stamp(actor: Combatant, ability_id: StringName, target_id: StringName, delay: float) -> void:
+	var factor: float = SPEEDS[speed_index]
+	var stamp_shape: StringName = SaintStamp.shape_for(actor.def_id, AbilityIcon.of(ctrl.state.catalog.ability(ability_id)))
+	var target: CombatantView = view_of(target_id)
+	if factor <= 0.0 or stamp_shape == &"" or target == null or SaintStamp.texture_of(stamp_shape) == null or not is_inside_tree():
+		return
+	var place := func() -> void:
+		if not is_instance_valid(target):
+			return
+		var stamp := SaintStamp.new()
+		stamp.z_index = OVERLAY_Z
+		_field.add_child(stamp)
+		var to_field: Transform2D = _field.get_global_transform().affine_inverse()
+		stamp.play(stamp_shape, to_field * target.chest_global(), to_field * target.feet_global(), factor)
+	if delay > 0.0:
+		get_tree().create_timer(delay).timeout.connect(place)
+	else:
+		place.call()
+
+
+## The ability stamps playing now (tests).
+func saint_stamps_shown() -> Array[StringName]:
+	var shown: Array[StringName] = []
+	for child: Node in _field.get_children():
+		if child is SaintStamp:
+			shown.append((child as SaintStamp).shape)
+	return shown
+
+
+## Raphael's scene; false when it cannot play (instant speed, no art), and
+## the result shows at once.
+func _play_raphael() -> bool:
+	var factor: float = SPEEDS[speed_index]
+	var boss_view: CombatantView = null
+	for c: Combatant in ctrl.state.enemies:
+		if c.category == &"boss":
+			boss_view = view_of(c.id)
+	if factor <= 0.0 or boss_view == null or not is_inside_tree() or not ResourceLoader.exists(RAPHAEL_PATH):
+		return false
+	_raphael_played = true
+	busy = true
+	var to_field: Transform2D = _field.get_global_transform().affine_inverse()
+	var boss_feet: Vector2 = to_field * boss_view.feet_global()
+	var figure_tex: Texture2D = load(RAPHAEL_PATH)
+	var right: float = boss_feet.x - RAPHAEL_GAP
+	var at := Vector2(roundf(right - figure_tex.get_width()), GROUND_Y - figure_tex.get_height())
+	var centre: float = at.x + figure_tex.get_width() * 0.5
+	var light: Array[ColorRect] = []
+	for band: Vector2 in LIGHT_BANDS:
+		var column := ColorRect.new()
+		column.color = Color(PixelStyle.COLOR_GOLD, band.y)
+		column.position = Vector2(roundf(centre - band.x * 0.5), -OVERLAY_MARGIN)
+		column.size = Vector2(band.x, GROUND_Y + OVERLAY_MARGIN)
+		light.append(column)
+	var halo := TextureRect.new()
+	halo.texture = _halo_settings.disk if _halo_settings != null else null
+	halo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	halo.size = Vector2.ONE * RAPHAEL_HALO_SIZE
+	halo.position = (at + RAPHAEL_HALO_CENTER - halo.size * 0.5).round()
+	var figure := TextureRect.new()
+	figure.texture = figure_tex
+	figure.position = at
+	var gold := TextureRect.new()
+	gold.texture = load(RAPHAEL_GOLD_PATH)
+	gold.position = at
+	_raphael_nodes.clear()
+	for item: Control in light + [halo, figure, gold]:
+		item.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		item.z_index = OVERLAY_Z
+		item.modulate.a = 0.0
+		_field.add_child(item)
+		_raphael_nodes.append(item)
+	var panel := TextureRect.new()
+	panel.texture = load(RAPHAEL_PANEL_PATH) if ResourceLoader.exists(RAPHAEL_PANEL_PATH) else null
+	panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	panel.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	panel.size = STAGE_SIZE
+	var caption := Label.new()
+	caption.text = texts.t(&"boss_bound")
+	caption.position = PANEL_CAPTION.position
+	caption.size = PANEL_CAPTION.size
+	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	PixelStyle.title(caption, PixelStyle.COLOR_BONE, PixelStyle.BIG_TITLE_SIZE)
+	for item: Control in [panel, caption]:
+		item.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		item.z_index = OVERLAY_Z + 10
+		item.modulate.a = 0.0
+		_stage.add_child(item)
+		_raphael_nodes.append(item)
+	var tween := create_tween()
+	# The light comes down, Raphael appears in flat gold and flickers.
+	for column: ColorRect in light:
+		tween.parallel().tween_property(column, "modulate:a", 1.0, LIGHT_IN / factor)
+	for i: int in FLICKERS:
+		tween.tween_property(gold, "modulate:a", 1.0, FLICKER_STEP / factor)
+		tween.tween_property(gold, "modulate:a", 0.2, FLICKER_STEP / factor)
+	tween.tween_property(gold, "modulate:a", 1.0, FLICKER_STEP / factor)
+	# The gold becomes the archangel as Alan drew him, with his halo.
+	tween.tween_property(figure, "modulate:a", 1.0, BECOME / factor)
+	tween.parallel().tween_property(halo, "modulate:a", 1.0, BECOME / factor)
+	tween.parallel().tween_property(gold, "modulate:a", 0.0, BECOME / factor)
+	tween.tween_interval(RAPHAEL_HOLD / factor)
+	# The story panel: Raphael binds Asmodeus (Tobit 8:3).
+	tween.tween_property(panel, "modulate:a", 1.0, PANEL_FADE / factor)
+	tween.parallel().tween_property(caption, "modulate:a", 1.0, PANEL_FADE / factor)
+	tween.tween_callback(func() -> void:
+		for item: CanvasItem in [halo, figure, gold] + light:
+			item.visible = false)
+	tween.tween_interval(PANEL_HOLD / factor)
+	tween.tween_property(panel, "modulate:a", 0.0, PANEL_FADE / factor)
+	tween.parallel().tween_property(caption, "modulate:a", 0.0, PANEL_FADE / factor)
+	# Back on the field Asmodeus lies fallen; he flickers gold and is gone.
+	for i: int in FLICKERS:
+		tween.tween_property(boss_view, "modulate", BOSS_GOLD, FLICKER_STEP / factor)
+		tween.tween_property(boss_view, "modulate", Color.WHITE, FLICKER_STEP / factor)
+	tween.tween_property(boss_view, "modulate", Color(BOSS_GOLD, 0.0), BOSS_FADE / factor)
+	tween.tween_callback(func() -> void:
+		for item: CanvasItem in _raphael_nodes:
+			if is_instance_valid(item):
+				item.queue_free()
+		_raphael_nodes.clear()
+		busy = false
+		_result_overlay.visible = true
+		_refresh())
+	return true
+
+
+## True while Raphael's scene plays (tests).
+func raphael_shown() -> bool:
+	return not _raphael_nodes.is_empty()
 
 
 ## True while the miracle's stamp or the instant of the icon is on screen.

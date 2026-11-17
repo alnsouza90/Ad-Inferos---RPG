@@ -304,3 +304,44 @@ func test_consolation_has_its_instant_of_the_icon_and_the_clearing() -> void:
 	assert_eq(view.halo().kind(), HaloLook.DISK)
 	assert_true(view.clearing_shown(), "clareira de luz no chão")
 	assert_ne(view.player().self_modulate, Color.BLACK, "o santo volta à cor depois do instante")
+
+
+## T44 part 3 (D-452): each saint's ability stamp lands on its target.
+func test_each_saint_has_the_stamp_of_its_abilities() -> void:
+	assert_eq(SaintStamp.shape_for(&"saint_george", AbilityIcon.WARD), SaintStamp.SHIELD)
+	assert_eq(SaintStamp.shape_for(&"saint_benedict", AbilityIcon.EXORCISM), SaintStamp.CROSS)
+	assert_eq(SaintStamp.shape_for(&"saint_benedict", AbilityIcon.RELIEF), SaintStamp.RING)
+	assert_eq(SaintStamp.shape_for(&"saint_therese", AbilityIcon.HEAL), SaintStamp.PETALS)
+	assert_eq(SaintStamp.shape_for(&"saint_george", AbilityIcon.STRIKE), &"", "o golpe de lança não tem estampa")
+	for shape: StringName in [SaintStamp.SHIELD, SaintStamp.CROSS, SaintStamp.RING]:
+		assert_not_null(SaintStamp.texture_of(shape), String(shape))
+
+
+func test_george_shield_drops_on_the_one_he_protects() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	var george: Combatant = screen.ctrl.state.find(&"saint_george")
+	screen._schedule_saint_stamp(george, &"george_raised_shield", &"saint_therese", 0.0)
+	assert_eq(screen.saint_stamps_shown(), [SaintStamp.SHIELD] as Array[StringName])
+	await wait_seconds(SaintStamp.ARRIVE + SaintStamp.HOLD + SaintStamp.LEAVE + 0.3)
+	assert_eq(screen.saint_stamps_shown(), [] as Array[StringName], "a estampa some")
+
+
+## bosses.md §5.3 (D-452): with the liver, Raphael appears in gold beside
+## Asmodeus, becomes himself, the story panel shows, Asmodeus goes; then
+## the result.
+func test_raphael_binds_asmodeus_before_the_result() -> void:
+	var screen := _screen(&"c02_boss_asmodeus", 3)
+	screen.speed_index = 1
+	assert_true(screen._play_raphael())
+	assert_true(screen.raphael_shown())
+	assert_true(screen.busy, "a cena segura os toques")
+	await wait_until(func() -> bool: return screen.result_shown(), 6.0)
+	assert_true(screen.result_shown())
+	assert_false(screen.raphael_shown())
+	assert_false(screen.busy)
+	var asmodeus: CombatantView = null
+	for c: Combatant in screen.ctrl.state.enemies:
+		if c.category == &"boss":
+			asmodeus = screen.view_of(c.id)
+	assert_almost_eq(asmodeus.modulate.a, 0.0, 0.01, "Asmodeu pisca em ouro e some")
