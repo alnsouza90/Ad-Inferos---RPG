@@ -45,7 +45,7 @@ func test_B09_with_three_claws_two_shades_two_actions_and_three_phases() -> void
 	var boss: Combatant = c.state.boss()
 	assert_eq(boss.def_id, &"boss_asmodeus")
 	var shades: int = c.state.enemies.filter(func(e: Combatant) -> bool: return e.def_id == &"enemy_shade_of_desire").size()
-	assert_eq(shades, 0, "Asmodeu luta sozinho, sem escolta (D-421)")
+	assert_eq(shades, 2, "escolta de 2 Sombras (D-424)")
 	assert_eq(c.state.boss_actions_per_round(boss), 2, "age 2 vezes")
 	assert_eq(c.state.intents_of(boss).size(), 2, "duas intenções, cada uma visível")
 	assert_ne(c.state.intents_of(boss)[0].action_id, c.state.intents_of(boss)[1].action_id, "ações diferentes")

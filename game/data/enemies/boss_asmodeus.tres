@@ -193,3 +193,4 @@ art_id = "boss_asmodeus"
 phase_thresholds = Array[float]([0.5])
 dominion_phase_thresholds = Array[float]([0.66, 0.33])
 dominion_extra_actions = 1
+dominion_escort = Array[StringName]([&"enemy_shade_of_desire", &"enemy_shade_of_desire"])
