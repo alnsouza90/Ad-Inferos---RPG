@@ -81,7 +81,7 @@ func show_phase() -> void:
 			_show_relic()
 		ExpeditionController.Phase.IN_NODE:
 			_show_empty_node()
-		ExpeditionController.Phase.AT_CAMP:
+		ExpeditionController.Phase.AT_CAMP, ExpeditionController.Phase.AT_VIGIL:
 			_show_camp()
 		ExpeditionController.Phase.ENDED:
 			_show_summary()
@@ -218,13 +218,15 @@ func _show_empty_node() -> void:
 func _show_summary() -> void:
 	var t: UiTextDef = data.ui
 	var lines: Array[String] = [
-		t.text(&"summary_title", {"reason": t.text(StringName("walk_end_%s" % ctrl.ended_reason))}),
+		t.text(&"summary_title_expedition" if ctrl.has_full_circle() else &"summary_title", {"reason": t.text(StringName("walk_end_%s" % ctrl.ended_reason))}),
 		"",
 		t.text(&"summary_alms", {"banked": ctrl.state.alms_banked, "unbanked": ctrl.state.alms_unbanked}),
 	]
 	for saint_id: StringName in ctrl.state.party:
 		var status: SaintStatus = ctrl.saints[saint_id]
 		var line: String = t.text(&"summary_saint", {"saint": _saint_name(saint_id), "hp": status.hp, "max": status.max_hp, "desolation": status.desolation})
+		if status.xp > 0:
+			line += " · " + t.text(&"summary_saint_xp", {"xp": status.xp})
 		if status.spirit_state != Desolation.NORMAL:
 			line += " · " + t.text(StringName("spirit_%s" % status.spirit_state))
 		if status.injury != SaintStatus.INJURY_NONE:
