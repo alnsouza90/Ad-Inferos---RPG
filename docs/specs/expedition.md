@@ -10,7 +10,7 @@ Portão → Trecho 1 (4 camadas) → Pouso → Trecho 2 (4 camadas) → Pouso �
 
 - Uma expedição é sempre de um círculo.
 - A expedição termina por: chefe vencido, retirada (planejada ou de emergência) ou derrota.
-- Pousos alcançados ficam **consagrados**: a próxima expedição ao mesmo círculo pode começar no último Pouso consagrado.
+- Pousos alcançados ficam **consagrados**: a próxima expedição ao mesmo círculo pode começar no último Pouso consagrado. A consagração fica nas bandeiras da campanha (`circle_02_camp_1`, `circle_02_camp_2`) e não se perde na derrota (§9). Quem começa num Pouso começa nele, com o Lume de retomada, e ao seguir abre o trecho seguinte (D-435). A escolha do ponto de partida aparece no Mapa do Inferno (T47).
 
 ## 2. Geração do mapa
 

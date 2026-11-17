@@ -113,6 +113,45 @@ static func start_new(p_catalog: ExpeditionCatalog, circle: StringName, map_seed
 	return c
 
 
+## A new expedition that starts at a consecrated camp (§1): the camp after
+## leg `camp`, with the resumed Light (E03, [light_resume]); leaving it opens
+## leg `camp` + 1. `p_flags` are the campaign's flags, which must hold the
+## camp's consecration; otherwise null.
+static func start_resumed(p_catalog: ExpeditionCatalog, circle: StringName, map_seed: int, party: Array[StringName], provisions: Array[StringName], encounter_circle: int, camp: int, p_flags: Array[StringName]) -> ExpeditionController:
+	if not p_flags.has(consecrated_flag(circle, camp)):
+		return null
+	var c := ExpeditionController.new()
+	c.catalog = p_catalog
+	c.state = ExpeditionState.create_resumed(p_catalog.constants, circle, map_seed, party, provisions)
+	c.virtues = Virtues.start(p_catalog.constants)
+	for id: StringName in party:
+		c.saints[id] = SaintStatus.from_def(p_catalog.saint(id))
+	c.ambush_encounter_circle = encounter_circle
+	c.flags = p_flags.duplicate()
+	c.state.leg = camp
+	c.map = c._generate_leg(camp)
+	c.state.map = c.map.to_dict()
+	c.state.camp_reached = true
+	c.phase = Phase.AT_CAMP
+	c._initial = c.snapshot()
+	return c
+
+
+## The flag of a consecrated camp: the camp after leg `leg` of `circle`.
+static func consecrated_flag(circle: StringName, leg: int) -> StringName:
+	return StringName("%s_camp_%d" % [circle, leg])
+
+
+## The last camp of `circle` consecrated in these flags (0: none, start at
+## the gate).
+static func last_consecrated_camp(p_flags: Array[StringName], circle: StringName) -> int:
+	var last: int = 0
+	for leg: int in range(1, LAST_LEG):
+		if p_flags.has(consecrated_flag(circle, leg)):
+			last = leg
+	return last
+
+
 ## The map of leg `leg` (expedition §2, §3): the easy pool in leg 1 and the
 ## hard one after it; the circle's elites in the variable node, its Guardian
 ## at the end of leg 1 and the fish in leg 3 (only where the circle has them,
@@ -963,6 +1002,12 @@ func _arrive_at_camp() -> void:
 	state.alms_unbanked = 0
 	if not state.camp_reached:
 		state.camp_reached = true
+		# §1: the camp stays consecrated for the next expeditions to this
+		# circle, even after a defeat (§9, E09).
+		if has_full_circle():
+			var flag: StringName = consecrated_flag(state.circle, state.leg)
+			if not flags.has(flag):
+				flags.append(flag)
 		_emit(EV_CAMP_REACHED, {"alms_banked": state.alms_banked})
 
 
