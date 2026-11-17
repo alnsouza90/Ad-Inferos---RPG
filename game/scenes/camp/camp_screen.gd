@@ -53,6 +53,10 @@ const HALO_POINTS: Dictionary = {
 const PANEL_TOP: float = 360.0
 ## The arch of the portrait in the card (as in the battle's panel).
 const ARCH_POS := Vector2(6, 6)
+## The activities right beside the portrait, centred on it (D-443); the
+## name and state of the saint after them.
+const GRID_X: float = 118.0
+const NAME_X: float = 362.0
 const ACTIVITY_SIZE := Vector2(116, 28)
 const TARGET_SIZE := Vector2(116, 26)
 const FIXED_SIZE := Vector2(136, 30)
@@ -717,18 +721,18 @@ func _build_card(saint_id: StringName) -> void:
 	root.add_child(portrait)
 	var name_label := _label(_saint_name(saint_id))
 	PixelStyle.title(name_label)
-	name_label.position = Vector2(118, 44)
+	name_label.position = Vector2(NAME_X, 44)
 	root.add_child(name_label)
 	var stats := _label("")
-	stats.position = Vector2(118, 62)
+	stats.position = Vector2(NAME_X, 62)
 	root.add_child(stats)
 	var choice := _label("")
-	choice.position = Vector2(118, 112)
+	choice.position = Vector2(NAME_X, 112)
 	choice.add_theme_color_override("font_color", COLOR_CHOSEN)
 	root.add_child(choice)
 	var grid := GridContainer.new()
 	grid.columns = 2
-	grid.position = Vector2(290, 44)
+	grid.position = Vector2(GRID_X, ARCH_POS.y + 85.0 - (ACTIVITY_SIZE.y * 2.0 + 4.0) * 0.5)
 	grid.add_theme_constant_override("h_separation", 4)
 	grid.add_theme_constant_override("v_separation", 4)
 	root.add_child(grid)
@@ -743,7 +747,7 @@ func _build_card(saint_id: StringName) -> void:
 		grid.add_child(button)
 		buttons[activity] = button
 	var targets := HBoxContainer.new()
-	targets.position = Vector2(290, 112)
+	targets.position = Vector2(GRID_X, ARCH_POS.y + 85.0 + ACTIVITY_SIZE.y + 10.0)
 	targets.add_theme_constant_override("separation", 4)
 	targets.visible = false
 	root.add_child(targets)
