@@ -43,6 +43,7 @@ faith_prepared_ally_max,0.1,Preparo da Fé: máximo somado pelos companheiros (D
 faith_prepared_vigil,0.05,Preparo da Fé: chance por ter feito a Vigília (D-396)
 faith_prepared_cap,0.7,Chance máxima de Consolação com preparo (D-396)
 consolation_gift_desolation,30,Desolação que o dom da Consolação tira de um aliado em estado normal (D-285; D-396)
+rest_heal_all_pct,0.3,Descanso no Pouso cura cada santo esta fração da vida máxima (D-421)
 seven_nights_damage,20,Dano da marca As sete noites de Asmodeu ao fim da contagem (proposta D-411)
 firmness_fervor,1,Fervor a mais na rodada seguinte por ficha de Firmeza (bosses.md §2.4; D-394)
 firmness_per_round,1,Fichas de Firmeza que a companhia ganha no máximo por rodada (D-394)

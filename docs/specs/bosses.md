@@ -140,7 +140,7 @@ Asmodeu segura a alma do Peregrino com um Domínio de **3 garras**, visível jun
 
 | Garra | Vantagem do chefe | Cede quando |
 | --- | --- | --- |
-| 1 · Escolta | A luta começa com 2 Sombras do Desejo nas posições 3 e 4 | A **primeira** vez que a companhia alcança o Peregrino no Círculo 2 (Tentação bem resolvida ou Encontro com a alma) |
+| 1 · Escolta | A luta começa com 2 Sombras do Desejo nas posições 3 e 4 (de volta, D-424) | A **primeira** vez que a companhia alcança o Peregrino no Círculo 2 (Tentação bem resolvida ou Encontro com a alma) |
 | 2 · Ação a mais | +1 ação por rodada | A **segunda** vez |
 | 3 · Fase extra | 3 fases em vez de 2, com as Três cabeças e o Encanto do desejo | A companhia leva o **fígado do peixe** (§5.3) |
 

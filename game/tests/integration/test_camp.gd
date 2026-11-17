@@ -89,7 +89,8 @@ func test_share_heals_30_percent_of_another_saint() -> void:
 	var george: SaintStatus = ctrl.saints[G]
 	george.hp = 1
 	ctrl.execute(ExpeditionCommand.rest(_acts("vigil", "share", "vigil", &"", G)))
-	assert_eq(george.hp, 1 + Damage.round_half_up(george.max_hp * 0.3))
+	# Share 30%, then the rest heals everyone 30% more (D-421).
+	assert_eq(george.hp, 1 + Damage.round_half_up(george.max_hp * 0.3) + Damage.round_half_up(george.max_hp * cat.constants.get_float(&"rest_heal_all_pct")))
 
 
 func test_D144_share_cannot_target_the_saint_himself() -> void:
@@ -136,7 +137,7 @@ func test_therese_little_sacrifices_heal_15_percent_of_the_party() -> void:
 	ctrl.execute(ExpeditionCommand.rest(_acts("prayer", "prayer", "own")))
 	for id: StringName in ctrl.saints:
 		var s: SaintStatus = ctrl.saints[id]
-		assert_eq(s.hp, 1 + Damage.round_half_up(s.max_hp * 0.15), String(id))
+		assert_eq(s.hp, 1 + Damage.round_half_up(s.max_hp * 0.15) + Damage.round_half_up(s.max_hp * cat.constants.get_float(&"rest_heal_all_pct")), String(id))
 
 
 func test_george_guard_halves_the_ambush_chance() -> void:

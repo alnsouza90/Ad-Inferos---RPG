@@ -121,10 +121,15 @@ func _generate_leg(leg: int) -> LegMap:
 	var c: ExpeditionCatalog = catalog
 	var stream := RngStream.new(state.map_seed if leg == 1 else RngStream.hash32(state.map_seed ^ RngStream.fnv1a32("leg_%d" % leg)), RngStreams.MAP)
 	var generator := MapGenerator.new(c.constants, stream)
-	generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy" if leg == 1 else &"hard")
+	# Leg 1 draws from the easy pool; legs 2 and 3 from both, half and half
+	# (D-421, package G).
+	generator.battle_encounters = c.encounter_pool(ambush_encounter_circle, &"easy")
+	if leg > 1:
+		generator.battle_encounters += c.encounter_pool(ambush_encounter_circle, &"hard")
 	generator.elite_encounters = c.encounter_pool(ambush_encounter_circle, &"elite")
 	generator.allow_elite = not generator.elite_encounters.is_empty()
 	generator.guardian_encounters = c.encounter_pool(ambush_encounter_circle, &"guardian")
+	generator.guardian_at_leg2_start = c.constants.get_float_or(&"sim_guardian_leg2", 0.0) > 0.0
 	generator.with_fish = not c.encounter_pool(ambush_encounter_circle, &"boss").is_empty()
 	return generator.generate(leg, c.reserves.get(leg))
 
@@ -1072,6 +1077,9 @@ func _rest(cmd: ExpeditionCommand) -> StringName:
 		var bosses: Array[StringName] = catalog.encounter_pool(ambush_encounter_circle, &"boss")
 		_start_battle(bosses[0], BOSS_SEED_KEY)
 		return &""
+	# expedition §6 (D-421, package G): the rest also heals every saint.
+	for saint_id: StringName in state.party:
+		_heal_pct(saint_id, c.get_float(&"rest_heal_all_pct"))
 	if not refund:
 		state.provisions.erase(&"bread")
 	state.next_battle_fervor = mini(prayers, c.get_int(&"prayer_fervor_cap"))
