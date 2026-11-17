@@ -304,3 +304,55 @@ func test_consolation_has_its_instant_of_the_icon_and_the_clearing() -> void:
 	assert_eq(view.halo().kind(), HaloLook.DISK)
 	assert_true(view.clearing_shown(), "clareira de luz no chão")
 	assert_ne(view.player().self_modulate, Color.BLACK, "o santo volta à cor depois do instante")
+
+
+## T44 part 3 (D-452): each saint's ability stamp lands on its target.
+func test_each_saint_has_the_stamp_of_its_abilities() -> void:
+	assert_eq(SaintStamp.shape_for(&"saint_george", AbilityIcon.WARD), SaintStamp.SHIELD)
+	assert_eq(SaintStamp.shape_for(&"saint_benedict", AbilityIcon.EXORCISM), SaintStamp.CROSS)
+	assert_eq(SaintStamp.shape_for(&"saint_benedict", AbilityIcon.RELIEF), SaintStamp.RING)
+	assert_eq(SaintStamp.shape_for(&"saint_therese", AbilityIcon.HEAL), SaintStamp.PETALS)
+	assert_eq(SaintStamp.shape_for(&"saint_george", AbilityIcon.STRIKE), &"", "o golpe de lança não tem estampa")
+	for shape: StringName in [SaintStamp.SHIELD, SaintStamp.CROSS, SaintStamp.RING, SaintStamp.PETALS]:
+		assert_not_null(SaintStamp.texture_of(shape), String(shape))
+
+
+func test_george_shield_drops_on_the_one_he_protects() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	var george: Combatant = screen.ctrl.state.find(&"saint_george")
+	screen._schedule_saint_stamp(george, &"george_raised_shield", &"saint_therese", 0.0)
+	assert_eq(screen.saint_stamps_shown(), [SaintStamp.SHIELD] as Array[StringName])
+	await wait_seconds(SaintStamp.ARRIVE + SaintStamp.HOLD + SaintStamp.LEAVE + 0.3)
+	assert_eq(screen.saint_stamps_shown(), [] as Array[StringName], "a estampa some")
+
+
+## bosses.md §5.3 (D-452, D-453): with the liver, Raphael flickers in gold
+## beside the defeated Asmodeus, becomes himself, the story panel shows, he
+## flickers in gold and goes; then the result.
+func test_raphael_binds_asmodeus_before_the_result() -> void:
+	var screen := _screen(&"c02_boss_asmodeus", 3)
+	screen.speed_index = 1
+	assert_true(screen._play_raphael())
+	assert_true(screen.raphael_shown())
+	assert_true(screen.busy, "a cena segura os toques")
+	await wait_until(func() -> bool: return screen.result_shown(), 6.0)
+	assert_true(screen.result_shown())
+	assert_false(screen.raphael_shown())
+	assert_false(screen.busy)
+
+
+## D-454: a corporeal enemy's blow leaves the ink slash on the saint.
+func test_an_enemy_blow_leaves_the_ink_slash_on_the_saint() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	var enemy: StringName = screen.ctrl.state.enemies[0].id
+	assert_eq(screen._ink_of(enemy, &"saint_george", &"strike"), InkSplash.SLASH)
+	assert_eq(screen._ink_of(&"saint_george", enemy, &"strike"), &"", "o santo não deixa tinta")
+	assert_eq(screen._ink_of(enemy, &"saint_george", &"spirit"), InkSplash.STAIN, "o dano espiritual sobe do chão")
+	for ink: StringName in [InkSplash.SLASH, InkSplash.STAIN, InkSplash.POOL, InkSplash.WIND]:
+		assert_not_null(InkSplash.texture_of(ink), String(ink))
+	screen._play_ink(InkSplash.SLASH, screen.view_of(&"saint_george"))
+	assert_eq(screen.inks_shown(), [InkSplash.SLASH] as Array[StringName])
+	await wait_seconds(InkSplash.FRAMES / InkSplash.FPS + 0.2)
+	assert_eq(screen.inks_shown(), [] as Array[StringName], "a tinta some")
