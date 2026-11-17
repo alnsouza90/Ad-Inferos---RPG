@@ -98,9 +98,13 @@ ABILITY_STAMPS = {"shield": 0.75, "cross": 1.0, "ring": 1.0, "petal": 0.6}
 ABILITY_STAMP_VERSIONS = {"shield": 2}
 # The enemies' ink (D-454): sheets of six frames in a grid of three columns
 # and two rows on a flat light grey; each cell is cleaned and laid in a row.
-INK_SHEETS = {"slash": "ink_slash_px_v01.png"}
+# name -> (source, anchor): "centre" keeps each cell as drawn; "bottom" sets
+# every cell's drawing on the same ground line (the stain rises from it).
+INK_SHEETS = {"slash": ("ink_slash_px_v01.png", "centre"), "stain": ("ink_stain_px_v01.png", "bottom")}
 INK_GRID = (3, 2)
 INK_BACKGROUND_TOLERANCE = 40
+# Row of a grounded cell that stands on the feet (the rest hangs below).
+INK_GROUND_LINE = 92
 STAMP_HEIGHT = 220
 STAMP_WHITE = (0xF1, 0xEC, 0xE0, 255)
 STAMP_THRESHOLD = 150
@@ -230,8 +234,8 @@ def main() -> None:
         piece = tidy(source.crop(source.getbbox()), times) if times < 1.0 else tidy(source)
         piece = piece.crop(piece.getbbox())
         save(piece, ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
-    for name, file_name in INK_SHEETS.items():
-        save(ink_strip(ROOT / "art_source/vfx/stamps" / file_name), ROOT / f"game/assets/pixel/vfx/ink_{name}.png")
+    for name, (file_name, anchor) in INK_SHEETS.items():
+        save(ink_strip(ROOT / "art_source/vfx/stamps" / file_name, anchor), ROOT / f"game/assets/pixel/vfx/ink_{name}.png")
     for name, source in STAMPS.items():
         save(stamp(source), ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     figure, gold = raphael()
@@ -292,7 +296,7 @@ def raphael() -> tuple[Image.Image, Image.Image]:
     return figure, Image.fromarray(flat, "RGBA")
 
 
-def ink_strip(source: Path) -> Image.Image:
+def ink_strip(source: Path, anchor: str = "centre") -> Image.Image:
     """The six cells of the grid, the flat grey around them made empty, all
     cells the same size, in one row (reading order)."""
     sheet = np.array(Image.open(source).convert("RGBA"))
@@ -303,6 +307,18 @@ def ink_strip(source: Path) -> Image.Image:
     columns, rows = INK_GRID
     cell_w, cell_h = image.width // columns, image.height // rows
     cells = [tidy(image.crop((c * cell_w, r * cell_h, (c + 1) * cell_w, (r + 1) * cell_h))) for r in range(rows) for c in range(columns)]
+    if anchor == "bottom":
+        # Each cell's widest row (the surface of the pool, the foot of the
+        # column) goes to the same ground line; drips hang below it.
+        grounded = []
+        for cell in cells:
+            alpha = np.array(cell)[:, :, 3] > 0
+            moved = Image.new("RGBA", cell.size, (0, 0, 0, 0))
+            if alpha.any():
+                widest = int(np.argmax(alpha.sum(1)))
+                moved.paste(cell, (0, INK_GROUND_LINE - widest))
+            grounded.append(moved)
+        cells = grounded
     strip = Image.new("RGBA", (cell_w * len(cells), cell_h), (0, 0, 0, 0))
     for i, cell in enumerate(cells):
         strip.paste(cell, (i * cell_w, 0))

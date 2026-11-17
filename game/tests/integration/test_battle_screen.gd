@@ -349,6 +349,7 @@ func test_an_enemy_blow_leaves_the_ink_slash_on_the_saint() -> void:
 	var enemy: StringName = screen.ctrl.state.enemies[0].id
 	assert_eq(screen._ink_of(enemy, &"saint_george", &"strike"), InkSplash.SLASH)
 	assert_eq(screen._ink_of(&"saint_george", enemy, &"strike"), &"", "o santo não deixa tinta")
+	assert_eq(screen._ink_of(enemy, &"saint_george", &"spirit"), InkSplash.STAIN, "o dano espiritual sobe do chão")
 	screen._play_ink(InkSplash.SLASH, screen.view_of(&"saint_george"))
 	assert_eq(screen.inks_shown(), [InkSplash.SLASH] as Array[StringName])
 	await wait_seconds(InkSplash.FRAMES / InkSplash.FPS + 0.2)

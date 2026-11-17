@@ -967,14 +967,14 @@ func _react(hit: Dictionary) -> float:
 	return view.play_hit()
 
 
-## The enemy's ink on a saint it hits (D-454): a corporeal enemy's blow
-## leaves the slash; other kinds wait for their sheets.
+## The enemy's ink on a saint it hits (D-454, D-455): a blow in the flesh
+## leaves the slash; any other harm rises from the ground as a stain.
 func _ink_of(source: StringName, target_id: StringName, damage_type: StringName) -> StringName:
 	var attacker: Combatant = ctrl.state.find(source)
 	var target: Combatant = ctrl.state.find(target_id)
 	if attacker == null or target == null or attacker.is_saint() or not target.is_saint():
 		return &""
-	return InkSplash.SLASH if damage_type == &"strike" else &""
+	return InkSplash.SLASH if damage_type == &"strike" else InkSplash.STAIN
 
 
 func _play_ink(ink: StringName, view: CombatantView) -> void:
@@ -982,9 +982,11 @@ func _play_ink(ink: StringName, view: CombatantView) -> void:
 	if ink == &"" or view == null or factor <= 0.0 or InkSplash.texture_of(ink) == null:
 		return
 	var splash := InkSplash.new()
-	splash.z_index = OVERLAY_Z
+	# Over the fighters, under their bars and intents.
 	_field.add_child(splash)
-	splash.play(ink, _field.get_global_transform().affine_inverse() * view.chest_global(), factor)
+	_field.move_child(splash, _badges_layer.get_index())
+	var spot: Vector2 = view.feet_global() if InkSplash.GROUNDED.has(ink) else view.chest_global()
+	splash.play(ink, _field.get_global_transform().affine_inverse() * spot, factor)
 
 
 ## The ink splashes playing now (tests).
