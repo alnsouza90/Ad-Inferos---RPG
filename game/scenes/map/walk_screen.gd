@@ -59,6 +59,26 @@ const ENTRANCE_PROPS: Dictionary = {
 	&"stairs": "env_circle_02_entry_stair",
 }
 const SOUL_DRAWINGS: int = 3
+## The animated pieces of the content (D-446): the two souls in the wind and
+## the fish of the Tigris, with their frame count; the fish leaps out of the
+## river, its tail this high above the feet.
+const COUPLE_STRIP: String = "env_circle_02_couple"
+const FISH_STRIP: String = "env_circle_02_fish"
+const STRIP_FRAMES: int = 8
+const COUPLE_LIFT: float = 16.0
+const FISH_ABOVE_FEET: float = 56.0
+## The pinnacle stands this far behind the souls (corridor fraction).
+const SOULS_PINNACLE_AFTER: float = 0.2
+## A loose piece of the place stands here (corridor fraction).
+const DECOR_AT: float = 0.18
+## Passing from one screen to the next (D-446): along the open way the party
+## walks off the right edge and comes in from the left; a door, a cave or a
+## stair darkens the screen and opens on the other side.
+const PASSAGE_TIME: float = 0.6
+const PASSAGE_WALK: float = 620.0
+## The wall behind a door and the loose pieces sink a little into the ground.
+const WALL_SINK: float = 30.0
+const PIECE_SINK: float = 12.0
 const LIST_BUTTON_SIZE := Vector2(300, 28)
 ## The panel of the walk (D-436): the saints' cards, the mini-map strip and
 ## the alforje.
@@ -137,6 +157,14 @@ var _arrow_time: float = 0.0
 var _minimap_overlay: Control
 var _minimap: MiniMapView
 var _straight: StringName = &""
+## node id -> passage of each entrance (SceneryPlan).
+var _passages: Dictionary = {}
+## The scenery of this corridor (SceneryPlan.look).
+var _look: Dictionary = {}
+## The passage the party came through into this corridor (set by the flow)
+## and the one it took to leave it.
+var entered_by: StringName = &""
+var left_by: StringName = &""
 var _facing: int = 1
 var _moving: bool = false
 
@@ -214,12 +242,16 @@ func arrive() -> void:
 	var n: MapNode = ctrl.current_node()
 	var at_fork: bool = ctrl.phase == ExpeditionController.Phase.AT_FORK
 	var entrance_ids: Array[StringName] = []
+	_passages.clear()
+	_straight = &""
 	if at_fork:
 		for e: MapNode in ctrl.entrances():
 			entrance_ids.append(e.id)
-		_straight = CorridorLook.straight_entrance(ctrl.map, n, ctrl.entrances())
-	else:
-		_straight = &""
+			var kind: StringName = SceneryPlan.passage(ctrl.map, n, e)
+			_passages[e.id] = kind
+			if kind == SceneryPlan.OPEN:
+				_straight = e.id
+	_apply_look(n)
 	var content: bool = ExpeditionController.has_corridor_content(n)
 	corridor = CorridorWalk.make(content, ctrl.phase == ExpeditionController.Phase.PENDING, entrance_ids, _straight)
 	var after_battle: bool = content and at_fork and n.is_battle_like()
@@ -237,6 +269,7 @@ func arrive() -> void:
 	elif corridor.at_pending_content():
 		_reached_content()
 	_show_arrows()
+	_come_in()
 
 
 ## Holding the finger: 1 walks forward, -1 walks back (D-178).
@@ -285,12 +318,14 @@ func press_enter() -> void:
 	if busy or selected_entrance == &"" or ctrl.phase != ExpeditionController.Phase.AT_FORK:
 		return
 	var node_id: StringName = selected_entrance
+	var kind: StringName = passage_of(node_id)
 	var reason: StringName = run.call(ExpeditionCommand.choose_path(node_id))
 	if reason != &"":
 		_info.text = texts.reason(reason)
 		return
 	selected_entrance = &""
-	node_entered.emit(node_id)
+	left_by = kind
+	_go_out(kind, node_id)
 
 
 ## Entrar (tent), Abrir (relic) or Falar (soul): EngageNode.
@@ -366,6 +401,21 @@ func entrance_text(node_id: StringName) -> String:
 
 func straight_entrance() -> StringName:
 	return _straight
+
+
+## The passage into `node_id` from here (SceneryPlan.OPEN, DOOR, CAVE, STAIRS).
+func passage_of(node_id: StringName) -> StringName:
+	return _passages.get(node_id, SceneryPlan.OPEN)
+
+
+## The scenery of this corridor (SceneryPlan.look).
+func scenery_look() -> Dictionary:
+	return _look
+
+
+## True while the content's drawing is shown (the fish goes once taken).
+func content_shown() -> bool:
+	return _content_view != null and _content_view.visible
 
 
 func position_in_corridor() -> float:
@@ -689,7 +739,7 @@ func _action(text: String, callback: Callable) -> void:
 
 
 func _entrance_info(n: MapNode) -> String:
-	var lines: Array[String] = [texts.type_name(n) + " · " + texts.path_name(CorridorLook.path_kind(n.id, _straight))]
+	var lines: Array[String] = [texts.type_name(n) + " · " + texts.path_name(passage_of(n.id))]
 	var known: String = texts.content(ctrl, n)
 	if known != "":
 		lines.append(known)
@@ -709,21 +759,25 @@ func _build_objects() -> void:
 	_entrance_views.clear()
 	_content_view = null
 	var n: MapNode = ctrl.current_node()
+	var decor: String = SceneryPlan.decor(ctrl.map, n)
+	if decor != "":
+		_place_piece(_prop(decor), DECOR_AT)
 	if corridor.has_content() and not n.is_battle_like():
-		var prop: Texture2D = _content_prop(n)
-		if prop != null:
-			_content_view = _prop_view(prop, texts.type_name(n))
-			_content_view.modulate = Color.WHITE if corridor.content_pending else Color(0.6, 0.6, 0.65)
-		else:
-			_content_view = _block(texts.type_name(n), COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
+		_content_view = _content_drawing(n)
 		_content_view.position = Vector2(roundf(_world_x(corridor.content_at) - _content_view.size.x * 0.5), FEET_Y - _content_view.size.y)
+		if n.content == MapGenerator.CONTENT_FISH:
+			# The fish leaps out of the river, and is gone once taken (D-446).
+			_content_view.position.y -= FISH_ABOVE_FEET
+			_content_view.visible = corridor.content_pending
+		elif n.type == MapNode.TYPE_SOUL:
+			_content_view.position.y -= COUPLE_LIFT
+			_place_piece(_prop("env_circle_02_pinnacle"), corridor.content_at + SOULS_PINNACLE_AFTER)
 		_objects.add_child(_content_view)
 	for id: StringName in corridor.entrance_order():
 		var e: MapNode = ctrl.map.find(id)
-		var kind: StringName = CorridorLook.path_kind(id, _straight)
+		var kind: StringName = passage_of(id)
 		var text: String = texts.type_name(e) + "\n" + texts.path_name(kind)
-		var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
-		var view: Control = _prop_view(entrance, text) if entrance != null else _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
+		var view: Control = _entrance_view(kind, text)
 		view.set_meta(&"text", text)
 		view.mouse_filter = Control.MOUSE_FILTER_STOP
 		view.gui_input.connect(func(event: InputEvent) -> void:
@@ -735,18 +789,132 @@ func _build_objects() -> void:
 		_entrance_views[id] = view
 
 
-## The drawing of what waits in the corridor (T65, D-385): the tent of the
-## Temptation, the reliquary (open once taken), one of the souls (picked by
-## the node id, so a resumed game looks the same).
-func _content_prop(n: MapNode) -> Texture2D:
+## The drawing of what waits in the corridor (T65, D-385, D-446): the tent of
+## the Temptation, the reliquary (open once taken), the two souls in the wind
+## (a touch talks to them), the fish of the Tigris.
+func _content_drawing(n: MapNode) -> Control:
+	var text: String = texts.type_name(n)
+	if n.content == MapGenerator.CONTENT_FISH:
+		return _strip_view(_prop(FISH_STRIP), text)
+	var view: Control = null
 	match n.type:
 		MapNode.TYPE_TEMPTATION:
-			return _prop("env_circle_02_tent")
+			view = _prop_view(_prop("env_circle_02_tent"), text)
 		MapNode.TYPE_RELIC:
-			return _prop("prop_reliquary_closed" if corridor.content_pending else "prop_reliquary_open")
+			view = _prop_view(_prop("prop_reliquary_closed" if corridor.content_pending else "prop_reliquary_open"), text)
 		MapNode.TYPE_SOUL:
-			return _prop("env_circle_02_soul_%d" % (RngStream.fnv1a32(String(n.id)) % SOUL_DRAWINGS + 1))
-	return null
+			view = _strip_view(_prop(COUPLE_STRIP), text)
+			view.mouse_filter = Control.MOUSE_FILTER_STOP
+			view.gui_input.connect(func(event: InputEvent) -> void:
+				if _is_tap(event) and corridor.at_pending_content():
+					press_engage()
+					view.accept_event())
+	if view == null:
+		return _block(text, COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
+	view.modulate = Color.WHITE if corridor.content_pending else Color(0.6, 0.6, 0.65)
+	return view
+
+
+## An entrance (D-445): the open way has no drawing, only its name at the
+## right edge; a door stands in a built wall; a cave or a stair alone.
+func _entrance_view(kind: StringName, text: String) -> Control:
+	if kind == SceneryPlan.OPEN:
+		var way := Control.new()
+		way.size = ENTRANCE_SIZE
+		var label := _label(text)
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.size = Vector2(ENTRANCE_SIZE.x + 40.0, 24)
+		label.position = Vector2(-20, -26)
+		way.add_child(label)
+		return way
+	var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
+	if entrance == null:
+		return _block(text, COLOR_DETOUR, ENTRANCE_SIZE)
+	var view: Control = _prop_view(entrance, text)
+	if kind == SceneryPlan.DOOR:
+		var wall: Texture2D = _prop(SceneryPlan.WALL)
+		if wall != null:
+			var behind := TextureRect.new()
+			behind.texture = wall
+			behind.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			behind.material = CircleLook.filter_material()
+			behind.position = Vector2(roundf((entrance.get_width() - wall.get_width()) * 0.5), entrance.get_height() - wall.get_height() + WALL_SINK)
+			view.add_child(behind)
+			view.move_child(behind, 0)
+	return view
+
+
+## A loose piece of the place, standing on the ground at `fraction`.
+func _place_piece(tex: Texture2D, fraction: float) -> void:
+	if tex == null:
+		return
+	var piece := TextureRect.new()
+	piece.texture = tex
+	piece.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	piece.material = CircleLook.filter_material()
+	piece.position = Vector2(roundf(_world_x(fraction) - tex.get_width() * 0.5), FEET_Y - tex.get_height() + PIECE_SINK)
+	_objects.add_child(piece)
+
+
+## An animated piece standing on the ground, its name above it.
+func _strip_view(tex: Texture2D, text: String) -> Control:
+	if tex == null:
+		return _block(text, COLOR_OBJECT, OBJECT_SIZE)
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var picture := AnimatedStrip.new()
+	picture.setup(tex, STRIP_FRAMES)
+	picture.material = CircleLook.filter_material()
+	holder.size = picture.size
+	holder.add_child(picture)
+	var label := _label(text)
+	label.size = Vector2(maxf(picture.size.x, 90.0), 24)
+	label.position = Vector2(roundf((picture.size.x - label.size.x) * 0.5), -26)
+	holder.add_child(label)
+	return holder
+
+
+## The scenery of the corridor of `n` (D-445, D-446).
+func _apply_look(n: MapNode) -> void:
+	_look = SceneryPlan.look(ctrl.map, n)
+	_scenery_back.setup(SceneryPlan.back_layers(_look), CircleLook.filter_material())
+	_scenery_front.setup(SceneryPlan.front_layers(_look, true), CircleLook.filter_material())
+
+
+## Leaving by `kind` into `node_id`, then the flow shows the next screen.
+func _go_out(kind: StringName, node_id: StringName) -> void:
+	if BattleScreen.SPEEDS[speed_index] <= 0.0 or not is_inside_tree():
+		node_entered.emit(node_id)
+		return
+	busy = true
+	var tween := create_tween()
+	if kind == SceneryPlan.OPEN:
+		_facing = 1
+		_set_moving(true)
+		tween.tween_property(_party, "position:x", PASSAGE_WALK, PASSAGE_TIME)
+	else:
+		tween.tween_property(_dark, "color:a", 1.0, PASSAGE_TIME * 0.5)
+	tween.tween_callback(func() -> void:
+		busy = false
+		node_entered.emit(node_id))
+
+
+## Coming in by the passage taken on the screen before.
+func _come_in() -> void:
+	var kind: StringName = entered_by
+	entered_by = &""
+	if kind == &"" or BattleScreen.SPEEDS[speed_index] <= 0.0 or not is_inside_tree() or corridor.position > 0.0:
+		return
+	var tween := create_tween()
+	if kind == SceneryPlan.OPEN:
+		_party.position.x = -PASSAGE_WALK
+		_facing = 1
+		_set_moving(true)
+		tween.tween_property(_party, "position:x", 0.0, PASSAGE_TIME)
+		tween.tween_callback(func() -> void: _set_moving(false))
+	else:
+		_dark.color.a = 1.0
+		tween.tween_property(_dark, "color:a", 0.0, PASSAGE_TIME * 0.5)
 
 
 func _prop(file_name: String) -> Texture2D:

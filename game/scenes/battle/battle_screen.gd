@@ -143,6 +143,9 @@ signal back_requested
 ## and saved by the expedition), "Jogar de novo" and the dev buttons are
 ## hidden (they would bypass the log) and the result offers "Continuar".
 var in_expedition: bool = false
+## The scenery of the corridor the battle broke out in (SceneryPlan.look);
+## empty: the leg-1 set, or the boss arena.
+var scenery_look: Dictionary = {}
 ## Takes a BattleCommand and returns its CommandResult. Default: the
 ## controller itself (the arena).
 var executor: Callable
@@ -1626,8 +1629,14 @@ func _build_field() -> void:
 	_field.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_field_clip.add_child(_field)
 	var set_id: StringName = CircleLook.SET_BOSS if ctrl.state.encounter_type == &"boss" else CircleLook.SET_LEG_1
+	var backs: Array[Dictionary] = CircleLook.back_layers(set_id)
+	var fronts: Array[Dictionary] = CircleLook.front_layers(set_id)
+	if not scenery_look.is_empty():
+		# The battle stays in the place of the corridor (D-359, D-446).
+		backs = SceneryPlan.back_layers(scenery_look)
+		fronts = SceneryPlan.front_layers(scenery_look)
 	_scenery_back = ParallaxScenery.new()
-	_scenery_back.setup(CircleLook.back_layers(set_id), CircleLook.filter_material())
+	_scenery_back.setup(backs, CircleLook.filter_material())
 	_field.add_child(_scenery_back)
 	_dim = ColorRect.new()
 	_dim.color = Color(0.02, 0.01, 0.02, 0.0)
@@ -1659,7 +1668,7 @@ func _build_field() -> void:
 		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_field.add_child(holder)
 		var front := ParallaxScenery.new()
-		front.setup(CircleLook.front_layers(set_id), CircleLook.filter_material())
+		front.setup(fronts, CircleLook.filter_material())
 		front.drop = FRONT_DROP
 		holder.add_child(front)
 		_front_corners.append(holder)

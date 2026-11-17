@@ -34,9 +34,12 @@ static func make(has_content: bool, pending: bool, entrance_ids: Array[StringNam
 	for id: StringName in entrance_ids:
 		if id != straight_id:
 			detours.append(id)
+	# Without an open way the corridor ends in its passages (D-446): the
+	# last one stands at the very end, where the way would go on.
+	var last: float = DETOURS_TO if straight_id != &"" else STRAIGHT_AT
 	for i: int in detours.size():
-		var t: float = 0.5 if detours.size() == 1 else float(i) / float(detours.size() - 1)
-		w.entrance_at[detours[i]] = lerpf(DETOURS_FROM, DETOURS_TO, t)
+		var t: float = 1.0 if detours.size() == 1 and straight_id == &"" else (0.5 if detours.size() == 1 else float(i) / float(detours.size() - 1))
+		w.entrance_at[detours[i]] = lerpf(DETOURS_FROM, last, t)
 	if straight_id != &"":
 		w.entrance_at[straight_id] = STRAIGHT_AT
 	return w

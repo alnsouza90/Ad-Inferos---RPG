@@ -9,6 +9,8 @@ extends Control
 ## Texture, parallax and horizontal offset of each layer, back to front.
 var _textures: Array[Texture2D] = []
 var _parallax: Array[float] = []
+## Unique pieces (D-445 rule 1) are drawn once, never repeated sideways.
+var _once: Array[bool] = []
 ## Pixels the layers are pushed down: the battle shows only the top of the
 ## front layer, in the corners (D-258).
 var drop: float = 0.0:
@@ -19,18 +21,21 @@ var _camera_x: float = 0.0
 var _shift: float = 0.0
 
 
-## `layers`: [{"path": String, "parallax": float}]; a missing file is skipped.
+## `layers`: [{"path": String, "parallax": float, "once": bool}]; a missing
+## file is skipped.
 func setup(layers: Array[Dictionary], filter: Material = null) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	material = filter
 	_textures.clear()
 	_parallax.clear()
+	_once.clear()
 	for layer: Dictionary in layers:
 		var path: String = str(layer.get("path", ""))
 		if not ResourceLoader.exists(path):
 			continue
 		_textures.append(load(path) as Texture2D)
 		_parallax.append(float(layer.get("parallax", 1.0)))
+		_once.append(bool(layer.get("once", false)))
 	queue_redraw()
 
 
@@ -69,8 +74,8 @@ func _draw() -> void:
 		var offset: float = layer_offset(i)
 		# The layer is centred on the control when the camera is at 0.
 		var origin: float = floorf((size.x - w) * 0.5) + offset
-		var first: int = int(floorf(-origin / w))
-		var last: int = int(floorf((size.x - origin) / w))
+		var first: int = 0 if _once[i] else int(floorf(-origin / w))
+		var last: int = 0 if _once[i] else int(floorf((size.x - origin) / w))
 		for k: int in range(first, last + 1):
 			var x: float = origin + k * w
 			if posmod(k, 2) == 0:

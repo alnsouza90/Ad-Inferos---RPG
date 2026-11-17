@@ -233,6 +233,7 @@ texts = {
 "round_clock": "Rodada {round} · desolação ao vencer: {amount}",
 "slot": "Posição {slot}",
 "speaker_demon_tempter": "A voz na tempestade",
+"speaker_soul_lover": "A alma",
 "speed_fast": "Velocidade 2x",
 "speed_instant": "Velocidade: instantânea",
 "speed_normal": "Velocidade 1x",

@@ -48,7 +48,7 @@ Pedido de Alan (17/11/2026): alinhar trecho a trecho qual cenário cada lugar us
 
 **Total: cerca de 60 gerações.** No jogo, o motor monta cada tela com céu, meio, peças e frente, segundo estas regras, sorteando com a semente do mapa (a mesma partida sempre igual).
 
-## Continuidade entre os nós · proposta v3, para aprovar
+## Continuidade entre os nós · v3, aprovada (D-446) e no motor (D-447)
 
 Pedido de Alan (17/11/2026): a passagem de um nó para o outro tem de ser suave e caber no cenário. Exemplo: o nó antes de Minos **tem de acabar numa porta**, então esse nó precisa de uma parede construída. A continuidade é essencial para a imersão.
 
@@ -68,3 +68,28 @@ Pedido de Alan (17/11/2026): a passagem de um nó para o outro tem de ser suave 
 3. **O motor olha para a frente:** antes de montar a tela N, ele vê o que vem em N+1. Se N+1 pede porta, a tela N recebe um muro ou uma arcada com a porta no fim. Se pede caverna, recebe a parede de rocha.
 4. **Bifurcação:** a tela da bifurcação mostra as duas saídas no fundo, no mesmo lugar. Por exemplo, o chão que segue para a direita e uma porta num muro. Por isso ela é montada com as peças que as duas saídas pedem.
 5. **Minos:** a última tela do trecho 1 antes dele é sempre de **muro com porta**. Entra-se pela porta e o salão do júri abre com a companhia já dentro.
+
+## Como ficou no motor (D-447)
+
+- `game/scenes/map/scenery_plan.gd` decide tudo a partir do mapa, nunca do sorteio das regras, então a mesma partida sempre fica igual.
+- **Lugares genéricos por trecho:**
+  - trecho 1: T1 fundo + meio liso, ou tempestade + parede de rocha;
+  - trecho 2: tempestade + torres quebradas, ou tempestade + meio liso;
+  - trecho 3: T3 fundo + claustro, ou tempestade + parede de rocha.
+- **Cada tipo de nó:**
+  - **Combate:** um lugar genérico, que herda o lugar de onde se chega pelo caminho reto. Por isso o lugar continua até uma passagem fechada.
+  - **Tentação:** o lugar do caminho com o meio liso e a tenda.
+  - **Encontro com alma:** o lugar do caminho, com a multidão de almas atrás e o casal no chão. Tocar no casal é o mesmo que "Falar".
+  - **Relíquia:** o céu do caminho com a parede de rocha. Se o caminho já está no claustro, fica no claustro.
+  - **Elite:** o céu vira o olho da tempestade, sobre o mesmo meio. Isso não conta como mudança de lugar.
+  - **Minos:** o salão do júri com o piso de lajes roxas. Chega-se sempre por uma porta num muro, e essa porta fica no fim do corredor anterior.
+  - **Peixe do Tigre:** T3 fundo + margem do Tigre. O peixe salta do rio e some depois de pego.
+- **Trono:** aparece uma vez só, na chegada ao círculo (o corredor que sai do Portão do trecho 1), desenhado uma vez, sem se repetir para os lados.
+- **Passagens:**
+  - **Aberta:** só no caminho reto e quando o lugar é o mesmo. Fica no fim do corredor, sem desenho; a companhia sai pela direita e entra pela esquerda na tela seguinte.
+  - **Fechada:** a caverna só onde o meio é a parede de rocha; nos outros lugares, porta (com um muro atrás) ou escada. A tela escurece e abre do outro lado.
+  - Sem caminho aberto, a última passagem fica no fim do corredor.
+- **Frente:**
+  - a luta mostra a frente do trecho nos cantos;
+  - a caminhada usa as pedras baixas do trecho 1, porque as frentes dos trechos 2 e 3 são altas e esconderiam a companhia.
+- **Medido em 60 partidas inteiras:** cerca de 73% dos corredores seguem por um caminho aberto. Os outros mudam de lugar por porta, caverna ou escada.

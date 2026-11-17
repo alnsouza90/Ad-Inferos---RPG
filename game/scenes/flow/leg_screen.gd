@@ -31,6 +31,8 @@ var relic_choice: StringName = &""
 ## The party's place in the corridor (save-load §3.1), when GameState is not
 ## in use (tests). In the game it lives in GameState and goes to the save.
 var corridor_place: Dictionary = {}
+## The passage the party took out of the last corridor (SceneryPlan).
+var _passage: StringName = &""
 
 var _panel_label: Label
 
@@ -145,7 +147,12 @@ func _show_walk() -> void:
 	walk.speed_index = speed_index
 	walk.setup(data, ctrl, run_command)
 	walk.saved_place = _place()
-	walk.node_entered.connect(func(_id: StringName) -> void: show_phase())
+	# The passage taken on the screen before (D-446): the walk comes in by it.
+	walk.entered_by = _passage
+	_passage = &""
+	walk.node_entered.connect(func(_id: StringName) -> void:
+		_passage = walk.left_by
+		show_phase())
 	walk.position_changed.connect(_keep_place)
 	_replace(walk)
 
@@ -168,6 +175,8 @@ func _show_battle() -> void:
 	battle.in_expedition = true
 	battle.speed_index = speed_index
 	battle.setup(data, ctrl.battle)
+	if ctrl.battle.state.encounter_type != &"boss":
+		battle.scenery_look = SceneryPlan.look(ctrl.map, ctrl.current_node())
 	battle.light = ctrl.state.light
 	battle.light_max = ctrl.catalog.constants.get_int(&"light_start")
 	battle.set_pack_capacity(FieldProvisions.capacity(ctrl.state.gate_level, ctrl.catalog.constants))
