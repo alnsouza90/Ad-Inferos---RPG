@@ -266,6 +266,8 @@ texts = {
 "virtue_faith": "Fé",
 "virtue_hope": "Esperança",
 "walk_alms": "Esmolas {banked} (+{unbanked} não garantidas)",
+"walk_card_desolation": "Desol.",
+"walk_card_hp": "Vida",
 "walk_choose_saint": "{provision}: em quem?",
 "walk_content_enemies": "{pool}: {enemies}",
 "walk_content_hidden": "Conteúdo oculto",
@@ -286,6 +288,7 @@ texts = {
 "walk_minimap_close": "Fechar",
 "walk_no_provisions": "Sem provisões",
 "walk_open": "Abrir",
+"walk_pack": "Alforje · {count} de {of}",
 "walk_pass_by": "Passar ao largo",
 "walk_path_cave": "Caverna",
 "walk_path_door": "Porta",
@@ -302,5 +305,7 @@ texts = {
 "walk_reason_nothing_to_reveal": "Nada a revelar",
 "walk_reason_requirement_not_met": "Falta o que é preciso",
 "walk_reason_wrong_phase": "Agora não",
+"walk_strip_open": "toque: mapa inteiro",
+"walk_strip_title": "Trecho {leg} · mini-mapa",
 "walk_talk": "Falar"
 }

@@ -523,3 +523,29 @@ func test_every_walk_text_exists_in_the_data() -> void:
 		keys.append("walk_end_%s" % reason)
 	for key: String in keys:
 		assert_true(data.ui.has_text(StringName(key)), "ui_text.csv tem '%s'" % key)
+
+
+# --- T44 part 1 (D-436): the panel of the walk --------------------------------------
+
+func test_the_panel_shows_a_card_per_saint_and_the_strip_opens_the_map() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	assert_eq(w._cards.size(), c.state.party.size(), "uma mini-ficha por santo")
+	assert_false(w.minimap_open())
+	w._strip.pressed.emit()
+	assert_true(w.minimap_open(), "tocar no mini-mapa abre o mapa inteiro")
+
+
+func test_the_alforje_shows_its_slots() -> void:
+	var c := _new_ctrl(3)
+	var w := _new_walk(c)
+	var slots: int = FieldProvisions.capacity(c.state.gate_level, c.catalog.constants)
+	assert_string_contains(w._provisions_button.text, "%d de %d" % [c.state.provisions.size(), slots])
+	w.press_provisions()
+	assert_true(w.provisions_open())
+	var grid: GridContainer = null
+	for child: Node in w._provisions_list.get_children():
+		if child is GridContainer:
+			grid = child
+	assert_not_null(grid, "as casas do alforje")
+	assert_eq(grid.get_child_count(), slots, "cheias e vazias")

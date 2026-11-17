@@ -63,6 +63,16 @@ const ENTRANCE_PROPS: Dictionary = {
 }
 const SOUL_DRAWINGS: int = 3
 const LIST_BUTTON_SIZE := Vector2(300, 28)
+## The panel of the walk (D-436): the saints' cards, the mini-map strip and
+## the alforje.
+const CARDS_X: float = 210.0
+const CARD_SIZE := Vector2(140, 80)
+const STRIP_X: float = 660.0
+const STRIP_SIZE := Vector2(290, 80)
+const PACK_BUTTON_SIZE := Vector2(124, 56)
+const PACK_POS := Vector2(16, 186)
+const PACK_SLOT := Vector2(48, 40)
+const PACK_COLUMNS: int = 4
 
 ## A command was accepted that leaves this corridor (ChoosePath, or content
 ## that opens its own screen): the flow shows the next phase.
@@ -112,6 +122,8 @@ var _alms_label: Label
 var _provisions_button: Button
 var _provisions_overlay: Control
 var _provisions_list: VBoxContainer
+var _cards: Dictionary = {}
+var _strip: Button
 var _minimap_overlay: Control
 var _minimap: MiniMapView
 var _straight: StringName = &""
@@ -381,17 +393,24 @@ func provisions_open() -> bool:
 
 ## Text of the provision's button in the open list ("" when not listed).
 func provision_text(id: StringName) -> String:
-	for child: Node in _provisions_list.get_children():
-		if child is Button and (child as Button).get_meta(&"provision", &"") == id:
-			return (child as Button).text
-	return ""
+	var slot: Button = _slot_of(id)
+	return slot.tooltip_text if slot != null else ""
 
 
 func provision_disabled(id: StringName) -> bool:
+	var slot: Button = _slot_of(id)
+	return slot.disabled if slot != null else true
+
+
+func _slot_of(id: StringName) -> Button:
 	for child: Node in _provisions_list.get_children():
-		if child is Button and (child as Button).get_meta(&"provision", &"") == id:
-			return (child as Button).disabled
-	return true
+		var buttons: Array[Node] = [child]
+		if child is GridContainer:
+			buttons = child.get_children()
+		for b: Node in buttons:
+			if b is Button and (b as Button).get_meta(&"provision", &"") == id:
+				return b as Button
+	return null
 
 
 func stage_position() -> Vector2:
@@ -594,7 +613,11 @@ func _refresh() -> void:
 	_light_fill.size.x = LIGHT_BAR_SIZE.x * clampf(ctrl.state.light / float(ExpeditionLight.LIGHT_MAX), 0.0, 1.0)
 	_light_label.text = texts.light(ctrl)
 	_alms_label.text = texts.alms(ctrl)
-	_provisions_button.text = texts.t(&"walk_provisions", {"count": ctrl.state.provisions.size()})
+	_provisions_button.text = texts.t(&"walk_pack", {"count": ctrl.state.provisions.size(), "of": FieldProvisions.capacity(ctrl.state.gate_level, ctrl.catalog.constants)})
+	for id: StringName in _cards:
+		(_cards[id] as Control).queue_redraw()
+	if _strip != null:
+		_strip.queue_redraw()
 	_provisions_button.disabled = not _can_use_provisions()
 	_fill_provisions()
 
@@ -787,24 +810,48 @@ func _fill_provisions() -> void:
 			target.pressed.connect(press_provision_target.bind(saint_id))
 			_provisions_list.add_child(target)
 		return
-	var counts: Dictionary = {}
-	var order: Array[StringName] = []
-	for id: StringName in ctrl.state.provisions:
-		if not counts.has(id):
-			order.append(id)
-		counts[id] = int(counts.get(id, 0)) + 1
-	if order.is_empty():
-		_provisions_list.add_child(_label(texts.t(&"walk_no_provisions")))
-	for id: StringName in order:
+	var slots: int = maxi(FieldProvisions.capacity(ctrl.state.gate_level, ctrl.catalog.constants), ctrl.state.provisions.size())
+	var title := _label(texts.t(&"walk_pack", {"count": ctrl.state.provisions.size(), "of": slots}))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	PixelStyle.title(title)
+	_provisions_list.add_child(title)
+	# The alforje opened (D-412): one slot per unit, full or empty.
+	var grid := GridContainer.new()
+	grid.columns = PACK_COLUMNS
+	grid.add_theme_constant_override("h_separation", 4)
+	grid.add_theme_constant_override("v_separation", 4)
+	_provisions_list.add_child(grid)
+	var reasons: Array[String] = []
+	for i: int in slots:
+		var slot := Button.new()
+		slot.custom_minimum_size = PACK_SLOT
+		slot.focus_mode = Control.FOCUS_NONE
+		if i >= ctrl.state.provisions.size():
+			slot.disabled = true
+			slot.text = texts.t(&"pack_empty")
+			grid.add_child(slot)
+			continue
+		var id: StringName = ctrl.state.provisions[i]
 		var problem: StringName = ctrl.field_provision_problem(id, ctrl.state.party[0] if not ctrl.state.party.is_empty() else &"")
-		var line: String = texts.t(&"walk_provision_line", {"provision": texts.provision_name(id), "count": counts[id]})
+		var line: String = texts.t(&"walk_provision_line", {"provision": texts.provision_name(id), "count": ctrl.state.provisions.count(id)})
 		if problem != &"":
 			line += " · " + texts.reason(problem)
-		var button := _button(line, LIST_BUTTON_SIZE)
-		button.set_meta(&"provision", id)
-		button.disabled = problem != &""
-		button.pressed.connect(press_provision.bind(id))
-		_provisions_list.add_child(button)
+			if not reasons.has(line):
+				reasons.append(line)
+		slot.icon = HudStyle.icon("icon_item_%s" % id)
+		slot.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		slot.set_meta(&"provision", id)
+		slot.tooltip_text = line
+		slot.disabled = problem != &""
+		slot.pressed.connect(press_provision.bind(id))
+		grid.add_child(slot)
+	if ctrl.state.provisions.is_empty():
+		_provisions_list.add_child(_label(texts.t(&"walk_no_provisions")))
+	for line: String in reasons:
+		var why := _label(line)
+		why.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		why.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
+		_provisions_list.add_child(why)
 
 
 func _center_stage() -> void:
@@ -886,21 +933,27 @@ func _build() -> void:
 	_layout_field()
 
 
-## The panel under the field, in the same place as the battle's: the Lume
-## and the Alms on the left with Provisões and Mapa (D-258), what stands
-## here and its buttons in the middle.
+## The panel under the field (D-436, approved preview): the Lume with its
+## lantern and the Alms on the left, a small card per saint (life and
+## desolation), the mini-map of the leg always in view (a touch opens the
+## whole map), the alforje, and what stands here with its buttons.
 func _build_panel() -> void:
 	_stage.add_child(PixelStyle.plate(Rect2(-OVERLAY_MARGIN, FIELD_HEIGHT, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, STAGE_SIZE.y - FIELD_HEIGHT + 1.0)))
 	var top: float = FIELD_HEIGHT
+	var lantern := TextureRect.new()
+	lantern.texture = PixelStyle.piece("ui_lantern_on")
+	lantern.position = Vector2(12, top + 10)
+	lantern.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(lantern)
 	_light_label = _label("")
 	_light_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_light_label.position = Vector2(16, top + 10)
+	_light_label.position = Vector2(50, top + 10)
 	_light_label.size = Vector2(LIGHT_BAR_SIZE.x, 12)
 	_light_label.add_theme_color_override("font_color", PixelStyle.COLOR_AMBER)
 	_stage.add_child(_light_label)
 	var light_back := ColorRect.new()
 	light_back.color = COLOR_LIGHT_OFF
-	light_back.position = Vector2(16, top + 24)
+	light_back.position = Vector2(50, top + 24)
 	light_back.size = LIGHT_BAR_SIZE
 	light_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(light_back)
@@ -909,31 +962,124 @@ func _build_panel() -> void:
 	_light_fill.size = LIGHT_BAR_SIZE
 	_light_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	light_back.add_child(_light_fill)
+	var purse := TextureRect.new()
+	purse.texture = HudStyle.icon("icon_item_alms")
+	purse.position = Vector2(46, top + 36)
+	purse.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(purse)
 	_alms_label = _label("")
 	_alms_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_alms_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_alms_label.position = Vector2(16, top + 36)
-	_alms_label.size = Vector2(LIGHT_BAR_SIZE.x + 20.0, 24)
+	_alms_label.position = Vector2(80, top + 40)
+	_alms_label.size = Vector2(120, 24)
 	_stage.add_child(_alms_label)
-	_provisions_button = _button("", BUTTON_SIZE)
-	_provisions_button.position = Vector2(16, top + 66)
+	for i: int in ctrl.state.party.size():
+		_build_saint_card(ctrl.state.party[i], Vector2(CARDS_X + i * (CARD_SIZE.x + 8.0), top + 10))
+	_build_strip(Vector2(STRIP_X, top + 10))
+	_provisions_button = _button("", PACK_BUTTON_SIZE)
+	_provisions_button.position = Vector2(16, top + 106)
+	_provisions_button.icon = PixelStyle.piece("ui_hook_bag")
+	_provisions_button.expand_icon = true
 	_provisions_button.pressed.connect(press_provisions)
 	_stage.add_child(_provisions_button)
-	var minimap_button := _button(texts.t(&"walk_minimap"), BUTTON_SIZE)
-	minimap_button.position = Vector2(16, top + 104)
-	minimap_button.pressed.connect(press_minimap)
-	_stage.add_child(minimap_button)
 	_info = _label("")
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_info.position = Vector2(190, top + 14)
-	_info.size = Vector2(580, 72)
+	_info.position = Vector2(150, top + 100)
+	_info.size = Vector2(800, 30)
 	_stage.add_child(_info)
 	_action_box = HBoxContainer.new()
-	_action_box.position = Vector2(190, top + 104)
-	_action_box.size = Vector2(580, BUTTON_SIZE.y)
+	_action_box.position = Vector2(150, top + 136)
+	_action_box.size = Vector2(800, BUTTON_SIZE.y)
 	_action_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	_action_box.add_theme_constant_override("separation", 10)
 	_stage.add_child(_action_box)
+
+
+## A small card: the saint's bust, name, life and desolation.
+func _build_saint_card(saint_id: StringName, at: Vector2) -> void:
+	_stage.add_child(PixelStyle.plate(Rect2(at, CARD_SIZE), PixelStyle.COLOR_PITCH, PixelStyle.COLOR_LEAD_LIGHT))
+	var bust := TextureRect.new()
+	var path: String = BattleScreen.BUST_PATH % [saint_id, saint_id]
+	bust.texture = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	bust.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bust.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bust.position = at + Vector2(3, 3)
+	bust.size = Vector2(48, CARD_SIZE.y - 6.0)
+	bust.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(bust)
+	var name_label := _label(texts.saint_name(saint_id))
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	PixelStyle.title(name_label)
+	name_label.position = at + Vector2(56, 2)
+	name_label.size = Vector2(CARD_SIZE.x - 58.0, 14)
+	_stage.add_child(name_label)
+	var bars := Control.new()
+	bars.position = at + Vector2(56, 22)
+	bars.size = Vector2(CARD_SIZE.x - 62.0, 40)
+	bars.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bars.draw.connect(_draw_card_bars.bind(bars, saint_id))
+	_stage.add_child(bars)
+	_cards[saint_id] = bars
+
+
+func _draw_card_bars(bars: Control, saint_id: StringName) -> void:
+	var status: SaintStatus = ctrl.saints.get(saint_id)
+	if status == null:
+		return
+	var w: float = bars.size.x
+	var font: Font = PixelStyle.text_font()
+	var desolation_max: float = float(ctrl.catalog.constants.get_int(&"desolation_max"))
+	var rows: Array = [
+		[texts.t(&"walk_card_hp"), float(status.hp) / maxf(float(status.max_hp), 1.0), PixelStyle.COLOR_BLOOD],
+		[texts.t(&"walk_card_desolation"), float(status.desolation) / maxf(desolation_max, 1.0), PixelStyle.COLOR_VIOLET],
+	]
+	for i: int in rows.size():
+		var y: float = i * 16.0
+		bars.draw_string(font, Vector2(0, y + 9), str(rows[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GREY)
+		var bar := Rect2(30, y + 3, w - 30, 5)
+		bars.draw_rect(bar, PixelStyle.COLOR_IRON)
+		bars.draw_rect(Rect2(bar.position, Vector2(roundf(bar.size.x * clampf(float(rows[i][1]), 0.0, 1.0)), bar.size.y)), rows[i][2])
+
+
+## The mini-map of the leg (D-436): the gate, one room per layer (the one
+## taken, or still dark ahead) and the camp; touching it opens the map.
+func _build_strip(at: Vector2) -> void:
+	_strip = Button.new()
+	_strip.position = at
+	_strip.size = STRIP_SIZE
+	_strip.focus_mode = Control.FOCUS_NONE
+	_strip.pressed.connect(press_minimap)
+	_strip.draw.connect(_draw_strip)
+	_stage.add_child(_strip)
+
+
+func _draw_strip() -> void:
+	var font: Font = PixelStyle.title_font()
+	_strip.draw_string(font, Vector2(6, 12), texts.t(&"walk_strip_title", {"leg": ctrl.state.leg}), HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
+	var icons: Array[String] = [MiniMapView.GATE_ICON]
+	var current: Array[bool] = [ctrl.state.current_node == &""]
+	for layer: int in range(1, ctrl.map.layer_count() + 1):
+		var taken: MapNode = null
+		for n: MapNode in ctrl.map.layer_nodes(layer):
+			if n.id == ctrl.state.current_node or ctrl.state.visited.has(n.id):
+				taken = n
+		icons.append(MiniMapView.ICONS.get(taken.type, "") if taken != null else "")
+		current.append(taken != null and taken.id == ctrl.state.current_node)
+	icons.append(MiniMapView.CAMP_ICON)
+	current.append(ctrl.phase == ExpeditionController.Phase.AT_CAMP)
+	var step: float = (STRIP_SIZE.x - 12.0) / icons.size()
+	for i: int in icons.size():
+		var centre := Vector2(6 + step * (i + 0.5), 46)
+		if i > 0:
+			_strip.draw_line(Vector2(centre.x - step + 17, centre.y), Vector2(centre.x - 17, centre.y), PixelStyle.COLOR_LEAD_LIGHT)
+		var tex: Texture2D = HudStyle.icon(icons[i])
+		if tex != null:
+			_strip.draw_texture(tex, (centre - Vector2(16, 16)).round())
+		else:
+			_strip.draw_rect(Rect2(centre - Vector2(6, 6), Vector2(12, 12)), PixelStyle.COLOR_LEAD)
+		if current[i]:
+			_strip.draw_rect(Rect2(centre - Vector2(18, 18), Vector2(36, 36)), PixelStyle.COLOR_GOLD, false)
+	_strip.draw_string(PixelStyle.text_font(), Vector2(0, STRIP_SIZE.y - 4), texts.t(&"walk_strip_open"), HORIZONTAL_ALIGNMENT_CENTER, STRIP_SIZE.x, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GREY)
 
 
 func _build_provisions_overlay() -> void:
@@ -942,9 +1088,9 @@ func _build_provisions_overlay() -> void:
 	_provisions_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_provisions_overlay.visible = false
 	_stage.add_child(_provisions_overlay)
-	_provisions_overlay.add_child(PixelStyle.plate(Rect2(16, 110, LIST_BUTTON_SIZE.x + 16.0, 240), COLOR_DIM))
+	_provisions_overlay.add_child(PixelStyle.plate(Rect2(PACK_POS, Vector2(LIST_BUTTON_SIZE.x + 16.0, 170)), PixelStyle.COLOR_IRON, PixelStyle.COLOR_GOLD))
 	_provisions_list = VBoxContainer.new()
-	_provisions_list.position = Vector2(24, 118)
+	_provisions_list.position = PACK_POS + Vector2(8, 6)
 	_provisions_list.add_theme_constant_override("separation", 4)
 	_provisions_overlay.add_child(_provisions_list)
 
