@@ -126,6 +126,22 @@ const SAINT_PORTRAIT_PATH: String = "res://assets/pixel/characters/%s/%s_portrai
 const HALO_SETTINGS_PATH: String = "res://scenes/battle/halo_settings.tres"
 ## Clip a saint may have for the preparation of its miracle (D-388).
 const MIRACLE_WINDUP: StringName = &"miracle_windup"
+## The miracle's stamp (D-424): the screen darkens and the saint's white
+## stamp appears over it and fades, while the saint makes the gesture.
+const STAMP_PATH: String = "res://assets/pixel/vfx/stamp_%s.png"
+const STAMP_DARK := Color(0.02, 0.01, 0.03, 0.72)
+const STAMP_IN: float = 0.15
+const STAMP_HOLD: float = 0.55
+const STAMP_OUT: float = 0.35
+## The instant of the icon (Art Bible §4.3 item 4): in Consolation the field
+## turns flat gold and the saint black ink; in the Dark Night, black with
+## the saint outlined in bone; the name of the state above.
+const INSTANT_IN: float = 0.12
+const INSTANT_HOLD: float = 0.7
+const INSTANT_OUT: float = 0.3
+const INSTANT_LABEL := Rect2(0, 40, 960, 30)
+## Drawn above the fighters while they last (z order inside the field).
+const OVERLAY_Z: int = 3
 const HALO_SETTINGS_PIXEL_PATH: String = "res://scenes/battle/halo_settings_pixel.tres"
 
 ## The arena (T17) sets these before adding the screen to the tree.
@@ -226,6 +242,10 @@ var _badges: Dictionary = {}
 var _frames: Dictionary = {}
 var _camera: ImpactCamera
 var _dim: ColorRect
+var _stamp_dark: ColorRect
+var _stamp: TextureRect
+var _instant_bg: ColorRect
+var _instant_label: Label
 var _flash: ColorRect
 var _lantern: Control
 var _lume_label: Label
@@ -604,9 +624,11 @@ func _animate(ev: BattleEvent) -> float:
 				_hint.text = "%s: %s" % [texts.name_of(actor), texts.ability_name(d["ability"])]
 			var targets: Array = d.get("targets", [])
 			var actor_view: CombatantView = view_of(d["actor"])
+			var stamp_time: float = 0.0
 			if actor != null and actor_view != null and StringName(str(d["ability"])) == actor.miracle:
 				actor_view.next_windup = MIRACLE_WINDUP
-			return _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &"")
+				stamp_time = _play_stamp(actor.def_id)
+			return maxf(stamp_time, _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &""))
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""
 		&"enemy_action_started":
@@ -679,6 +701,8 @@ func _animate(ev: BattleEvent) -> float:
 				view.set_spirit_state(StringName(str(d["new"])))
 			if view != null and d["new"] != Desolation.NORMAL:
 				view.float_text(texts.t(StringName("spirit_%s" % d["new"])), COLOR_SPIRIT)
+			if view != null and (d["new"] == Desolation.CONSOLATION or d["new"] == Desolation.DARK_NIGHT):
+				return maxf(_scaled(SMALL_TIME, factor), _play_instant(view, StringName(str(d["new"]))))
 			return _scaled(SMALL_TIME, factor)
 		&"fell", &"enemy_died":
 			var view: CombatantView = view_of(d["target"])
@@ -687,6 +711,87 @@ func _animate(ev: BattleEvent) -> float:
 			_sync_views(factor > 0.0)
 			return _scaled(MOVE_TIME, factor)
 	return 0.0
+
+
+## D-424: darkness and the white stamp of `saint_def_id`; returns how long
+## it lasts (0 at the instant speed or without a stamp).
+func _play_stamp(saint_def_id: StringName) -> float:
+	var factor: float = SPEEDS[speed_index]
+	var path: String = STAMP_PATH % saint_def_id
+	if factor <= 0.0 or not ResourceLoader.exists(path) or not is_inside_tree():
+		return 0.0
+	var tex: Texture2D = load(path)
+	_stamp.texture = tex
+	_stamp.size = tex.get_size()
+	_stamp.position = ((Vector2(STAGE_SIZE.x, FIELD_HEIGHT) - _stamp.size) * 0.5).round()
+	_stamp_dark.visible = true
+	_stamp.visible = true
+	_stamp_dark.modulate.a = 0.0
+	_stamp.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(_stamp_dark, "modulate:a", 1.0, STAMP_IN / factor)
+	tween.parallel().tween_property(_stamp, "modulate:a", 1.0, STAMP_IN / factor)
+	tween.tween_interval(STAMP_HOLD / factor)
+	tween.tween_property(_stamp_dark, "modulate:a", 0.0, STAMP_OUT / factor)
+	tween.parallel().tween_property(_stamp, "modulate:a", 0.0, STAMP_OUT / factor)
+	tween.tween_callback(func() -> void:
+		_stamp_dark.visible = false
+		_stamp.visible = false)
+	return (STAMP_IN + STAMP_HOLD + STAMP_OUT) / factor
+
+
+## The instant of the icon when `view`'s saint enters `state`.
+func _play_instant(view: CombatantView, state: StringName) -> float:
+	var factor: float = SPEEDS[speed_index]
+	if factor <= 0.0 or not is_inside_tree():
+		return 0.0
+	var gold: bool = state == Desolation.CONSOLATION
+	_instant_bg.color = PixelStyle.COLOR_GOLD if gold else PixelStyle.COLOR_PITCH
+	_instant_label.text = texts.t(StringName("spirit_%s" % state))
+	_instant_label.add_theme_color_override("font_color", PixelStyle.COLOR_PITCH if gold else PixelStyle.COLOR_BONE)
+	_instant_label.add_theme_color_override("font_outline_color", PixelStyle.COLOR_GOLD if gold else PixelStyle.COLOR_PITCH)
+	for item: CanvasItem in [_instant_bg, _instant_label]:
+		item.visible = true
+		item.modulate.a = 0.0
+	var figure: FramePlayer = view.player()
+	var kept: Dictionary = {}
+	view.z_index = OVERLAY_Z + 1
+	if figure != null:
+		kept = {"strength": figure.outline_strength, "color": figure.outline_color, "width": figure.outline_width, "pulse": figure.outline_pulse, "tint": figure.self_modulate}
+		# Only the figure's own drawing turns to ink; its outline (a child)
+		# keeps the bone of the Dark Night.
+		figure.self_modulate = Color.BLACK
+		if not gold:
+			figure.outline_color = PixelStyle.COLOR_BONE
+			figure.outline_width = 1.0
+			figure.outline_pulse = false
+			figure.outline_strength = 1.0
+	var tween := create_tween()
+	tween.tween_property(_instant_bg, "modulate:a", 1.0, INSTANT_IN / factor)
+	tween.parallel().tween_property(_instant_label, "modulate:a", 1.0, INSTANT_IN / factor)
+	tween.tween_interval(INSTANT_HOLD / factor)
+	tween.tween_property(_instant_bg, "modulate:a", 0.0, INSTANT_OUT / factor)
+	tween.parallel().tween_property(_instant_label, "modulate:a", 0.0, INSTANT_OUT / factor)
+	tween.tween_callback(func() -> void:
+		_instant_bg.visible = false
+		_instant_label.visible = false
+		view.z_index = 0
+		if figure != null:
+			figure.self_modulate = kept["tint"]
+			figure.outline_strength = float(kept["strength"])
+			figure.outline_color = kept["color"]
+			figure.outline_width = float(kept["width"])
+			figure.outline_pulse = bool(kept["pulse"]))
+	return (INSTANT_IN + INSTANT_HOLD + INSTANT_OUT) / factor
+
+
+## True while the miracle's stamp or the instant of the icon is on screen.
+func stamp_shown() -> bool:
+	return _stamp != null and _stamp.visible
+
+
+func instant_shown() -> bool:
+	return _instant_bg != null and _instant_bg.visible
 
 
 func _react(hit: Dictionary) -> float:
@@ -1535,6 +1640,31 @@ func field_margin() -> float:
 	return maxf(_stage.position.x, 0.0) if _stage != null else 0.0
 
 
+## The darkness and the stamp of the miracle, and the instant of the icon,
+## over the whole field and above the fighters (hidden until used).
+func _build_overlays() -> void:
+	var cover := Rect2(-OVERLAY_MARGIN, -OVERLAY_MARGIN, STAGE_SIZE.x + OVERLAY_MARGIN * 2.0, FIELD_HEIGHT + OVERLAY_MARGIN * 2.0)
+	_stamp_dark = ColorRect.new()
+	_stamp_dark.color = STAMP_DARK
+	_instant_bg = ColorRect.new()
+	for rect: ColorRect in [_stamp_dark, _instant_bg]:
+		rect.position = cover.position
+		rect.size = cover.size
+	_stamp = TextureRect.new()
+	_instant_label = Label.new()
+	_instant_label.position = INSTANT_LABEL.position
+	_instant_label.size = INSTANT_LABEL.size
+	PixelStyle.title(_instant_label, PixelStyle.COLOR_BONE, PixelStyle.BIG_TITLE_SIZE)
+	_instant_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	for item: Control in [_stamp_dark, _stamp, _instant_bg, _instant_label]:
+		item.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		item.visible = false
+		item.z_index = OVERLAY_Z
+		_field.add_child(item)
+	_instant_label.z_index = OVERLAY_Z + 2
+	_stamp.z_index = OVERLAY_Z + 2
+
+
 ## The field takes the whole width of the screen: the scenery repeats to the
 ## sides, the fighters stay on the stage in the middle.
 func _layout_field() -> void:
@@ -1673,6 +1803,7 @@ func _build_field() -> void:
 		holder.add_child(front)
 		_front_corners.append(holder)
 		_scenery_front.append(front)
+	_build_overlays()
 	_flash = ColorRect.new()
 	_flash.color = Color(1, 1, 1, 0)
 	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE

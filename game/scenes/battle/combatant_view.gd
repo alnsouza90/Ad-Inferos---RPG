@@ -40,6 +40,8 @@ const FLOAT_TIME: float = 0.8
 const FIGURE_SIZE := Vector2(200, 300)
 const COLOR_OUTLINE := Color(0, 0, 0, 0.9)
 const SHADER_PATH: String = "res://shaders/halo.gdshader"
+## The clearing sits this far below the feet line, as in the camp (D-432).
+const CLEARING_SINK: float = 4.0
 ## Frame animation (T35): seconds at speed 1 and distances in pixels of the
 ## view (presentation only).
 const DASH_MAX_TIME: float = 0.22
@@ -111,6 +113,8 @@ var _halo_settings: HaloSettings
 var _figure: TextureRect
 var _figure_material: ShaderMaterial
 var _halo: HaloView
+## The clearing of light on the ground under a saint in Consolation.
+var _clearing: TextureRect
 var _spirit_state: StringName = Desolation.NORMAL
 var _spirit_desolation: int = 0
 ## Action pose on screen (&"attack", &"hit", &"fall") or &"" for the body
@@ -286,6 +290,11 @@ func set_info_visible(on: bool) -> void:
 
 func figure_texture() -> Texture2D:
 	return _figure.texture if _figure != null else null
+
+
+## True while the clearing of Consolation lights the ground under the saint.
+func clearing_shown() -> bool:
+	return _clearing != null and _clearing.visible
 
 
 func halo() -> HaloView:
@@ -633,6 +642,8 @@ func _apply_style() -> void:
 	if _player != null:
 		_style.bg_color = Color(0, 0, 0, 0.25)
 		_player.self_modulate = Color(0.55, 0.55, 0.55) if _dimmed else Color.WHITE
+		if _clearing != null and _down:
+			_clearing.visible = false
 	if _art != null:
 		# The figure replaces the coloured block; the border still marks it.
 		_style.bg_color = Color(0, 0, 0, 0.25)
@@ -672,6 +683,15 @@ func _build_frame_halo() -> void:
 	_place_frame_halo()
 	_body.add_child(_halo)
 	_body.move_child(_halo, _player.get_index())
+	if _halo_settings.clearing != null:
+		_clearing = TextureRect.new()
+		_clearing.texture = _halo_settings.clearing
+		_clearing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_clearing.visible = false
+		var feet: Vector2 = _player.position + _player.feet
+		_clearing.position = (feet - Vector2(_clearing.texture.get_width() * 0.5, _clearing.texture.get_height() - CLEARING_SINK)).round()
+		_body.add_child(_clearing)
+		_body.move_child(_clearing, _player.get_index())
 	_apply_player_look(false)
 
 
@@ -695,6 +715,8 @@ func _apply_player_look(animated: bool) -> void:
 	var duration: float = _halo_settings.transition_time / speed if animated and speed > 0.0 else 0.0
 	if _halo != null:
 		_halo.apply(look, duration)
+	if _clearing != null:
+		_clearing.visible = look.clearing and not _down
 	if duration > 0.0 and is_inside_tree():
 		create_tween().tween_property(_figure_material, "shader_parameter/saturation", look.saturation, duration)
 	else:

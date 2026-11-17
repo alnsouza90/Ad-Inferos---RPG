@@ -6,6 +6,14 @@ extends RefCounted
 var brightness: float = 1.0
 var saturation: float = 1.0
 var rays: bool = false
+## Which drawing of the halo (Art Bible §4.3): DISK, COVERED from fade_start
+## on, ECLIPSE in the Dark Night; the clearing on the ground in Consolation.
+var kind: StringName = DISK
+var clearing: bool = false
+
+const DISK: StringName = &"disk"
+const COVERED: StringName = &"covered"
+const ECLIPSE: StringName = &"eclipse"
 
 
 static func of(settings: HaloSettings, spirit_state: StringName, desolation: int) -> HaloLook:
@@ -13,14 +21,18 @@ static func of(settings: HaloSettings, spirit_state: StringName, desolation: int
 	if spirit_state == Desolation.DARK_NIGHT:
 		look.brightness = settings.dark_night_brightness
 		look.saturation = settings.dark_night_saturation
+		look.kind = ECLIPSE
 	elif spirit_state == Desolation.CONSOLATION:
 		look.brightness = settings.consolation_brightness
 		look.saturation = settings.consolation_saturation
 		look.rays = true
+		look.clearing = true
 	else:
 		# Linear fade across the band, full fade from its end on.
 		var span: float = maxf(1.0, float(settings.fade_end - settings.fade_start))
 		var t: float = clampf(float(desolation - settings.fade_start) / span, 0.0, 1.0)
 		look.brightness = lerpf(settings.normal_brightness, settings.faded_brightness, t)
 		look.saturation = lerpf(settings.normal_saturation, settings.faded_saturation, t)
+		if desolation >= settings.fade_start:
+			look.kind = COVERED
 	return look

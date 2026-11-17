@@ -74,6 +74,17 @@ EVENT_ART = {
     "event_c02_soul_lovers": ROOT / "art_source/events/circle_02/event_c02_soul_lovers_px_v01.png",
 }
 EVENTS_OUT = ROOT / "game/assets/events/circle_02"
+# The white stamp of each saint's miracle (D-424): Alan's images, reduced to
+# the pixel grid; light pixels become flat angelic white, everything else
+# empty (Art Bible §6.1: white, flat, hard edge, no outline).
+STAMPS = {
+    "saint_therese": ROOT / "art_source/vfx/stamps/stamp_saint_therese_src_v01.png",
+    "saint_benedict": ROOT / "art_source/vfx/stamps/stamp_saint_benedict_src_v01.jpg",
+    "saint_george": ROOT / "art_source/vfx/stamps/stamp_saint_george_src_v01.png",
+}
+STAMP_HEIGHT = 220
+STAMP_WHITE = (0xF1, 0xEC, 0xE0, 255)
+STAMP_THRESHOLD = 150
 EVENT_SIZE = (1920, 1080)
 
 
@@ -194,6 +205,8 @@ def main() -> None:
     save(slabs.crop((0, 0, slabs.width, FLOOR_SLAB_ROWS)), SCENERY_OUT / "env_circle_02_jury_floor.png")
     for name, (count, side, height) in ANIMATED.items():
         save(animated_strip(C02 / f"env_circle_02_{name}_px_v01.png", count, side, height), SCENERY_OUT / f"env_circle_02_{name}.png")
+    for name, source in STAMPS.items():
+        save(stamp(source), ROOT / f"game/assets/pixel/vfx/stamp_{name}.png")
     for name, source in EVENT_ART.items():
         save(event_art(source), EVENTS_OUT / f"{name}.png")
 
@@ -226,6 +239,21 @@ def animated_strip(source: Path, count: int, side: int, height: int) -> Image.Im
     for i, cell in enumerate(cells):
         strip.paste(cell, (i * cell.width, 0))
     return strip
+
+
+def stamp(source: Path) -> Image.Image:
+    """Light and opaque pixels of the source, cut to their box and shrunk by
+    area to STAMP_HEIGHT, become flat white; the rest is empty."""
+    image = Image.open(source).convert("RGBA")
+    flat = Image.new("RGBA", image.size, (0, 0, 0, 255))
+    flat.alpha_composite(image)
+    grey = flat.convert("L")
+    grey = grey.crop(grey.point(lambda v: 255 if v >= STAMP_THRESHOLD else 0).getbbox())
+    width = max(1, round(grey.width * STAMP_HEIGHT / grey.height))
+    grey = grey.resize((width, STAMP_HEIGHT), Image.BOX)
+    cell = np.zeros((STAMP_HEIGHT, width, 4), dtype=np.uint8)
+    cell[np.array(grey) >= STAMP_THRESHOLD] = STAMP_WHITE
+    return Image.fromarray(cell, "RGBA")
 
 
 def event_art(source: Path) -> Image.Image:
