@@ -1,5 +1,5 @@
 character,display_scale,attack_style,spell_style,blessing_style,halo_x,halo_y,halo_size,weight,palette,figure_scale,grade_gamma,grade_warm
-saint_benedict,1.0,melee,crosses,ring,60,29,44,heavy,snap,,0.8,1.10|1.0|0.86
+saint_benedict,1.0,melee,crosses,ring,64,22,44,heavy,snap,,,
 saint_george,1.0,melee,crosses,shield,74,17,44,medium,snap,,,
 saint_therese,1.0,melee,crosses,petals,52,18,44,light,snap,,,
 enemy_mud_devil,1.0,melee,orb,ring,104,67,0,heavy,snap,,,

@@ -723,10 +723,6 @@ func _build_objects() -> void:
 		var kind: StringName = CorridorLook.path_kind(id, _straight)
 		var text: String = texts.type_name(e) + "\n" + texts.path_name(kind)
 		var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
-		# In Circle 2 a Temptation is the tent (D-443): the way to it shows
-		# the tent, not a plain passage.
-		if e.type == MapNode.TYPE_TEMPTATION and _content_prop(e) != null:
-			entrance = _content_prop(e)
 		var view: Control = _prop_view(entrance, text) if entrance != null else _block(text, COLOR_STRAIGHT if kind == CorridorLook.STRAIGHT else COLOR_DETOUR, ENTRANCE_SIZE)
 		view.set_meta(&"text", text)
 		view.mouse_filter = Control.MOUSE_FILTER_STOP

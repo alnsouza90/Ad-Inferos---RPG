@@ -12,7 +12,7 @@ columns = 9
 count = 9
 fps = 8
 looping = true
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = -1
 pose_time = 0.4
 
@@ -25,7 +25,7 @@ columns = 9
 count = 9
 fps = 8
 looping = true
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = -1
 pose_time = 0.4
 
@@ -38,7 +38,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = -1
 pose_time = 0.4
 
@@ -51,7 +51,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = 0
 pose_time = 0.4
 
@@ -64,7 +64,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = 0
 pose_time = 0.4
 
@@ -77,7 +77,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = -1
 pose_time = 0.4
 
@@ -90,7 +90,7 @@ columns = 1
 count = 1
 fps = 0
 looping = false
-anchor = Vector2(122, 252)
+anchor = Vector2(126, 252)
 impact_frame = -1
 pose_time = 0.4
 
@@ -103,6 +103,6 @@ attack_style = &"melee"
 spell_style = &"crosses"
 blessing_style = &"ring"
 weight = &"heavy"
-halo_center = Vector2(128, 98)
+halo_center = Vector2(137, 93)
 halo_diameter = 32
 clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_walk"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_spell_strike"), SubResource("clip_defend"), SubResource("clip_fall")])
