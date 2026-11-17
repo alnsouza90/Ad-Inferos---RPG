@@ -827,6 +827,11 @@ func _entrance_view(kind: StringName, text: String) -> Control:
 		label.position = Vector2(-20, -26)
 		way.add_child(label)
 		return way
+	if kind == SceneryPlan.DOOR and _look.get("mid", "") == SceneryPlan.JURY_WALL:
+		# The door of the jury hall is part of its wall (D-448).
+		var jury_door: Texture2D = _prop(SceneryPlan.JURY_DOOR)
+		if jury_door != null:
+			return _prop_view(jury_door, text)
 	var entrance: Texture2D = _prop(ENTRANCE_PROPS.get(kind, ""))
 	if entrance == null:
 		return _block(text, COLOR_DETOUR, ENTRANCE_SIZE)

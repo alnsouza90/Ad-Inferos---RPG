@@ -26,6 +26,10 @@ const T2_MID: String = "env_circle_02_t2_mid"
 const T3_MID: String = "env_circle_02_t3_mid"
 const JURY_HALL: String = "env_circle_02_jury_hall"
 const JURY_FLOOR: String = "env_circle_02_jury_floor"
+## The outer wall of the jury hall along the way to Minos, and its door set
+## into the same masonry (D-448).
+const JURY_WALL: String = "env_circle_02_jury_wall"
+const JURY_DOOR: String = "env_circle_02_jury_door"
 const TIGRIS: String = "env_circle_02_tigris"
 const SOULS_CROWD: String = "env_circle_02_souls_crowd"
 ## The throne of Minos far away: a unique piece, drawn once, only at the
@@ -90,7 +94,23 @@ static func look(map: LegMap, n: MapNode) -> Dictionary:
 		MapNode.TYPE_ELITE:
 			# Something bigger is there: the sky turns to the eye of the storm.
 			inherited["back"] = STORM_EYE
+	if leads_to_guardian(map, n):
+		# The way to Minos runs along the outer wall of the jury hall and
+		# ends at its door (D-448, option B).
+		inherited["mid"] = JURY_WALL
+		if inherited["back"] != STORM_EYE:
+			inherited["back"] = STORM
 	return inherited
+
+
+## True when the Guardian's hall is the next place after `n`.
+static func leads_to_guardian(map: LegMap, n: MapNode) -> bool:
+	if n == null:
+		return false
+	for e: MapNode in map.entrances_from(n):
+		if e.role == MapNode.ROLE_GUARDIAN:
+			return true
+	return false
 
 
 ## How the company goes from the corridor of `from` (null: the gate) into
@@ -144,7 +164,7 @@ static func _inherited(map: LegMap, n: MapNode, leg: int) -> Dictionary:
 static func _generic_of(before: Dictionary, leg: int) -> Dictionary:
 	var mid: String = before["mid"]
 	var back: String = before["back"]
-	if mid == JURY_HALL or mid == TIGRIS or back == "":
+	if mid == JURY_HALL or mid == TIGRIS or mid == JURY_WALL or back == "":
 		return _make(GENERIC[leg - 1][0], leg)
 	if back == STORM_EYE:
 		# Past the elite the eye opens back into the storm.

@@ -62,6 +62,7 @@ func test_minos_waits_in_the_jury_hall_behind_a_door() -> void:
 			assert_eq(SceneryPlan.look(map, n)["ground"], SceneryPlan.JURY_FLOOR, "piso B (D-446)")
 			for p: MapNode in map.predecessors(n):
 				assert_eq(SceneryPlan.passage(map, p, n), SceneryPlan.DOOR, "o nó antes de Minos acaba numa porta")
+				assert_eq(SceneryPlan.look(map, p)["mid"], SceneryPlan.JURY_WALL, "e corre ao longo do muro do salão (D-448)")
 	assert_gt(guardians, 0)
 
 
