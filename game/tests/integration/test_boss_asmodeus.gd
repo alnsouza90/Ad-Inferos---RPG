@@ -241,3 +241,44 @@ func test_the_ring_hides_asmodeus_from_single_target_attacks() -> void:
 	var slot: int = c.state.enemy_slot_of(boss)
 	assert_eq(c.validate(BattleCommand.use_ability(&"saint_george", &"george_spear_thrust", [slot] as Array[int])), CommandResult.INVALID_TARGET, "a Estocada não o acha")
 	assert_eq(c.validate(BattleCommand.use_ability(&"saint_benedict", &"benedict_crux_sacra", [] as Array[int])), &"", "ataque em grupo ainda o atinge")
+
+
+# --- D-428: each special has its own clip --------------------------------------------
+
+func test_every_enemy_action_announces_itself_before_its_effects() -> void:
+	var c: BattleController = _ctrl(Dominion.claws(2, true))
+	c.execute(BattleCommand.end_party_turn())
+	var started: Array[BattleEvent] = _events(c, BattleController.EV_ENEMY_ACTION_STARTED)
+	assert_gt(started.size(), 0, "o turno inimigo anuncia cada ação")
+	var first: Dictionary = started[0].data
+	assert_true(first.has("action") and first.has("targets"))
+	var at: int = c.history.find(started[0])
+	var next_damage: int = -1
+	for i: int in range(at, c.history.size()):
+		if c.history[i].type == &"damage_dealt":
+			next_damage = i
+			break
+	assert_true(next_damage == -1 or next_damage > at, "o anúncio vem antes do dano")
+
+
+func test_asmodeus_has_a_clip_for_each_special() -> void:
+	var frames: CharacterFrames = load("res://scenes/battle/combatants/pixel/boss_asmodeus_frames.tres")
+	for id: StringName in [&"asmodeus_breath", &"asmodeus_three_heads", &"asmodeus_enchant", &"asmodeus_gale", &"asmodeus_seven_nights", &"asmodeus_ring"]:
+		assert_true(frames.has_clip(id), String(id))
+	for id: StringName in [&"idle", &"windup", &"strike", &"fall"]:
+		assert_true(frames.has_clip(id), String(id))
+
+
+func test_the_screen_plays_the_special_clip_of_asmodeus() -> void:
+	var screen := BattleScreen.new()
+	screen.speed_index = 1
+	screen.setup(data, BattleController.new(_state(Dominion.claws(2, true), true)))
+	add_child_autofree(screen)
+	var boss: Combatant = screen.ctrl.state.boss()
+	var target: Combatant = screen.ctrl.state.party[0]
+	var ev := BattleEvent.create(BattleController.EV_ENEMY_ACTION_STARTED, {"enemy": boss.id, "action": &"asmodeus_breath", "targets": [target.id]})
+	var wait: float = screen._animate(ev)
+	assert_gt(wait, 0.0, "o sopro tem a sua animação")
+	assert_eq(screen.view_of(boss.id).player().clip_id(), &"asmodeus_breath")
+	var plain := BattleEvent.create(BattleController.EV_ENEMY_ACTION_STARTED, {"enemy": boss.id, "action": &"asmodeus_lance", "targets": [target.id]})
+	assert_eq(screen._animate(plain), 0.0, "sem clipe próprio, segue o golpe de sempre")

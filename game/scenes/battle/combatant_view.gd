@@ -445,6 +445,34 @@ func play_spell(target_global: Vector2, target_view: Node = null) -> float:
 	return total
 
 
+## An action with its own whole clip (Asmodeus' specials, D-428): the clip
+## plays once where the figure stands and the blow lands on its impact frame
+## as a dark light around the target (or on the caster with no target).
+func play_own_clip(clip_id: StringName, target_global: Vector2 = Vector2.INF) -> float:
+	if speed <= 0.0 or _player == null or _down or not _frames.has_clip(clip_id):
+		return 0.0
+	_player.speed = speed
+	_to_front()
+	# A special plays whole even in the fight in poses (D-359): its last
+	# frame is almost the idle, so the pose alone would show nothing.
+	var posed: bool = _player.pose_mode
+	_player.pose_mode = false
+	var clip: FrameClip = _frames.clip(clip_id)
+	var length: float = _player.play(clip_id)
+	var land: float = _player.scaled(_player.impact_of(clip))
+	var hold: float = _player.scaled(HOLD_TIME)
+	var at: Vector2 = target_global if target_global != Vector2.INF else chest_global()
+	var tw := create_tween()
+	tw.tween_interval(land)
+	tw.tween_callback(func() -> void: impact.emit(at, SPELL_STRENGTH, &"outline"))
+	tw.tween_interval(maxf(length - land, 0.0) + hold)
+	tw.tween_callback(func() -> void: _player.pose_mode = posed)
+	tw.tween_callback(_back_to_idle)
+	var total: float = length + hold
+	_impact_share = land / total if total > 0.0 else 1.0
+	return total
+
+
 ## A blessing (support with no damage, D-233): the caster raises its sign in
 ## place and a light rises on the one it helps (`target_global`: the feet;
 ## INF blesses the caster).

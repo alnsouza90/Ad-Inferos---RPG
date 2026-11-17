@@ -57,6 +57,10 @@ ALPHA_CUT = 128
 # which is in the idle, stays).
 ARC_GREY_SPREAD = 20
 ARC_MIN_LUMA = 95
+# The red splashes (D-428): a red at least this bright, this far above the
+# other two channels.
+RED_FX_MIN = 120
+RED_FX_SPREAD = 70
 # A clip whose feet stand more than this many pixels off the line of the
 # first idle frame is reported: the frames would hop on screen.
 FEET_TOLERANCE = 3
@@ -226,6 +230,21 @@ def erase_white_arc(cell: np.ndarray, own: set[tuple[int, int, int]]) -> int:
     return int(arc.sum())
 
 
+def erase_red_fx(cell: np.ndarray, own: set[tuple[int, int, int]]) -> int:
+    """Removes the bright red splashes the generator adds to quick frames
+    (D-428): saturated reds the idle clip never uses (the dark red of
+    Asmodeus' wings is in the idle, so it stays). No blood in the game's
+    sprites (prompts-pixel-m2.md §11)."""
+    rgb = cell[:, :, :3].astype(np.int32)
+    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+    candidate = (cell[:, :, 3] == 255) & (r >= RED_FX_MIN) & (r - np.maximum(g, b) >= RED_FX_SPREAD)
+    fx = np.zeros_like(candidate)
+    for y, x in zip(*np.nonzero(candidate)):
+        fx[y, x] = tuple(int(v) for v in rgb[y, x]) not in own
+    cell[fx] = 0
+    return int(fx.sum())
+
+
 def components(mask: np.ndarray) -> list[list[tuple[int, int]]]:
     """Groups of opaque pixels touching by side or corner."""
     seen = np.zeros_like(mask, dtype=bool)
@@ -316,6 +335,8 @@ def clean(clip: Clip, char: Character, colours: np.ndarray,
         report["meio-tom"] += binarize(cell)
         if "white_arc" in clip.cleanup:
             report["arco"] += erase_white_arc(cell, idle_colours)
+        if "red_fx" in clip.cleanup:
+            report["vermelho"] = report.get("vermelho", 0) + erase_red_fx(cell, idle_colours)
         if "warm_skin" in clip.cleanup:
             report["pele"] = report.get("pele", 0) + warm_skin(cell, clip.character)
         for token in clip.cleanup:

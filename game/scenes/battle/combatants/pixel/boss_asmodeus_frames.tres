@@ -8,11 +8,11 @@ script = ExtResource("2_clip")
 id = &"idle"
 sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_idle.png"
 frame_size = Vector2i(256, 256)
-columns = 12
-count = 12
+columns = 16
+count = 16
 fps = 8
 looping = true
-anchor = Vector2(128, 221)
+anchor = Vector2(133, 219)
 impact_frame = -1
 pose_time = 0.4
 
@@ -21,11 +21,11 @@ script = ExtResource("2_clip")
 id = &"windup"
 sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_windup.png"
 frame_size = Vector2i(256, 256)
-columns = 4
-count = 4
+columns = 3
+count = 3
 fps = 8
 looping = false
-anchor = Vector2(128, 221)
+anchor = Vector2(133, 219)
 impact_frame = -1
 pose_time = 0.4
 
@@ -34,12 +34,12 @@ script = ExtResource("2_clip")
 id = &"strike"
 sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_strike.png"
 frame_size = Vector2i(256, 256)
-columns = 4
-count = 4
-fps = 8
+columns = 5
+count = 5
+fps = 10
 looping = false
-anchor = Vector2(128, 221)
-impact_frame = 1
+anchor = Vector2(133, 219)
+impact_frame = 0
 pose_time = 0.4
 
 [sub_resource type="Resource" id="clip_fall"]
@@ -47,23 +47,101 @@ script = ExtResource("2_clip")
 id = &"fall"
 sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_fall.png"
 frame_size = Vector2i(256, 256)
-columns = 6
-count = 6
+columns = 9
+count = 9
 fps = 8
 looping = false
-anchor = Vector2(128, 221)
+anchor = Vector2(133, 219)
 impact_frame = -1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_breath"]
+script = ExtResource("2_clip")
+id = &"asmodeus_breath"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_breath.png"
+frame_size = Vector2i(256, 256)
+columns = 9
+count = 9
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 2
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_three_heads"]
+script = ExtResource("2_clip")
+id = &"asmodeus_three_heads"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_three_heads.png"
+frame_size = Vector2i(256, 256)
+columns = 8
+count = 8
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 2
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_enchant"]
+script = ExtResource("2_clip")
+id = &"asmodeus_enchant"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_enchant.png"
+frame_size = Vector2i(256, 256)
+columns = 7
+count = 7
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 1
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_gale"]
+script = ExtResource("2_clip")
+id = &"asmodeus_gale"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_gale.png"
+frame_size = Vector2i(256, 256)
+columns = 8
+count = 8
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 3
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_seven_nights"]
+script = ExtResource("2_clip")
+id = &"asmodeus_seven_nights"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_seven_nights.png"
+frame_size = Vector2i(256, 256)
+columns = 9
+count = 9
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 4
+pose_time = 0.4
+
+[sub_resource type="Resource" id="clip_asmodeus_ring"]
+script = ExtResource("2_clip")
+id = &"asmodeus_ring"
+sheet_path = "res://assets/pixel/characters/boss_asmodeus/boss_asmodeus_asmodeus_ring.png"
+frame_size = Vector2i(256, 256)
+columns = 7
+count = 7
+fps = 8
+looping = false
+anchor = Vector2(133, 219)
+impact_frame = 3
 pose_time = 0.4
 
 [resource]
 script = ExtResource("1_set")
 character_id = &"boss_asmodeus"
-figure_height = 186.0
+figure_height = 206.0
 display_scale = 1
 attack_style = &"melee"
 spell_style = &"orb"
 blessing_style = &"ring"
 weight = &"colossal"
-halo_center = Vector2(0, 0)
+halo_center = Vector2(106, 47)
 halo_diameter = 0
-clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_fall")])
+clips = Array[ExtResource("2_clip")]([SubResource("clip_idle"), SubResource("clip_windup"), SubResource("clip_strike"), SubResource("clip_fall"), SubResource("clip_asmodeus_breath"), SubResource("clip_asmodeus_three_heads"), SubResource("clip_asmodeus_enchant"), SubResource("clip_asmodeus_gale"), SubResource("clip_asmodeus_seven_nights"), SubResource("clip_asmodeus_ring")])
