@@ -10,6 +10,7 @@ var _rays: TextureRect
 var _disk_material: ShaderMaterial
 var _rays_material: ShaderMaterial
 var _settings: HaloSettings
+var _kind: StringName = HaloLook.DISK
 
 
 func setup(settings: HaloSettings, diameter: float) -> void:
@@ -29,6 +30,8 @@ func setup(settings: HaloSettings, diameter: float) -> void:
 
 ## Shows `look`; with `duration` > 0 the brightness glides to it.
 func apply(look: HaloLook, duration: float) -> void:
+	_kind = look.kind
+	_disk.texture = _texture_of(look.kind)
 	_rays.visible = look.rays
 	_rays_material.set_shader_parameter("spin_speed", _settings.rays_spin_speed if look.rays else 0.0)
 	for mat: ShaderMaterial in [_disk_material, _rays_material]:
@@ -44,6 +47,21 @@ func brightness() -> float:
 
 func rays_shown() -> bool:
 	return _rays.visible
+
+
+## The drawing shown now (HaloLook.DISK, COVERED, ECLIPSE).
+func kind() -> StringName:
+	return _kind
+
+
+func _texture_of(look_kind: StringName) -> Texture2D:
+	var drawn: Texture2D = null
+	match look_kind:
+		HaloLook.COVERED:
+			drawn = _settings.covered
+		HaloLook.ECLIPSE:
+			drawn = _settings.eclipse
+	return drawn if drawn != null else _settings.disk
 
 
 func _layer(texture: Texture2D, mat: ShaderMaterial, layer_size: Vector2, pos: Vector2) -> TextureRect:

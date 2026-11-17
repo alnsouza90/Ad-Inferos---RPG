@@ -46,3 +46,13 @@ func test_consolation_is_bright_with_rays() -> void:
 	assert_almost_eq(look.brightness, 1.3, 0.001)
 	assert_almost_eq(look.saturation, 1.05, 0.001)
 	assert_true(look.rays)
+
+
+func test_each_state_has_its_drawing_of_the_halo() -> void:
+	assert_eq(HaloLook.of(settings, Desolation.NORMAL, 74).kind, HaloLook.DISK)
+	assert_eq(HaloLook.of(settings, Desolation.NORMAL, 75).kind, HaloLook.COVERED, "coberta a partir de 75 (Art Bible §4.3)")
+	assert_eq(HaloLook.of(settings, Desolation.DARK_NIGHT, 100).kind, HaloLook.ECLIPSE)
+	var consolation := HaloLook.of(settings, Desolation.CONSOLATION, 100)
+	assert_eq(consolation.kind, HaloLook.DISK)
+	assert_true(consolation.clearing, "clareira no chão")
+	assert_false(HaloLook.of(settings, Desolation.NORMAL, 80).clearing)

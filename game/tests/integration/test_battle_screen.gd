@@ -276,3 +276,31 @@ func test_every_screen_text_exists_in_the_data() -> void:
 		keys.append("reason_%s" % code)
 	for key: String in keys:
 		assert_true(data.ui.has_text(StringName(key)), "ui_text.csv tem '%s'" % key)
+
+
+## T44 part 2 (D-424, Art Bible §4.3): the miracle's white stamp, the instant
+## of the icon and the halo of each state, in the battle.
+func test_the_miracle_shows_the_white_stamp_of_its_saint() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	for id: StringName in [&"saint_george", &"saint_benedict", &"saint_therese"]:
+		assert_true(ResourceLoader.exists(BattleScreen.STAMP_PATH % id), String(id))
+	assert_gt(screen._play_stamp(&"saint_george"), 0.0)
+	assert_true(screen.stamp_shown())
+	await wait_seconds((BattleScreen.STAMP_IN + BattleScreen.STAMP_HOLD + BattleScreen.STAMP_OUT) + 0.2)
+	assert_false(screen.stamp_shown(), "a estampa some")
+
+
+func test_consolation_has_its_instant_of_the_icon_and_the_clearing() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	screen.tap(&"saint_george")
+	screen.press_dev_consolation()
+	await wait_until(func() -> bool: return screen.instant_shown(), 3.0)
+	assert_true(screen.instant_shown(), "o campo vira ouro por um instante")
+	await wait_seconds(BattleScreen.INSTANT_IN + BattleScreen.INSTANT_HOLD + BattleScreen.INSTANT_OUT + 1.5)
+	assert_false(screen.instant_shown())
+	var view: CombatantView = screen.view_of(&"saint_george")
+	assert_eq(view.halo().kind(), HaloLook.DISK)
+	assert_true(view.clearing_shown(), "clareira de luz no chão")
+	assert_ne(view.player().self_modulate, Color.BLACK, "o santo volta à cor depois do instante")

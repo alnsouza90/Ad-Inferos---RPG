@@ -3,8 +3,14 @@
 [ext_resource type="Script" path="res://scenes/battle/halo_settings.gd" id="1_halo"]
 [ext_resource type="Texture2D" path="res://assets/pixel/vfx/halo_disk.png" id="2_disk"]
 [ext_resource type="Texture2D" path="res://assets/pixel/vfx/halo_rays.png" id="3_rays"]
+[ext_resource type="Texture2D" path="res://assets/pixel/vfx/halo_covered.png" id="4_covered"]
+[ext_resource type="Texture2D" path="res://assets/pixel/vfx/halo_eclipse.png" id="5_eclipse"]
+[ext_resource type="Texture2D" path="res://assets/pixel/vfx/halo_clearing.png" id="6_clearing"]
 
 [resource]
 script = ExtResource("1_halo")
 disk = ExtResource("2_disk")
 rays = ExtResource("3_rays")
+covered = ExtResource("4_covered")
+eclipse = ExtResource("5_eclipse")
+clearing = ExtResource("6_clearing")

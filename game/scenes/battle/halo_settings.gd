@@ -6,6 +6,12 @@ extends Resource
 
 @export var disk: Texture2D
 @export var rays: Texture2D
+## The disk covered from fade_start on, the eclipse of the Dark Night and
+## the clearing on the ground in Consolation (Art Bible §4.3, D-432). Empty:
+## the disk stays and there is no clearing (the painted test screen).
+@export var covered: Texture2D
+@export var eclipse: Texture2D
+@export var clearing: Texture2D
 ## Rays diameter relative to the disk.
 @export var rays_scale: float = 1.6
 @export var normal_brightness: float = 1.0
