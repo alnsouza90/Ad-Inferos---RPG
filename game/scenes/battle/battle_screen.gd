@@ -580,6 +580,18 @@ func _animate(ev: BattleEvent) -> float:
 			return _act(d["actor"], _style_of_ability(d["ability"]), StringName(str(targets[0])) if not targets.is_empty() else &"")
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""
+		&"enemy_action_started":
+			# An action with its own clip plays it whole; its damage then
+			# lands without a second lunge (D-428).
+			var acting: CombatantView = view_of(StringName(str(d["enemy"])))
+			var action_clip := StringName(str(d["action"]))
+			if acting == null or acting.player() == null or not acting.player().frames.has_clip(action_clip):
+				return 0.0
+			_last_actor = StringName(str(d["enemy"]))
+			var aimed: Array = d.get("targets", [])
+			var aimed_view: CombatantView = view_of(StringName(str(aimed[0]))) if not aimed.is_empty() else null
+			var where: Vector2 = aimed_view.chest_global() if aimed_view != null and aimed_view != acting else Vector2.INF
+			return acting.play_own_clip(action_clip, where) * acting.impact_share()
 		&"liver_smoke":
 			_hint.text = texts.t(&"boss_liver_smoke")
 			var smoke_view: CombatantView = view_of(StringName(str(d["boss"])))

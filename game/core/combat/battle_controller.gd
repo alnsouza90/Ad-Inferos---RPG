@@ -28,6 +28,9 @@ const EV_BATTLE_ENDED: StringName = &"battle_ended"
 const EV_ABILITY_USED: StringName = &"ability_used"
 const EV_INTENTS_UPDATED: StringName = &"intents_updated"
 const EV_NO_TARGET: StringName = &"no_target"
+## An enemy starts an action (before its effects): the screen can play the
+## action's own animation (D-428).
+const EV_ENEMY_ACTION_STARTED: StringName = &"enemy_action_started"
 const EV_SWAPPED: StringName = &"swapped"
 const EV_PASSED: StringName = &"passed"
 const EV_PROVISION_USED: StringName = &"provision_used"
@@ -794,6 +797,10 @@ func _execute_intent(enemy: Combatant, intent: Intent) -> bool:
 	if targets.is_empty():
 		_emit(EV_NO_TARGET, {"enemy": enemy.id, "action": action.id})
 		return false
+	var target_ids: Array[StringName] = []
+	for t: Combatant in targets:
+		target_ids.append(t.id)
+	_emit(EV_ENEMY_ACTION_STARTED, {"enemy": enemy.id, "action": action.id, "targets": target_ids})
 	resolve_effects(enemy, action.id, action.effects, targets)
 	EnemyBrain.start_cooldown(state, enemy, action)
 	return true
