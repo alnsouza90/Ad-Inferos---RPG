@@ -21,7 +21,12 @@ extends RefCounted
 ##   (`<circle>_camp_<leg>`), kept across expeditions and after a defeat;
 ##   old logs are rebuilt the same way.
 
-const CURRENT_VERSION: int = 5
+##   5 → 6 (T46, save-load §3.3): the save keeps the whole campaign. The
+##   expedition replays as before (nothing in it changes); the campaign is
+##   born from the old save when it loads (ExpeditionSave.campaign_of),
+##   because that needs the catalog, which a migration step does not have.
+
+const CURRENT_VERSION: int = 6
 const CONTENT_TYPES: Array[String] = ["node_battle", "node_elite", "node_temptation", "node_relic", "node_soul"]
 
 ## n -> Callable taking a version-n save and returning version n + 1.
@@ -35,7 +40,11 @@ func _init(p_steps: Variant = null, p_current: int = CURRENT_VERSION) -> void:
 
 
 static func default_steps() -> Dictionary:
-	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3, 3: SaveMigrations.migrate_v2_to_v3, 4: SaveMigrations.migrate_v2_to_v3}
+	return {1: SaveMigrations.migrate_v1_to_v2, 2: SaveMigrations.migrate_v2_to_v3, 3: SaveMigrations.migrate_v2_to_v3, 4: SaveMigrations.migrate_v2_to_v3, 5: SaveMigrations.migrate_v5_to_v6}
+
+
+static func migrate_v5_to_v6(data: Dictionary) -> Dictionary:
+	return data.duplicate(true)
 
 
 static func migrate_v2_to_v3(data: Dictionary) -> Dictionary:

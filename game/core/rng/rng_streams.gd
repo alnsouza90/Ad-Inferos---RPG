@@ -9,6 +9,10 @@ const MAP: StringName = &"map"
 const REWARDS: StringName = &"rewards"
 const EVENTS: StringName = &"events"
 const FAITH: StringName = &"faith"
+## The campaign between expeditions (T46): which attribute a minor injury
+## takes (village-economy §8). Drawn with its own counter in CampaignState,
+## so it stays out of NAMES and of the battle's saved counters.
+const CAMPAIGN: StringName = &"campaign"
 const NAMES: Array[StringName] = [BATTLE, MAP, REWARDS, EVENTS, FAITH]
 
 var base_seed: int:

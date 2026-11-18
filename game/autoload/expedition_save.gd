@@ -10,13 +10,17 @@ extends RefCounted
 const GAME_VERSION_SETTING: String = "application/config/version"
 
 
-static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: StringName = &"expedition", corridor_place: Dictionary = {}) -> Dictionary:
+static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: StringName = &"expedition", corridor_place: Dictionary = {}, campaign: CampaignState = null) -> Dictionary:
 	var snap: Dictionary = ctrl.snapshot()
+	# Version 6 (T46, save-load §3.3): the whole campaign when there is one.
+	var campaign_section: Dictionary = {"seed": campaign_seed, "virtues": snap["virtues"], "flags": snap["flags"]}
+	if campaign != null:
+		campaign_section = campaign.to_dict()
 	return {
 		"save_version": SaveMigrations.CURRENT_VERSION,
 		"game_version": str(ProjectSettings.get_setting(GAME_VERSION_SETTING, "0.0.0")),
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
-		"campaign": {"seed": campaign_seed, "virtues": snap["virtues"], "flags": snap["flags"]},
+		"campaign": campaign_section,
 		"saints": snap["saints"],
 		"expedition": {
 			"initial": ctrl.initial_snapshot(),
@@ -40,6 +44,19 @@ static func corridor_place(data: Dictionary) -> Dictionary:
 	if not (x is float or x is int) or float(x) < 0.0 or float(x) > 1.0:
 		return {}
 	return {"node": str((p as Dictionary).get("corridor_node", "")), "x": float(x)}
+
+
+## The campaign of a save: read as it is from version 6 on; born from the
+## expedition for an older one (save-load §3.3, Campaign.adopt).
+static func campaign_of(catalog: ExpeditionCatalog, data: Dictionary) -> CampaignState:
+	var section: Variant = data.get("campaign")
+	var c: Dictionary = section if section is Dictionary else {}
+	if c.has("week"):
+		return CampaignState.from_dict(c)
+	var saints: Variant = data.get("saints")
+	var flags: Variant = c.get("flags")
+	var virtues: Variant = c.get("virtues")
+	return Campaign.adopt(catalog, int(c.get("seed", 0)), virtues if virtues is Dictionary else {}, flags if flags is Array else [], saints if saints is Dictionary else {})
 
 
 ## Rebuilds the controller, or null if the save does not replay exactly.

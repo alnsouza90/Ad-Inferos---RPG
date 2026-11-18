@@ -450,3 +450,18 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - Os números entram em `constants.csv` (`equipped_abilities`, `relic_slots_max`, `relic_second_slot_level`); são os do GDD §3 e de `village-economy.md` §9.
 - **D-478 · 18/11/2026 · Alan** — PR #92 aprovado e com merge. **Alcunhas na ficha** aprovadas, a partir do primeiro Carisma do GDD: Bento "Abade", Teresinha "Pequena Via", Antão "Asceta" (Jorge "Cavaleiro", D-477). **Ícones das relíquias** aprovados: 30 gerações no PixelLab para as três do M2 (Crucifixo de madeira, Cruz em tau, Vela da Candelária), no estilo dos ícones de provisão, 32 × 32, mostrados um a um.
 - **D-479 · 18/11/2026 · Alan** — **Ícones das relíquias do M2** escolhidos: Crucifixo de madeira (A), Cruz em tau (D) e Vela da Candelária (D, a vela branca sem castiçal, com fita vermelha e chama acesa, diferente da vela de provisão). Gerados no PixelLab (`create_image_pro`, 32 × 32, com o estilo dos ícones de provisão; 30 gerações). Originais em `art_source/ui/pixel/icons/`; no jogo em `assets/pixel/icons/icon_<relíquia>.png`; na ficha, a 0,75 dentro da moldura, como Alan aprovou.
+- **D-480 · 18/11/2026 · agente** — **T46, a campanha no núcleo:**
+  - **Onde mora:** `game/core/campaign/`. `CampaignState` guarda os dados; `CampaignSaint` é o santo entre expedições (o `SaintStatus` mais nível, habilidades levadas e semanas do ferimento); `Campaign` tem as regras.
+  - **Começo:** semana 1, os três santos do começo e os edifícios do M2 no nível 1 (`M2_FACILITIES`, de `village-economy.md` §13). `party_size` (3) vai para `constants.csv`.
+  - **Expedição:** a expedição recebe da campanha os santos como estão, as virtudes e as bandeiras (`ExpeditionController.carry_in`, antes do primeiro comando; o retrato inicial guarda tudo, então o replay sai igual).
+  - **Ferimentos:** quem desce ferido luta com a penalidade (§8): o grave tira 20% de Vigor e de Fé; o leve tira 10% de um dos dois, sorteado uma vez no fluxo `campaign` da campanha. A penalidade só vale para o ferimento trazido da vila; o ferimento ganho na expedição conta a partir da próxima.
+  - **Volta:**
+    - os santos voltam como estão;
+    - o ferimento novo começa a contar;
+    - as Esmolas (garantidas e as que sobraram) vão para a companhia, e as relíquias soltas para a vila;
+    - bandeiras e virtudes passam para a campanha;
+    - o Círculo 2 concluído traz Antão, que fica para São Cristóvão anunciar;
+    - a semana vira, e o Retiro fica liberado de novo.
+  - **Virada da semana:** o Jardim e Claustro alivia a desolação (pelas mesmas regras do campo); os ferimentos contam (o leito cura o grave em uma semana); todos voltam com a vida cheia (**pendente com Alan**, a especificação não diz); as designações da semana acabam.
+  - **Save versão 6:** guarda a campanha inteira. Um save antigo abre e a campanha nasce dele ao carregar (`ExpeditionSave.campaign_of`, `Campaign.adopt`), sem perder virtudes, bandeiras, Pousos nem os santos como estavam.
+  - **Sorteio:** o fluxo `campaign` fica fora de `RngStreams.NAMES`, para não mudar os contadores que a luta grava.

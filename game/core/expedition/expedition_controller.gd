@@ -137,6 +137,23 @@ static func start_resumed(p_catalog: ExpeditionCatalog, circle: StringName, map_
 	return c
 
 
+## Before any command: the campaign hands the expedition its saints as they
+## are (hit points, desolation, injuries, relics), the Pilgrim's virtues and
+## the flags (T46). The initial snapshot takes them, so a replay starts the
+## same way.
+func carry_in(statuses: Dictionary, p_virtues: Virtues, p_flags: Array[StringName]) -> void:
+	assert(command_log.is_empty(), "carry_in only before the first command")
+	for id: StringName in state.party:
+		if statuses.has(id):
+			saints[id] = (statuses[id] as SaintStatus).duplicate_status()
+	if p_virtues != null:
+		virtues = Virtues.from_dict(p_virtues.to_dict())
+	for f: StringName in p_flags:
+		if not flags.has(f):
+			flags.append(f)
+	_initial = snapshot()
+
+
 ## The flag of a consecrated camp: the camp after leg `leg` of `circle`.
 static func consecrated_flag(circle: StringName, leg: int) -> StringName:
 	return StringName("%s_camp_%d" % [circle, leg])
