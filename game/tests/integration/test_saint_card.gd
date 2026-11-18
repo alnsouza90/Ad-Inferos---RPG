@@ -165,3 +165,9 @@ func test_the_card_opens_on_the_life_and_turns_to_the_sheet() -> void:
 	assert_eq(card.page_index, SaintCard.PAGE_LIFE)
 	card.show_page(SaintCard.PAGE_SHEET)
 	assert_eq(card.page_index, SaintCard.PAGE_SHEET)
+
+
+func test_every_relic_of_the_m2_has_its_icon() -> void:
+	# D-478: the relic node of the M2 gives these; each shows its icon.
+	for id: StringName in RealData.expedition_catalog().relic_node_pool():
+		assert_true(ResourceLoader.exists(SaintCard.RELIC_ICON_PATH % id), String(id))
