@@ -5,9 +5,10 @@ extends Control
 ## circles of their halos, and goes. Gold, because what it moves does not run
 ## out. Presentation only.
 
-const RUN: float = 0.3
-const HOLD: float = 0.45
-const FADE: float = 0.3
+## Only an instant (D-456): it runs, shows and goes in about half a second.
+const RUN: float = 0.12
+const HOLD: float = 0.2
+const FADE: float = 0.15
 ## The thread sags a little, like a cord between two hands.
 const SAG: float = 14.0
 const WIDTH: float = 2.0

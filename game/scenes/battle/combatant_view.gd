@@ -84,7 +84,8 @@ const SHADOW_WIDTH: float = 0.55
 const SHADOW_FLAT: float = 0.16
 ## Width and darkness of the ground shadow by the weight of the figure.
 const SHADOW_BY_WEIGHT: Dictionary = {&"light": 0.85, &"medium": 1.0, &"heavy": 1.15, &"colossal": 1.35}
-const SHADOW_DARK_BY_WEIGHT: Dictionary = {&"light": 0.9, &"medium": 1.0, &"heavy": 1.15, &"colossal": 1.5}
+## (The Circle 2 ground is dark: the shadow is nearly black to read on it.)
+const SHADOW_DARK_BY_WEIGHT: Dictionary = {&"light": 1.6, &"medium": 1.75, &"heavy": 2.0, &"colossal": 2.4}
 const COLOR_SHADOW := Color(0, 0, 0, 0.38)
 
 var combatant_id: StringName
@@ -845,7 +846,8 @@ func _draw_shadow() -> void:
 		var t: float = float(row) / half_h
 		var span: float = roundf(half_w * sqrt(maxf(0.0, 1.0 - t * t)))
 		if span > 0.0:
-			_shadow.draw_rect(Rect2(-span, row, span * 2.0, 1.0), colour)
+			# The ellipse rests on the feet line, above the bar under it (D-456).
+			_shadow.draw_rect(Rect2(-span, row - half_h, span * 2.0, 1.0), colour)
 
 
 func _freeze_player(on: bool) -> void:
