@@ -71,6 +71,20 @@ func setup(p_data: GameData, p_ctrl: ExpeditionController, p_run: Callable = Cal
 	run = p_run if p_run.is_valid() else func(cmd: ExpeditionCommand) -> StringName: return ctrl.execute(cmd)
 
 
+## A scene of pages only (`story`, T43): the Prologue and other scenes that
+## run outside an expedition. No options; after the last page, Continuar
+## leaves.
+func setup_story(p_data: GameData, p_event: EventDef) -> void:
+	data = p_data
+	texts = EventTexts.new(p_data)
+	ctrl = null
+	event = p_event
+
+
+func is_story() -> bool:
+	return event != null and event.options.is_empty()
+
+
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_build()
@@ -87,7 +101,7 @@ func _notification(what: int) -> void:
 
 ## Next page; after the last one the options appear; after the result, leave.
 func press_next() -> void:
-	if _result_shown:
+	if _result_shown or (is_story() and page_index >= page_count() - 1):
 		finished.emit()
 		return
 	if page_index < page_count() - 1:
@@ -115,7 +129,7 @@ func page_count() -> int:
 
 
 func options_shown() -> bool:
-	return not _result_shown and page_index >= page_count() - 1
+	return not is_story() and not _result_shown and page_index >= page_count() - 1
 
 
 func result_shown() -> bool:
@@ -261,7 +275,8 @@ func _refresh() -> void:
 	var page: Dictionary = event.pages[page_index] if page_count() > 0 else {}
 	var at_options: bool = options_shown()
 	_next_button.visible = not at_options
-	_next_button.text = texts.t(&"event_next")
+	var last_page: bool = is_story() and page_index >= page_count() - 1
+	_next_button.text = texts.t(&"event_continue" if last_page else &"event_next")
 	_options_box.visible = at_options
 	_show_line(StringName(str(page.get("speaker", EventTexts.NARRATOR))), str(page.get("text_pt", "")))
 	for id: StringName in _option_buttons:
@@ -286,6 +301,8 @@ func _show_line(speaker_id: StringName, line: String) -> void:
 
 
 func _build_options() -> void:
+	if event.options.is_empty():
+		return
 	var ctx: EventContext = ctrl.event_context()
 	for option: Dictionary in event.options:
 		var id := StringName(str(option.get("id", "")))

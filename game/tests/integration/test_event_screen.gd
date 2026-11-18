@@ -217,3 +217,27 @@ func test_the_event_is_drawn_like_the_other_pixel_screens() -> void:
 		var button: Button = s._option_buttons[id]
 		assert_eq(button.get_theme_stylebox(&"normal"), s.theme.get_stylebox(&"normal", &"Button"), "botão de ferro")
 		assert_true(plate.encloses(button.get_global_rect()), "a opção fica dentro da placa, sem cobrir a ilustração: %s em %s" % [button.get_global_rect(), plate])
+
+
+## T43: a scene of pages only (story), with no expedition, as the Prologue
+## will use: page by page, then Continuar leaves.
+func test_a_story_plays_its_pages_and_leaves() -> void:
+	var story := EventDef.new()
+	story.id = &"test_story"
+	story.type = &"story"
+	story.title_pt = "Cena"
+	story.origin = &"game_fiction"
+	story.pages = [{"speaker": "narrator", "text_pt": "Primeira."}, {"speaker": "narrator", "text_pt": "Segunda."}]
+	var s := EventScreen.new()
+	s.setup_story(data, story)
+	add_child_autofree(s)
+	var left: Array[bool] = []
+	s.finished.connect(func() -> void: left.append(true))
+	assert_true(s.is_story())
+	assert_eq(s.text_shown(), "Primeira.")
+	assert_false(s.options_shown(), "cena não tem opções")
+	s.press_next()
+	assert_eq(s.text_shown(), "Segunda.")
+	assert_eq(left.size(), 0)
+	s.press_next()
+	assert_eq(left.size(), 1, "Continuar sai da cena")
