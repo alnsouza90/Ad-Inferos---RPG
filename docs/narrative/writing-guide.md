@@ -19,7 +19,7 @@ Versão 1.0 · base: GDD v1.1 §9 e §10 · vale para **todo** texto exibido no 
 | 5 | Demonologia histórica (Binsfeld, Weyer, Collin de Plancy) | Figuras demoníacas, como tradições |
 | 6 | Licença poética | Criações do jogo, sempre identificadas |
 
-Todo texto de lore declara `origin` (`narrative-system.md` §6).
+Todo texto de lore declara `origin` (`narrative-system.md` §6). **As referências (livro, canto, versículo) ficam só no Arquivo, nunca no texto da tela** (D-465).
 
 ## 3. Regras firmes
 

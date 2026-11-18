@@ -1,6 +1,6 @@
 # Falas da Vertigem, de Minos e de Asmodeu na luta · rascunho para Alan aprovar (T43, peça 5b)
 
-**Situação:** rascunho do agente. Ainda não é texto do jogo.
+**Situação:** v2 (18/11/2026), com as correções de Alan: o começo e a derrota de Asmodeu reescritos, sem Sara e sem o peixe. Na derrota com o fígado, Asmodeu reconhece que Deus mandou Rafael. As referências ficam só no Arquivo, nunca no balão. Os santos não respondem.
 
 **Como aparecem:** uma frase curta num balão sobre o inimigo, por um instante, nos momentos fortes da luta. A luta não para por causa da fala. Ela some sozinha e não aparece na velocidade instantânea. A parte técnica fica comigo.
 
@@ -27,7 +27,7 @@
 
 | Momento | Fala |
 | --- | --- |
-| Começo da luta | Ó vós que vindes ao doloroso abrigo, olhai como entrais e em quem confiais. (Dante) |
+| Começo da luta | Ó vós que vindes ao doloroso abrigo, olhai como entrais e em quem confiais. |
 | Quando usa o Rabo de serpente | Uma volta, um círculo. Eu conto cada um. |
 | Quando invoca a Sombra | Testemunha, venha. Diga o que viu. |
 | Vida abaixo da metade | Vivos não se julgam. E, no entanto, aqui estão. |
@@ -42,13 +42,13 @@
 
 | Momento | Fala |
 | --- | --- |
-| Começo da luta | Sete noivos entraram no quarto de Sara. Nenhum saiu. Vocês são três. |
-| Com a fumaça do fígado (começo, com o fígado) | Esse cheiro... Quem trouxe o peixe? |
+| Começo da luta | Três santos para buscar uma alma que veio sozinha até mim. Que desperdício de luz. |
+| Com a fumaça (começo, com o fígado) | Essa fumaça... eu conheço essa fumaça. |
 | Troca de fase | O Peregrino é meu. Ele mesmo me deu a chave. |
 | Quando usa As sete noites | Duas noites. Depois, a terceira é minha. |
 | Vida abaixo de um quarto | Vocês não entendem. Ele quis vir. |
 | Derrota sem o fígado (foge) | O vento me leva. Ele sempre me trouxe de volta. |
-| Derrota com o fígado | Não... o fogo do peixe... |
+| Derrota com o fígado | Ele mandou o anjo outra vez. Sempre o mesmo anjo. |
 
 **O que Alan precisa decidir:**
 - se as falas servem, ou o que muda;
