@@ -6,6 +6,8 @@ extends Node
 var catalog: ExpeditionCatalog
 var expedition: ExpeditionController
 var campaign_seed: int = 0
+## The campaign between expeditions (T46); saved with the expedition.
+var campaign: CampaignState
 ## Where the party stands in the corridor: {"node": id, "x": 0..1}
 ## (save-load §3.1). Presentation only: outside the command log.
 var corridor_place: Dictionary = {}
@@ -15,6 +17,8 @@ func start_expedition(p_catalog: ExpeditionCatalog, ctrl: ExpeditionController, 
 	catalog = p_catalog
 	expedition = ctrl
 	campaign_seed = p_seed
+	if campaign == null:
+		campaign = Campaign.start(p_catalog, p_seed)
 	corridor_place = {}
 	save_now()
 
@@ -27,6 +31,7 @@ func continue_saved(p_catalog: ExpeditionCatalog) -> StringName:
 	if expedition != null:
 		var data: Dictionary = result["data"]
 		campaign_seed = int(data.get("campaign", {}).get("seed", 0))
+		campaign = ExpeditionSave.campaign_of(p_catalog, data)
 		corridor_place = ExpeditionSave.corridor_place(data)
 	return result["status"]
 
@@ -44,7 +49,7 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 
 func save_now() -> void:
 	if expedition != null:
-		_service().call("save_expedition", expedition, campaign_seed, corridor_place)
+		_service().call("save_expedition", expedition, campaign_seed, corridor_place, campaign)
 
 
 ## The party stopped walking: keep the place and save it (§3.1, §4).

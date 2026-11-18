@@ -89,6 +89,7 @@ fallen_minor_injury_hp,1,Vida ao terminar o combate caído
 map_three_nodes_chance,0.5,Chance de uma camada do mapa ter 3 nós (senão 2)
 map_second_link_chance,0.5,Chance de um nó ligar também ao vizinho do caminho reto
 relic_slots_start,1,Espaços de relíquia de cada santo até o nível 4 (GDD §3)
+party_size,3,Santos que descem na expedição (GDD §1: a companhia de três)
 equipped_abilities,4,Habilidades que cada santo leva para a luta (GDD §3; combat.md §2)
 relic_slots_max,2,Espaços de relíquia a partir do nível 4 (GDD §3)
 relic_second_slot_level,4,Nível do santo em que abre o segundo espaço de relíquia (GDD §3; village-economy.md §9)

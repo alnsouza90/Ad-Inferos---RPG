@@ -58,6 +58,8 @@ game/
 │   ├── spirit/desolation.gd       desolação, teste de Fé, estados
 │   ├── ai/enemy_brain.gd          escolha de intenções
 │   ├── expedition/                mapa, nós, Lume, provisões, Pouso
+│   ├── campaign/                  semanas, Retiro, ferimentos, Esmolas, santos da companhia (T46)
+│   ├── progression/               escolha das habilidades levadas (AbilityLoadout)
 │   ├── village/                   semanas, calendário, instalações, economia
 │   ├── progression/               experiência, níveis, melhorias, Carismas, relíquias
 │   └── narrative/                 eventos com requisitos, virtudes, flashbacks

@@ -117,7 +117,7 @@ Os santos (`saints`) passam a ser da campanha: nível, experiência, vida, desol
 
 Os Pousos consagrados continuam nas bandeiras (`<círculo>_camp_<trecho>`, D-435). `circle_02_completed` continua sendo a bandeira de conclusão.
 
-**Migração para a versão 6:**
+**Migração para a versão 6:** a etapa 5 → 6 não muda o arquivo, porque a expedição não muda. A campanha nasce do save antigo ao carregar (`ExpeditionSave.campaign_of`), porque precisa do catálogo dos santos.
 - Um save da versão 5 com expedição em andamento continua a expedição: ela é refeita como nas versões 3 a 5. Ao terminar, a campanha nasce do resultado: semana 2, as Esmolas garantidas, os santos como voltaram, e o elenco inicial (mais Antão, se `circle_02_completed`).
 - Um save da versão 5 sem expedição, por exemplo no resumo do trecho, abre na vila com a campanha criada do mesmo jeito.
 - Nada do save antigo se perde: virtudes, bandeiras e Pousos consagrados passam como estão.
