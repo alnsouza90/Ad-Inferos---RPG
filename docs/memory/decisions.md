@@ -416,3 +416,9 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - Aplicar em `village-economy.md` §2 e §3, no GDD §6 e no núcleo (hoje `gate_level` dá vagas e revelação; a revelação base fica a do nível 1), dentro das T45, T48 e T49.
 - **D-470 · 18/11/2026 · Alan** — **Biografias curtas** de São Jorge, São Bento e Santa Teresinha aprovadas (`docs/design/rascunho-biografias-santos.md`); no cartão aparece só **"Santa Teresinha"**. O prédio que volta tem São Francisco de Assis como guardião.
 - **D-471 · 18/11/2026 · Alan** — Aprovadas a fala e a instrução do **Portão** no papel novo e as do **Jardim** (o nome original do GDD), com São Francisco ("Louvado sejas, meu Senhor, com todas as tuas criaturas"). A instrução da Capela fica só com os Sufrágios. PR #89 aprovado; o merge falhou porque o ramo mudou depois do CI, e um reset do agente fechou o PR, então o mesmo conteúdo foi para o PR #90.
+- **D-472 · 18/11/2026 · agente** — **Cartão padrão do santo, primeiro com São Jorge** (T50, D-464). Tela `SaintCard` (`game/scenes/village/saint_card.gd`):
+  - à esquerda, o arco do retrato em três vezes o tamanho, com o mesmo retrato da luta, recortado pelo rosto (`FACE_REGIONS`, para que todos os rostos fiquem do mesmo tamanho, D-467);
+  - à direita, o nome, "Festa em ...", "A vida" (a biografia aprovada, D-470) e a "Ficha de jogo": atributos (Vigor, Proteção, Fé, Vontade), traço, as seis habilidades com o custo em Fervor e o milagre em ouro;
+  - "Fechar" no alto, à direita.
+  
+  Os textos estão em `ui_text.csv` (`saint_bio_*`, `saint_feast_*`, `saint_card_*`, `stat_*`). As datas das festas também estão em `feasts.csv` (`real_date`); a semana de cada festa no jogo fica em aberto. Falta a aprovação de Alan; depois, o mesmo painel para Bento, Teresinha e Antão.
