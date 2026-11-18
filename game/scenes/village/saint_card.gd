@@ -69,8 +69,8 @@ const RELIC_FRAME_SIZE := Vector2(59, 53) * RELIC_FRAME_SCALE
 const DOT_LIGHT := Rect2(8, 8, 11, 11)
 const RELIC_ICON_PATH: String = "res://assets/pixel/icons/icon_%s.png"
 ## Where a 32x32 relic icon sits inside the tile frame.
-const RELIC_ICON_INSET := Vector2(6, 4)
-const RELIC_ICON_SCALE: float = 1.0
+const RELIC_ICON_INSET := Vector2(10, 8)
+const RELIC_ICON_SCALE: float = 0.75
 ## The stamp of the saint, faint behind the name (D-449).
 const STAMP_PATH: String = "res://assets/pixel/vfx/stamp_%s.png"
 const STAMP_POS := Vector2(590, 4)
