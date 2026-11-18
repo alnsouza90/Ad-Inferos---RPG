@@ -72,7 +72,7 @@ ANIMATED = {
 # 2x, only their top rows, laid under the feet.
 FLOOR_SLAB_ROWS = 44
 EVENT_ART = {
-    "event_c02_soul_helen": ROOT / "art_source/events/circle_02/event_c02_soul_helen_px_v01.png",
+    "event_c02_soul_helen": ROOT / "art_source/events/circle_02/event_c02_soul_helen_px_v02.png",
     "scene_raphael_binds": ROOT / "art_source/events/circle_02/scene_raphael_binds_px_v02.png",
     "event_c02_soul_lovers": ROOT / "art_source/events/circle_02/event_c02_soul_lovers_px_v01.png",
 }
