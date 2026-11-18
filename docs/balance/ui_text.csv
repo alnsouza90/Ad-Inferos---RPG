@@ -417,3 +417,21 @@ reason_retreat_house_closed,A Casa de Exercícios ainda não abriu.
 reason_no_upgrade_left,Nenhuma melhoria disponível.
 reason_already_upgraded,Esta habilidade já foi melhorada.
 reason_not_an_ability,Habilidade de outro santo.
+building_chapel,Catedral
+building_library,Biblioteca
+building_carmel,Carmelo
+building_garden,Jardim e Claustro
+building_infirmary,Enfermaria
+building_retreat_house,Casa de Exercícios
+building_forge,Forja
+building_pantry,Despensa
+building_gate,Portão
+building_reliquary,Relicário
+building_closed,Ainda fechado
+season_advent,Advento
+season_christmas,Natal
+season_ordinary_1,Tempo Comum
+season_lent,Quaresma
+season_easter,Páscoa
+season_ordinary_2,Tempo Comum
+village_week,Semana {week} · {season}
