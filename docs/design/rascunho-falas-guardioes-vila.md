@@ -52,7 +52,7 @@ O Carmelo agora é **inteiro**, fica bloqueado no motor e tem uma **reforma espi
 
 A instrução do prédio continua: *(aviso: reforma depois do Círculo 3)* "Reformado o Carmelo, uma nova morada se abre a cada círculo vencido."
 
-**Escolha de Alan (D-491):** a fala é o poema de Santa Teresa. Proposta de texto (tradução própria), para Alan confirmar o tamanho:
+**Aprovada por Alan (D-492):** o texto curto do poema de Santa Teresa (tradução própria):
 
 > Nada te perturbe, nada te espante. Tudo passa; Deus não muda. Só Deus basta.
 
