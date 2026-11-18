@@ -1,0 +1,62 @@
+[gd_resource type="Resource" script_class="EventDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/event_def.gd" id="1_1njpc"]
+
+[resource]
+script = ExtResource("1_1njpc")
+id = &"c02_soul_helen"
+type = &"soul_meeting"
+circle = 2
+title_pt = "Helena contra o vento"
+origin = &"game_fiction"
+pages = [{
+"speaker": "narrator",
+"text_pt": "Uma alma anda contra o vento, sozinha, com o rosto meio escondido num véu rasgado. O furacão a empurra, e ela não deixa de andar."
+}, {
+"speaker": "narrator",
+"text_pt": "Vê Helena, por quem tanto tempo mau girou. (Dante, Inferno V)"
+}, {
+"speaker": "soul_helen",
+"text_pt": "Disseram que o meu rosto lançou mil navios. Ninguém perguntou o que eu queria. Eu também não perguntei, quando escolhi."
+}, {
+"speaker": "soul_helen",
+"text_pt": "Dez anos de guerra, e cada morto tinha o meu nome na boca. Aqui o vento repete esses nomes todas as noites. Eu cubro o rosto para não ver a quem ele os leva."
+}, {
+"speaker": "soul_helen",
+"text_pt": "Passou por aqui um vivo. Olhou-me como todos olhavam. Depois baixou os olhos e seguiu o vento. Ele ainda pode virar o rosto. Eu já não posso."
+}]
+options = [{
+"chance": {},
+"failure_pt": "",
+"id": "pray",
+"on_failure": [],
+"on_success": [],
+"outcomes": [{
+"amount": 1.0,
+"id": "virtue_hope",
+"target": "",
+"type": "virtue"
+}, {
+"amount": 0.0,
+"id": "",
+"target": "",
+"type": "dominion"
+}],
+"requires": [],
+"result_pt": "Os santos rezam pelos mortos de Troia. Helena para por um instante; o vento não a leva. Mais adiante, os rastros do Peregrino seguem com passo mais firme.",
+"safe": false,
+"success_pt": "",
+"text_pt": "Rezar pelos que morreram por ela"
+}, {
+"chance": {},
+"failure_pt": "",
+"id": "follow_tracks",
+"on_failure": [],
+"on_success": [],
+"outcomes": [],
+"requires": [],
+"result_pt": "A companhia passa. O véu dela se fecha de novo contra o vento.",
+"safe": false,
+"success_pt": "",
+"text_pt": "Seguir os rastros sem parar"
+}]
