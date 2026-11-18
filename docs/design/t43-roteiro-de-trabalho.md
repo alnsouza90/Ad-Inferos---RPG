@@ -7,10 +7,13 @@ Onde a tarefa começa e onde termina, peça por peça. Cada peça é um rascunho
 | # | Peça | Onde entra | Situação |
 | --- | --- | --- | --- |
 | 1 | Encontro com alma 1: "Os que o vento não separa" (o casal) | `c02_soul_lovers` | **Feito e aprovado** (D-447) |
-| 2 | Encontro com alma 2 | Trecho 2 ou 3, no lugar das almas | A fazer: Alan escolhe a alma (inspirada em Dante, Canto V, ou criação do jogo) |
+| 2 | Encontro com alma 2: Helena | Mesmo cenário das almas | **Rascunho** em `docs/design/rascunho-encontro-alma-helena.md` (escolha de Alan, 18/11) |
 | 3 | Tentação nova (além de "O abrigo do vento") | Nó de Tentação, com opções e chances | A fazer: Alan escolhe o tema; os números seguem o modelo da primeira |
 | 4 | Falas curtas de São Cristóvão no Portão | Relatório da semana (D-262) e anúncio do santo que chega (D-458) | A fazer: 3 a 5 frases |
 | 5 | Ficha breve de Santo Antão para o cartão de novo santo (T50) | Vida em poucas linhas, com a origem de cada dado (fato, tradição, lenda) | A fazer: Alan confere as fontes |
+| 5b | Falas das Elites e do chefe durante a luta | Vertigem, Minos e Asmodeu: 2 a 4 frases curtas cada, nos momentos fortes (começo, troca de fase, vida baixa, derrota). Precisa de um sistema de falas na luta (parte técnica) | A fazer: pedido de Alan (18/11) |
+| 5c | Apresentação da vila | Uma fala curta de cada guardião no seu prédio (GDD §6: Santo Agostinho e Santa Mônica, Cosme e Damião, Santa Isabel, São Cristóvão, Santo Inácio, Santo Elói, Santo Tomás, Santa Teresa d'Ávila, Santa Helena); os não liberados com aviso (D-459) | A fazer: pedido de Alan (18/11) |
+| 5d | Cena da Porta do Inferno e do Anjo da Guarda | Abertura do Círculo 1 (M3) | Fica para o M3: o Prólogo termina na beira do abismo, olhando a porta |
 | 6 | `docs/narrative/flags.md` | Lista das bandeiras de história usadas pelos eventos | Técnica: o agente faz |
 | 7 | Motor da cena (`story`) | Usado pelos eventos e pelo Prólogo (T51) | Técnica: o agente faz depois dos textos |
 
