@@ -540,3 +540,12 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
 - **D-499 · 18/11/2026 · Alan** — **Guardiões em retrato, no padrão da arte do jogo, da cintura para cima**, como os atendentes dos prédios do *Darkest Dungeon*: grandes, à esquerda, olhando para os painéis. Sem auréola (a do motor). Prompts e lista em `docs/art/prompts-guardioes-vila.md`; Alan gera no Meta AI. Os objetos de cada um seguem a iconografia tradicional, com a origem registrada para o Martirológio.
 - **D-500 · 18/11/2026 · Alan** — **Interiores dos cinco prédios abertos no M2** gerados por Alan no Meta AI: Jardim e Claustro, Portão, Enfermaria, Casa de Exercícios e Despensa. Os originais estão em `art_source/environments/village/interiors/`. Como já vieram em pixel art, **não passam pelo PixelLab**; só são reduzidos para 960 × 540 (`game/assets/pixel/environments/village/interiors/`). Os retratos dos guardiões vêm a seguir.
 - **D-501 · 18/11/2026 · Alan** — **Retratos dos cinco guardiões do M2** (Cristóvão, Inácio, Francisco, Cosme e Damião, Isabel), gerados por Alan no Meta AI e **convertidos no PixelLab** para 192 × 256 (o tamanho dos retratos dos santos jogáveis), para ficarem menos realistas e mais perto deles (`game/assets/pixel/characters/guardians/`). **São Cristóvão sem o Menino Jesus**; o Menino entra como **quadro na parede do Portão**, peça de cenário. O prompt do quadro está em `prompts-guardioes-vila.md`.
+- **D-502 · 18/11/2026 · Alan e agente** — Três retratos substituídos por Alan (Cristóvão, Cosme e Damião, Inácio) e convertidos no PixelLab. **Tela dos prédios abertos no M2** (`BuildingScreen`):
+  - **Composição:** o interior de Alan ao fundo e o guardião grande à esquerda, da cintura para cima, a 1,5×. A placa de ferro traz o nome, a fala aprovada e a instrução. O painel de ações cresce com as linhas, para o interior aparecer embaixo. Embaixo ficam as Esmolas e o botão "Voltar à vila".
+  - **Despensa:** comprar e devolver, com o alforje.
+  - **Enfermaria:** os feridos e o leito pago.
+  - **Jardim e Claustro:** descansar ou sair.
+  - **Casa de Exercícios:** os santos com o nível e as melhorias; tocando num santo, as habilidades para melhorar.
+  - **Portão:** quem chegou (anunciado uma vez), a companhia sugerida em ordem, tirar e pôr santos e "Partir".
+  - **Regras:** tudo passa pelas regras do núcleo; as recusas aparecem com o motivo. As falas e as instruções entram em `ui_text.csv`.
+  - **Pendente:** ligar a vila aos prédios e o Portão ao Mapa do Inferno.

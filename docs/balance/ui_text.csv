@@ -437,3 +437,37 @@ season_ordinary_2,Tempo Comum
 village_week,Semana {week} · {season}
 statue_title,Ave Maria
 statue_prayer,"Ave Maria, gratia plena, Dominus tecum. Benedicta tu in mulieribus, et benedictus fructus ventris tui, Iesus. Sancta Maria, Mater Dei, ora pro nobis peccatoribus, nunc et in hora mortis nostrae. Amen."
+guardian_gate,São Cristóvão
+guardian_pantry,Santa Isabel da Hungria
+guardian_infirmary,São Cosme e São Damião
+guardian_garden,São Francisco de Assis
+guardian_retreat_house,Santo Inácio de Loyola
+guardian_line_gate,"Por esta porta chega quem foi chamado, e por ela sai quem vai buscar."
+guardian_line_pantry,O pão que guardo não é meu. É de quem vai precisar dele lá embaixo.
+guardian_line_infirmary,Curávamos sem cobrar. Aqui também ninguém paga para ser cuidado.
+guardian_line_garden,"Louvado sejas, meu Senhor, com todas as tuas criaturas."
+guardian_line_retreat_house,"Também fui soldado, e uma ferida me ensinou mais que todas as vitórias."
+guardian_help_gate,"Aqui chegam os santos novos. Escolha os três que descem e a ordem deles, e abra o Mapa do Inferno para partir."
+guardian_help_pantry,"Compre aqui, com Esmolas, as provisões da expedição: pão, velas, água benta, ataduras e incenso."
+guardian_help_infirmary,Os ferimentos saram com as semanas. Um santo deitado num leito sara mais depressa do ferimento grave.
+guardian_help_garden,Deixe um santo descansar no Jardim e Claustro durante a semana: ele não vai à expedição e volta com a desolação aliviada.
+guardian_help_retreat_house,Os santos sobem de nível com a experiência das expedições. Aqui eles aprendem as versões melhores das habilidades.
+building_back,Voltar à vila
+village_alms,Esmolas {alms}
+pantry_pack,Alforje {count}/{of}
+pantry_buy,{name} · {price}
+pantry_give_back,Devolver
+infirmary_bed,Leito · {cost}
+infirmary_in_bed,No leito
+infirmary_none,Ninguém ferido.
+injury_minor,ferimento leve
+injury_major,ferimento grave
+garden_rest,Descansar
+garden_resting,Descansando
+garden_desolation,desolação {value}
+retreat_upgrades,Nível {level} · melhorias {left}
+retreat_upgraded,{name} (melhorada)
+gate_party,A companhia
+gate_slot,{slot}. {name}
+gate_depart,Partir
+gate_arrival,Chegou: {name}
