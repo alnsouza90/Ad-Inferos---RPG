@@ -397,3 +397,23 @@ saint_roles_saint_anthony_abbot,Exorcista · Combatente
 saint_epithet_saint_benedict,Abade
 saint_epithet_saint_therese,Pequena Via
 saint_epithet_saint_anthony_abbot,Asceta
+reason_facility_closed,Este lugar ainda não abriu.
+reason_not_enough_alms,Esmolas insuficientes.
+reason_pack_full,O alforje está cheio.
+reason_unknown_provision,Provisão desconhecida.
+reason_not_in_stock,Não está guardado na vila.
+reason_no_bed_free,Não há leito livre.
+reason_not_injured,Este santo não está ferido.
+reason_already_there,Já está lá.
+reason_no_place_free,Não há vaga livre.
+reason_no_relic_space,Não há espaço de relíquia livre.
+reason_loadout,Escolha as habilidades de cada santo na ficha.
+reason_saint_not_unlocked,Este santo ainda não chegou.
+reason_saint_resting,Este santo está descansando no Jardim.
+reason_saint_injured,Este santo está gravemente ferido: precisa sarar antes de descer.
+reason_wrong_party,A companhia desce com três santos diferentes.
+reason_retreat_used,Já houve um Retiro desde a última expedição.
+reason_retreat_house_closed,A Casa de Exercícios ainda não abriu.
+reason_no_upgrade_left,Nenhuma melhoria disponível.
+reason_already_upgraded,Esta habilidade já foi melhorada.
+reason_not_an_ability,Habilidade de outro santo.

@@ -270,7 +270,7 @@ Provisões com que a expedição parte enquanto não há vila (M1, D-123). Uma l
 | `provision_id` | ID | Provisão de `provisions.csv` |
 | `amount` | inteiro ≥ 1 | Quantidade |
 
-Validação: provisão inexistente dá `unknown_id`; kit com mais itens que [gate_slots_l1] dá `out_of_range`.
+Validação: provisão inexistente dá `unknown_id`; kit com mais itens que [pantry_slots_l1] dá `out_of_range`.
 
 ### 3.17 Eventos narrativos → `game/data/events/<id>.tres` (`EventDef`)
 

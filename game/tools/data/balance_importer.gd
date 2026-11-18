@@ -640,8 +640,8 @@ func _build_starting_kits() -> void:
 		var d: StartingKitDef = starting_kits[id]
 		for n: int in amount:
 			d.provisions.append(StringName(provision_id))
-		if constants.has_key(&"gate_slots_l1") and d.provisions.size() > constants.get_int(&"gate_slots_l1"):
-			_err("out_of_range", t.file_name, line, "o kit '%s' passa de %d provisões (espaços do Portão nível 1)" % [id, constants.get_int(&"gate_slots_l1")])
+		if constants.has_key(&"pantry_slots_l1") and d.provisions.size() > constants.get_int(&"pantry_slots_l1"):
+			_err("out_of_range", t.file_name, line, "o kit '%s' passa de %d provisões (espaços do alforje, Despensa nível 1)" % [id, constants.get_int(&"pantry_slots_l1")])
 
 
 func _build_relics() -> void:

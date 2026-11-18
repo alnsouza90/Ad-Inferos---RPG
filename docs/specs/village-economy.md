@@ -43,7 +43,7 @@ Sugestões automáticas: santos com ferimento grave são sugeridos para a Enferm
 
 Custo de melhoria: nível 2 = [facility_l2_cost] (1.500); nível 3 = [facility_l3_cost] (2.500).
 
-**Nova divisão (D-469, D-474):** o Jardim volta com o nome **Jardim e Claustro**, guardado por São Francisco de Assis, e é o lugar da cura da desolação; abre logo depois do Limbo, para que haja como curar a desolação desde o começo. A Capela fica só com os Sufrágios. O alforje maior passa do Portão para a Despensa, com os mesmos números (`gate_slots_l*` muda de nome na T48). O Portão perde a revelação de camadas por nível: vale sempre a do nível 1.
+**Nova divisão (D-469, D-474):** o Jardim volta com o nome **Jardim e Claustro**, guardado por São Francisco de Assis, e é o lugar da cura da desolação; abre logo depois do Limbo, para que haja como curar a desolação desde o começo. A Capela fica só com os Sufrágios. O alforje maior passa do Portão para a Despensa, com os mesmos números (`pantry_slots_l*`, T48). O Portão perde a revelação de camadas por nível: vale sempre a do nível 1.
 
 ## 4. Designação semanal
 

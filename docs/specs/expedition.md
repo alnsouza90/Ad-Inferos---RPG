@@ -111,7 +111,7 @@ A expedição é vista como uma **caminhada lateral**: os santos andam por um co
 
 ## 5. Provisões
 
-- Espaços pelo nível do Portão: [gate_slots_l1] (8), [gate_slots_l2] (10), [gate_slots_l3] (12). Cada espaço guarda **uma unidade**.
+- Espaços pelo nível da Despensa (D-474): [pantry_slots_l1] (8), [pantry_slots_l2] (10), [pantry_slots_l3] (12). Cada espaço guarda **uma unidade**.
 - Compradas na Despensa antes da partida (preços em `economy.csv`). Não usadas voltam ao estoque da vila.
 - Em combate: no máximo 1 por turno da equipe, sem gastar ação.
 
