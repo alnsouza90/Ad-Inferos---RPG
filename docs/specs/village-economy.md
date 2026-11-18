@@ -184,7 +184,8 @@ O M2 é a fatia vertical: Prólogo, vila mínima e o Círculo 2 inteiro. **Arte 
 | Virada da semana | Jardim e Claustro → cura de ferimentos → eventos de desbloqueio | Capela, Sufrágios, tempos litúrgicos |
 | Ferimentos | Como no §8, com os leitos da Enfermaria nível 1 | — |
 | Experiência e níveis | Como no §9: atributos e melhorias de habilidade na Casa de Exercícios | Carismas, equipamento e Forja; 2º espaço de relíquia no nível 4 vale se algum santo chegar lá |
-| Relíquias | Equipadas no Portão, na escolha da equipe | Relicário |
+| Relíquias | Equipadas no Portão, na escolha da equipe; a ficha mostra os dois espaços, o segundo fechado até o nível 4 (D-477) | Relicário |
+| Habilidades levadas | Escolhidas na ficha do santo, tocando nos vitrais, só na vila: 4, ao menos uma sem custo (D-477) | — |
 | Santos | Jorge, Bento e Teresinha desde o início; **Santo Antão** chega ao concluir o Círculo 2, anunciado por São Cristóvão no Portão (D-458), com o cartão do santo (D-464) | Nicolau de Mira (semana 3) e os demais |
 | Mapa do Inferno | Aberto pelo Portão; arte nova e completa (D-475). Mostra a descida inteira (Átrio, Porta, Antinferno, Limbo e os círculos), só com o **Círculo 2** aberto; o resto aparece bloqueado com aviso (D-459). No Círculo 2, escolher a entrada: o Portão do círculo ou um Pouso consagrado | Os outros círculos |
 | Desolação na vila | Jardim e Claustro, −50 por semana, além do que baixa nas expedições | — |

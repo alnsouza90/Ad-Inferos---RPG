@@ -434,3 +434,17 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   Especificação aplicada em `village-economy.md` v1.2 (§1 a §4 e §13, Simplificações do M2), `desolation.md`, `screens.md` (fluxo do M2, Portão, cartão do santo, Mapa do Inferno) e `save-load.md` (§3.3, versão 6). Fim da tela única "Planejar a semana": a preparação acontece nos edifícios, e o Portão a fecha.
 - **D-475 · 18/11/2026 · Alan** — **(1)** O cartão do santo mostra, debaixo de cada habilidade, uma **linha de regra montada a partir dos dados** (dano, tipo, alvo, fichas, desolação, cura), seguida da frase da história. Vale para todos os santos. **(2)** O **Jardim e Claustro abre já no M2**, no nível 1, com −50 de desolação por semana (o M2 não tem Limbo). **(3)** **Toda a arte da vila é refeita em pixel no PixelLab**; a arte antiga não entra. A vila é **montada pelo motor** com os edifícios soltos (D-352). O **Mapa do Inferno** também é feito novo e completo, com os círculos fora do M2 bloqueados. Como sempre, cada geração tem custo mostrado e aprovação peça por peça. **(4)** PR #91 aprovado e com merge (cartões e T45).
 - **D-476 · 18/11/2026 · agente** — **Linha de regra no cartão** (D-475). `AbilityRule` (`game/scenes/common/ability_rule.gd`) monta a linha a partir dos efeitos e do alvo de cada habilidade, por exemplo: "6 de exorcismo · num inimigo nas posições 1 a 3 · usa das posições 1 a 3". As palavras vêm de `ui_text.csv` (`rule_*`). Para caber a linha e a frase da história (em cinza), o cartão ganhou **duas páginas no mesmo painel**: "A vida" (vida, atributos, traço) e "Habilidades". O retrato, o nome e a festa ficam nas duas. A aba escolhida fica em osso, nunca em ouro (D-293). Algumas frases da história repetem a regra ("2 Amparo e −10 de desolação", na Perseverança de Antão); trocá-las por frases da vida do santo é texto de Alan.
+- **D-477 · 18/11/2026 · Alan** — **Ficha do santo, modelo B** (o arco com o retrato e os vitrais), melhorado:
+  - **Topo:** o nome, a alcunha (Jorge: "Cavaleiro", do primeiro Carisma no GDD; os outros santos ficam sem alcunha até Alan aprovar) e a função (a coluna do GDD).
+  - **Abas:** "A vida" (festa e vida) e "Ficha".
+  - **Na Ficha:**
+    - os seis vitrais e a rosa do milagre;
+    - o traço ao lado da rosa;
+    - "Na luta: 4 de 4" no alto;
+    - o detalhe da habilidade escolhida (nome, linha de regra, frase da história);
+    - Posição e Alvo em óculos acesos;
+    - três quadros de ferro embaixo: Atributos, **Pouso** (a atividade própria) e **Relíquia**.
+  - **As habilidades se escolhem na ficha, tocando nos vitrais**, só na vila: o primeiro toque mostra, o segundo leva ou deixa. A regra fica no núcleo (`AbilityLoadout`): leva [equipped_abilities] (4), com ao menos uma sem custo, e não fecha a ficha sem isso. A Casa de Exercícios fica só com as melhorias.
+  - **Relíquia:** dois espaços; o segundo aparece **fechado** até o nível [relic_second_slot_level] (4).
+  - **Arte nova:** só os **ícones das relíquias** no PixelLab, com custo antes e aprovação peça por peça. Os ícones do Pouso e o medalhão do traço ficam como estão.
+  - Os números entram em `constants.csv` (`equipped_abilities`, `relic_slots_max`, `relic_second_slot_level`); são os do GDD §3 e de `village-economy.md` §9.
