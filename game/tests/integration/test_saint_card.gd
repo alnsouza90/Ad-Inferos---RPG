@@ -34,8 +34,8 @@ func test_the_card_of_george_shows_his_whole_sheet() -> void:
 	assert_not_null(card.portrait_texture(), "o mesmo retrato da luta (D-442)")
 
 
-func test_every_saint_of_the_company_has_its_life_and_feast() -> void:
-	for saint_id: StringName in GameData.M0_FORMATION:
+func test_every_saint_has_its_life_and_feast() -> void:
+	for saint_id: StringName in [&"saint_george", &"saint_benedict", &"saint_therese", &"saint_anthony_abbot"]:
 		assert_true(data.ui.has_text(StringName("saint_bio_%s" % saint_id)), String(saint_id))
 		assert_true(data.ui.has_text(StringName("saint_feast_%s" % saint_id)), String(saint_id))
 
@@ -61,3 +61,10 @@ func test_closing_the_card() -> void:
 	watch_signals(card)
 	card.press_close()
 	assert_signal_emitted(card, "closed")
+
+
+func test_every_card_fits_the_screen() -> void:
+	for saint_id: StringName in [&"saint_george", &"saint_benedict", &"saint_therese", &"saint_anthony_abbot"]:
+		var card := _card(saint_id)
+		await wait_process_frames(3)
+		assert_lte(card.column_bottom(), SaintCard.PLATE_RECT.end.y - 6.0, String(saint_id))

@@ -25,6 +25,9 @@ const NAME_SIZE: int = PixelStyle.TITLE_SIZE * 3
 const BODY_SIZE: int = PixelStyle.TEXT_SIZE * 2
 const SMALL_SIZE: int = PixelStyle.TEXT_SIZE * 2
 const BUTTON_SIZE := Vector2(130, 30)
+## Wrapped lines sit closer than the font's own spacing, so the longest
+## sheet (Anthony's) fits the card.
+const LINE_TIGHTEN: int = -4
 ## The part of each portrait that fills the window of the arch, so that every
 ## face shows the same size (D-467: Therese is smaller in her picture). Each
 ## region keeps the window's proportion (60:96). A saint without one shows
@@ -101,6 +104,11 @@ func miracle_shown() -> String:
 	return _miracle.get_parsed_text()
 
 
+## The bottom of the texts, in the card's coordinates.
+func column_bottom() -> float:
+	return _miracle.get_global_rect().end.y - _stage.global_position.y
+
+
 func portrait_texture() -> Texture2D:
 	return _portrait.texture
 
@@ -173,7 +181,7 @@ func _build_column() -> void:
 	var column := VBoxContainer.new()
 	column.position = Vector2(COLUMN_X, 14)
 	column.size = Vector2(COLUMN_WIDTH, 0)
-	column.add_theme_constant_override("separation", 2)
+	column.add_theme_constant_override("separation", 0)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(column)
 	_name = _label(saint.name_pt, NAME_SIZE)
@@ -186,6 +194,7 @@ func _build_column() -> void:
 	column.add_child(_heading("saint_card_life"))
 	_bio = _label(_text("saint_bio_%s" % saint.id), BODY_SIZE)
 	_bio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_bio.add_theme_constant_override("line_spacing", LINE_TIGHTEN)
 	_bio.custom_minimum_size.x = COLUMN_WIDTH
 	column.add_child(_bio)
 	column.add_child(_heading("saint_card_sheet"))
@@ -229,6 +238,7 @@ func _entry(title_text: String, desc: String, color: Color = PixelStyle.COLOR_AM
 	line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	line.custom_minimum_size.x = COLUMN_WIDTH
 	line.add_theme_font_size_override("normal_font_size", SMALL_SIZE)
+	line.add_theme_constant_override("line_separation", LINE_TIGHTEN)
 	line.add_theme_color_override("default_color", PixelStyle.COLOR_BONE)
 	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	line.text = "[color=#%s]%s[/color]  %s" % [color.to_html(false), _escape(title_text), _escape(desc)]
