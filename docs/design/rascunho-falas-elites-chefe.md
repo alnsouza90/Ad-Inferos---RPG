@@ -1,6 +1,6 @@
 # Falas da Vertigem, de Minos e de Asmodeu na luta · rascunho para Alan aprovar (T43, peça 5b)
 
-**Situação:** v2 (18/11/2026), com as correções de Alan: o começo e a derrota de Asmodeu reescritos, sem Sara e sem o peixe. Na derrota com o fígado, Asmodeu reconhece que Deus mandou Rafael. As referências ficam só no Arquivo, nunca no balão. Os santos não respondem.
+**Situação:** aprovado por Alan (D-466). v2 (18/11/2026), com as correções de Alan: o começo e a derrota de Asmodeu reescritos, sem Sara e sem o peixe. Na derrota com o fígado, Asmodeu reconhece que Deus mandou Rafael. As referências ficam só no Arquivo, nunca no balão. Os santos não respondem.
 
 **Como aparecem:** uma frase curta num balão sobre o inimigo, por um instante, nos momentos fortes da luta. A luta não para por causa da fala. Ela some sozinha e não aparece na velocidade instantânea. A parte técnica fica comigo.
 
