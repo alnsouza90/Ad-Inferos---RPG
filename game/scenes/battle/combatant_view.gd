@@ -82,6 +82,10 @@ const ANTICIPATION_LEAN_DEG: float = 3.0
 const BLUR_STRETCH: float = 0.12
 const SHADOW_WIDTH: float = 0.55
 const SHADOW_FLAT: float = 0.16
+## Width and darkness of the ground shadow by the weight of the figure.
+const SHADOW_BY_WEIGHT: Dictionary = {&"light": 0.85, &"medium": 1.0, &"heavy": 1.15, &"colossal": 1.35}
+## (The Circle 2 ground is dark: the shadow is nearly black to read on it.)
+const SHADOW_DARK_BY_WEIGHT: Dictionary = {&"light": 1.6, &"medium": 1.75, &"heavy": 2.0, &"colossal": 2.4}
 const COLOR_SHADOW := Color(0, 0, 0, 0.38)
 
 var combatant_id: StringName
@@ -519,6 +523,13 @@ func feet_global() -> Vector2:
 	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT))
 
 
+## Where the halo stands (global): its centre, or above the chest without one.
+func halo_global() -> Vector2:
+	if _halo != null:
+		return _halo.get_global_transform() * (_halo.size * 0.5)
+	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT * 0.15))
+
+
 ## Where blows and spells land on this combatant (global): its chest.
 func chest_global() -> Vector2:
 	return get_global_transform() * (_body.position + Vector2(size.x * 0.5, BODY_HEIGHT * 0.45))
@@ -820,13 +831,23 @@ func shadow_visible() -> bool:
 
 
 ## A dark ellipse under the feet (gesture 2): the figure stands on the ground.
+## A flat ellipse of hard pixels (Art Bible §8: the ground shadow is a flat
+## black ellipse with hard edges, darkened and stretched by the engine),
+## wider and darker for the heavy ones; the colossal Asmodeus' is the
+## widest, so his weight sits on the ground (D-456).
 func _draw_shadow() -> void:
 	if _player == null:
 		return
-	var w: float = _player.figure_width() * SHADOW_WIDTH
-	_shadow.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, SHADOW_FLAT))
-	_shadow.draw_circle(Vector2.ZERO, w * 0.5, COLOR_SHADOW)
-	_shadow.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var weight_id: StringName = _frames.weight if _frames != null else &"medium"
+	var half_w: float = roundf(_player.figure_width() * SHADOW_WIDTH * float(SHADOW_BY_WEIGHT.get(weight_id, 1.0)) * 0.5)
+	var half_h: float = maxf(2.0, roundf(half_w * SHADOW_FLAT))
+	var colour := Color(COLOR_SHADOW, COLOR_SHADOW.a * float(SHADOW_DARK_BY_WEIGHT.get(weight_id, 1.0)))
+	for row: int in range(-int(half_h), int(half_h) + 1):
+		var t: float = float(row) / half_h
+		var span: float = roundf(half_w * sqrt(maxf(0.0, 1.0 - t * t)))
+		if span > 0.0:
+			# The ellipse rests on the feet line, above the bar under it (D-456).
+			_shadow.draw_rect(Rect2(-span, row - half_h, span * 2.0, 1.0), colour)
 
 
 func _freeze_player(on: bool) -> void:

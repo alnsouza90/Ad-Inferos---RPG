@@ -746,6 +746,16 @@ func _animate(ev: BattleEvent) -> float:
 		&"fell", &"enemy_died":
 			var view: CombatantView = view_of(d["target"])
 			return view.play_fall() if view != null else 0.0
+		&"interceded":
+			# D-268: a thread of gold from the one who intercedes to the one he helps.
+			var giver: CombatantView = view_of(StringName(str(d["actor"])))
+			var helped: CombatantView = view_of(StringName(str(d["target"])))
+			if giver != null and helped != null and factor > 0.0:
+				var thread := GoldenThread.new()
+				thread.z_index = OVERLAY_Z
+				_field.add_child(thread)
+				var to_field: Transform2D = _field.get_global_transform().affine_inverse()
+				return thread.play(to_field * giver.halo_global(), to_field * helped.halo_global(), factor)
 		&"gale_swapped":
 			# D-402, D-455: the wind sweeps over the two saints it swaps.
 			var slots: Array = d.get("slots", [])
@@ -1007,6 +1017,15 @@ func _play_ink_at(ink: StringName, at: Vector2) -> void:
 	splash.play(ink, at, factor)
 
 
+## The golden threads playing now (tests).
+func threads_shown() -> int:
+	var count: int = 0
+	for child: Node in _field.get_children():
+		if child is GoldenThread:
+			count += 1
+	return count
+
+
 ## The ink splashes playing now (tests).
 func inks_shown() -> Array[StringName]:
 	var shown: Array[StringName] = []
@@ -1099,17 +1118,35 @@ func _refresh_top() -> void:
 		_round_label.text = texts.t(&"round_clock", {"round": ctrl.state.round_number, "amount": at_end})
 	_fervor_label.text = texts.t(&"fervor", {"amount": ctrl.fervor.amount, "max": cap})
 	_fervor_flames.queue_redraw()
-	_boss_bar.visible = ctrl.state.boss() != null
+	var leader: Combatant = _bar_leader()
+	_boss_bar.visible = leader != null
 	_boss_bar.queue_redraw()
+	for id: Variant in _badges:
+		(_badges[id] as CombatantBadge).bar_hidden = leader != null and id == leader.id
 	_speed_button.text = texts.t(SPEED_KEYS[speed_index])
 	_pause_button.text = texts.t(&"pause")
 	_refresh_lume()
 
 
+## Who gets the great bar on top (D-456): the boss, or else an elite
+## standing in the battle (Minos, the Sin Incarnate).
+func _bar_leader() -> Combatant:
+	if ctrl == null:
+		return null
+	var boss: Combatant = ctrl.state.boss()
+	if boss != null:
+		return boss
+	for c: Combatant in ctrl.state.enemies:
+		if c.category == &"elite" and c.is_standing():
+			return c
+	return null
+
+
 func _draw_boss_bar() -> void:
-	var boss: Combatant = ctrl.state.boss() if ctrl != null else null
+	var boss: Combatant = _bar_leader()
 	if boss == null:
 		return
+	var is_boss: bool = boss.category == &"boss"
 	var w: float = BOSS_BAR.size.x
 	var font: Font = PixelStyle.title_font()
 	var name_text: String = texts.name_of(boss)
@@ -1120,8 +1157,10 @@ func _draw_boss_bar() -> void:
 	_boss_bar.draw_rect(plate, PixelStyle.COLOR_PITCH)
 	_boss_bar.draw_rect(plate, PixelStyle.COLOR_LEAD_LIGHT, false)
 	_boss_bar.draw_string(font, Vector2(plate.position.x, 11), name_text, HORIZONTAL_ALIGNMENT_CENTER, plate.size.x, PixelStyle.TITLE_SIZE, PixelStyle.COLOR_BONE)
-	var phase: String = texts.t(&"boss_phase_float", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count()})
-	_boss_bar.draw_string(PixelStyle.text_font(), Vector2(BOSS_BAR_END, 11), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
+	if is_boss:
+		# Only a boss has phases and the claws of the Domínio.
+		var phase: String = texts.t(&"boss_phase_float", {"phase": ctrl.state.boss_phase, "of": ctrl.state.boss_phase_count()})
+		_boss_bar.draw_string(PixelStyle.text_font(), Vector2(BOSS_BAR_END, 11), phase, HORIZONTAL_ALIGNMENT_LEFT, -1, PixelStyle.TEXT_SIZE, PixelStyle.COLOR_GOLD)
 	# The iron bar with claws at the ends (D-441): ends kept, middle stretched.
 	var frame: Texture2D = PixelStyle.piece("ui_boss_bar")
 	var top: float = 12.0
@@ -1136,7 +1175,7 @@ func _draw_boss_bar() -> void:
 	_boss_bar.draw_rect(Rect2(bar.position, Vector2(roundf(bar.size.x * share), bar.size.y)), PixelStyle.COLOR_BLOOD)
 	# The claws of the Domínio still holding (bosses.md §5), at the right.
 	var grip: Texture2D = PixelStyle.piece("ui_claw_grip")
-	if grip != null:
+	if grip != null and is_boss:
 		for i: int in ctrl.state.dominion_claws.size():
 			_boss_bar.draw_texture_rect(grip, Rect2(w - BOSS_BAR_END - 14 - i * 14, -3, 13, 16), false)
 

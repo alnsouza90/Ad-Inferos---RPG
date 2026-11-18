@@ -221,6 +221,21 @@ func test_a_boss_has_the_big_bar_and_a_common_battle_does_not() -> void:
 	assert_true(screen.boss_bar_shown(), "Asmodeu com a barra grande")
 
 
+func test_the_elites_have_the_big_bar_too() -> void:
+	for encounter: StringName in [&"c02_elite_minos", &"c02_elite_vertigo"]:
+		var screen := BattleScreen.new()
+		screen.speed_index = BattleScreen.SPEED_INSTANT
+		screen.setup(data, BattleController.new(data.battle(encounter, SEED)))
+		add_child_autofree(screen)
+		assert_true(screen.boss_bar_shown(), "%s com a barra grande (D-456)" % encounter)
+		var leader: Combatant = screen._bar_leader()
+		assert_eq(leader.category, &"elite")
+		assert_true(screen.badge_of(leader.id).bar_hidden, "sem a segunda barra debaixo dos pés")
+		for c: Combatant in screen.ctrl.state.enemies:
+			if c != leader:
+				assert_false(screen.badge_of(c.id).bar_hidden, "os outros mantêm a barra")
+
+
 func test_the_sheet_shows_the_intent_as_an_icon() -> void:
 	var screen: BattleScreen = _battle()
 	assert_gt(screen.sheet_icon_count(), 0, "a intenção do inimigo aparece como ícone")

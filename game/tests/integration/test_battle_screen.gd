@@ -356,3 +356,14 @@ func test_an_enemy_blow_leaves_the_ink_slash_on_the_saint() -> void:
 	assert_eq(screen.inks_shown(), [InkSplash.SLASH] as Array[StringName])
 	await wait_seconds(InkSplash.FRAMES / InkSplash.FPS + 0.2)
 	assert_eq(screen.inks_shown(), [] as Array[StringName], "a tinta some")
+
+
+## D-268, D-456: Interceder draws a thread of gold between the two saints.
+func test_interceding_draws_a_thread_of_gold() -> void:
+	var screen := _screen(&"m0_easy_01", 1)
+	screen.speed_index = 0
+	var wait: float = screen._animate(BattleEvent.create(&"interceded", {"actor": &"saint_george", "target": &"saint_therese", "amount": 10}))
+	assert_gt(wait, 0.0)
+	assert_eq(screen.threads_shown(), 1)
+	await wait_seconds(wait + 0.2)
+	assert_eq(screen.threads_shown(), 0, "o fio some")
