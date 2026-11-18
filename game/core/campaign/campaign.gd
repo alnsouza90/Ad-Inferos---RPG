@@ -130,10 +130,9 @@ static func board(c: CampaignState, catalog: ExpeditionCatalog, ctrl: Expedition
 ## they are, new injuries start counting, the Alms come to the company, the
 ## found relics to the village, the flags and virtues to the campaign, a
 ## circle completed for the first time unlocks its saint (§10). Then the week
-## turns.
+## turns. Saints left in the village earn no experience (D-483): to level
+## them all, the company has to take turns.
 static func finish_expedition(c: CampaignState, catalog: ExpeditionCatalog, ctrl: ExpeditionController) -> void:
-	# Before the saints come home: the share compares with what they had.
-	_share_with_the_reserve(c, catalog, ctrl)
 	for id: StringName in ctrl.saints:
 		if not c.saints.has(id):
 			continue
@@ -179,20 +178,6 @@ static func advance_week(c: CampaignState, catalog: ExpeditionCatalog) -> void:
 	c.week += 1
 	c.garden_saints.clear()
 	c.infirmary_beds.clear()
-
-
-## Saints of the company who stayed in the village get [xp_reserve_share]
-## (50%) of what each of the party earned (expedition §8).
-static func _share_with_the_reserve(c: CampaignState, catalog: ExpeditionCatalog, ctrl: ExpeditionController) -> void:
-	var earned: int = 0
-	for id: StringName in ctrl.saints:
-		if c.saints.has(id):
-			var before: int = (c.saints[id] as CampaignSaint).status.xp
-			earned = maxi(earned, (ctrl.saints[id] as SaintStatus).xp - before)
-	var share: int = Damage.round_half_up(earned * catalog.constants.get_float(&"xp_reserve_share"))
-	for id: StringName in c.saints:
-		if not ctrl.saints.has(id):
-			(c.saints[id] as CampaignSaint).status.xp += share
 
 
 ## Levels the experience reached bring (§9): Vigor and Faith of

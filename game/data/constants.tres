@@ -101,7 +101,6 @@ values = {
 "xp_battle": 10.0,
 "xp_boss": 40.0,
 "xp_elite": 20.0,
-"xp_reserve_share": 0.5,
 "xp_thresholds": [0.0, 40.0, 100.0, 180.0, 280.0]
 }
 descriptions = {
@@ -201,6 +200,5 @@ descriptions = {
 "xp_battle": "Experiência por combate comum",
 "xp_boss": "Experiência por chefe",
 "xp_elite": "Experiência por elite",
-"xp_reserve_share": "Fração da experiência para a reserva",
 "xp_thresholds": "Experiência acumulada por nível"
 }

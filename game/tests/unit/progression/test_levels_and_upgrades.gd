@@ -135,7 +135,8 @@ func test_an_improved_ability_acts_as_its_plus_version_in_battle() -> void:
 	assert_gt(used.effects[0].amount, _ability(&"george_spear_thrust").effects[0].amount)
 
 
-func test_the_reserve_gets_half_of_the_expedition() -> void:
+func test_the_reserve_earns_nothing() -> void:
+	# D-483: to level them all, the saints take turns.
 	var c := Campaign.start(cat, 1)
 	var ctrl := ExpeditionController.start_new(cat, &"circle_02", 3, [&"saint_george", &"saint_benedict", &"saint_therese"] as Array[StringName], cat.kit_provisions(&"m1_kit"), 2)
 	# Antão in the company but left home this time.
@@ -146,7 +147,7 @@ func test_the_reserve_gets_half_of_the_expedition() -> void:
 		(ctrl.saints[id] as SaintStatus).xp += 40
 	Campaign.finish_expedition(c, cat, ctrl)
 	assert_eq(c.saint(&"saint_george").status.xp, 40)
-	assert_eq(c.saint(&"saint_anthony_abbot").status.xp, Damage.round_half_up(40 * constants.get_float(&"xp_reserve_share")))
+	assert_eq(c.saint(&"saint_anthony_abbot").status.xp, 0)
 	assert_eq(c.saint(&"saint_george").level, 2, "o nível sobe na volta")
 
 
@@ -170,3 +171,15 @@ func test_the_chosen_abilities_reach_the_battle() -> void:
 	(Campaign.departing(c, cat, [&"saint_george"] as Array[StringName])[&"saint_george"] as SaintStatus).apply_to(body)
 	assert_true(body.equipped.has(&"george_javelin"))
 	assert_false(body.equipped.has(&"george_shield_bash"))
+
+
+func test_the_plus_of_formal_challenge_and_desert_vigil_gives_strength() -> void:
+	# D-483: the general rule would give nothing (Duelo has one stack) or
+	# more desolation; their `upgrade` field gives +1 Strength instead.
+	for id: StringName in [&"george_formal_challenge", &"antony_desert_vigil"]:
+		var base: AbilityDef = _ability(id)
+		var plus := AbilityUpgrade.upgraded(base, constants)
+		assert_eq(plus.effects[1].condition_id, &"strength", String(id))
+		assert_eq(plus.effects[1].stacks, base.effects[1].stacks + 1, String(id))
+		assert_eq(plus.effects[0].amount, base.effects[0].amount, "%s: o resto fica igual" % id)
+		assert_eq(plus.effects[0].stacks, base.effects[0].stacks, "%s: o resto fica igual" % id)

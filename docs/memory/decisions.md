@@ -477,7 +477,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Melhorias:** os níveis 2, 3 e 4 dão uma cada (`upgrade_levels`). Aplicadas na Casa de Exercícios (`Campaign.apply_upgrade`), sem custo, uma vez por habilidade.
   - **Versão "+":** `AbilityUpgrade` aplica a regra geral do §9 numa cópia: +30% (`upgrade_gain`), meio para cima, mínimo +1, a desolação pelo tamanho; senão `hp_fraction` +0,1 (`upgrade_hp_fraction`); senão +1 pilha na primeira condição. Também lê as exceções do campo `upgrade`.
   - **Na luta:** a habilidade melhorada age na versão "+" (`Combatant.upgraded`, `BattleController._ability_for`). As 4 habilidades escolhidas na ficha também chegam à luta (`SaintStatus.equipped`).
-  - **Reserva:** quem ficou na vila recebe 50% do que cada santo da equipe ganhou (`xp_reserve_share`).
+  - **Reserva:** substituído pela D-483 (quem fica na vila não ganha experiência).
   - **Constantes novas:** `upgrade_gain`, `upgrade_hp_fraction`, `upgrade_levels`, `miracle_upgrade_level`.
   - **Pendente com Alan:** duas habilidades em que a regra geral não funciona:
     - o **Desafio Formal** de Jorge daria "2 Duelo", mas o Duelo só tem 1 pilha, então não ganharia nada;
@@ -485,3 +485,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
     
     A proposta é usar o campo `upgrade`, nas duas, para dar +1 de Força em vez disso (`e2.stacks+1`).
   - **Fica para outra tarefa:** o bônus de experiência da Purificação (+25%) mudaria o resultado de saves antigos; entra com a migração.
+- **D-483 · 18/11/2026 · Alan** — **(1)** A versão "+" do **Desafio Formal** e da **Vigília no Deserto** dá **+1 de Força** (`upgrade`: `e2.stacks+1`); o resto fica igual. **(2)** **Quem fica na vila não ganha experiência**: a escolha da equipe pesa, e para subir todos é preciso revezar. Sai a constante `xp_reserve_share`, e `expedition.md` §8 muda. PR #95 aprovado com essas mudanças.

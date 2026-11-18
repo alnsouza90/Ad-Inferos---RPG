@@ -123,4 +123,4 @@ Riscar (~~assim~~) e anotar a data quando resolver.
 | Fundo magenta das estampas de Teresinha e Jorge: recortar no motor como chave de cor; o preto da medalha de Bento vira transparente | T44 | 17/11/2026 |
 | Peças do consultor que faltam para o M2 (D-432): auréola coberta, eclipse e clareira; fogueira animada; estampas das habilidades (cruz, anel, pétalas, escudo); tinta dos inimigos (corte, mancha que sobe, poça, vento); partículas (poeira, lascas, gotas); 9 ícones de ação (Golpe, Exorcismo, Cura, Alívio, Amparo, Força, Limpeza, Levantar, Retirar); ícones das condições novas (Encanto, As sete noites, Anel/oculto, Vendaval, Firmeza); painel em 9 partes; chama da vela em 3 quadros (hoje do motor) | Alan (custo) / T44 | 17/11/2026 |
 | ~~Vida dos santos entre expedições~~ Vida cheia ao virar a semana (D-481, 18/11/2026) | Alan | 18/11/2026 |
-| Versão "+" do Desafio Formal (Duelo só tem 1 pilha) e da Vigília no Deserto (+desolação piora): proposta +1 de Força (`e2.stacks+1`) nas duas | Alan | 18/11/2026 |
+| ~~Versão "+" do Desafio Formal e da Vigília no Deserto~~ +1 de Força nas duas (D-483, 18/11/2026) | Alan | 18/11/2026 |

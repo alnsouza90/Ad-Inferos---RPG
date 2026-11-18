@@ -83,7 +83,6 @@ suffrages_per_milestone,8,Sufrágios por marco do Purgatório
 xp_battle,10,Experiência por combate comum
 xp_elite,20,Experiência por elite
 xp_boss,40,Experiência por chefe
-xp_reserve_share,0.5,Fração da experiência para a reserva
 xp_thresholds,0|40|100|180|280,Experiência acumulada por nível
 fallen_minor_injury_hp,1,Vida ao terminar o combate caído
 map_three_nodes_chance,0.5,Chance de uma camada do mapa ter 3 nós (senão 2)
