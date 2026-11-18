@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx6ymto4ss0p5"
-path="res://.godot/imported/village_hub.png-f6558df94e3ebf69882b55a614196cba.ctex"
+uid="uid://dwobf20vj7nuo"
+path="res://.godot/imported/village_outline_infirmary.png-614784bf333d156eb5e1ffe05a17e9a7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/environments/village/village_hub.png"
-dest_files=["res://.godot/imported/village_hub.png-f6558df94e3ebf69882b55a614196cba.ctex"]
+source_file="res://assets/pixel/environments/village/village_outline_infirmary.png"
+dest_files=["res://.godot/imported/village_outline_infirmary.png-614784bf333d156eb5e1ffe05a17e9a7.ctex"]
 
 [params]
 

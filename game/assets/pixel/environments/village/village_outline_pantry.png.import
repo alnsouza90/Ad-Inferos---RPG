@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dj88uqn25nja6"
-path="res://.godot/imported/village_hub_night.png-4ae9a486e409e7a8883824493dfc0828.ctex"
+uid="uid://0sphadcatqll"
+path="res://.godot/imported/village_outline_pantry.png-ab6740ab2e04d3f45dffd701c94591cb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/environments/village/village_hub_night.png"
-dest_files=["res://.godot/imported/village_hub_night.png-4ae9a486e409e7a8883824493dfc0828.ctex"]
+source_file="res://assets/pixel/environments/village/village_outline_pantry.png"
+dest_files=["res://.godot/imported/village_outline_pantry.png-ab6740ab2e04d3f45dffd701c94591cb.ctex"]
 
 [params]
 
