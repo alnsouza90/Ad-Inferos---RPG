@@ -64,3 +64,17 @@ dark gothic pixel art portrait, 16-bit style, in the style of Blasphemous with t
 | Enfermaria | São Cosme e São Damião | "Curávamos sem cobrar. Aqui também ninguém paga para ser cuidado." |
 | Forja | Santo Elói | "Trabalhei o ouro para reis. Aqui o ferro serve melhor." |
 | Despensa | Santa Isabel da Hungria | "O pão que guardo não é meu. É de quem vai precisar dele lá embaixo." |
+
+---
+
+## Decisão de Alan (D-501): São Cristóvão sem o Menino; o Menino num quadro do Portão
+
+O retrato de São Cristóvão fica **sem o Menino Jesus**. O Menino vai para um **quadro na parede do Portão**: uma imagem sacra pendurada, peça de cenário (iconografia, como permite a Direção de Arte). Ele não fala, não é unidade e não dá bônus. O agente recorta a imagem e a põe na parede do interior do Portão, à luz das tochas.
+
+### Quadro do Menino Jesus · peça de cenário do Portão · proporção 3:4
+
+```text
+dark gothic pixel art game prop, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent, calm and tender, without Blasphemous's grotesque, gory or profane side, a single small old devotional painting hanging on a wall, front view, a dark carved wooden frame with simple worn edges and a small iron ring at the top, inside the painting the Christ Child as a small boy in a simple pale robe, standing, one hand raised in blessing, the other holding a small orb with a cross, a soft warm amber light around him painted in the picture, a gentle serene face, the painting slightly darkened and cracked by age, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 3:4 --no flat gold, glowing gold halo, blue, text, letters, wall, room, other objects, people around, gore, grotesque, damaged face, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+**Origem (para o Martirológio):** iconografia tradicional do Menino Jesus abençoando, com o globo e a cruz (o *Salvator Mundi* na forma de menino); ligado ao Portão pela lenda de São Cristóvão (*Legenda Áurea*).
