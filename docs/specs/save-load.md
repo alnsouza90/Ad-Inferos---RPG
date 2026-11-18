@@ -97,6 +97,31 @@ O combate **não** guarda o estado completo; guarda o necessário para reconstru
 
 Ao carregar: criar o combate com a semente e o retrato inicial, reaplicar os comandos em ordem, com animação instantânea. O estado final deve ser idêntico ao que existia.
 
+### 3.3 A campanha no M2 (T45, T46)
+
+Até a versão 5, o save só guarda a expedição: `campaign` tem a semente, as virtudes e as bandeiras, e os santos saem do retrato da expedição. A partir do M2, a vila precisa da campanha entre as expedições. O bloco `campaign` passa a guardar, além do que já tem:
+
+| Campo | Conteúdo |
+| --- | --- |
+| `week` | Semana atual (começa em 1) |
+| `retreat_used` | Se já houve um Retiro desde a última expedição (V01) |
+| `alms` | Esmolas da companhia, já garantidas |
+| `facilities` | Nível de cada edifício aberto (`pantry`, `infirmary`, `gate`, `retreat_house`) |
+| `pantry_stock` | Provisões compradas e ainda não levadas |
+| `unlocked_saints` | Santos no elenco |
+| `pending_arrivals` | Santos desbloqueados que São Cristóvão ainda vai anunciar (D-458) |
+| `infirmary_beds` | Quem está num leito pago nesta semana |
+| `village_intro_done` | Se a apresentação da vila já foi vista |
+
+Os santos (`saints`) passam a ser da campanha: nível, experiência, vida, desolação, estado espiritual, ferimento e semanas que faltam, melhorias e relíquias. A expedição começa com um retrato deles e devolve o estado final ao terminar.
+
+Os Pousos consagrados continuam nas bandeiras (`<círculo>_camp_<trecho>`, D-435). `circle_02_completed` continua sendo a bandeira de conclusão.
+
+**Migração para a versão 6:**
+- Um save da versão 5 com expedição em andamento continua a expedição: ela é refeita como nas versões 3 a 5. Ao terminar, a campanha nasce do resultado: semana 2, as Esmolas garantidas, os santos como voltaram, e o elenco inicial (mais Antão, se `circle_02_completed`).
+- Um save da versão 5 sem expedição, por exemplo no resumo do trecho, abre na vila com a campanha criada do mesmo jeito.
+- Nada do save antigo se perde: virtudes, bandeiras e Pousos consagrados passam como estão.
+
 ## 4. Quando salvar
 
 | Momento | Observação |
@@ -129,6 +154,7 @@ Ao carregar: criar o combate com a semente e o retrato inicial, reaplicar os com
 - **Versão 3 (T62, D-396):** as regras novas de desolação mudam o resultado dos comandos já gravados, então o retrato de conferência antigo nunca bate. A migração marca a expedição com `"rebuild": true`; ao carregar, o log é refeito com as regras novas, sem a conferência, e para no primeiro comando que elas recusarem (o resto se perde). O próximo salvamento já grava a versão 3 normal.
 - **Versão 4 (T42):** a expedição inteira (trechos 2 e 3, Vigília, chefe); refeita do mesmo jeito.
 - **Versão 5 (T42, D-435):** chegar a um Pouso grava a consagração nas bandeiras (`<círculo>_camp_<trecho>`); refeita do mesmo jeito.
+- **Versão 6 (T46):** a campanha da vila (§3.3); a migração cria a campanha a partir do save da expedição.
 
 ## 8. Casos de teste obrigatórios
 
@@ -141,3 +167,5 @@ Ao carregar: criar o combate com a semente e o retrato inicial, reaplicar os com
 | S05 | Save versão 1 com código na versão 2 | Migração aplicada e testada |
 | S06 | Save de versão futura | Recusado com mensagem |
 | S07 | 100 ciclos salvar/carregar em combate com comandos aleatórios válidos | Sempre idêntico |
+| S08 | Save versão 5 no meio de uma expedição, com código na versão 6 | A expedição continua; ao voltar, a vila abre com a campanha criada (§3.3) |
+| S09 | Save versão 5 com `circle_02_completed` | Antão no elenco e anunciado por São Cristóvão na primeira visita ao Portão |

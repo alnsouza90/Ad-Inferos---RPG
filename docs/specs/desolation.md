@@ -49,8 +49,7 @@ As fontes em combate são **adicionais** às de fim de combate. A calibragem do 
 | Vigília no Pouso | −[desolation_vigil] (20; era 40 até 03/11/2026) |
 | Água Benta | −[holy_water_desolation] (15) e remove Corrupção |
 | Habilidades (Teresinha, Bento, João da Cruz...) | Definido em `abilities.csv` |
-| Capela, por semana | −[chapel_desolation_per_week] (15) |
-| Jardim, por semana | −[garden_desolation_per_week] (50); o Jardim sai do jogo e o descanso forte passa à Capela nível 3 (D-292, valor a definir) |
+| Jardim e Claustro, por semana | −[garden_desolation_per_week] (50); a Capela fica só com os Sufrágios (D-469, D-474) |
 
 O valor nunca fica abaixo de 0.
 

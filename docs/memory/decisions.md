@@ -416,3 +416,19 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - Aplicar em `village-economy.md` §2 e §3, no GDD §6 e no núcleo (hoje `gate_level` dá vagas e revelação; a revelação base fica a do nível 1), dentro das T45, T48 e T49.
 - **D-470 · 18/11/2026 · Alan** — **Biografias curtas** de São Jorge, São Bento e Santa Teresinha aprovadas (`docs/design/rascunho-biografias-santos.md`); no cartão aparece só **"Santa Teresinha"**. O prédio que volta tem São Francisco de Assis como guardião.
 - **D-471 · 18/11/2026 · Alan** — Aprovadas a fala e a instrução do **Portão** no papel novo e as do **Jardim** (o nome original do GDD), com São Francisco ("Louvado sejas, meu Senhor, com todas as tuas criaturas"). A instrução da Capela fica só com os Sufrágios. PR #89 aprovado; o merge falhou porque o ramo mudou depois do CI, e um reset do agente fechou o PR, então o mesmo conteúdo foi para o PR #90.
+- **D-472 · 18/11/2026 · agente** — **Cartão padrão do santo, primeiro com São Jorge** (T50, D-464). Tela `SaintCard` (`game/scenes/village/saint_card.gd`):
+  - à esquerda, o arco do retrato em três vezes o tamanho, com o mesmo retrato da luta, recortado pelo rosto (`FACE_REGIONS`, para que todos os rostos fiquem do mesmo tamanho, D-467);
+  - à direita, o nome, "Festa em ...", "A vida" (a biografia aprovada, D-470) e a "Ficha de jogo": atributos (Vigor, Proteção, Fé, Vontade), traço, as seis habilidades com o custo em Fervor e o milagre em ouro;
+  - "Fechar" no alto, à direita.
+  
+  Os textos estão em `ui_text.csv` (`saint_bio_*`, `saint_feast_*`, `saint_card_*`, `stat_*`). As datas das festas também estão em `feasts.csv` (`real_date`); a semana de cada festa no jogo fica em aberto. Falta a aprovação de Alan; depois, o mesmo painel para Bento, Teresinha e Antão.
+- **D-473 · 18/11/2026 · Alan** — **Cartão padrão aprovado** (D-472), por enquanto: Alan revê com a vila pronta (T49). Mostra **as seis habilidades** que o santo conhece, não só as quatro que leva. Replicado para São Bento, Santa Teresinha e Santo Antão. O retrato aprovado de Antão entra no jogo (`assets/pixel/characters/saint_anthony_abbot/`). A vida dele no cartão é o texto aprovado na D-464, sem a linha de cabeçalho com "o Grande", as datas e o Egito. As linhas do cartão ficam mais juntas, para a ficha de Antão, a mais longa, caber; um teste garante que todo cartão cabe na tela.
+- **D-474 · 18/11/2026 · Alan** — **Vila e campanha do M2 (respostas da T45):**
+  - **(1)** O prédio que volta se chama **Jardim e Claustro**. Cura −50 de desolação por semana (`garden_desolation_per_week`) e abre **logo depois do Limbo** (`facilities.csv`: `circle:1`), senão não haveria como curar a desolação. É construído no M3.
+  - **(2)** A Capela fica só com os Sufrágios: sai o −15 de desolação (`chapel_desolation_per_week` fica sem uso e sai do CSV na T48).
+  - **(3)** O alforje maior fica nos níveis da Despensa, com os números de antes: 8, 10 e 12 espaços nos níveis 1, 2 e 3.
+  - **(4)** O Portão não tem níveis e revela sempre 1 camada.
+  - **(5)** O calendário litúrgico fica todo para o M3.
+  - **Observação de Alan sobre o cartão de Antão:** nem todas as descrições deixam clara a mecânica. Conferência em `docs/design/rascunho-mecanica-santo-antao.md`, com a proposta de uma linha de regra montada a partir dos dados.
+  
+  Especificação aplicada em `village-economy.md` v1.2 (§1 a §4 e §13, Simplificações do M2), `desolation.md`, `screens.md` (fluxo do M2, Portão, cartão do santo, Mapa do Inferno) e `save-load.md` (§3.3, versão 6). Fim da tela única "Planejar a semana": a preparação acontece nos edifícios, e o Portão a fecha.

@@ -37,6 +37,6 @@ Depois, tocar no guardião repete a fala e a instrução. As referências ficam 
 | Prédio | Guardião | Fala | Instrução (como funciona) | De onde vem a fala (só no Arquivo) |
 | --- | --- | --- | --- | --- |
 | Portão (papel novo) | São Cristóvão | Por esta porta chega quem foi chamado, e por ela sai quem vai buscar. | Aqui chegam os santos novos. Escolha os três que descem e a ordem deles, e abra o Mapa do Inferno para partir. | Criação do jogo, na imagem do barqueiro que leva e traz (*Legenda Áurea*) |
-| Jardim (volta, D-469) | São Francisco de Assis | Louvado sejas, meu Senhor, com todas as tuas criaturas. | Deixe um santo descansar no Jardim durante a semana: ele não vai à expedição e volta com a desolação aliviada. | *Cântico do Irmão Sol*, de São Francisco (tradução própria) |
+| Jardim e Claustro (volta, D-469, D-474) | São Francisco de Assis | Louvado sejas, meu Senhor, com todas as tuas criaturas. | Deixe um santo descansar no Jardim e Claustro durante a semana: ele não vai à expedição e volta com a desolação aliviada. | *Cântico do Irmão Sol*, de São Francisco (tradução própria) |
 
-Com isso, a instrução da Capela muda: "Deixe um santo rezando na Capela durante a semana: ele não vai à expedição, e a companhia ganha Sufrágios." Sai o "descansa da desolação", que agora é do Jardim.
+Com isso, a instrução da Capela muda: "Deixe um santo rezando na Capela durante a semana: ele não vai à expedição, e a companhia ganha Sufrágios." Sai o "descansa da desolação", que agora é do Jardim e Claustro.
