@@ -414,3 +414,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **(3) Mapa do Inferno:** mostra o que já foi liberado. Os outros círculos ficam indisponíveis. Dentro de um círculo aberto, mostra os **Pousos consagrados** e se escolhe por onde entrar (Portão do círculo ou um Pouso).
   - **(4) O aumento do alforje** vira uma melhoria **comprada na Despensa**.
   - Aplicar em `village-economy.md` §2 e §3, no GDD §6 e no núcleo (hoje `gate_level` dá vagas e revelação; a revelação base fica a do nível 1), dentro das T45, T48 e T49.
+- **D-470 · 18/11/2026 · Alan** — **Biografias curtas** de São Jorge, São Bento e Santa Teresinha aprovadas (`docs/design/rascunho-biografias-santos.md`); no cartão aparece só **"Santa Teresinha"**. O nome do prédio que volta é **Claustro e Jardim**, com São Francisco de Assis (fala e instrução em rascunho, junto com a do Portão no papel novo).

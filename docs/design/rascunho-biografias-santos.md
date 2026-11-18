@@ -1,6 +1,6 @@
 # Biografias curtas para o cartão de santo · rascunho para Alan aprovar
 
-**Situação:** rascunho do agente. Ainda não é texto do jogo.
+**Situação:** aprovado por Alan (18/11/2026, D-470). No cartão, só **"Santa Teresinha"**.
 
 **Onde aparece:** no cartão padrão do santo (D-464): retrato, nome, dia da festa, esta vida em poucas linhas, ficha de jogo e habilidades. A tabela "de onde vem" de cada santo vai para o **Martirológio**, nunca para o cartão (D-465).
 
