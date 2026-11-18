@@ -711,7 +711,11 @@ func carried_relics() -> Array[RelicDef]:
 	return result
 
 
-func relic_slots(_saint_id: StringName) -> int:
+func relic_slots(saint_id: StringName) -> int:
+	# The second space opens at its level (GDD §3, D-477).
+	var status: SaintStatus = saints.get(saint_id)
+	if status != null and status.level >= catalog.constants.get_int(&"relic_second_slot_level"):
+		return catalog.constants.get_int(&"relic_slots_max")
 	return catalog.constants.get_int(&"relic_slots_start")
 
 

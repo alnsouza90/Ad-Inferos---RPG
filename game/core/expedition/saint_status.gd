@@ -30,6 +30,13 @@ var xp: int = 0
 ## counts from the next one.
 var hp_penalty: float = 0.0
 var faith_penalty: float = 0.0
+## From the village (T47): the saint's level, the Faith its levels added,
+## the abilities improved to their "+" version and the four it takes into
+## battle (empty: the default ones).
+var level: int = 1
+var level_faith: int = 0
+var upgrades: Array[StringName] = []
+var equipped: Array[StringName] = []
 
 
 static func from_def(def: SaintDef) -> SaintStatus:
@@ -53,7 +60,10 @@ func apply_to(c: Combatant) -> void:
 	c.desolation = desolation
 	c.spirit_state = spirit_state
 	c.purified = purified
-	c.faith = Damage.round_half_up(c.faith * (1.0 - faith_penalty)) + faith_bonus
+	c.faith = Damage.round_half_up((c.faith + level_faith) * (1.0 - faith_penalty)) + faith_bonus
+	c.upgraded = upgrades.duplicate()
+	if not equipped.is_empty():
+		c.equipped = equipped.duplicate()
 
 
 func to_dict() -> Dictionary:
@@ -68,6 +78,14 @@ func to_dict() -> Dictionary:
 		data["hp_penalty"] = hp_penalty
 	if faith_penalty > 0.0:
 		data["faith_penalty"] = faith_penalty
+	if level > 1:
+		data["level"] = level
+	if level_faith > 0:
+		data["level_faith"] = level_faith
+	if not upgrades.is_empty():
+		data["upgrades"] = upgrades.map(func(a: StringName) -> String: return String(a))
+	if not equipped.is_empty():
+		data["equipped"] = equipped.map(func(a: StringName) -> String: return String(a))
 	return data
 
 
@@ -87,6 +105,12 @@ static func from_dict(data: Dictionary) -> SaintStatus:
 	s.xp = int(data.get("xp", 0))
 	s.hp_penalty = float(data.get("hp_penalty", 0.0))
 	s.faith_penalty = float(data.get("faith_penalty", 0.0))
+	s.level = int(data.get("level", 1))
+	s.level_faith = int(data.get("level_faith", 0))
+	for a: Variant in data.get("upgrades", []):
+		s.upgrades.append(StringName(str(a)))
+	for a: Variant in data.get("equipped", []):
+		s.equipped.append(StringName(str(a)))
 	return s
 
 
