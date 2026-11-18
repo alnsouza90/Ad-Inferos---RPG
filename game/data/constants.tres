@@ -72,6 +72,7 @@ values = {
 "map_second_link_chance": 0.5,
 "map_three_nodes_chance": 0.5,
 "min_damage": 1.0,
+"miracle_upgrade_level": 5.0,
 "node_weight_battle": 25.0,
 "node_weight_elite": 40.0,
 "node_weight_relic": 35.0,
@@ -90,6 +91,9 @@ values = {
 "share_heal_pct": 0.3,
 "strength_mult": 1.25,
 "suffrages_per_milestone": 8.0,
+"upgrade_gain": 0.3,
+"upgrade_hp_fraction": 0.1,
+"upgrade_levels": [2.0, 3.0, 4.0],
 "virtue_max": 5.0,
 "virtue_start": 2.0,
 "vulnerable_mult": 1.25,
@@ -97,7 +101,6 @@ values = {
 "xp_battle": 10.0,
 "xp_boss": 40.0,
 "xp_elite": 20.0,
-"xp_reserve_share": 0.5,
 "xp_thresholds": [0.0, 40.0, 100.0, 180.0, 280.0]
 }
 descriptions = {
@@ -168,6 +171,7 @@ descriptions = {
 "map_second_link_chance": "Chance de um nó ligar também ao vizinho do caminho reto",
 "map_three_nodes_chance": "Chance de uma camada do mapa ter 3 nós (senão 2)",
 "min_damage": "Dano mínimo após armadura",
+"miracle_upgrade_level": "Nível do milagre aprimorado (village-economy.md §9)",
 "node_weight_battle": "Peso de combate no nó variável",
 "node_weight_elite": "Peso de elite no nó variável",
 "node_weight_relic": "Peso de relíquia no nó variável",
@@ -186,6 +190,9 @@ descriptions = {
 "share_heal_pct": "Partilha no Pouso",
 "strength_mult": "Multiplicador da ficha Força",
 "suffrages_per_milestone": "Sufrágios por marco do Purgatório",
+"upgrade_gain": "Versão +: ganho do primeiro efeito com número (meio para cima, mínimo 1) (village-economy.md §9)",
+"upgrade_hp_fraction": "Versão +: ganho de hp_fraction (village-economy.md §9)",
+"upgrade_levels": "Níveis que dão uma melhoria de habilidade (village-economy.md §9)",
 "virtue_max": "Valor máximo de cada virtude",
 "virtue_start": "Valor inicial de cada virtude",
 "vulnerable_mult": "Dano contra o tipo vulnerável",
@@ -193,6 +200,5 @@ descriptions = {
 "xp_battle": "Experiência por combate comum",
 "xp_boss": "Experiência por chefe",
 "xp_elite": "Experiência por elite",
-"xp_reserve_share": "Fração da experiência para a reserva",
 "xp_thresholds": "Experiência acumulada por nível"
 }

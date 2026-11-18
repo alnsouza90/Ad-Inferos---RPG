@@ -160,7 +160,7 @@ Ao chegar ao `node_camp`:
 - Lume 0–24: × 1,5 (sai quando a variante do Lume for escolhida, D-274).
 - Revisitas: § 11.
 - Esmolas ganhas ficam "não garantidas" até chegar a um Pouso ou terminar a expedição com o chefe vencido. Na história, é o ouro negado aos pobres que a companhia **restitui**; ele só vira Esmola ao ser consagrado no Pouso, e o abismo o toma de volta na derrota (D-266 (1), D-279). Nomes sugeridos na tela: "Despojos" antes do Pouso e "Esmolas" depois (a aprovar em `ui_text.csv`).
-- Experiência: [xp_battle] (10) por combate comum, 20 por elite, 40 por chefe, para cada santo que participou; santos na reserva da vila recebem 50% do total da expedição.
+- Experiência: [xp_battle] (10) por combate comum, 20 por elite, 40 por chefe, para cada santo que participou; santos que ficaram na vila **não ganham experiência** (D-483: para subir todos de nível, é preciso revezar a companhia).
 
 ## 9. Retirada e derrota
 

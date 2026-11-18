@@ -361,7 +361,11 @@ func _saint(actor_id: StringName) -> Combatant:
 
 func _ability_for(cmd: BattleCommand, actor: Combatant) -> AbilityDef:
 	var ability_id: StringName = actor.miracle if cmd.type == BattleCommand.USE_MIRACLE else cmd.ability_id
-	return state.catalog.ability(ability_id)
+	var def: AbilityDef = state.catalog.ability(ability_id)
+	# An improved ability acts as its "+" version (village-economy §9, T47).
+	if def != null and actor.upgraded.has(ability_id):
+		return AbilityUpgrade.upgraded(def, state.catalog.constants)
+	return def
 
 
 ## The 8 checks of combat §4.2, except the target (checked by _resolve_targets).

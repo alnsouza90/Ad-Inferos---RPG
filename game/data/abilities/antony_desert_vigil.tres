@@ -3,12 +3,12 @@
 [ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_k0vxx"]
 [ext_resource type="Script" path="res://data/defs/ability_def.gd" id="2_m77pt"]
 
-[sub_resource type="Resource" id="Resource_pyrfl"]
+[sub_resource type="Resource" id="Resource_k0vxx"]
 script = ExtResource("1_k0vxx")
 type = &"desolation"
 amount = 8.0
 
-[sub_resource type="Resource" id="Resource_re6i5"]
+[sub_resource type="Resource" id="Resource_m77pt"]
 script = ExtResource("1_k0vxx")
 order = 2
 type = &"apply_condition"
@@ -24,5 +24,6 @@ kind = &"basic"
 use_slots = Array[int]([1, 2, 3])
 targeting = &"self"
 origin = &"hagiography"
+upgrade = "e2.stacks+1"
 desc_pt = "Aceita a provação: +8 de desolação e 2 Força."
-effects = Array[ExtResource("1_k0vxx")]([SubResource("Resource_pyrfl"), SubResource("Resource_re6i5")])
+effects = Array[ExtResource("1_k0vxx")]([SubResource("Resource_k0vxx"), SubResource("Resource_m77pt")])

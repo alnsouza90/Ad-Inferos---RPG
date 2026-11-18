@@ -3,7 +3,7 @@ george_spear_thrust,saint_george,Estocada,basic,0,1|2,enemy,1|2,,,game_fiction,,
 george_shield_bash,saint_george,Golpe de Escudo,basic,1,1,enemy,1,,,game_fiction,,Golpe curto que atordoa.
 george_raised_shield,saint_george,Escudo Erguido,basic,0,1|2|3,ally,1|2|3,y,,game_fiction,,Dá 1 Amparo a um aliado.
 george_javelin,saint_george,Arremesso,basic,0,2|3,enemy,2|3|4,,,game_fiction,,Lança arremessada contra a retaguarda.
-george_formal_challenge,saint_george,Desafio Formal,fervor,2,1|2,enemy,1|2|3|4,,,legend,,Desafia um inimigo para o Duelo e ganha 1 Força.
+george_formal_challenge,saint_george,Desafio Formal,fervor,2,1|2,enemy,1|2|3|4,,,legend,e2.stacks+1,Desafia um inimigo para o Duelo e ganha 1 Força.
 george_knight_charge,saint_george,Investida do Cavaleiro,fervor,2,1,enemy,1|2,,,game_fiction,,Investida pesada contra a frente inimiga.
 george_dragon_lance,saint_george,Lança do Dragão,miracle,3,1|2,enemy,1|2|3,,,legend,,A lança que venceu o dragão: dano dobrado contra elites e chefes.
 benedict_cross_medal,saint_benedict,Cruz de São Bento,basic,0,1|2|3,enemy,1|2|3,,,tradition,,Exorcismo com a cruz.
@@ -29,7 +29,7 @@ nicholas_three_innocents,saint_nicholas,Os Três Inocentes,fervor,2,1|2|3,ally,1
 nicholas_three_purses,saint_nicholas,As Três Bolsas,miracle,3,1|2|3,all_allies,,,,tradition,,1 Força e 1 Amparo para todos os aliados.
 antony_sign_of_cross,saint_anthony_abbot,Sinal da Cruz,basic,0,1|2|3,enemy,1|2|3,,,hagiography,,Os demônios fogem do sinal da cruz.
 antony_tau_staff,saint_anthony_abbot,Cajado em Tau,basic,0,1|2,enemy,1|2,,,tradition,,Golpe com o cajado do eremita.
-antony_desert_vigil,saint_anthony_abbot,Vigília no Deserto,basic,0,1|2|3,self,,,,hagiography,,Aceita a provação: +8 de desolação e 2 Força.
+antony_desert_vigil,saint_anthony_abbot,Vigília no Deserto,basic,0,1|2|3,self,,,,hagiography,e2.stacks+1,Aceita a provação: +8 de desolação e 2 Força.
 antony_scorn,saint_anthony_abbot,Desprezo do Inimigo,basic,1,1|2|3,enemy,1|2|3|4,,,hagiography,,Zomba do demônio: retira as fichas positivas e fere.
 antony_beasts,saint_anthony_abbot,As Feras do Sepulcro,fervor,2,1|2,enemy_group,1|2,,,hagiography,,Enfrenta os demônios em forma de fera.
 antony_endurance,saint_anthony_abbot,Perseverança,fervor,2,1|2|3,self,,,,hagiography,,2 Amparo e −10 de desolação.

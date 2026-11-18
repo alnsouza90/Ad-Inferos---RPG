@@ -83,7 +83,6 @@ suffrages_per_milestone,8,Sufrágios por marco do Purgatório
 xp_battle,10,Experiência por combate comum
 xp_elite,20,Experiência por elite
 xp_boss,40,Experiência por chefe
-xp_reserve_share,0.5,Fração da experiência para a reserva
 xp_thresholds,0|40|100|180|280,Experiência acumulada por nível
 fallen_minor_injury_hp,1,Vida ao terminar o combate caído
 map_three_nodes_chance,0.5,Chance de uma camada do mapa ter 3 nós (senão 2)
@@ -93,3 +92,7 @@ party_size,3,Santos que descem na expedição (GDD §1: a companhia de três)
 equipped_abilities,4,Habilidades que cada santo leva para a luta (GDD §3; combat.md §2)
 relic_slots_max,2,Espaços de relíquia a partir do nível 4 (GDD §3)
 relic_second_slot_level,4,Nível do santo em que abre o segundo espaço de relíquia (GDD §3; village-economy.md §9)
+upgrade_gain,0.3,"Versão +: ganho do primeiro efeito com número (meio para cima, mínimo 1) (village-economy.md §9)"
+upgrade_hp_fraction,0.1,Versão +: ganho de hp_fraction (village-economy.md §9)
+upgrade_levels,2|3|4,Níveis que dão uma melhoria de habilidade (village-economy.md §9)
+miracle_upgrade_level,5,Nível do milagre aprimorado (village-economy.md §9)

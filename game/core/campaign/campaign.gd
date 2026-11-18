@@ -16,6 +16,11 @@ const M2_FACILITIES: Array[StringName] = [&"pantry", &"infirmary", &"gate", &"re
 const UNLOCK_START: String = "start"
 const UNLOCK_CIRCLE: String = "circle:"
 const GARDEN: StringName = &"garden"
+const RETREAT_HOUSE: StringName = &"retreat_house"
+const NO_RETREAT_HOUSE: StringName = &"retreat_house_closed"
+const NO_UPGRADE_LEFT: StringName = &"no_upgrade_left"
+const ALREADY_UPGRADED: StringName = &"already_upgraded"
+const NOT_AN_ABILITY: StringName = &"not_an_ability"
 
 
 ## A new campaign at week 1 with the saints of the start (§10).
@@ -93,6 +98,8 @@ static func departing(c: CampaignState, catalog: ExpeditionCatalog, party: Array
 	for id: StringName in party:
 		var s: CampaignSaint = c.saints[id]
 		var status: SaintStatus = s.status.duplicate_status()
+		status.level = s.level
+		status.equipped = s.equipped.duplicate()
 		status.injury = SaintStatus.INJURY_NONE
 		status.hp_penalty = 0.0
 		status.faith_penalty = 0.0
@@ -123,7 +130,8 @@ static func board(c: CampaignState, catalog: ExpeditionCatalog, ctrl: Expedition
 ## they are, new injuries start counting, the Alms come to the company, the
 ## found relics to the village, the flags and virtues to the campaign, a
 ## circle completed for the first time unlocks its saint (§10). Then the week
-## turns.
+## turns. Saints left in the village earn no experience (D-483): to level
+## them all, the company has to take turns.
 static func finish_expedition(c: CampaignState, catalog: ExpeditionCatalog, ctrl: ExpeditionController) -> void:
 	for id: StringName in ctrl.saints:
 		if not c.saints.has(id):
@@ -138,6 +146,8 @@ static func finish_expedition(c: CampaignState, catalog: ExpeditionCatalog, ctrl
 		s.status = back
 		if taken != SaintStatus.INJURY_NONE:
 			_start_injury(catalog, s)
+	for id: StringName in c.saints:
+		settle_level(c.saints[id], catalog)
 	c.alms += ctrl.state.alms_banked + ctrl.state.alms_unbanked
 	for r: StringName in ctrl.state.relic_pack:
 		c.relic_stock.append(r)
@@ -168,6 +178,51 @@ static func advance_week(c: CampaignState, catalog: ExpeditionCatalog) -> void:
 	c.week += 1
 	c.garden_saints.clear()
 	c.infirmary_beds.clear()
+
+
+## Levels the experience reached bring (§9): Vigor and Faith of
+## `saints.csv` per level; the miracle improved at [miracle_upgrade_level].
+static func settle_level(s: CampaignSaint, catalog: ExpeditionCatalog) -> void:
+	var thresholds: Array[float] = catalog.constants.get_list(&"xp_thresholds")
+	var def: SaintDef = catalog.saint(s.id)
+	while s.level < thresholds.size() and s.status.xp >= int(thresholds[s.level]):
+		s.level += 1
+		s.status.max_hp += def.hp_per_level
+		s.status.hp += def.hp_per_level
+		s.status.level_faith += def.faith_per_level
+		if s.level == catalog.constants.get_int(&"miracle_upgrade_level") and not s.status.upgrades.has(def.miracle):
+			s.status.upgrades.append(def.miracle)
+
+
+## Improvements the saint's levels gave and it has not used yet (§9).
+static func upgrades_left(s: CampaignSaint, catalog: ExpeditionCatalog) -> int:
+	var given: int = 0
+	for lv: float in catalog.constants.get_list(&"upgrade_levels"):
+		if s.level >= int(lv):
+			given += 1
+	var used: int = 0
+	for id: StringName in s.status.upgrades:
+		if id != catalog.saint(s.id).miracle:
+			used += 1
+	return given - used
+
+
+## At the Retreat House: an ability not yet improved turns into its "+"
+## version, with no cost in Alms (§9).
+static func apply_upgrade(c: CampaignState, catalog: ExpeditionCatalog, saint_id: StringName, ability_id: StringName) -> StringName:
+	if not c.facilities.has(RETREAT_HOUSE):
+		return NO_RETREAT_HOUSE
+	var s: CampaignSaint = c.saints.get(saint_id)
+	if s == null:
+		return NOT_UNLOCKED
+	if not catalog.saint(saint_id).abilities.has(ability_id):
+		return NOT_AN_ABILITY
+	if s.status.upgrades.has(ability_id):
+		return ALREADY_UPGRADED
+	if upgrades_left(s, catalog) <= 0:
+		return NO_UPGRADE_LEFT
+	s.status.upgrades.append(ability_id)
+	return OK
 
 
 ## The injury a saint has after taking `taken` while carrying `before`

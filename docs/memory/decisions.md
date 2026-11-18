@@ -472,3 +472,17 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **(4) Ferimento grave:** o santo **não pode descer** até se curar (3 semanas, ou 1 com leito da Enfermaria). Isso torna a Enfermaria uma escolha de verdade.
   
   No código: a expedição leva o santo sem o ferimento (ele fica na campanha); o que volta ferido é ferimento novo, combinado com o que ele tinha (`Campaign.combined_injury`). O Portão recusa o grave (`Campaign.INJURED`). Especificação em `village-economy.md` §8, casos V16 e V17.
+- **D-482 · 18/11/2026 · agente** — **T47, experiência, níveis e Casa de Exercícios:**
+  - **Níveis:** saem da experiência (`xp_thresholds`: 0, 40, 100, 180, 280). Cada nível soma `hp_per_level` ao Vigor e `faith_per_level` à Fé (`SaintStatus.level_faith`). No nível 4 abre o 2º espaço de relíquia; no nível 5 o milagre fica aprimorado, sem gastar melhoria.
+  - **Melhorias:** os níveis 2, 3 e 4 dão uma cada (`upgrade_levels`). Aplicadas na Casa de Exercícios (`Campaign.apply_upgrade`), sem custo, uma vez por habilidade.
+  - **Versão "+":** `AbilityUpgrade` aplica a regra geral do §9 numa cópia: +30% (`upgrade_gain`), meio para cima, mínimo +1, a desolação pelo tamanho; senão `hp_fraction` +0,1 (`upgrade_hp_fraction`); senão +1 pilha na primeira condição. Também lê as exceções do campo `upgrade`.
+  - **Na luta:** a habilidade melhorada age na versão "+" (`Combatant.upgraded`, `BattleController._ability_for`). As 4 habilidades escolhidas na ficha também chegam à luta (`SaintStatus.equipped`).
+  - **Reserva:** substituído pela D-483 (quem fica na vila não ganha experiência).
+  - **Constantes novas:** `upgrade_gain`, `upgrade_hp_fraction`, `upgrade_levels`, `miracle_upgrade_level`.
+  - **Pendente com Alan:** duas habilidades em que a regra geral não funciona:
+    - o **Desafio Formal** de Jorge daria "2 Duelo", mas o Duelo só tem 1 pilha, então não ganharia nada;
+    - a **Vigília no Deserto** de Antão daria +10 de desolação em vez de +8, uma "melhoria" que piora.
+    
+    A proposta é usar o campo `upgrade`, nas duas, para dar +1 de Força em vez disso (`e2.stacks+1`).
+  - **Fica para outra tarefa:** o bônus de experiência da Purificação (+25%) mudaria o resultado de saves antigos; entra com a migração.
+- **D-483 · 18/11/2026 · Alan** — **(1)** A versão "+" do **Desafio Formal** e da **Vigília no Deserto** dá **+1 de Força** (`upgrade`: `e2.stacks+1`); o resto fica igual. **(2)** **Quem fica na vila não ganha experiência**: a escolha da equipe pesa, e para subir todos é preciso revezar. Sai a constante `xp_reserve_share`, e `expedition.md` §8 muda. PR #95 aprovado com essas mudanças.

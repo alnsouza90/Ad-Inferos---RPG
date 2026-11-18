@@ -46,6 +46,8 @@ var trait_def: TraitDef
 var affinities: Array[StringName] = []
 ## Saints only: the 4 equipped abilities and the signature miracle.
 var equipped: Array[StringName] = []
+## Saints only: abilities (and the miracle) in their "+" version (T47).
+var upgraded: Array[StringName] = []
 var miracle: StringName = &""
 ## &"normal", &"consolation" or &"dark_night" (desolation §1).
 var spirit_state: StringName = &"normal"
