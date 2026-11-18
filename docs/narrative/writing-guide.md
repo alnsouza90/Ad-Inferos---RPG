@@ -19,7 +19,7 @@ Versão 1.0 · base: GDD v1.1 §9 e §10 · vale para **todo** texto exibido no 
 | 5 | Demonologia histórica (Binsfeld, Weyer, Collin de Plancy) | Figuras demoníacas, como tradições |
 | 6 | Licença poética | Criações do jogo, sempre identificadas |
 
-Todo texto de lore declara `origin` (`narrative-system.md` §6).
+Todo texto de lore declara `origin` (`narrative-system.md` §6). **As referências (livro, canto, versículo) ficam só no Arquivo, nunca no texto da tela** (D-465).
 
 ## 3. Regras firmes
 
@@ -32,7 +32,7 @@ Todo texto de lore declara `origin` (`narrative-system.md` §6).
 7. Almas condenadas mostradas com humanidade, sem relativizar o pecado e sem caricatura.
 8. Proibido: ato sexual explícito, criança como vítima, método de suicídio, profanação de santos e figuras sagradas, figuras de outras religiões.
 9. Fora do Martirológio, nenhuma explicação doutrinal passa de **três frases**.
-10. As almas inspiradas em Dante **não** usam o nome original do poema; a inspiração fica no Arquivo.
+10. As almas **criadas pelo jogo** a partir de Dante **não** usam o nome original do poema; a inspiração fica no Arquivo. Filósofos, figuras históricas e lendas que aparecem em Dante (Aristóteles, Sócrates, Helena, Cleópatra…) **mantêm o nome** quando entram como diálogo (D-459).
 
 ## 4. Tom e estilo
 

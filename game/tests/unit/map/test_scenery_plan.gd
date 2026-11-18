@@ -147,3 +147,11 @@ func test_every_middle_sinks_until_its_ground_is_under_the_feet() -> void:
 		var file: String = str(layer["path"]).get_file().get_basename()
 		assert_eq(float(layer["sink"]), float(SceneryPlan.SINK.get(file, 0.0)), file)
 	assert_gt(float(SceneryPlan.SINK[SceneryPlan.PLAIN]), 0.0, "a planície acaba num barranco escuro: desce")
+
+
+func test_the_souls_are_never_hidden_behind_the_rock_wall() -> void:
+	for seed: int in SEEDS:
+		for map: LegMap in _legs(seed):
+			for n: MapNode in map.all_nodes():
+				if n.type == MapNode.TYPE_SOUL:
+					assert_ne(SceneryPlan.look(map, n)["mid"], SceneryPlan.ROCK_WALL, "a multidão de almas fica à vista")

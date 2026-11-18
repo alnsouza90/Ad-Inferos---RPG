@@ -1,0 +1,32 @@
+# Aprovado por Alan (18/11/2026, D-461): o segundo Encontro com alma do
+# Círculo 2. Origem: Dante, Inferno V, 64-65 (Virgílio aponta Helena entre os
+# que o vento leva; tradução própria, literal); lenda grega (Helena e a guerra
+# de Troia, Homero, Ilíada); "o rosto que lançou mil navios" é da tradição
+# posterior (Marlowe, séc. XVI). Ela mantém o nome (D-459). Falas, ligação com
+# o Peregrino e escolhas: criação do jogo.
+id: c02_soul_helen
+type: soul_meeting
+circle: 2
+title_pt: "Helena contra o vento"
+origin: game_fiction
+pages:
+  - speaker: narrator
+    text_pt: "Uma alma anda contra o vento, sozinha, com o rosto meio escondido num véu rasgado. O furacão a empurra, e ela não deixa de andar."
+  - speaker: narrator
+    text_pt: "Vê Helena, por quem tanto tempo mau girou."
+  - speaker: soul_helen
+    text_pt: "Disseram que o meu rosto lançou mil navios. Ninguém perguntou o que eu queria. Eu também não perguntei, quando escolhi."
+  - speaker: soul_helen
+    text_pt: "Dez anos de guerra, e cada morto tinha o meu nome na boca. Aqui o vento repete esses nomes todas as noites. Eu cubro o rosto para não ver a quem ele os leva."
+  - speaker: soul_helen
+    text_pt: "Passou por aqui um vivo. Olhou-me como todos olhavam. Depois baixou os olhos e seguiu o vento. Ele ainda pode virar o rosto. Eu já não posso."
+options:
+  - id: pray
+    text_pt: "Rezar pelos que morreram por ela"
+    result_pt: "Os santos rezam pelos mortos de Troia. Helena para por um instante; o vento não a leva. Mais adiante, os rastros do Peregrino seguem com passo mais firme."
+    outcomes:
+      - { type: virtue, id: virtue_hope, amount: 1 }
+      - { type: dominion }
+  - id: follow_tracks
+    text_pt: "Seguir os rastros sem parar"
+    result_pt: "A companhia passa. O véu dela se fecha de novo contra o vento."

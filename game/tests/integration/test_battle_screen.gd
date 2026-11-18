@@ -367,3 +367,29 @@ func test_interceding_draws_a_thread_of_gold() -> void:
 	assert_eq(screen.threads_shown(), 1)
 	await wait_seconds(wait + 0.2)
 	assert_eq(screen.threads_shown(), 0, "o fio some")
+
+
+## T43 (D-466): the elites and the boss say their lines at strong moments.
+func test_the_elites_and_the_boss_say_their_lines() -> void:
+	var screen := _screen(&"c02_elite_vertigo", 1)
+	screen.speed_index = 0
+	var vertigo: Combatant = null
+	for c: Combatant in screen.ctrl.state.enemies:
+		if c.def_id == &"elite_sin_vertigo":
+			vertigo = c
+	screen._say(vertigo.id, "vertigo_enchant")
+	assert_eq(screen.lines_shown(), [data.ui.text(&"line_elite_sin_vertigo_vertigo_enchant")] as Array[String])
+	screen._say(vertigo.id, "nothing_here")
+	assert_eq(screen.lines_shown().size(), 1, "momento sem fala não mostra nada")
+	vertigo.hp = 10
+	screen._check_low(vertigo.id)
+	screen._check_low(vertigo.id)
+	assert_eq(screen.lines_shown().size(), 2, "a fala da vida baixa vem uma vez só")
+	for key: String in ["start", "vertigo_whirl", "low", "defeat"]:
+		assert_true(data.ui.has_text(BattleLine.key(&"elite_sin_vertigo", key)), key)
+	for key: String in ["start", "minos_tail_lash", "minos_summon", "low", "defeat"]:
+		assert_true(data.ui.has_text(BattleLine.key(&"elite_minos", key)), key)
+	for key: String in ["start", "smoke", "phase", "asmodeus_seven_nights", "low", "fled", "bound"]:
+		assert_true(data.ui.has_text(BattleLine.key(&"boss_asmodeus", key)), key)
+	await wait_seconds(BattleLine.SHOW + BattleLine.FADE * 1.5 + 0.3)
+	assert_eq(screen.lines_shown().size(), 0, "as falas somem")

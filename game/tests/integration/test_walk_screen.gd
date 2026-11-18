@@ -651,3 +651,16 @@ func test_the_company_comes_in_by_the_passage_it_took() -> void:
 	await wait_seconds(WalkScreen.PASSAGE_TIME + 0.2)
 	assert_almost_eq(w._party.position.x, 0.0, 0.5)
 	assert_almost_eq(w._dark.color.a, 0.0, 0.01)
+
+
+## D-461: the corridor shows the soul the meeting will open (the couple or
+## Helen), by the same draw.
+func test_the_corridor_shows_the_soul_the_meeting_opens() -> void:
+	var w := _corridor_with(MapNode.TYPE_SOUL)
+	var meeting: EventDef = ctrl.peek_event(&"soul_meeting")
+	assert_not_null(meeting)
+	var expected: String = str(WalkScreen.SOUL_STRIPS.get(meeting.id, WalkScreen.COUPLE_STRIP))
+	assert_eq(w.soul_drawing(), expected)
+	w.walk_by(1.0)
+	w.press_engage()
+	assert_eq(ctrl.event.id, meeting.id, "abre o mesmo encontro que o corredor mostrou")

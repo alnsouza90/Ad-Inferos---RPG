@@ -95,8 +95,11 @@ static func look(map: LegMap, n: MapNode) -> Dictionary:
 			if inherited["mid"] != T3_MID:
 				inherited["mid"] = ROCK_WALL
 		MapNode.TYPE_SOUL:
-			# The souls fly over the place the way already is in (D-446).
+			# The souls fly over the place the way already is in (D-446);
+			# the rock wall would hide them, so there the place opens up.
 			inherited["crowd"] = SOULS_CROWD
+			if inherited["mid"] == ROCK_WALL:
+				inherited["mid"] = PLAIN
 		MapNode.TYPE_ELITE:
 			# Something bigger is there: the sky turns to the eye of the storm.
 			inherited["back"] = STORM_EYE

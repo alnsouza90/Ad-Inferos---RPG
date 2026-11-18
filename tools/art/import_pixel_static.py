@@ -66,11 +66,13 @@ JURY_DOOR_BOX = (52, 92, 140, 230)
 ANIMATED = {
     "couple": (8, 256, 150),
     "fish": (8, 192, 110),
+    "helen": (8, 256, 150),
 }
 # The purple slabs as the floor of the jury hall (D-446, option B): shown
 # 2x, only their top rows, laid under the feet.
 FLOOR_SLAB_ROWS = 44
 EVENT_ART = {
+    "event_c02_soul_helen": ROOT / "art_source/events/circle_02/event_c02_soul_helen_px_v02.png",
     "scene_raphael_binds": ROOT / "art_source/events/circle_02/scene_raphael_binds_px_v02.png",
     "event_c02_soul_lovers": ROOT / "art_source/events/circle_02/event_c02_soul_lovers_px_v01.png",
 }

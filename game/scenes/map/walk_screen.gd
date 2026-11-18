@@ -65,6 +65,8 @@ const SOUL_DRAWINGS: int = 3
 const COUPLE_STRIP: String = "env_circle_02_couple"
 const FISH_STRIP: String = "env_circle_02_fish"
 const STRIP_FRAMES: int = 8
+## The drawing of each soul meeting (D-461); the couple by default.
+const SOUL_STRIPS: Dictionary = {&"c02_soul_helen": "env_circle_02_helen"}
 const COUPLE_LIFT: float = 16.0
 const FISH_ABOVE_FEET: float = 56.0
 ## The pinnacle stands this far behind the souls (corridor fraction).
@@ -806,7 +808,7 @@ func _content_drawing(n: MapNode) -> Control:
 		MapNode.TYPE_RELIC:
 			view = _prop_view(_prop("prop_reliquary_closed" if corridor.content_pending else "prop_reliquary_open"), text)
 		MapNode.TYPE_SOUL:
-			view = _strip_view(_prop(COUPLE_STRIP), text)
+			view = _strip_view(_prop(_soul_strip()), text)
 			view.mouse_filter = Control.MOUSE_FILTER_STOP
 			view.gui_input.connect(func(event: InputEvent) -> void:
 				if _is_tap(event) and corridor.at_pending_content():
@@ -816,6 +818,17 @@ func _content_drawing(n: MapNode) -> Control:
 		return _block(text, COLOR_OBJECT if corridor.content_pending else COLOR_OBJECT_DONE, OBJECT_SIZE)
 	view.modulate = Color.WHITE if corridor.content_pending else Color(0.6, 0.6, 0.65)
 	return view
+
+
+## The soul that waits in this corridor: the same draw as the meeting.
+func _soul_strip() -> String:
+	var meeting: EventDef = ctrl.peek_event(&"soul_meeting") if ctrl.current_node() != null else null
+	return str(SOUL_STRIPS.get(meeting.id, COUPLE_STRIP)) if meeting != null else COUPLE_STRIP
+
+
+## The id of the soul drawn here (tests).
+func soul_drawing() -> String:
+	return _soul_strip()
 
 
 ## An entrance (D-445): the open way has no drawing, only its name at the

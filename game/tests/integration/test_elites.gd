@@ -49,7 +49,10 @@ func test_the_elite_encounters_of_bosses_md() -> void:
 	assert_eq(cat.encounter(&"c02_elite_minos").slots, [&"enemy_mud_devil", &"enemy_infernal_scarab", &"elite_minos"] as Array[StringName])
 	assert_eq(cat.encounter(&"c02_elite_vertigo").slots, [&"enemy_shade_of_desire", &"elite_sin_vertigo", &"enemy_wandering_breath"] as Array[StringName])
 	assert_eq(cat.encounter_pool(2, &"guardian"), [&"c02_elite_minos"] as Array[StringName], "Minos é o Guardião")
-	assert_eq(cat.encounter_pool(2, &"elite"), [&"c02_elite_vertigo"] as Array[StringName], "a Vertigem é o Pecado")
+	# D-461: the Vertigem with three escorts (easy, medium, hard).
+	assert_eq(cat.encounter_pool(2, &"elite"), [&"c02_elite_vertigo", &"c02_elite_vertigo_easy", &"c02_elite_vertigo_hard"] as Array[StringName], "a Vertigem é o Pecado, com três escoltas")
+	for id: StringName in cat.encounter_pool(2, &"elite"):
+		assert_true(cat.encounter(id).slots.has(&"elite_sin_vertigo"), String(id))
 	for id: StringName in cat.encounter_pool(2, &"elite") + cat.encounter_pool(2, &"guardian"):
 		assert_eq(cat.encounter(id).type, &"elite")
 		assert_eq(cat.encounter(id).hazard, &"gale")
@@ -198,7 +201,7 @@ func test_E01_elites_appear_in_the_variable_node_at_most_one_per_path() -> void:
 			for n: MapNode in layer:
 				if n.type == MapNode.TYPE_ELITE and n.role == MapNode.ROLE_VARIABLE:
 					elites += 1
-					assert_eq(n.encounter_id, &"c02_elite_vertigo", "no nó variável, só o Pecado Encarnado (D-406)")
+					assert_true(cat.encounter(n.encounter_id).slots.has(&"elite_sin_vertigo"), "no nó variável, só o Pecado Encarnado (D-406, D-461)")
 	assert_gt(elites, 0, "o nó variável sorteia elites")
 
 
