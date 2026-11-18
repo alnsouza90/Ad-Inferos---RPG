@@ -142,6 +142,12 @@ const INSTANT_OUT: float = 0.3
 const INSTANT_LABEL := Rect2(0, 40, 960, 30)
 ## Drawn above the fighters while they last (z order inside the field).
 const OVERLAY_Z: int = 3
+## The lines of the elites and the boss stand this far over their heads, but
+## never above the top band.
+const LINE_ABOVE_HEAD: float = 34.0
+const LINE_MIN_Y: float = 96.0
+## Margin between a line and the edge of the screen.
+const LINE_EDGE: float = 8.0
 ## Saint Raphael at the victory with the liver (bosses.md §5.3, D-452,
 ## D-453): beside the defeated Asmodeus, Raphael flickers in flat gold and
 ## becomes himself (gold edge, halo); the story panel; then he flickers in
@@ -273,6 +279,8 @@ var _instant_bg: ColorRect
 var _instant_label: Label
 ## Raphael's scene played (it plays once, at the end of the boss battle).
 var _raphael_played: bool = false
+## Combatants that already said their "low" line (D-466).
+var _said_low: Dictionary = {}
 var _raphael_nodes: Array[CanvasItem] = []
 var _flash: ColorRect
 var _lantern: Control
@@ -650,6 +658,9 @@ func _animate(ev: BattleEvent) -> float:
 	match ev.type:
 		&"round_started", &"fervor_gained", &"intents_chosen", &"intents_updated":
 			_refresh_top()
+			if ev.type == &"round_started" and int(d.get("round", 0)) == 1:
+				for c: Combatant in ctrl.state.enemies:
+					_say(c.id, "start")
 		&"ability_used":
 			_last_actor = d["actor"]
 			var actor: Combatant = ctrl.state.find(d["actor"])
@@ -669,6 +680,7 @@ func _animate(ev: BattleEvent) -> float:
 		&"enemy_action", &"party_turn_ended":
 			_last_actor = &""
 		&"enemy_action_started":
+			_say(StringName(str(d["enemy"])), str(d["action"]))
 			# An action with its own clip plays it whole; its damage then
 			# lands without a second lunge (D-428).
 			var acting: CombatantView = view_of(StringName(str(d["enemy"])))
@@ -681,6 +693,7 @@ func _animate(ev: BattleEvent) -> float:
 			var where: Vector2 = aimed_view.chest_global() if aimed_view != null and aimed_view != acting else Vector2.INF
 			return acting.play_own_clip(action_clip, where) * acting.impact_share()
 		&"liver_smoke":
+			_say(StringName(str(d["boss"])), "smoke")
 			_hint.text = texts.t(&"boss_liver_smoke")
 			var smoke_view: CombatantView = view_of(StringName(str(d["boss"])))
 			if smoke_view != null:
@@ -688,6 +701,8 @@ func _animate(ev: BattleEvent) -> float:
 			return _scaled(BOSS_SCENE_SECONDS, factor)
 		&"boss_phase_changed":
 			var boss: Combatant = ctrl.state.boss()
+			if boss != null:
+				_say(boss.id, "phase")
 			var boss_view: CombatantView = view_of(boss.id) if boss != null else null
 			if boss_view != null:
 				boss_view.float_text(texts.t(&"boss_phase_float", {"phase": d["phase"], "of": d["of"]}), COLOR_SPIRIT)
@@ -706,6 +721,7 @@ func _animate(ev: BattleEvent) -> float:
 			if view == null:
 				return lunge
 			_set_hp(target_id, int(d["hp"]))
+			_check_low(target_id)
 			var number: String = texts.t(&"preview_damage", {"amount": d["amount"]})
 			var ink: StringName = _ink_of(source, target_id, StringName(str(d.get("type", ""))))
 			if lunge > 0.0:
@@ -744,6 +760,8 @@ func _animate(ev: BattleEvent) -> float:
 				return maxf(_scaled(SMALL_TIME, factor), _play_instant(view, StringName(str(d["new"]))))
 			return _scaled(SMALL_TIME, factor)
 		&"fell", &"enemy_died":
+			if ev.type == &"enemy_died":
+				_say_defeat(StringName(str(d["target"])))
 			var view: CombatantView = view_of(d["target"])
 			return view.play_fall() if view != null else 0.0
 		&"interceded":
@@ -1015,6 +1033,53 @@ func _play_ink_at(ink: StringName, at: Vector2) -> void:
 	_field.add_child(splash)
 	_field.move_child(splash, _badges_layer.get_index())
 	splash.play(ink, at, factor)
+
+
+## An elite or the boss says its line for `moment` (D-466), if it has one.
+func _say(combatant_id: StringName, moment: String) -> void:
+	var c: Combatant = ctrl.state.find(combatant_id)
+	var view: CombatantView = view_of(combatant_id)
+	var factor: float = SPEEDS[speed_index]
+	if c == null or view == null or c.is_saint() or factor <= 0.0:
+		return
+	var key: StringName = BattleLine.key(c.def_id, moment)
+	if not data.ui.has_text(key):
+		return
+	var line := BattleLine.new()
+	line.z_index = OVERLAY_Z
+	_field.add_child(line)
+	var head: Vector2 = _field.get_global_transform().affine_inverse() * view.halo_global()
+	var half: float = BattleLine.WIDTH * 0.5 + LINE_EDGE
+	line.play(texts.t(key), Vector2(clampf(head.x, half, STAGE_SIZE.x - half), maxf(head.y - LINE_ABOVE_HEAD, LINE_MIN_Y)), factor)
+
+
+func _check_low(combatant_id: StringName) -> void:
+	var c: Combatant = ctrl.state.find(combatant_id)
+	if c == null or c.is_saint() or _said_low.has(combatant_id) or c.max_hp <= 0:
+		return
+	if float(c.hp) / float(c.max_hp) < BattleLine.low_share(c.def_id) and c.hp > 0:
+		_said_low[combatant_id] = true
+		_say(combatant_id, "low")
+
+
+func _say_defeat(combatant_id: StringName) -> void:
+	var c: Combatant = ctrl.state.find(combatant_id)
+	if c == null:
+		return
+	if c.category == &"boss":
+		var bound: bool = ctrl.state.has_liver
+		_say(combatant_id, "bound" if bound else "fled")
+	else:
+		_say(combatant_id, "defeat")
+
+
+## The lines on screen now (tests).
+func lines_shown() -> Array[String]:
+	var shown: Array[String] = []
+	for child: Node in _field.get_children():
+		if child is BattleLine and not child.is_queued_for_deletion():
+			shown.append((child as BattleLine).text)
+	return shown
 
 
 ## The golden threads playing now (tests).
