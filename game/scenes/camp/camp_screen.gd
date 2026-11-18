@@ -35,6 +35,15 @@ const FIRE_FPS: float = 9.0
 const FIRE_SCALE: float = 1.0
 ## Rows of the fire frame below the logs (empty), so the logs rest on the ring.
 const FIRE_FOOT_GAP: float = 6.0
+## The saints breathe and the fire's light trembles on the side of each one
+## that faces it (D-361): the breath stretches the pose this much, in this
+## many seconds (each saint out of step); the light is an amber edge.
+const BREATH_STRETCH: float = 0.012
+const BREATH_SECONDS: float = 3.6
+const FIRELIGHT := Color("E07B1F")
+const FIRELIGHT_MIN: float = 0.45
+const FIRELIGHT_MAX: float = 0.95
+const FIGURE_SHADER_PATH: String = "res://shaders/halo.gdshader"
 ## Seats around the fire, in party order: feet (centre, bottom), mirrored to
 ## face the fire. The third sits further back, beyond the stones (D-432).
 const SEATS: Array[Dictionary] = [
@@ -48,7 +57,7 @@ const SEATS: Array[Dictionary] = [
 const HALO_POINTS: Dictionary = {
 	&"saint_george": Vector2(57, 13),
 	&"saint_benedict": Vector2(66, 28),
-	&"saint_therese": Vector2(86, 10),
+	&"saint_therese": Vector2(82, 2),
 }
 const PANEL_TOP: float = 360.0
 ## The arch of the portrait in the card (as in the battle's panel).
@@ -483,6 +492,12 @@ func _process(delta: float) -> void:
 	if _fire_glow != null:
 		_fire_glow.modulate.a = 0.55 + 0.08 * sin(_clock * 11.0) + 0.05 * sin(_clock * 23.0)
 	for id: StringName in _seats:
+		var seat: Dictionary = _seats[id]
+		var breath: float = (sin((_clock + float(seat["phase"])) * TAU / BREATH_SECONDS) + 1.0) * 0.5
+		(seat["pose"] as Control).scale = Vector2(1.0, 1.0 + BREATH_STRETCH * breath)
+		# The same flicker as the glow of the fire, so they move together.
+		var flicker: float = clampf(0.5 + 0.3 * sin(_clock * 11.0) + 0.2 * sin(_clock * 23.0 + float(seat["phase"])), 0.0, 1.0)
+		(seat["light"] as ShaderMaterial).set_shader_parameter("rim_color", Color(FIRELIGHT, lerpf(FIRELIGHT_MIN, FIRELIGHT_MAX, flicker)))
 		var rays: CanvasItem = _seats[id]["rays"]
 		if rays.visible:
 			(rays as Control).rotation += delta * _halo_settings.rays_spin_speed
@@ -641,6 +656,16 @@ func _build_seat(field: Control, saint_id: StringName, seat: Dictionary) -> void
 	pose.position = top_left
 	pose.size = pose_size
 	pose.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Breathing from the ground up; the fire lights the side facing it.
+	pose.pivot_offset = Vector2(pose_size.x * 0.5, pose_size.y)
+	var light := ShaderMaterial.new()
+	light.shader = load(FIGURE_SHADER_PATH)
+	var fire_on_right: bool = _fire_base().x > feet.x
+	# rim_side is where the light falls, in the texture: a mirrored pose is
+	# flipped, so its side swaps.
+	light.set_shader_parameter("rim_side", (1.0 if fire_on_right else -1.0) * (-1.0 if mirror else 1.0))
+	light.set_shader_parameter("rim_color", Color(FIRELIGHT, FIRELIGHT_MIN))
+	pose.material = light
 	field.add_child(pose)
 	var point: Vector2 = HALO_POINTS.get(saint_id, Vector2(pose_size.x * 0.5, 6.0))
 	if mirror:
@@ -673,7 +698,7 @@ func _build_seat(field: Control, saint_id: StringName, seat: Dictionary) -> void
 	button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
 	button.pressed.connect(select_saint.bind(saint_id))
 	field.add_child(button)
-	_seats[saint_id] = {"pose": pose, "halo": halo, "rays": rays, "clearing": clearing, "button": button, "halo_kind": &"disk"}
+	_seats[saint_id] = {"pose": pose, "halo": halo, "rays": rays, "clearing": clearing, "button": button, "halo_kind": &"disk", "light": light, "phase": float(_seats.size()) * 1.3}
 
 
 func _build_panel() -> void:
