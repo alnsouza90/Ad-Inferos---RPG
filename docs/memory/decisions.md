@@ -448,3 +448,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Relíquia:** dois espaços; o segundo aparece **fechado** até o nível [relic_second_slot_level] (4).
   - **Arte nova:** só os **ícones das relíquias** no PixelLab, com custo antes e aprovação peça por peça. Os ícones do Pouso e o medalhão do traço ficam como estão.
   - Os números entram em `constants.csv` (`equipped_abilities`, `relic_slots_max`, `relic_second_slot_level`); são os do GDD §3 e de `village-economy.md` §9.
+- **D-478 · 18/11/2026 · Alan** — PR #92 aprovado e com merge. **Alcunhas na ficha** aprovadas, a partir do primeiro Carisma do GDD: Bento "Abade", Teresinha "Pequena Via", Antão "Asceta" (Jorge "Cavaleiro", D-477). **Ícones das relíquias** aprovados: 30 gerações no PixelLab para as três do M2 (Crucifixo de madeira, Cruz em tau, Vela da Candelária), no estilo dos ícones de provisão, 32 × 32, mostrados um a um.
