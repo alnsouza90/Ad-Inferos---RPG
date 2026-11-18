@@ -558,6 +558,12 @@ func _pick_event(type: StringName = &"temptation") -> EventDef:
 	return pool[_event_rng().pick_index(pool.size())]
 
 
+## The event of `type` the current node holds, without starting it (the
+## walk shows who waits there, D-461); the same draw as when it starts.
+func peek_event(type: StringName) -> EventDef:
+	return _pick_event(type)
+
+
 ## Draw 1 picks the event, draw 2 rolls the chance; derived from the node so
 ## replays and saves give the same result.
 func _event_rng() -> RngStream:
