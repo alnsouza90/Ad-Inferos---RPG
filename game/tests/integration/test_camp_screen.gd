@@ -256,3 +256,19 @@ func test_the_camp_shows_the_same_portrait_as_the_battle() -> void:
 	var s := _screen(c)
 	for id: StringName in c.state.party:
 		assert_eq(s.portrait_of(id), BattleScreen.saint_portrait(id), "o mesmo retrato, no arco (D-442)")
+
+
+## D-361: the saints breathe and the fire's light trembles on their side.
+func test_the_seated_saints_breathe_and_the_fire_lights_them() -> void:
+	var screen := _screen(_camp())
+	var seat: Dictionary = screen._seats[screen.ctrl.state.party[0]]
+	var light: ShaderMaterial = seat["light"]
+	assert_not_null(light, "luz da fogueira no santo")
+	var alphas: Array[float] = []
+	var heights: Array[float] = []
+	for i: int in 6:
+		await wait_seconds(0.15)
+		alphas.append((light.get_shader_parameter("rim_color") as Color).a)
+		heights.append((seat["pose"] as Control).scale.y)
+	assert_gt(alphas.max() - alphas.min(), 0.05, "a luz treme")
+	assert_gt(heights.max() - heights.min(), 0.0, "o santo respira")
