@@ -102,4 +102,7 @@ func test_grey_sky_in_advent_and_lent_clear_otherwise() -> void:
 	assert_gt(_screen(1).grey_amount(), 0.0)
 	assert_gt(_screen(int(starts[3])).grey_amount(), 0.0)
 	assert_eq(_screen(int(starts[2])).grey_amount(), 0.0)
+	# D-496: the amber sunset outside them, Alan's grey clouds in them.
+	assert_true(_screen(int(starts[2])).sunset_shown())
+	assert_false(_screen(1).sunset_shown())
 	assert_string_contains(_screen(1).week_shown(), data.ui.text(&"season_advent"))

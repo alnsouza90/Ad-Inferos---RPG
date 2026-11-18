@@ -13,6 +13,9 @@ signal building_chosen(building: StringName)
 
 const STAGE_SIZE := VillageLayout.PICTURE_SIZE
 const WEATHER_SHADER_PATH: String = "res://shaders/village_weather.gdshader"
+## Outside Advent and Lent the sky is an amber sunset drawn by the engine
+## (D-496); in them, Alan's clouds turned grey.
+const SUNSET_SHADER_PATH: String = "res://shaders/village_sunset.gdshader"
 ## The clouds' drift, in picture pixels per second.
 const SKY_SPEED: float = 6.0
 ## Advent and Lent: how grey the sky and the village get, and the mist over
@@ -36,6 +39,7 @@ var selected: StringName = &""
 var _stage: Control
 var _sky: TextureRect
 var _sky_width: float = 0.0
+var _sunset: ColorRect
 var _picture: TextureRect
 var _outlines: Dictionary = {}
 var _week: Label
@@ -120,7 +124,11 @@ func sky_x() -> float:
 
 
 func grey_amount() -> float:
-	return float((_sky.material as ShaderMaterial).get_shader_parameter(&"grey"))
+	return float((_sky.material as ShaderMaterial).get_shader_parameter(&"grey")) if _sky.visible else 0.0
+
+
+func sunset_shown() -> bool:
+	return _sunset.visible
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -153,8 +161,18 @@ func _build() -> void:
 	_sky.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_sky.size = Vector2(STAGE_SIZE.x + _sky_width, sky_texture.get_size().y)
 	_sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_sky.material = _weather(GREY_SKY if grey else 0.0)
+	_sky.material = _weather(GREY_SKY)
+	_sky.visible = grey
 	_stage.add_child(_sky)
+	_sunset = ColorRect.new()
+	_sunset.size = STAGE_SIZE
+	_sunset.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sunset := ShaderMaterial.new()
+	sunset.shader = load(SUNSET_SHADER_PATH) as Shader
+	sunset.set_shader_parameter(&"drift", SKY_SPEED)
+	_sunset.material = sunset
+	_sunset.visible = not grey
+	_stage.add_child(_sunset)
 	_picture = TextureRect.new()
 	_picture.texture = load(VillageLayout.PICTURE_PATH) as Texture2D
 	_picture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
