@@ -1,6 +1,10 @@
 # Ficha de Santo Antão para o cartão de novo santo · rascunho para Alan aprovar (T43, peça 5)
 
-**Situação:** rascunho do agente. Ainda não é texto do jogo.
+**Situação:** texto aprovado por Alan (18/11/2026, D-464).
+- O cartão mostra só **"Santo Antão"**, sem "o Grande".
+- O cartão mostra a vida, a **ficha de jogo** (traço, atributos, habilidades, milagre), o **retrato** e o **dia da festa** (17 de janeiro).
+- A origem de cada dado fica no **Martirológio**, não no cartão.
+- **Imagem:** Alan gera o retrato e a figura em pixel, com o **porco, o sino e o cajado em tau** (iconografia da tradição; referência em `docs/art/reference/santos/santo_antao_ref_alan.jpg`).
 
 **Onde aparece:** no cartão que abre depois da fala de São Cristóvão (D-458, T50), ao concluir o Círculo 2. O cartão mostra o retrato, esta vida em poucas linhas, o traço, as habilidades e o milagre, com os nomes e as descrições vindos de `saints.csv` e `abilities.csv`.
 
@@ -23,7 +27,7 @@
 **Cuidados:**
 - A citação de Mateus 19,21 fica com o livro e o versículo no Arquivo, e a tradução é própria.
 - Nada sobre milagres além do que a *Vida* conta.
-- O cartão não usa o porco nem o fogo de Santo Antão, que são da iconografia medieval e de outras tradições.
+- O porco, o sino e o cajado em tau entram na imagem (decisão de Alan); são da iconografia medieval, e o Martirológio diz isso.
 
 **O que Alan precisa decidir:**
 - se o texto serve, ou o que muda;

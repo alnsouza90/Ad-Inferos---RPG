@@ -10,7 +10,7 @@ Onde a tarefa começa e onde termina, peça por peça. Cada peça é um rascunho
 | 2 | Encontro com alma 2: Helena | Mesmo cenário das almas | **Feito e aprovado** (D-461, D-462): texto, prancha de Alan em pixel, figura animada |
 | 3 | Tentação nova | — | **Fora** (D-462): o Círculo 2 fica só com "O abrigo do vento" |
 | 4 | Falas curtas de São Cristóvão no Portão | Relatório da semana (D-262) e anúncio do santo que chega (D-458) | **Aprovado** (D-463): `ui_text.csv`, `christopher_*` |
-| 5 | Ficha breve de Santo Antão para o cartão de novo santo (T50) | Vida em poucas linhas, com a origem de cada dado (fato, tradição, lenda) | A fazer: Alan confere as fontes |
+| 5 | Ficha breve de Santo Antão para o cartão de novo santo (T50) | Vida em poucas linhas; a origem de cada dado vai para o Martirológio | **Texto aprovado** (D-464); retrato e figura em pixel com Alan |
 | 5b | Falas das Elites e do chefe durante a luta | Vertigem, Minos e Asmodeu: 2 a 4 frases curtas cada, nos momentos fortes (começo, troca de fase, vida baixa, derrota). Precisa de um sistema de falas na luta (parte técnica) | A fazer: pedido de Alan (18/11) |
 | 5c | Apresentação da vila | Uma fala curta de cada guardião no seu prédio (GDD §6: Santo Agostinho e Santa Mônica, Cosme e Damião, Santa Isabel, São Cristóvão, Santo Inácio, Santo Elói, Santo Tomás, Santa Teresa d'Ávila, Santa Helena); os não liberados com aviso (D-459) | A fazer: pedido de Alan (18/11) |
 | 5d | Cena da Porta do Inferno e do Anjo da Guarda | Abertura do Círculo 1 (M3) | Fica para o M3: o Prólogo termina na beira do abismo, olhando a porta |
