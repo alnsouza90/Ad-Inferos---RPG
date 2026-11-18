@@ -1,6 +1,6 @@
 # Falas de São Cristóvão no Portão · rascunho para Alan aprovar (T43, peça 4)
 
-**Situação:** rascunho do agente. Ainda não é texto do jogo.
+**Situação:** aprovado por Alan (18/11/2026, D-463). Os textos estão em `docs/balance/ui_text.csv` (chaves `christopher_*`); a tela que os mostra é a T50. Cada santo que chega terá a sua própria frase de anúncio (`christopher_announce_<santo>`), escrita quando o santo entrar no jogo.
 
 **Quem é ele no jogo:** o guardião do Portão (GDD §6). Dá o relatório da semana (D-262) e anuncia os santos que chegam à vila (D-458).
 
