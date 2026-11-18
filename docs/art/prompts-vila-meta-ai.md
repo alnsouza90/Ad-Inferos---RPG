@@ -1,11 +1,11 @@
-# Vila · prompts para o Meta AI (T49, D-488)
+# Vila · prompts para o Meta AI (T49, D-488, D-489)
 
 **Como funciona:**
 1. Alan gera cada peça no Meta AI e escolhe a melhor.
 2. O agente recorta e converte para o pixel do jogo, no tamanho da tabela, e monta.
 3. Alan aprova peça por peça.
 
-Os prompts saem em **arte de tinta, no estilo do *Darkest Dungeon***, porque é o que o Meta AI faz bem e o que a conversão para pixel preserva. Por isso não pedem pixel art.
+Os prompts pedem **pixel art no estilo de *Blasphemous* junto com o gótico de *Darkest Dungeon*** (D-489), **sem o lado contraventor** de *Blasphemous*: nada grotesco, nada de sangue, nenhuma imagem sagrada deformada. A conversão do agente acerta o tamanho do pixel e a paleta do jogo.
 
 **A montagem (D-488):**
 - Uma **tela 16:9 só**, sem arrastar, de **frente**, como a vila do *Darkest Dungeon* da imagem de referência.
@@ -32,19 +32,19 @@ Os prompts saem em **arte de tinta, no estilo do *Darkest Dungeon***, porque é 
 ### 1.1 Céu · proporção 21:9
 
 ```text
-Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art, Mike Mignola influence, a wide overcast dawn sky over an abyss, heavy layered clouds drawn with ink hatching, a pale amber glow low on the horizon slightly right of center like a weak sun behind the clouds, the rest of the sky ash grey and dark umber, no buildings, no ground, no mountains, no birds, the left and right edges continuous, palette of black, bone, ash grey and warm amber, thick black ink lines, distressed print texture --ar 21:9 --no flat gold, sun disk, blue sky, buildings, people, text, cartoon, 3D, photorealistic
+dark gothic pixel art, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and calm, without Blasphemous's grotesque, gory or profane side, a wide overcast dawn sky over an abyss, heavy layered clouds shaded with dithering, a pale amber glow low on the horizon slightly right of center like a weak sun behind the clouds, the rest of the sky ash grey and dark umber, no buildings, no ground, no mountains, no birds, the left and right edges continuous, palette of black, bone, ash grey and warm amber, a single consistent pixel size, crisp hard pixel edges, selective dithering, no anti-aliasing --ar 21:9 --no flat gold, sun disk, blue sky, buildings, people, text, cartoon, 3D, photorealistic
 ```
 
 ### 1.2 Fundo distante · proporção 21:9
 
 ```text
-Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art, Mike Mignola influence, a distant dark horizon of jagged cliffs and broken rock spires at the rim of an immense abyss, rising mist, a few bare dead trees in silhouette, all in dark muted silhouette with little detail, the lower part fading into mist, isolated on a plain flat solid light grey background above the silhouettes, palette of black, ash grey and dark umber, thick black ink lines, distressed print texture --ar 21:9 --no buildings, castles, towers, people, sky details, flat gold, blue, text, cartoon, 3D, photorealistic
+dark gothic pixel art, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and calm, without Blasphemous's grotesque, gory or profane side, a distant dark horizon of jagged cliffs and broken rock spires at the rim of an immense abyss, rising mist, a few bare dead trees in silhouette, all in dark muted silhouette with little detail, the lower part fading into mist, isolated on a plain flat solid light grey background above the silhouettes, palette of black, ash grey and dark umber, a single consistent pixel size, crisp hard pixel edges, selective dithering, no anti-aliasing --ar 21:9 --no buildings, castles, towers, people, sky details, flat gold, blue, text, cartoon, 3D, photorealistic
 ```
 
 ### 1.3 Chão da vila (o morro, sem edifícios) · proporção 16:9
 
 ```text
-Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art, Mike Mignola influence, the empty ground of a small medieval monastery village seen from the front like the hamlet of Darkest Dungeon, a low rocky hill rising toward the back with three terraces of flat building plots, a worn dirt road winding from the front center up to the top, short stone stairs between the terraces, low dry-stone walls, a few bare dead trees at the left and right edges, a small round paved place in the front center for a statue, at the far right the ground ends at a cliff edge over a dark abyss with a stone stair descending into the darkness, the upper third of the image left as plain flat light grey for the sky to be placed behind, warm amber light from the left, palette of black, bone, ash grey and dark umber, thick black ink outlines, heavy black shadows, distressed print texture --ar 16:9 --no buildings, houses, chapel, towers, statue, people, characters, flat gold, blue, text, UI, cartoon, 3D, photorealistic
+dark gothic pixel art, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and calm, without Blasphemous's grotesque, gory or profane side, the empty ground of a small medieval monastery village seen from the front like the hamlet of Darkest Dungeon, a low rocky hill rising toward the back with three terraces of flat building plots, a worn dirt road winding from the front center up to the top, short stone stairs between the terraces, low dry-stone walls, a few bare dead trees at the left and right edges, a small round paved place in the front center for a statue, at the far right the ground ends at a cliff edge over a dark abyss with a stone stair descending into the darkness, the upper third of the image left as plain flat light grey for the sky to be placed behind, warm amber light from the left, palette of black, bone, ash grey and dark umber, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, selective dithering, no anti-aliasing --ar 16:9 --no buildings, houses, chapel, towers, statue, people, characters, flat gold, blue, text, UI, cartoon, 3D, photorealistic
 ```
 
 ---
@@ -54,7 +54,7 @@ Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art,
 **Bloco comum.** Troque `<EDIFÍCIO>` pela descrição de cada peça abaixo:
 
 ```text
-Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art, Mike Mignola influence, ONE single isolated <EDIFÍCIO> of a small medieval monastery village, three-quarter front view from slightly above like the buildings of the Darkest Dungeon hamlet, the whole building fully visible and centered with empty margin on all four sides, filling about 85 percent of the image height, nothing behind it and nothing beside it, standing on a small patch of dirt ground, warm amber candlelight in the windows, soft light from the left, thick irregular black ink outlines, heavy black shadows, angular blocky shading, muted desaturated colors with painterly flat fills, palette of black, bone, ash grey and warm amber, ink texture on the building only, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal --ar <PROPORÇÃO> --no other buildings, background buildings, walls behind, towers behind, sky, landscape, people, characters, flat gold, blue, cropped edges, top-down view, isometric, parchment background, textured background, vignette, text, cartoon, 3D, photorealistic
+dark gothic pixel art, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and calm, without Blasphemous's grotesque, gory or profane side, ONE single isolated <EDIFÍCIO> of a small medieval monastery village, three-quarter front view from slightly above like the buildings of the Darkest Dungeon hamlet, the whole building fully visible and centered with empty margin on all four sides, filling about 85 percent of the image height, nothing behind it and nothing beside it, standing on a small patch of dirt ground, warm amber candlelight in the windows, soft light from the left, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, muted desaturated colors, palette of black, bone, ash grey and warm amber, selective dithering in the shadows, no anti-aliasing, isolated on a plain flat solid light grey background, clean cutout silhouette for background removal --ar <PROPORÇÃO> --no other buildings, background buildings, walls behind, towers behind, sky, landscape, people, characters, flat gold, blue, cropped edges, top-down view, isometric, gore, blood, grotesque, profane imagery, blur, smooth shading, painterly, parchment background, textured background, vignette, text, cartoon, 3D, photorealistic
 ```
 
 | # | Peça (prédio do jogo) | Proporção | `<EDIFÍCIO>` |
@@ -67,13 +67,13 @@ Darkest Dungeon style 2D hand-painted gothic illustration, hand-inked comic art,
 | 6 | Despensa | 6:5 | `sturdy two-storey stone storehouse with a steep slate roof, a wide wooden double loading door bound with iron, small windows glowing amber, wooden barrels and grain sacks stacked beside the door` |
 | 7 | Forja | 1:1 | `small stone forge with an open front shed, an iron anvil on a tree stump, tongs and hammers on the wall, a glowing fire in a brick hearth, a tall square stone chimney with a little smoke, a small iron cross on the gable` |
 | 8 | Relicário | 1:1 | `small square stone reliquary shrine with a low stone dome topped by a stone ball and a small iron cross, a grated iron door in a stone arch, two small niches with candles` |
-| 9 | Carmelo em ruínas | 4:3 | `ruined roofless convent of old whitewashed stone, cracked walls, a small bell gable without its bell, seven dark empty arched windows in a row, broken roof beams, fallen stones and weeds at its foot, quiet and sad, no light inside` |
+| 9 | Carmelo | 4:3 | `quiet whitewashed stone Carmelite convent, intact and simple, a steep dark slate roof, a small bell gable with a bell and a small iron cross, a plain wooden door, seven small arched windows in a row, a low wall with a little garden gate` |
 | 10 | Portão | 3:4 | `fortified stone gatehouse at the edge of a cliff, two crenellated towers joined by a wall with a single heavy closed wooden gate bound with iron, two burning wall torches, a steep stone stair going down from the gate on its right side into darkness` |
 | 11 | Imagem de Nossa Senhora | 1:2 | `weathered stone statue of the Virgin Mary standing in prayer with joined hands, a long veil and a simple carved stone halo, serene and gentle face, on a tall stepped stone pedestal, small votive candles and wild flowers at its base, reverent` (em vez de "building", é uma estátua; sem praça redonda, só o pedestal) |
 
 **Cuidados:**
 - **Imagem de Nossa Senhora:** com reverência, sem rosto deformado, auréola de pedra (nunca de ouro) e sem azul.
-- **Carmelo:** está em ruínas desde o início da história (D-262); a reforma vem no M3.
+- **Carmelo:** o prédio é **inteiro**, não em ruínas (D-489). Fica **bloqueado no motor**, escurecido e com o aviso, até a reforma liberar. A reforma é **espiritual**, não de pedra.
 
 ---
 
@@ -85,7 +85,7 @@ Altura e largura **finais em pixels**, na conversão. As peças maiores ficam at
 | --- | --- | --- | --- |
 | Catedral gótica | 230 × 300 | fundo | centro, no alto do morro |
 | Biblioteca | 90 × 210 | fundo | à esquerda da catedral |
-| Carmelo em ruínas | 170 × 130 | fundo | à direita da catedral |
+| Carmelo | 170 × 130 | fundo | à direita da catedral (bloqueado no motor até a reforma) |
 | Jardim e Claustro | 210 × 150 | meio | à esquerda, abaixo da Biblioteca |
 | Enfermaria | 190 × 120 | meio | esquerda, perto da borda |
 | Despensa | 150 × 130 | meio | à direita do caminho |

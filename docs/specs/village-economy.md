@@ -58,7 +58,7 @@ O santo designado não participa da expedição da semana. Não há bônus por a
 
 ## 5. Carmelo e Moradas
 
-- O Carmelo está **em ruínas desde o início**; "construir" é **reformar**, pelo mesmo custo e com os mesmos efeitos (D-262).
+- O Carmelo está **fechado desde o início**: o prédio é inteiro e fica bloqueado até a **reforma**, que é **espiritual, não de pedra** (D-489; antes, D-262). O custo e os efeitos são os mesmos.
 - A reforma desbloqueia **São João da Cruz** e concede a **Morada 1**.
 - Cada círculo concluído (chefe vencido pela primeira vez) depois da reforma concede a Morada seguinte, até a 7ª.
 - **Cada Morada acende uma das sete janelas do Carmelo** na vila (efeito do motor). As sete janelas continuam.
