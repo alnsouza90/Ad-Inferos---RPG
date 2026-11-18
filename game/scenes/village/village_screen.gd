@@ -1,22 +1,28 @@
 class_name VillageScreen
 extends Control
-## The village (T49, D-492): Alan's picture at 960 x 540, with the engine on
-## top. Touching an open building chooses it; the closed ones are darkened;
-## the night of the liturgical calendar (Advent and Lent) pulls the picture
-## to grey-violet and leaves the lights lit. Pure presentation: it reads the
-## campaign and says which building was chosen.
+## The village (T49, D-492, D-494): Alan's picture at 960 x 540, by day, or
+## his night picture in Advent and Lent. Touching an open building chooses
+## it; a closed one only says it is closed when touched. The top band and
+## the note follow the rest of the game: the iron band, Jacquard 12 for the
+## title, the riveted iron plate for the note. Pure presentation: it reads
+## the campaign and says which building was chosen.
 
 ## Emitted when an open building is touched (its id, as in VillageLayout).
 signal building_chosen(building: StringName)
 
 const STAGE_SIZE := VillageLayout.PICTURE_SIZE
-const SHADER_PATH: String = "res://shaders/village_hub.gdshader"
-## Darkness over a closed building (Bíblia de Arte §10A: a silhouette).
-const CLOSED_COLOR := Color(0.05, 0.03, 0.08, 0.62)
-const SELECTED_COLOR := PixelStyle.COLOR_BONE
-const SELECTED_WIDTH: float = 2.0
-const BAND_HEIGHT: float = 28.0
-const BAND_SIZE: int = PixelStyle.TEXT_SIZE * 2
+## The thin iron band at the top, as in battle and on the walk.
+const BAND_HEIGHT: float = 16.0
+const WEEK_POS := Vector2(14, 18)
+## Texts at twice the pixel size, as in the event, story and saint screens.
+const TITLE_SIZE: int = PixelStyle.TITLE_SIZE * 2
+const TEXT_SIZE: int = PixelStyle.TEXT_SIZE * 2
+## The note of the touched building, as the battle's note, in the sky
+## corner, so it never covers a building.
+const NOTE_RECT := Rect2(586, 24, 360, 68)
+## The outline of the touched building: a thin line in bone (selection is
+## bone, never gold, Bíblia de Arte §9).
+const SELECTED_WIDTH: float = 1.0
 
 var data: GameData
 var campaign: CampaignState
@@ -25,10 +31,11 @@ var selected: StringName = &""
 
 var _stage: Control
 var _picture: TextureRect
-var _closed: Dictionary = {}
 var _outline: Line2D
 var _week: Label
-var _name: Label
+var _note: NinePatchRect
+var _note_title: Label
+var _note_text: Label
 
 
 func setup(p_data: GameData, p_campaign: CampaignState, p_economy: ConstantsDef) -> void:
@@ -64,34 +71,29 @@ func tap_at(point: Vector2) -> void:
 	if building == &"":
 		return
 	selected = building
-	_outline.points = VillageLayout.outline(building)
-	_outline.add_point(VillageLayout.outline(building)[0])
+	var outline: PackedVector2Array = VillageLayout.outline(building)
+	outline.append(outline[0])
+	_outline.points = outline
 	_outline.visible = true
-	var name_text: String = data.ui.text(StringName("building_%s" % building))
+	_note.visible = true
+	_note_title.text = data.ui.text(StringName("building_%s" % building))
 	if is_open(building):
-		_name.text = name_text
+		_note_text.text = ""
 		building_chosen.emit(building)
 	else:
-		_name.text = "%s · %s" % [name_text, data.ui.text(&"building_closed")]
+		_note_text.text = data.ui.text(&"building_closed")
 
 
 func name_shown() -> String:
-	return _name.text
+	return ("%s %s" % [_note_title.text, _note_text.text]).strip_edges()
 
 
 func week_shown() -> String:
 	return _week.text
 
 
-func closed_shown() -> Array[StringName]:
-	var ids: Array[StringName] = []
-	for id: StringName in _closed:
-		ids.append(id)
-	return ids
-
-
-func night_amount() -> float:
-	return float((_picture.material as ShaderMaterial).get_shader_parameter(&"night"))
+func picture_texture() -> Texture2D:
+	return _picture.texture
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -114,53 +116,56 @@ func _build() -> void:
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stage)
 	_picture = TextureRect.new()
-	_picture.texture = load(VillageLayout.PICTURE_PATH) as Texture2D
+	_picture.texture = load(VillageLayout.NIGHT_PATH if is_night() else VillageLayout.PICTURE_PATH) as Texture2D
 	_picture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_picture.size = STAGE_SIZE
 	_picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var material := ShaderMaterial.new()
-	material.shader = load(SHADER_PATH) as Shader
-	material.set_shader_parameter(&"lights", load(VillageLayout.LIGHTS_PATH) as Texture2D)
-	material.set_shader_parameter(&"night", 1.0 if is_night() else 0.0)
-	_picture.material = material
 	_stage.add_child(_picture)
-	for id: StringName in VillageLayout.OUTLINES:
-		if is_open(id):
-			continue
-		var shade := Polygon2D.new()
-		shade.polygon = VillageLayout.outline(id)
-		shade.color = CLOSED_COLOR
-		_stage.add_child(shade)
-		_closed[id] = shade
 	_outline = Line2D.new()
 	_outline.width = SELECTED_WIDTH
-	_outline.default_color = SELECTED_COLOR
+	_outline.default_color = PixelStyle.COLOR_BONE
+	_outline.antialiased = false
 	_outline.visible = false
 	_stage.add_child(_outline)
-	_build_bands()
+	_build_top_band()
+	_build_note()
 
 
-func _build_bands() -> void:
-	_stage.add_child(PixelStyle.plate(Rect2(0, 0, STAGE_SIZE.x, BAND_HEIGHT)))
-	_week = _label(data.ui.text(&"village_week", {
+func _build_top_band() -> void:
+	var band := TextureRect.new()
+	band.texture = PixelStyle.piece("ui_top_band")
+	band.stretch_mode = TextureRect.STRETCH_TILE
+	band.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	band.size = Vector2(STAGE_SIZE.x, BAND_HEIGHT)
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(band)
+	_week = Label.new()
+	_week.text = data.ui.text(&"village_week", {
 		"week": campaign.week,
 		"season": data.ui.text(StringName("season_%s" % LiturgicalCalendar.season(campaign.week, economy))),
-	}))
-	_week.position = Vector2(12, 2)
+	})
+	_week.position = WEEK_POS
+	_week.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	PixelStyle.title(_week, PixelStyle.COLOR_BONE, TITLE_SIZE)
 	_stage.add_child(_week)
-	_stage.add_child(PixelStyle.plate(Rect2(0, STAGE_SIZE.y - BAND_HEIGHT, STAGE_SIZE.x, BAND_HEIGHT)))
-	_name = _label("")
-	_name.position = Vector2(12, STAGE_SIZE.y - BAND_HEIGHT + 2)
-	_stage.add_child(_name)
 
 
-func _label(text: String) -> Label:
-	var label := Label.new()
-	label.text = text
-	label.add_theme_font_size_override("font_size", BAND_SIZE)
-	label.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return label
+func _build_note() -> void:
+	_note = PixelStyle.iron_plate(NOTE_RECT)
+	_note.visible = false
+	_stage.add_child(_note)
+	_note_title = Label.new()
+	_note_title.position = Vector2(14, 6)
+	_note_title.size = Vector2(NOTE_RECT.size.x - 28.0, 26)
+	_note_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	PixelStyle.title(_note_title, PixelStyle.COLOR_AMBER, TITLE_SIZE)
+	_note.add_child(_note_title)
+	_note_text = Label.new()
+	_note_text.position = Vector2(14, 34)
+	_note_text.size = Vector2(NOTE_RECT.size.x - 28.0, NOTE_RECT.size.y - 40.0)
+	_note_text.add_theme_font_size_override("font_size", TEXT_SIZE)
+	_note_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_note.add_child(_note_text)
 
 
 func _center_stage() -> void:

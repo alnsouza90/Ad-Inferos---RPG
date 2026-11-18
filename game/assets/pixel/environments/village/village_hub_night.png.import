@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0uwlg5nmnai"
-path="res://.godot/imported/village_hub_lights.png-a4b7c1eaff15ed9cb8e4d21108bb3c0b.ctex"
+uid="uid://dj88uqn25nja6"
+path="res://.godot/imported/village_hub_night.png-4ae9a486e409e7a8883824493dfc0828.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pixel/environments/village/village_hub_lights.png"
-dest_files=["res://.godot/imported/village_hub_lights.png-a4b7c1eaff15ed9cb8e4d21108bb3c0b.ctex"]
+source_file="res://assets/pixel/environments/village/village_hub_night.png"
+dest_files=["res://.godot/imported/village_hub_night.png-4ae9a486e409e7a8883824493dfc0828.ctex"]
 
 [params]
 

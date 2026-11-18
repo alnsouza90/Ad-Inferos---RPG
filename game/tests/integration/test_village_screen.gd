@@ -60,10 +60,12 @@ func test_an_open_building_is_chosen_and_a_closed_one_only_says_so() -> void:
 	assert_string_contains(v.name_shown(), data.ui.text(&"building_closed"))
 
 
-func test_the_closed_buildings_of_the_m2_are_darkened() -> void:
+func test_closed_buildings_only_say_so_when_touched() -> void:
+	# D-494: nothing is darkened; a closed building shows it on the touch.
 	var v := _screen()
 	for id: StringName in VillageLayout.OUTLINES:
-		assert_eq(v.closed_shown().has(id), not Campaign.M2_FACILITIES.has(id), String(id))
+		v.tap_at(_centre(id))
+		assert_eq(v.name_shown().contains(data.ui.text(&"building_closed")), not Campaign.M2_FACILITIES.has(id), String(id))
 
 
 func test_night_in_advent_and_lent_day_otherwise() -> void:
@@ -71,7 +73,8 @@ func test_night_in_advent_and_lent_day_otherwise() -> void:
 	assert_eq(LiturgicalCalendar.season(1, cat.economy), &"advent")
 	assert_eq(LiturgicalCalendar.season(int(starts[3]), cat.economy), &"lent")
 	assert_eq(LiturgicalCalendar.season(int(starts[3]) - 1, cat.economy), &"ordinary_1")
-	assert_eq(_screen(1).night_amount(), 1.0)
-	assert_eq(_screen(int(starts[3])).night_amount(), 1.0)
-	assert_eq(_screen(int(starts[2])).night_amount(), 0.0)
+	# D-494: Alan's night picture in Advent and Lent, the day one otherwise.
+	assert_eq(_screen(1).picture_texture().resource_path, VillageLayout.NIGHT_PATH)
+	assert_eq(_screen(int(starts[3])).picture_texture().resource_path, VillageLayout.NIGHT_PATH)
+	assert_eq(_screen(int(starts[2])).picture_texture().resource_path, VillageLayout.PICTURE_PATH)
 	assert_string_contains(_screen(1).week_shown(), data.ui.text(&"season_advent"))
