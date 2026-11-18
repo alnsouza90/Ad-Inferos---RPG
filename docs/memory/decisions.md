@@ -505,3 +505,11 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   
   Prompts em `docs/art/prompts-vila-mapa-pixel.md`.
 - **D-486 · 18/11/2026 · Alan** — Reprovados o **Portão** gerado (cortado dos lados e com prédios atrás) e a **faixa 0** do mapa ("não entregou nada"; o primeiro teste, com duas faixas numa imagem só, estava bem melhor). **Alan vai gerar as artes**, ao menos como referência, a partir dos prompts de `docs/art/prompts-vila-mapa-pixel.md`, reescritos com as correções: um edifício só, inteiro, com margem, nada atrás, fundo cinza liso; o mapa em pedidos de duas faixas que emendam pela faixa repetida. Depois o agente converte para o pixel do jogo.
+- **D-487 · 18/11/2026 · Alan** — **Vila, novo rumo** (substitui partes da D-485):
+  - **(1)** O **Portão** gerado não ficou bom; será **refeito do zero** depois.
+  - **(2)** Os outros edifícios saem da **conversão das imagens de Alan** para pixel (1 geração cada). Já convertidos: Enfermaria, Casa de Exercícios, Jardim e Claustro, Capela, Forja, Biblioteca, Carmelo, Relicário e a praça com a imagem de Nossa Senhora (`art_source/environments/village/pixel/*_px_v01.png`). O tamanho de cada um segue a proporção da montagem de Alan.
+  - **(3)** Fica a **Despensa B** (`village_pantry_l1_px_v02.png`), a desenhada a partir da imagem dele.
+  - **(4)** **A vila é vista de cima**, como a montagem de Alan, e não mais de lado como no *Darkest Dungeon*.
+  - **(5)** **Primeiro a vila; o Mapa do Inferno vem depois.** As 10 faixas do Meta AI de Alan ficam guardadas como orientação.
+  
+  **Nota técnica:** o recorte do fundo cinza passa a tirar só o cinza ligado às bordas; antes, ele furava as paredes claras do Claustro e do Carmelo.
