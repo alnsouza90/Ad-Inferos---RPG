@@ -423,3 +423,12 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   
   Os textos estão em `ui_text.csv` (`saint_bio_*`, `saint_feast_*`, `saint_card_*`, `stat_*`). As datas das festas também estão em `feasts.csv` (`real_date`); a semana de cada festa no jogo fica em aberto. Falta a aprovação de Alan; depois, o mesmo painel para Bento, Teresinha e Antão.
 - **D-473 · 18/11/2026 · Alan** — **Cartão padrão aprovado** (D-472), por enquanto: Alan revê com a vila pronta (T49). Mostra **as seis habilidades** que o santo conhece, não só as quatro que leva. Replicado para São Bento, Santa Teresinha e Santo Antão. O retrato aprovado de Antão entra no jogo (`assets/pixel/characters/saint_anthony_abbot/`). A vida dele no cartão é o texto aprovado na D-464, sem a linha de cabeçalho com "o Grande", as datas e o Egito. As linhas do cartão ficam mais juntas, para a ficha de Antão, a mais longa, caber; um teste garante que todo cartão cabe na tela.
+- **D-474 · 18/11/2026 · Alan** — **Vila e campanha do M2 (respostas da T45):**
+  - **(1)** O prédio que volta se chama **Jardim e Claustro**. Cura −50 de desolação por semana (`garden_desolation_per_week`) e abre **logo depois do Limbo** (`facilities.csv`: `circle:1`), senão não haveria como curar a desolação. É construído no M3.
+  - **(2)** A Capela fica só com os Sufrágios: sai o −15 de desolação (`chapel_desolation_per_week` fica sem uso e sai do CSV na T48).
+  - **(3)** O alforje maior fica nos níveis da Despensa, com os números de antes: 8, 10 e 12 espaços nos níveis 1, 2 e 3.
+  - **(4)** O Portão não tem níveis e revela sempre 1 camada.
+  - **(5)** O calendário litúrgico fica todo para o M3.
+  - **Observação de Alan sobre o cartão de Antão:** nem todas as descrições deixam clara a mecânica. Conferência em `docs/design/rascunho-mecanica-santo-antao.md`, com a proposta de uma linha de regra montada a partir dos dados.
+  
+  Especificação aplicada em `village-economy.md` v1.2 (§1 a §4 e §13, Simplificações do M2), `desolation.md`, `screens.md` (fluxo do M2, Portão, cartão do santo, Mapa do Inferno) e `save-load.md` (§3.3, versão 6). Fim da tela única "Planejar a semana": a preparação acontece nos edifícios, e o Portão a fecha.

@@ -1,6 +1,6 @@
 # Especificação · Vila, calendário, economia e progressão
 
-Versão 1.1 (12/11/2026: decisões da consultoria do Fable, D-266 e D-267 a D-362) · base: GDD v1.1 §3, §6, §7 e §12 · números em `docs/balance/economy.csv`, `facilities.csv` e `constants.csv`
+Versão 1.2 (18/11/2026: nova divisão da vila, D-469, D-474; simplificações do M2, §13) · versão 1.1 (12/11/2026: decisões da consultoria do Fable, D-266 e D-267 a D-362) · base: GDD v1.1 §3, §6, §7 e §12 · números em `docs/balance/economy.csv`, `facilities.csv` e `constants.csv`
 
 > **Aviso (12/11/2026):** esta versão marca o que mudou de direção com a consultoria. Onde diz "a definir", o número sai do simulador e do aprovado de Alan (D-363); os CSVs ainda não mudaram. O GDD descreve a versão anterior e só muda com pedido de Alan.
 
@@ -10,45 +10,47 @@ Versão 1.1 (12/11/2026: decisões da consultoria do Fable, D-266 e D-267 a D-36
 - Na vila, o jogador prepara a semana numa tela única ("Planejar a semana") e então parte para uma expedição.
 - A semana avança quando a expedição termina (por qualquer motivo) ou quando o jogador faz um **Retiro**.
 - **Retiro:** avançar uma semana sem expedição. Permitido no máximo uma vez entre duas expedições.
-- Ao virar a semana, nesta ordem: efeitos da Capela (e do Jardim, que sai do jogo, D-292) → cura de ferimentos → Sufrágios → mudança de tempo litúrgico → eventos da semana (Natal, festa de santo, Conselho pendente).
+- Ao virar a semana, nesta ordem: efeitos da Capela e do Jardim e Claustro (D-469) → cura de ferimentos → Sufrágios → mudança de tempo litúrgico → eventos da semana (Natal, festa de santo, Conselho pendente).
 
 ## 2. Planejar a semana
 
-Uma tela com sugestões automáticas que o jogador apenas confirma ou ajusta:
+A semana se prepara nos próprios edifícios, como em *Darkest Dungeon* (D-469): cada etapa acontece no edifício dela, e o **Portão** reúne o fim da preparação. Sugestões automáticas que o jogador apenas confirma ou ajusta:
 
-1. Escolher a equipe (3 santos) e a ordem de posições.
-2. Designar santos para a Capela (ficam fora da expedição). O Jardim sai (D-292).
+1. Escolher a equipe (3 santos) e a ordem de posições, **no Portão**.
+2. Designar santos para a Capela (Sufrágios) ou para o Jardim e Claustro (descanso da desolação). Eles ficam fora da expedição.
 3. Aplicar melhorias de nível e trocar Carismas (Casa de Exercícios).
 4. Melhorar equipamentos (Forja) e equipar relíquias.
 5. Comprar provisões (Despensa).
 6. Pagar leitos da Enfermaria.
-7. Escolher o círculo e o ponto de partida (Portão ou Pouso consagrado).
+7. Abrir o **Mapa do Inferno** pelo Portão e escolher o círculo e o ponto de partida (Portão do círculo ou Pouso consagrado).
 
-Sugestões automáticas: santos com ferimento grave ou desolação ≥ 100 são sugeridos para a Capela ou descanso; melhorias de equipamento possíveis (D-278); provisões sugeridas pelo histórico do círculo.
+Sugestões automáticas: santos com ferimento grave são sugeridos para a Enfermaria, e os com desolação ≥ 100 para o Jardim e Claustro; melhorias de equipamento possíveis (D-278); provisões sugeridas pelo histórico do círculo.
 
 ## 3. Instalações
 
 | Instalação | Desbloqueio | Nível 1 | Nível 2 | Nível 3 |
 | --- | --- | --- | --- | --- |
-| Capela | Inicial | 1 vaga de oração | 2 vagas | 3 vagas e o descanso forte que era do Jardim (valor a definir, D-292) |
+| Capela | Inicial | 1 vaga de oração | 2 vagas | 3 vagas (só Sufrágios, D-469) |
 | Enfermaria | Inicial | 1 leito | 2 leitos | 3 leitos |
-| Despensa | Inicial | Provisões básicas | Preços −15% | Preços −30% |
-| Portão | Inicial | 8 espaços; revela 1 camada | 10 espaços; 2 camadas | 12 espaços; trecho inteiro |
+| Despensa | Inicial | Provisões básicas; alforje de 8 espaços | Preços −15%; alforje de 10 espaços | Preços −30%; alforje de 12 espaços |
+| Portão | Inicial | Sem níveis (D-469): chegada dos santos novos, escolha da equipe, acesso ao Mapa do Inferno. O caminho revela sempre 1 camada à frente | — | — |
+| Jardim e Claustro | Após o Limbo (D-474) | 1 vaga de descanso | 2 vagas | 3 vagas |
 | Casa de Exercícios | Após o Prólogo | Aplica melhorias de nível | Troca de Carisma −50% | Troca de Carisma grátis |
 | Forja | Após o Prólogo | Equipamento até nível 2 | Até nível 3 | Melhorias −20% |
 | Biblioteca | Após o Círculo 3 | Resistências dos inimigos; **Livro das Obras** (§10.1, D-275) | + conteúdo dos nós | + fases dos chefes |
 | Carmelo | Após o Círculo 3, por [carmel_cost] (1.500) | Ver §5 | — | — |
 | Relicário | Após o Círculo 4 | Equipar relíquias raras | — | Fundir 2 sacramentais iguais em 1 aprimorado (+50% do efeito) |
-| ~~Jardim~~ | — | Cortado (D-292): o descanso forte vai para a Capela nível 3 | — | — |
 
 Custo de melhoria: nível 2 = [facility_l2_cost] (1.500); nível 3 = [facility_l3_cost] (2.500).
+
+**Nova divisão (D-469, D-474):** o Jardim volta com o nome **Jardim e Claustro**, guardado por São Francisco de Assis, e é o lugar da cura da desolação; abre logo depois do Limbo, para que haja como curar a desolação desde o começo. A Capela fica só com os Sufrágios. O alforje maior passa do Portão para a Despensa, com os mesmos números (`gate_slots_l*` muda de nome na T48). O Portão perde a revelação de camadas por nível: vale sempre a do nível 1.
 
 ## 4. Designação semanal
 
 | Lugar | Efeito por semana |
 | --- | --- |
-| Capela | +[chapel_suffrages] (3) Sufrágios; −15 de desolação |
-| ~~Jardim~~ | Cortado (D-292) |
+| Capela | +[chapel_suffrages] (3) Sufrágios |
+| Jardim e Claustro | −[garden_desolation_per_week] (50) de desolação |
 
 O santo designado não participa da expedição da semana. Não há bônus por afinidade com o guardião.
 
@@ -168,3 +170,35 @@ Um santo ferido pode ir à expedição com a penalidade. Ferimentos não se acum
 | V06 | Chegar à semana 3 | Nicolau de Mira disponível |
 | V07 | 3 marcos de Sufrágios (24) | Gertrudes disponível |
 | V08 | Experiência 100 | Nível 3; segundo Carisma liberado |
+
+## 13. Simplificações do M2 (D-173, D-459, D-469, D-474)
+
+O M2 é a fatia vertical: Prólogo, vila mínima e o Círculo 2 inteiro. O resto deste documento vale para o jogo completo; no M2, vale assim:
+
+| Assunto | No M2 | Fica para o M3 |
+| --- | --- | --- |
+| Edifícios abertos | **Despensa**, **Portão** e **Enfermaria** no nível 1; **Casa de Exercícios** (só as melhorias de nível, sem Carismas) | Melhorias de nível dos edifícios |
+| Edifícios com aviso | Capela, Jardim e Claustro, Forja, Biblioteca, Carmelo e Relicário aparecem na vila com o guardião e o aviso de quando abrem (D-459, falas em `docs/design/rascunho-falas-guardioes-vila.md`) | Abrir cada um |
+| Alforje | 8 espaços (Despensa nível 1) | 10 e 12 espaços com a Despensa melhorada |
+| Semanas | Contam desde a semana 1; a expedição e o Retiro (no máximo um entre expedições) viram a semana | Calendário litúrgico, festas e o "ano que se vive" (D-288) |
+| Virada da semana | Cura de ferimentos → eventos de desbloqueio | Capela, Jardim e Claustro, Sufrágios, tempos litúrgicos |
+| Ferimentos | Como no §8, com os leitos da Enfermaria nível 1 | — |
+| Experiência e níveis | Como no §9: atributos e melhorias de habilidade na Casa de Exercícios | Carismas, equipamento e Forja; 2º espaço de relíquia no nível 4 vale se algum santo chegar lá |
+| Relíquias | Equipadas no Portão, na escolha da equipe | Relicário |
+| Santos | Jorge, Bento e Teresinha desde o início; **Santo Antão** chega ao concluir o Círculo 2, anunciado por São Cristóvão no Portão (D-458), com o cartão do santo (D-464) | Nicolau de Mira (semana 3) e os demais |
+| Mapa do Inferno | Aberto pelo Portão. Mostra a descida inteira (Átrio, Porta, Antinferno, Limbo e os círculos), só com o **Círculo 2** aberto; o resto aparece bloqueado com aviso (D-459). No Círculo 2, escolher a entrada: o Portão do círculo ou um Pouso consagrado | Os outros círculos |
+| Desolação na vila | Sem Capela nem Jardim e Claustro, a desolação só baixa nas expedições (Pouso, Vigília, habilidades) e na Purificação | Jardim e Claustro, −50 por semana |
+
+**Pendente (Alan):** no M2 o Limbo não existe, e a campanha começa no Círculo 2. A regra "o Jardim e Claustro abre depois do Limbo" deixa o M2 sem cura de desolação na vila. A proposta é abrir o Jardim e Claustro no nível 1 já no M2, com a arte antiga do Jardim, e o −50 por semana.
+
+**Casos de teste do M2** (somam-se ao §12):
+
+| # | Cenário | Esperado |
+| --- | --- | --- |
+| V09 | Comprar provisões sem Esmolas suficientes | Recusado, sem mudar nada |
+| V10 | Comprar a 9ª provisão com a Despensa no nível 1 | Recusado: alforje cheio |
+| V11 | Leito pago para um ferido grave | Curado na semana seguinte; Esmolas −300 |
+| V12 | Retiro logo depois de outro Retiro | Recusado (V01) |
+| V13 | Concluir o Círculo 2 pela primeira vez | Antão entra no elenco; São Cristóvão o anuncia ao voltar à vila |
+| V14 | Abrir o Mapa do Inferno no M2 | Só o Círculo 2 aceita entrada; o Pouso consagrado aparece como entrada |
+

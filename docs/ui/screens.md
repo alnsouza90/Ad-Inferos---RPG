@@ -47,6 +47,28 @@ Abertura → Título ─┬─ Continuar ───► (último ponto salvo)
 
 A arena do M0 continua acessível só na versão de desenvolvimento (botão no título). "Novo trecho" com um trecho salvo pede um segundo toque (o salvo é apagado). A preparação mostra a equipe e o kit e tem "Partir". A relíquia encontrada abre um painel para escolher quem a carrega (D-146) ou guardá-la na mochila; o fim do trecho mostra um resumo com Esmolas, santos, relíquias e virtudes (D-324).
 
+No M2 (fatia vertical, D-459, D-469):
+
+```text
+Título ─┬─ Continuar ──► (último ponto salvo)
+        └─ Novo jogo ──► Prólogo ──► Vila (apresentação na primeira vez)
+
+Vila ─┬─ Despensa (provisões)
+      ├─ Enfermaria (leitos)
+      ├─ Casa de Exercícios (melhorias de nível)
+      ├─ Edifícios com aviso (guardião, fala e quando abre)
+      ├─ Retiro (avança a semana)
+      └─ Portão ─┬─ chegada de santo novo: fala de São Cristóvão ─► cartão do santo
+                 └─ escolher a equipe, a ordem e as relíquias ─► Mapa do Inferno
+                        ─► entrada (Portão do círculo ou Pouso consagrado) ─► expedição (como no M1)
+                        ─► volta à vila: fala de São Cristóvão sobre o retorno (D-458)
+```
+
+- **Apresentação da vila** (primeira chegada, depois do Prólogo): a câmera passa por cada edifício; o guardião diz a frase, e a instrução do edifício aparece logo abaixo; os não liberados mostram o aviso. Tocar no guardião depois repete as duas.
+- **Portão** (D-469): como a diligência de *Darkest Dungeon*. Os retratos de todos os santos ficam em fila. Tocar num retrato abre o **cartão do santo**; arrastar ou tocar põe o santo numa das três posições. As sugestões automáticas (§2 de `village-economy.md`) já vêm preenchidas. "Partir" abre o Mapa do Inferno.
+- **Cartão do santo** (D-464, D-473; `SaintCard`): o mesmo painel no santo novo, no toque no retrato da vila e no Portão. Mostra o retrato no arco, o nome, a festa, a vida em poucas linhas e a ficha de jogo (atributos, traço, habilidades, milagre). A origem dos dados fica no Martirológio.
+- **Mapa do Inferno** (D-208, D-276, D-459): a descida inteira; no M2 só o Círculo 2 aceita entrada, e o resto aparece bloqueado com aviso. Dentro do círculo, escolher o Portão do círculo ou um Pouso consagrado.
+
 ## 3. Combate (tela principal do jogo)
 
 **Leiaute da T36 (D-257, D-258, D-347), no clima de Darkest Dungeon:** campo nos 720 px de cima com o cenário do círculo e todos os combatentes animados, pés no chão (y = 655); vida e desolação em barras nos pés; intenções numa linha sobre os inimigos e condições sobre a cabeça; Lume como lamparina descendo uma haste no canto esquerdo (só na expedição). Embaixo, painel de ferro forjado: à esquerda o santo escolhido (retrato com a moldura tingida pela desolação, vida, desolação, Fervor, habilidades, Milagre, Trocar, Passar, Provisões e a descrição); à direita a ficha do combatente tocado (figura, vida, intenção, condições) e "Encerrar turno"; estandartes nos lados. Paleta preta e cinza, fonte Pirata One. O desenho abaixo é o esquema antigo das posições.
@@ -119,9 +141,10 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121; caminhada interativa do M2:
 
 ## 7. Vila
 
-- Panorama da vila com os edifícios tocáveis (arte separada: edifício e fundo, conforme a Direção de Arte).
-- Topo: semana, tempo litúrgico (cor do tempo), Esmolas, Sufrágios.
-- Botão principal: **Planejar a semana** (tela única com as 7 etapas de `village-economy.md` §2, em abas na mesma tela).
+- Panorama da vila montado com **edifícios soltos** sobre o céu e o fundo em camadas (D-352); cada edifício é tocável e muda com o nível.
+- Topo: semana, Esmolas e, a partir do M3, o tempo litúrgico (cor do tempo) e os Sufrágios.
+- A preparação da semana acontece nos edifícios (D-469); o **Portão** fecha a preparação, com a equipe, e abre o Mapa do Inferno. Não há mais uma tela única "Planejar a semana".
+- Edifícios do M2 e os com aviso: `village-economy.md` §13.
 
 ## 8. Acessibilidade e opções
 
@@ -131,5 +154,5 @@ Regras em `specs/expedition.md` §2.3 (D-207, D-121; caminhada interativa do M2:
 
 ## 9. Pendências
 
-- Wireframes finais das telas de vila e instalações (M2).
+- Wireframes finais das telas de vila e instalações (M2, T49).
 - Ícones definitivos das intenções e condições (piloto de arte).

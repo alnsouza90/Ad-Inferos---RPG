@@ -23,7 +23,7 @@ library,3,,2500,,,Fases dos chefes
 reliquary,1,circle:4,0,,,Relíquias raras
 reliquary,2,,1500,,,—
 reliquary,3,,2500,,,Fundir sacramentais
-garden,1,circle:5,0,,,1 vaga
+garden,1,circle:1,0,,,1 vaga
 garden,2,,1500,,,2 vagas
 garden,3,,2500,,,3 vagas
 carmel,1,circle:3,1500,,,Desbloqueia João da Cruz e as Moradas
