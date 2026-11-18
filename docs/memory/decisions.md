@@ -454,7 +454,7 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Onde mora:** `game/core/campaign/`. `CampaignState` guarda os dados; `CampaignSaint` é o santo entre expedições (o `SaintStatus` mais nível, habilidades levadas e semanas do ferimento); `Campaign` tem as regras.
   - **Começo:** semana 1, os três santos do começo e os edifícios do M2 no nível 1 (`M2_FACILITIES`, de `village-economy.md` §13). `party_size` (3) vai para `constants.csv`.
   - **Expedição:** a expedição recebe da campanha os santos como estão, as virtudes e as bandeiras (`ExpeditionController.carry_in`, antes do primeiro comando; o retrato inicial guarda tudo, então o replay sai igual).
-  - **Ferimentos:** quem desce ferido luta com a penalidade (§8): o grave tira 20% de Vigor e de Fé; o leve tira 10% de um dos dois, sorteado uma vez no fluxo `campaign` da campanha. A penalidade só vale para o ferimento trazido da vila; o ferimento ganho na expedição conta a partir da próxima.
+  - **Ferimentos:** substituído pela D-481.
   - **Volta:**
     - os santos voltam como estão;
     - o ferimento novo começa a contar;
@@ -462,6 +462,13 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
     - bandeiras e virtudes passam para a campanha;
     - o Círculo 2 concluído traz Antão, que fica para São Cristóvão anunciar;
     - a semana vira, e o Retiro fica liberado de novo.
-  - **Virada da semana:** o Jardim e Claustro alivia a desolação (pelas mesmas regras do campo); os ferimentos contam (o leito cura o grave em uma semana); todos voltam com a vida cheia (**pendente com Alan**, a especificação não diz); as designações da semana acabam.
+  - **Virada da semana:** o Jardim e Claustro alivia a desolação (pelas mesmas regras do campo); os ferimentos contam (o leito cura o grave em uma semana); todos voltam com a vida cheia (confirmado por Alan na D-481); as designações da semana acabam.
   - **Save versão 6:** guarda a campanha inteira. Um save antigo abre e a campanha nasce dele ao carregar (`ExpeditionSave.campaign_of`, `Campaign.adopt`), sem perder virtudes, bandeiras, Pousos nem os santos como estavam.
   - **Sorteio:** o fluxo `campaign` fica fora de `RngStreams.NAMES`, para não mudar os contadores que a luta grava.
+- **D-481 · 18/11/2026 · Alan** — **Ferimentos e vida entre expedições:**
+  - **(1) Vida cheia** ao virar a semana.
+  - **(2) Ferimento leve:** −10% de Vigor **e** de Fé, sem sorteio.
+  - **(3) Acúmulo:** um segundo leve, antes de o primeiro sarar, vira grave.
+  - **(4) Ferimento grave:** o santo **não pode descer** até se curar (3 semanas, ou 1 com leito da Enfermaria). Isso torna a Enfermaria uma escolha de verdade.
+  
+  No código: a expedição leva o santo sem o ferimento (ele fica na campanha); o que volta ferido é ferimento novo, combinado com o que ele tinha (`Campaign.combined_injury`). O Portão recusa o grave (`Campaign.INJURED`). Especificação em `village-economy.md` §8, casos V16 e V17.

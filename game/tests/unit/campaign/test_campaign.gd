@@ -72,63 +72,64 @@ func test_a_major_injury_without_a_bed_takes_its_weeks() -> void:
 	assert_eq(george.status.injury, SaintStatus.INJURY_NONE)
 
 
-func test_an_injury_from_the_expedition_starts_counting_and_draws_its_attribute() -> void:
+func test_an_injury_from_the_expedition_starts_counting() -> void:
 	var c := _new()
 	var ctrl := _expedition(c)
-	(ctrl.saints[&"saint_benedict"] as SaintStatus).add_injury(SaintStatus.INJURY_MINOR)
+	(ctrl.saints[&"saint_george"] as SaintStatus).add_injury(SaintStatus.INJURY_MAJOR)
 	Campaign.finish_expedition(c, cat, ctrl)
-	var benedict: CampaignSaint = c.saint(&"saint_benedict")
-	# The week already turned once on the way home.
-	assert_eq(benedict.status.injury, SaintStatus.INJURY_NONE if cat.economy.get_int(&"injury_minor_weeks") <= 1 else SaintStatus.INJURY_MINOR)
-	var again := _new()
-	var ctrl2 := _expedition(again)
-	(ctrl2.saints[&"saint_george"] as SaintStatus).add_injury(SaintStatus.INJURY_MAJOR)
-	Campaign.finish_expedition(again, cat, ctrl2)
-	var george: CampaignSaint = again.saint(&"saint_george")
+	var george: CampaignSaint = c.saint(&"saint_george")
 	assert_eq(george.status.injury, SaintStatus.INJURY_MAJOR)
+	# The week already turned once on the way home.
 	assert_eq(george.injury_weeks_left, cat.economy.get_int(&"injury_major_weeks") - 1)
 
 
-func test_the_minor_injury_attribute_is_drawn_from_the_campaign_stream() -> void:
-	var a := _new()
-	var b := _new()
-	for c: CampaignState in [a, b]:
-		var s: CampaignSaint = c.saint(&"saint_therese")
-		s.status.injury = SaintStatus.INJURY_MINOR
-		Campaign._start_injury(c, cat, s)
-	assert_eq(a.saint(&"saint_therese").injury_stat, b.saint(&"saint_therese").injury_stat, "mesma semente, mesmo sorteio")
-	assert_true([CampaignSaint.STAT_MAX_HP, CampaignSaint.STAT_FAITH].has(a.saint(&"saint_therese").injury_stat))
-	assert_eq(a.rng_counter, 1)
-
-
-func test_an_injured_saint_fights_weaker() -> void:
-	# §8: major −20% max_hp and faith; minor −10% in the drawn attribute.
+func test_a_second_minor_injury_before_healing_becomes_major() -> void:
+	# D-481.
+	assert_eq(Campaign.combined_injury(SaintStatus.INJURY_NONE, SaintStatus.INJURY_MINOR), SaintStatus.INJURY_MINOR)
+	assert_eq(Campaign.combined_injury(SaintStatus.INJURY_MINOR, SaintStatus.INJURY_MINOR), SaintStatus.INJURY_MAJOR)
+	assert_eq(Campaign.combined_injury(SaintStatus.INJURY_MINOR, SaintStatus.INJURY_NONE), SaintStatus.INJURY_MINOR)
+	assert_eq(Campaign.combined_injury(SaintStatus.INJURY_NONE, SaintStatus.INJURY_MAJOR), SaintStatus.INJURY_MAJOR)
 	var c := _new()
-	var george: CampaignSaint = c.saint(&"saint_george")
-	george.status.injury = SaintStatus.INJURY_MAJOR
+	var therese: CampaignSaint = c.saint(&"saint_therese")
+	therese.status.injury = SaintStatus.INJURY_MINOR
+	therese.injury_weeks_left = 5
+	var ctrl := _expedition(c)
+	assert_eq((ctrl.saints[&"saint_therese"] as SaintStatus).injury, SaintStatus.INJURY_NONE, "o ferimento fica na campanha")
+	(ctrl.saints[&"saint_therese"] as SaintStatus).add_injury(SaintStatus.INJURY_MINOR)
+	Campaign.finish_expedition(c, cat, ctrl)
+	assert_eq(therese.status.injury, SaintStatus.INJURY_MAJOR)
+
+
+func test_a_saint_with_a_major_injury_cannot_go_down() -> void:
+	# D-481: it demands the Infirmary or the weeks.
+	var c := _new()
+	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MAJOR
+	assert_eq(Campaign.party_refusal(c, cat, RealData.m0_party_ids()), Campaign.INJURED)
+	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MINOR
+	assert_eq(Campaign.party_refusal(c, cat, RealData.m0_party_ids()), Campaign.OK, "o leve desce")
+
+
+func test_a_minor_injury_takes_vigor_and_faith() -> void:
+	# §8, D-481: −10% of both, no draw.
+	var c := _new()
+	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MINOR
 	var body := Combatant.from_saint(cat.saint(&"saint_george"))
 	var whole_hp: int = body.max_hp
 	var whole_faith: int = body.faith
 	(Campaign.departing(c, cat, [&"saint_george"] as Array[StringName])[&"saint_george"] as SaintStatus).apply_to(body)
-	var cut: float = 1.0 - cat.economy.get_float(&"injury_major_penalty")
+	var cut: float = 1.0 - cat.economy.get_float(&"injury_minor_penalty")
 	assert_eq(body.max_hp, Damage.round_half_up(whole_hp * cut))
 	assert_eq(body.faith, Damage.round_half_up(whole_faith * cut))
-	george.status.injury = SaintStatus.INJURY_MINOR
-	george.injury_stat = CampaignSaint.STAT_FAITH
-	var minor_body := Combatant.from_saint(cat.saint(&"saint_george"))
-	(Campaign.departing(c, cat, [&"saint_george"] as Array[StringName])[&"saint_george"] as SaintStatus).apply_to(minor_body)
-	assert_eq(minor_body.max_hp, whole_hp, "a leve tira só o atributo sorteado")
-	assert_eq(minor_body.faith, Damage.round_half_up(whole_faith * (1.0 - cat.economy.get_float(&"injury_minor_penalty"))))
 
 
 func test_the_expedition_carries_the_campaign_saints_and_replays_the_same() -> void:
 	var c := _new()
 	c.saint(&"saint_george").status.desolation = 40
-	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MAJOR
+	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MINOR
 	var ctrl := _expedition(c)
 	assert_eq((ctrl.saints[&"saint_george"] as SaintStatus).desolation, 40)
 	var again := ExpeditionController.from_snapshot(cat, ctrl.initial_snapshot())
-	assert_eq((again.saints[&"saint_george"] as SaintStatus).hp_penalty, cat.economy.get_float(&"injury_major_penalty"))
+	assert_eq((again.saints[&"saint_george"] as SaintStatus).hp_penalty, cat.economy.get_float(&"injury_minor_penalty"))
 
 
 func test_the_alms_and_relics_of_the_expedition_come_home() -> void:
@@ -187,7 +188,6 @@ func test_the_campaign_survives_a_save() -> void:
 	Campaign.retreat(c, cat)
 	c.alms = 77
 	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MINOR
-	c.saint(&"saint_george").injury_stat = CampaignSaint.STAT_FAITH
 	c.saint(&"saint_george").injury_weeks_left = 1
 	var text: String = JSON.stringify(c.to_dict())
 	var back := CampaignState.from_dict(JSON.parse_string(text))

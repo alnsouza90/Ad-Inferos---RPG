@@ -111,10 +111,13 @@ O conteúdo de cada marco é decisão de Alan, com o simulador, antes do Carmelo
 
 | Tipo | Penalidade | Cura natural | Com leito |
 | --- | --- | --- | --- |
-| Leve | −10% em um atributo (sorteado entre `max_hp` e `faith`) | 1 semana | — |
-| Grave | −20% em `max_hp` e `faith` | 3 semanas | 1 semana |
+| Leve | −[injury_minor_penalty] (10%) em `max_hp` **e** em `faith`, sem sorteio (D-481) | [injury_minor_weeks] (1) semana | — |
+| Grave | **Não pode descer** até se curar (D-481) | [injury_major_weeks] (3) semanas | [injury_major_weeks_bed] (1) semana |
 
-Um santo ferido pode ir à expedição com a penalidade. Ferimentos não se acumulam além de um grave: novo grave renova a contagem.
+- Um santo com ferimento leve pode descer com a penalidade. Com ferimento grave, o Portão não o deixa entrar na equipe: ou espera as semanas, ou paga um leito na Enfermaria.
+- **Acúmulo (D-481):** um segundo ferimento leve, antes de o primeiro sarar, vira grave. Um novo grave renova a contagem.
+- O ferimento ganho numa expedição só pesa a partir da próxima. A penalidade vale para o ferimento que o santo traz da vila.
+- **Vida (D-481):** ao virar a semana, todos voltam com a vida cheia. De uma expedição para a outra ficam a desolação e os ferimentos.
 
 ## 9. Progressão dos santos
 
@@ -167,6 +170,8 @@ Um santo ferido pode ir à expedição com a penalidade. Ferimentos não se acum
 | V03 | Semana 19 com 2 santos na Capela | 12 Sufrágios |
 | V04 | Carmelo construído após o Círculo 3; Círculos 4 a 9 concluídos | Morada 7 |
 | V05 | Ferimento grave com leito | Curado na semana seguinte |
+| V16 | Santo com ferimento grave no Portão | Recusado na equipe |
+| V17 | Segundo ferimento leve antes de sarar o primeiro | Vira grave |
 | V06 | Chegar à semana 3 | Nicolau de Mira disponível |
 | V07 | 3 marcos de Sufrágios (24) | Gertrudes disponível |
 | V08 | Experiência 100 | Nível 3; segundo Carisma liberado |

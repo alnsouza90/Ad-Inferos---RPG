@@ -9,6 +9,8 @@ const RETREAT_USED: StringName = &"retreat_used"
 const NOT_UNLOCKED: StringName = &"saint_not_unlocked"
 const RESTING: StringName = &"saint_resting"
 const WRONG_PARTY: StringName = &"wrong_party"
+## A major injury keeps the saint home until healed (D-481).
+const INJURED: StringName = &"saint_injured"
 ## Buildings open in the M2, at level 1 (village-economy §13, D-474, D-475).
 const M2_FACILITIES: Array[StringName] = [&"pantry", &"infirmary", &"gate", &"retreat_house", &"garden"]
 const UNLOCK_START: String = "start"
@@ -49,7 +51,7 @@ static func adopt(catalog: ExpeditionCatalog, p_seed: int, virtues: Dictionary, 
 			status.faith_penalty = 0.0
 			(c.saints[key] as CampaignSaint).status = status
 			if status.injury != SaintStatus.INJURY_NONE:
-				_start_injury(c, catalog, c.saints[key])
+				_start_injury(catalog, c.saints[key])
 	_unlock_by_circles(c, catalog)
 	return c
 
@@ -75,32 +77,40 @@ static func party_refusal(c: CampaignState, catalog: ExpeditionCatalog, party: A
 			return NOT_UNLOCKED
 		if c.garden_saints.has(id):
 			return RESTING
+		if (c.saints[id] as CampaignSaint).status.injury == SaintStatus.INJURY_MAJOR:
+			return INJURED
 	if party.size() != catalog.constants.get_int(&"party_size"):
 		return WRONG_PARTY
 	return OK
 
 
 ## The saints as they leave for an expedition: what they carry, with the
-## penalty of the injury each one still has (§8).
+## penalty of the minor injury each one still has (§8, D-481: −10% of
+## Vigor and of Faith, no draw). The injury itself stays in the campaign,
+## so whatever injury comes back is new.
 static func departing(c: CampaignState, catalog: ExpeditionCatalog, party: Array[StringName]) -> Dictionary:
 	var out: Dictionary = {}
 	for id: StringName in party:
 		var s: CampaignSaint = c.saints[id]
 		var status: SaintStatus = s.status.duplicate_status()
+		status.injury = SaintStatus.INJURY_NONE
 		status.hp_penalty = 0.0
 		status.faith_penalty = 0.0
-		match s.status.injury:
-			SaintStatus.INJURY_MAJOR:
-				status.hp_penalty = catalog.economy.get_float(&"injury_major_penalty")
-				status.faith_penalty = status.hp_penalty
-			SaintStatus.INJURY_MINOR:
-				var penalty: float = catalog.economy.get_float(&"injury_minor_penalty")
-				if s.injury_stat == CampaignSaint.STAT_FAITH:
-					status.faith_penalty = penalty
-				else:
-					status.hp_penalty = penalty
+		var penalty: float = injury_penalty(catalog, s.status.injury)
+		status.hp_penalty = penalty
+		status.faith_penalty = penalty
 		out[id] = status
 	return out
+
+
+## The fraction an injury takes off Vigor and Faith (§8).
+static func injury_penalty(catalog: ExpeditionCatalog, injury: StringName) -> float:
+	match injury:
+		SaintStatus.INJURY_MAJOR:
+			return catalog.economy.get_float(&"injury_major_penalty")
+		SaintStatus.INJURY_MINOR:
+			return catalog.economy.get_float(&"injury_minor_penalty")
+	return 0.0
 
 
 ## Hands an expedition just created for `party` the campaign's saints,
@@ -123,9 +133,11 @@ static func finish_expedition(c: CampaignState, catalog: ExpeditionCatalog, ctrl
 		back.hp_penalty = 0.0
 		back.faith_penalty = 0.0
 		var before: StringName = s.status.injury
+		var taken: StringName = back.injury
+		back.injury = combined_injury(before, taken)
 		s.status = back
-		if back.injury != before:
-			_start_injury(c, catalog, s)
+		if taken != SaintStatus.INJURY_NONE:
+			_start_injury(catalog, s)
 	c.alms += ctrl.state.alms_banked + ctrl.state.alms_unbanked
 	for r: StringName in ctrl.state.relic_pack:
 		c.relic_stock.append(r)
@@ -152,11 +164,21 @@ static func advance_week(c: CampaignState, catalog: ExpeditionCatalog) -> void:
 			if s.injury_weeks_left <= 0:
 				s.status.injury = SaintStatus.INJURY_NONE
 				s.injury_weeks_left = 0
-				s.injury_stat = &""
 		s.status.hp = s.status.max_hp
 	c.week += 1
 	c.garden_saints.clear()
 	c.infirmary_beds.clear()
+
+
+## The injury a saint has after taking `taken` while carrying `before`
+## (D-481): a second minor one, before the first healed, becomes major; a
+## major one stays major (and starts counting again).
+static func combined_injury(before: StringName, taken: StringName) -> StringName:
+	if taken == SaintStatus.INJURY_NONE:
+		return before
+	if taken == SaintStatus.INJURY_MAJOR or before != SaintStatus.INJURY_NONE:
+		return SaintStatus.INJURY_MAJOR
+	return SaintStatus.INJURY_MINOR
 
 
 ## The arrivals São Cristóvão announced are no longer pending (D-458).
@@ -166,19 +188,14 @@ static func announce_arrivals(c: CampaignState) -> Array[StringName]:
 	return announced
 
 
-static func _start_injury(c: CampaignState, catalog: ExpeditionCatalog, s: CampaignSaint) -> void:
+static func _start_injury(catalog: ExpeditionCatalog, s: CampaignSaint) -> void:
 	match s.status.injury:
 		SaintStatus.INJURY_MAJOR:
 			s.injury_weeks_left = catalog.economy.get_int(&"injury_major_weeks")
-			s.injury_stat = &""
 		SaintStatus.INJURY_MINOR:
 			s.injury_weeks_left = catalog.economy.get_int(&"injury_minor_weeks")
-			var rng := RngStream.new(c.seed, RngStreams.CAMPAIGN, c.rng_counter)
-			s.injury_stat = CampaignSaint.STAT_MAX_HP if rng.next_int_range(0, 1) == 0 else CampaignSaint.STAT_FAITH
-			c.rng_counter = rng.counter
 		_:
 			s.injury_weeks_left = 0
-			s.injury_stat = &""
 
 
 ## Desolation eased in the village goes through the same rules as in the
