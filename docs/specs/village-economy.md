@@ -173,23 +173,24 @@ Um santo ferido pode ir à expedição com a penalidade. Ferimentos não se acum
 
 ## 13. Simplificações do M2 (D-173, D-459, D-469, D-474)
 
-O M2 é a fatia vertical: Prólogo, vila mínima e o Círculo 2 inteiro. O resto deste documento vale para o jogo completo; no M2, vale assim:
+O M2 é a fatia vertical: Prólogo, vila mínima e o Círculo 2 inteiro. **Arte (D-475):** toda a arte da vila é refeita em pixel no PixelLab (a arte antiga não entra), e a vila é montada pelo motor com os edifícios soltos (D-352). O resto deste documento vale para o jogo completo; no M2, vale assim:
 
 | Assunto | No M2 | Fica para o M3 |
 | --- | --- | --- |
-| Edifícios abertos | **Despensa**, **Portão** e **Enfermaria** no nível 1; **Casa de Exercícios** (só as melhorias de nível, sem Carismas) | Melhorias de nível dos edifícios |
-| Edifícios com aviso | Capela, Jardim e Claustro, Forja, Biblioteca, Carmelo e Relicário aparecem na vila com o guardião e o aviso de quando abrem (D-459, falas em `docs/design/rascunho-falas-guardioes-vila.md`) | Abrir cada um |
+| Edifícios abertos | **Despensa**, **Portão**, **Enfermaria** e **Jardim e Claustro** no nível 1; **Casa de Exercícios** (só as melhorias de nível, sem Carismas) | Melhorias de nível dos edifícios |
+| Edifícios com aviso | Capela, Forja, Biblioteca, Carmelo e Relicário aparecem na vila com o guardião e o aviso de quando abrem (D-459, falas em `docs/design/rascunho-falas-guardioes-vila.md`) | Abrir cada um |
 | Alforje | 8 espaços (Despensa nível 1) | 10 e 12 espaços com a Despensa melhorada |
 | Semanas | Contam desde a semana 1; a expedição e o Retiro (no máximo um entre expedições) viram a semana | Calendário litúrgico, festas e o "ano que se vive" (D-288) |
-| Virada da semana | Cura de ferimentos → eventos de desbloqueio | Capela, Jardim e Claustro, Sufrágios, tempos litúrgicos |
+| Virada da semana | Jardim e Claustro → cura de ferimentos → eventos de desbloqueio | Capela, Sufrágios, tempos litúrgicos |
 | Ferimentos | Como no §8, com os leitos da Enfermaria nível 1 | — |
 | Experiência e níveis | Como no §9: atributos e melhorias de habilidade na Casa de Exercícios | Carismas, equipamento e Forja; 2º espaço de relíquia no nível 4 vale se algum santo chegar lá |
-| Relíquias | Equipadas no Portão, na escolha da equipe | Relicário |
+| Relíquias | Equipadas no Portão, na escolha da equipe; a ficha mostra os dois espaços, o segundo fechado até o nível 4 (D-477) | Relicário |
+| Habilidades levadas | Escolhidas na ficha do santo, tocando nos vitrais, só na vila: 4, ao menos uma sem custo (D-477) | — |
 | Santos | Jorge, Bento e Teresinha desde o início; **Santo Antão** chega ao concluir o Círculo 2, anunciado por São Cristóvão no Portão (D-458), com o cartão do santo (D-464) | Nicolau de Mira (semana 3) e os demais |
-| Mapa do Inferno | Aberto pelo Portão. Mostra a descida inteira (Átrio, Porta, Antinferno, Limbo e os círculos), só com o **Círculo 2** aberto; o resto aparece bloqueado com aviso (D-459). No Círculo 2, escolher a entrada: o Portão do círculo ou um Pouso consagrado | Os outros círculos |
-| Desolação na vila | Sem Capela nem Jardim e Claustro, a desolação só baixa nas expedições (Pouso, Vigília, habilidades) e na Purificação | Jardim e Claustro, −50 por semana |
+| Mapa do Inferno | Aberto pelo Portão; arte nova e completa (D-475). Mostra a descida inteira (Átrio, Porta, Antinferno, Limbo e os círculos), só com o **Círculo 2** aberto; o resto aparece bloqueado com aviso (D-459). No Círculo 2, escolher a entrada: o Portão do círculo ou um Pouso consagrado | Os outros círculos |
+| Desolação na vila | Jardim e Claustro, −50 por semana, além do que baixa nas expedições | — |
 
-**Pendente (Alan):** no M2 o Limbo não existe, e a campanha começa no Círculo 2. A regra "o Jardim e Claustro abre depois do Limbo" deixa o M2 sem cura de desolação na vila. A proposta é abrir o Jardim e Claustro no nível 1 já no M2, com a arte antiga do Jardim, e o −50 por semana.
+**Jardim e Claustro no M2 (D-475):** o M2 não tem Limbo e começa no Círculo 2. Por isso o Jardim e Claustro já abre no nível 1 no M2, com o −50 de desolação por semana, para que o ciclo da vila tenha como curar a desolação.
 
 **Casos de teste do M2** (somam-se ao §12):
 
@@ -200,5 +201,6 @@ O M2 é a fatia vertical: Prólogo, vila mínima e o Círculo 2 inteiro. O resto
 | V11 | Leito pago para um ferido grave | Curado na semana seguinte; Esmolas −300 |
 | V12 | Retiro logo depois de outro Retiro | Recusado (V01) |
 | V13 | Concluir o Círculo 2 pela primeira vez | Antão entra no elenco; São Cristóvão o anuncia ao voltar à vila |
+| V15 | Santo no Jardim e Claustro com 80 de desolação | Não vai à expedição; volta com 30 |
 | V14 | Abrir o Mapa do Inferno no M2 | Só o Círculo 2 aceita entrada; o Pouso consagrado aparece como entrada |
 

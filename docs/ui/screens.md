@@ -66,7 +66,17 @@ Vila ─┬─ Despensa (provisões)
 
 - **Apresentação da vila** (primeira chegada, depois do Prólogo): a câmera passa por cada edifício; o guardião diz a frase, e a instrução do edifício aparece logo abaixo; os não liberados mostram o aviso. Tocar no guardião depois repete as duas.
 - **Portão** (D-469): como a diligência de *Darkest Dungeon*. Os retratos de todos os santos ficam em fila. Tocar num retrato abre o **cartão do santo**; arrastar ou tocar põe o santo numa das três posições. As sugestões automáticas (§2 de `village-economy.md`) já vêm preenchidas. "Partir" abre o Mapa do Inferno.
-- **Cartão do santo** (D-464, D-473; `SaintCard`): o mesmo painel no santo novo, no toque no retrato da vila e no Portão. Mostra o retrato no arco, o nome, a festa, a vida em poucas linhas e a ficha de jogo (atributos, traço, habilidades, milagre). A origem dos dados fica no Martirológio.
+- **Ficha do santo** (D-464, D-477; `SaintCard`): o mesmo painel no santo novo, no toque no retrato da vila e no Portão.
+  - Mostra o retrato no arco, o nome, a alcunha e a função.
+  - Aba **A vida**: a festa e a vida em poucas linhas.
+  - Aba **Ficha**:
+    - os seis vitrais das habilidades e a rosa do milagre;
+    - o traço;
+    - o detalhe da habilidade tocada (regra montada dos dados e frase da história);
+    - Posição e Alvo;
+    - Atributos, a atividade do Pouso e os espaços de relíquia (o segundo fechado até o nível 4).
+  - **Escolher as habilidades:** dois toques num vitral levam a habilidade para a luta ou a deixam na vila. Só na vila; a ficha não fecha sem 4 habilidades, uma delas sem custo.
+  - A origem dos dados fica no Martirológio.
 - **Mapa do Inferno** (D-208, D-276, D-459): a descida inteira; no M2 só o Círculo 2 aceita entrada, e o resto aparece bloqueado com aviso. Dentro do círculo, escolher o Portão do círculo ou um Pouso consagrado.
 
 ## 3. Combate (tela principal do jogo)
