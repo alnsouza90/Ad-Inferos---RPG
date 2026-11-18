@@ -26,7 +26,8 @@ var alms_unbanked: int = 0
 var alms_banked: int = 0
 var party: Array[StringName] = []
 var fallen_once: Array[StringName] = []
-## Gate level (1 in the M1): pack slots and content visibility (§2.2, §5).
+## The Pantry's level (D-474): pack slots (§5). Called gate_level for the
+## saves; the reveal no longer depends on it (D-469, ExpeditionController).
 var gate_level: int = 1
 ## Nodes whose content Incense revealed; known until the end of the leg (D-137).
 var revealed_nodes: Array[StringName] = []

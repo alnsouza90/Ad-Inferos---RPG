@@ -52,7 +52,6 @@ desolation_ally_fallen,15,Aliado caído
 desolation_emergency_retreat,25,Retirada de emergência
 desolation_vigil,20,Vigília no Pouso (redução)
 holy_water_desolation,15,Água Benta (redução)
-chapel_desolation_per_week,15,Capela por semana (redução)
 garden_desolation_per_week,50,Jardim por semana (redução)
 light_start,100,Lume inicial
 light_resume,75,Lume ao retomar de Pouso consagrado
@@ -71,9 +70,15 @@ node_weight_relic,35,Peso de relíquia no nó variável
 node_weight_battle,25,Peso de combate no nó variável
 relic_node_guarded_chance,0.3,Nó de relíquia guardado
 map_generation_retries,50,Tentativas de geração do mapa
-gate_slots_l1,8,"Espaços de provisão, Portão 1"
-gate_slots_l2,10,"Espaços de provisão, Portão 2"
-gate_slots_l3,12,"Espaços de provisão, Portão 3"
+pantry_slots_l1,8,"Espaços do alforje, Despensa nível 1 (D-474)"
+pantry_slots_l2,10,"Espaços do alforje, Despensa nível 2"
+pantry_slots_l3,12,"Espaços do alforje, Despensa nível 3"
+infirmary_beds_l1,1,Leitos da Enfermaria nível 1 (village-economy.md §3)
+infirmary_beds_l2,2,Leitos da Enfermaria nível 2
+infirmary_beds_l3,3,Leitos da Enfermaria nível 3
+garden_slots_l1,1,Vagas do Jardim e Claustro nível 1 (village-economy.md §3)
+garden_slots_l2,2,Vagas do Jardim e Claustro nível 2
+garden_slots_l3,3,Vagas do Jardim e Claustro nível 3
 bread_heal,5,Cura do Pão em combate
 share_heal_pct,0.3,Partilha no Pouso
 prayer_fervor_cap,2,Fervor inicial máximo vindo de Orações

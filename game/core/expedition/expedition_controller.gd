@@ -374,8 +374,13 @@ func pass_by_problem() -> StringName:
 
 ## Content of a node is known when the gate reaches it (§2.2) or Incense
 ## revealed it earlier in this leg (D-129, D-137). The type is always known.
+## The Gate no longer reveals more by its level (D-469): always the reveal of
+## level 1. `state.gate_level` now holds the Pantry's level, for the pack.
+const REVEAL_LEVEL: int = 1
+
+
 func content_visible(n: MapNode) -> bool:
-	return LegMap.content_visible(n.layer, current_layer(), state.gate_level) or state.revealed_nodes.has(n.id)
+	return LegMap.content_visible(n.layer, current_layer(), REVEAL_LEVEL) or state.revealed_nodes.has(n.id)
 
 
 ## Reason a provision cannot be used in the corridor, or &"" if it can: at a

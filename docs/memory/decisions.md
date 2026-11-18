@@ -486,3 +486,14 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
     A proposta é usar o campo `upgrade`, nas duas, para dar +1 de Força em vez disso (`e2.stacks+1`).
   - **Fica para outra tarefa:** o bônus de experiência da Purificação (+25%) mudaria o resultado de saves antigos; entra com a migração.
 - **D-483 · 18/11/2026 · Alan** — **(1)** A versão "+" do **Desafio Formal** e da **Vigília no Deserto** dá **+1 de Força** (`upgrade`: `e2.stacks+1`); o resto fica igual. **(2)** **Quem fica na vila não ganha experiência**: a escolha da equipe pesa, e para subir todos é preciso revezar. Sai a constante `xp_reserve_share`, e `expedition.md` §8 muda. PR #95 aprovado com essas mudanças.
+- **D-484 · 18/11/2026 · agente** — **T48, os edifícios da vila no núcleo** (`game/core/campaign/village.gd`):
+  - **Despensa:** compra pelos preços de `economy.csv`. A recusa sem Esmolas e com o alforje cheio não muda nada (V09, V10). Uma provisão comprada pode ser devolvida pelo mesmo preço antes de descer. O alforje mede pelo nível da Despensa: `gate_slots_l*` passa a se chamar `pantry_slots_l*` (D-474). `ExpeditionState.gate_level` mantém o nome por causa dos saves, mas agora guarda o nível da Despensa.
+  - **Revelação:** fica sempre a do nível 1 (`ExpeditionController.REVEAL_LEVEL`, D-469).
+  - **Enfermaria:** um leito pago por semana para um santo ferido ([infirmary_bed_cost], `infirmary_beds_l*`; V11).
+  - **Jardim e Claustro:** vagas por nível (`garden_slots_l*`); entra e sai na semana.
+  - **Relíquias:** postas e tiradas na vila (no Portão, §13), com Vigor e Fé recalculados a partir do nível e das relíquias.
+  - **Sugestões:** o ferido grave vai para o leito, quem tem 100 ou mais de desolação para o Jardim, e a equipe sai dos outros, na ordem.
+  - **Portão:** `Village.depart` confere a equipe e as habilidades escolhidas e leva o alforje comprado (do Portão do círculo ou de um Pouso consagrado).
+  - Sai `chapel_desolation_per_week` (D-474).
+  - Os textos das recusas entram em `ui_text.csv` (`reason_*`).
+  - "Planejar a semana" deixa de ser uma tela única (D-474): cada ação está no edifício dela.
