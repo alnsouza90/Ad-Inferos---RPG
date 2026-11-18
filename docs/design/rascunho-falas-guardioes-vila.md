@@ -40,3 +40,20 @@ Depois, tocar no guardião repete a fala e a instrução. As referências ficam 
 | Jardim e Claustro (volta, D-469, D-474) | São Francisco de Assis | Louvado sejas, meu Senhor, com todas as tuas criaturas. | Deixe um santo descansar no Jardim e Claustro durante a semana: ele não vai à expedição e volta com a desolação aliviada. | *Cântico do Irmão Sol*, de São Francisco (tradução própria) |
 
 Com isso, a instrução da Capela muda: "Deixe um santo rezando na Capela durante a semana: ele não vai à expedição, e a companhia ganha Sufrágios." Sai o "descansa da desolação", que agora é do Jardim e Claustro.
+
+## Carmelo · fala nova de Santa Teresa d'Ávila (D-491: Alan escolheu o "Nada te perturbe")
+
+O Carmelo agora é **inteiro**, fica bloqueado no motor e tem uma **reforma espiritual** (D-489). Por isso a fala aprovada, que termina em *"e ainda está em ruínas"*, muda. Alan pediu uma fala sobre as sete moradas.
+
+| Proposta | Fala | De onde vem (só no Arquivo) |
+| --- | --- | --- |
+| A (recomendada) | A alma é um castelo de sete moradas. Quem reza encontra a porta da primeira. | *Castelo Interior*, Moradas I, 1: a alma como um castelo com muitas moradas, e a oração como a porta de entrada (paráfrase, tradução própria) |
+| B | Sete moradas tem a alma, e no centro mora o Rei. Esta casa espera quem quiser entrar. | *Castelo Interior*, Moradas I, 1 e VII: o Rei na morada do centro (paráfrase) |
+
+A instrução do prédio continua: *(aviso: reforma depois do Círculo 3)* "Reformado o Carmelo, uma nova morada se abre a cada círculo vencido."
+
+**Aprovada por Alan (D-492):** o texto curto do poema de Santa Teresa (tradução própria):
+
+> Nada te perturbe, nada te espante. Tudo passa; Deus não muda. Só Deus basta.
+
+**De onde vem (só no Arquivo):** o poema "Nada te turbe", encontrado no breviário de Santa Teresa de Ávila; atribuído a ela pela tradição carmelita. Tradução própria; o texto completo diz ainda "a paciência tudo alcança; quem a Deus tem nada lhe falta".

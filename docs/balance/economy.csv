@@ -43,3 +43,4 @@ all_saints_xp_mult,1.25,Semana 18
 all_souls_suffrages_mult,2,Semana 19
 feast_xp_mult,1.5,Festa do santo: experiência
 feast_battle_desolation,-10,Festa do santo: desolação no início do combate
+season_start_weeks,1|3|5|9|13|17,"Semana em que começa cada tempo: Advento, Natal, Tempo Comum I, Quaresma, Páscoa, Tempo Comum II (village-economy.md §6)"
