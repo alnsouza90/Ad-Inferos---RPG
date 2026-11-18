@@ -44,6 +44,9 @@ var relics_found: Array[StringName] = []
 var relic_pack: Array[StringName] = []
 ## Relic of the node in progress: waiting for its guard battle or a carrier.
 var pending_relic: StringName = &""
+## The elite encounter fought last in this expedition: the next legs avoid
+## it when the circle has another (D-406).
+var last_elite: StringName = &""
 
 
 ## New expedition from the gate, with full Light.
@@ -104,6 +107,7 @@ func to_dict() -> Dictionary:
 		"camp_reached": camp_reached, "camp_rested": camp_rested, "next_battle_fervor": next_battle_fervor,
 		"vigil_saints": _to_strings(vigil_saints),
 		"relics_found": _to_strings(relics_found), "relic_pack": _to_strings(relic_pack), "pending_relic": String(pending_relic),
+		"last_elite": String(last_elite),
 	}
 
 
@@ -134,6 +138,7 @@ static func from_dict(data: Dictionary) -> ExpeditionState:
 	state.relics_found = _to_names(data.get("relics_found", []))
 	state.relic_pack = _to_names(data.get("relic_pack", []))
 	state.pending_relic = StringName(str(data.get("pending_relic", "")))
+	state.last_elite = StringName(str(data.get("last_elite", "")))
 	return state
 
 

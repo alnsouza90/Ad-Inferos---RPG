@@ -178,3 +178,31 @@ func test_map_survives_a_json_round_trip() -> void:
 	var back := LegMap.from_dict(JSON.parse_string(text))
 	assert_eq(JSON.stringify(back.to_dict()), text)
 	assert_true(MapGenerator.is_valid(back))
+
+
+## D-406: the next legs avoid the elite fought last when the circle has
+## another; with a single elite it still comes (the Sin Incarnate returns).
+func test_elites_alternate_avoiding_the_last_one_fought() -> void:
+	for seed: int in 200:
+		var g := _generator(seed)
+		g.allow_elite = true
+		g.elite_encounters = [&"elite_a", &"elite_b"] as Array[StringName]
+		g.avoid_elite = &"elite_a"
+		for n: MapNode in g.generate(1, reserve()).all_nodes():
+			if n.type == MapNode.TYPE_ELITE:
+				assert_eq(n.encounter_id, &"elite_b", "semente %d" % seed)
+	for seed: int in 200:
+		var g := _generator(seed)
+		g.allow_elite = true
+		g.elite_encounters = [&"elite_a"] as Array[StringName]
+		g.avoid_elite = &"elite_a"
+		for n: MapNode in g.generate(1, reserve()).all_nodes():
+			if n.type == MapNode.TYPE_ELITE:
+				assert_eq(n.encounter_id, &"elite_a", "o único elite pode voltar")
+
+
+func test_the_last_elite_is_kept_in_the_save() -> void:
+	var state := ExpeditionState.new()
+	state.last_elite = &"c02_elite_vertigo"
+	assert_eq(ExpeditionState.from_dict(state.to_dict()).last_elite, &"c02_elite_vertigo")
+	assert_eq(ExpeditionState.from_dict({}).last_elite, &"", "save antigo sem o campo")

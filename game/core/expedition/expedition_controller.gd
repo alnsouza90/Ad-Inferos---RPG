@@ -167,6 +167,7 @@ func _generate_leg(leg: int) -> LegMap:
 		generator.battle_encounters += c.encounter_pool(ambush_encounter_circle, &"hard")
 	generator.elite_encounters = c.encounter_pool(ambush_encounter_circle, &"elite")
 	generator.allow_elite = not generator.elite_encounters.is_empty()
+	generator.avoid_elite = state.last_elite
 	generator.guardian_encounters = c.encounter_pool(ambush_encounter_circle, &"guardian")
 	generator.guardian_at_leg2_start = c.constants.get_float_or(&"sim_guardian_leg2", 0.0) > 0.0
 	generator.with_fish = not c.encounter_pool(ambush_encounter_circle, &"boss").is_empty()
@@ -774,6 +775,8 @@ func _lose_found_relics() -> void:
 func _start_battle(encounter_id: StringName, seed_key: StringName) -> void:
 	var enc: EncounterDef = catalog.encounter(encounter_id)
 	assert(enc != null, "no encounter %s" % encounter_id)
+	if enc.type == &"elite":
+		state.last_elite = encounter_id
 	var saint_defs: Array[SaintDef] = []
 	for id: StringName in state.party:
 		saint_defs.append(catalog.saint(id))

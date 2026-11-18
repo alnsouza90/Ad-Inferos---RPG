@@ -29,6 +29,8 @@ var battle_encounters: Array[StringName] = []
 ## (D-406); empty in the arena, which has no elites.
 var elite_encounters: Array[StringName] = []
 var allow_elite: bool = false
+## The elite fought last (D-406): avoided when the pool has another.
+var avoid_elite: StringName = &""
 ## The circle's Guardian encounters (pool `guardian`); empty: no Guardian.
 var guardian_encounters: Array[StringName] = []
 ## Being simulated (D-420): the Guardian at the START of leg 2, right after
@@ -358,4 +360,7 @@ func _assign_encounters(map: LegMap) -> void:
 		elif n.role == MapNode.ROLE_GUARDIAN:
 			n.encounter_id = guardian_encounters[rng.pick_index(guardian_encounters.size())]
 		elif n.type == MapNode.TYPE_ELITE and not elite_encounters.is_empty():
-			n.encounter_id = elite_encounters[rng.pick_index(elite_encounters.size())]
+			var pool: Array[StringName] = elite_encounters.duplicate()
+			if pool.size() > 1:
+				pool.erase(avoid_elite)
+			n.encounter_id = pool[rng.pick_index(pool.size())]
