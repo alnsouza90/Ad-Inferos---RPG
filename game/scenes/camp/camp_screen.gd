@@ -57,7 +57,7 @@ const SEATS: Array[Dictionary] = [
 const HALO_POINTS: Dictionary = {
 	&"saint_george": Vector2(57, 13),
 	&"saint_benedict": Vector2(66, 28),
-	&"saint_therese": Vector2(86, 10),
+	&"saint_therese": Vector2(82, 2),
 }
 const PANEL_TOP: float = 360.0
 ## The arch of the portrait in the card (as in the battle's panel).
