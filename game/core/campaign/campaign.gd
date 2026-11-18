@@ -78,14 +78,23 @@ static func party_refusal(c: CampaignState, catalog: ExpeditionCatalog, party: A
 		if seen.has(id):
 			return WRONG_PARTY
 		seen.append(id)
-		if not c.unlocked_saints.has(id):
-			return NOT_UNLOCKED
-		if c.garden_saints.has(id):
-			return RESTING
-		if (c.saints[id] as CampaignSaint).status.injury == SaintStatus.INJURY_MAJOR:
-			return INJURED
+		var why: StringName = saint_refusal(c, id)
+		if why != OK:
+			return why
 	if party.size() != catalog.constants.get_int(&"party_size"):
 		return WRONG_PARTY
+	return OK
+
+
+## Why this one saint cannot go down (OK when it can): not arrived yet,
+## resting in the Garden this week, or with a major injury (§8, D-481).
+static func saint_refusal(c: CampaignState, saint_id: StringName) -> StringName:
+	if not c.unlocked_saints.has(saint_id):
+		return NOT_UNLOCKED
+	if c.garden_saints.has(saint_id):
+		return RESTING
+	if (c.saints[saint_id] as CampaignSaint).status.injury == SaintStatus.INJURY_MAJOR:
+		return INJURED
 	return OK
 
 

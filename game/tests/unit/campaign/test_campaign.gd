@@ -192,3 +192,13 @@ func test_the_campaign_survives_a_save() -> void:
 	var text: String = JSON.stringify(c.to_dict())
 	var back := CampaignState.from_dict(JSON.parse_string(text))
 	assert_eq(JSON.stringify(back.to_dict()), text)
+
+
+func test_one_saint_refusal_names_why_it_cannot_go_down() -> void:
+	var c := Campaign.start(cat, 1)
+	assert_eq(Campaign.saint_refusal(c, &"saint_george"), Campaign.OK)
+	assert_eq(Campaign.saint_refusal(c, &"saint_anthony_abbot"), Campaign.NOT_UNLOCKED)
+	c.saint(&"saint_george").status.injury = SaintStatus.INJURY_MAJOR
+	assert_eq(Campaign.saint_refusal(c, &"saint_george"), Campaign.INJURED)
+	c.garden_saints.append(&"saint_therese")
+	assert_eq(Campaign.saint_refusal(c, &"saint_therese"), Campaign.RESTING)
