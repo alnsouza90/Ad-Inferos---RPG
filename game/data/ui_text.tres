@@ -376,6 +376,8 @@ texts = {
 "state_fallen": "Caído",
 "state_out": "Fora de combate",
 "state_remains": "Restos",
+"statue_prayer": "Ave Maria, gratia plena, Dominus tecum. Benedicta tu in mulieribus, et benedictus fructus ventris tui, Iesus. Sancta Maria, Mater Dei, ora pro nobis peccatoribus, nunc et in hora mortis nostrae. Amen.",
+"statue_title": "Ave Maria",
 "summary_alms": "Esmolas garantidas: {banked} · carregadas: {unbanked}",
 "summary_relics": "Relíquias: {relics}",
 "summary_saint": "{saint}: vida {hp}/{max} · desolação {desolation}",
