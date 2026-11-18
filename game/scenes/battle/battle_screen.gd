@@ -1118,8 +1118,11 @@ func _refresh_top() -> void:
 		_round_label.text = texts.t(&"round_clock", {"round": ctrl.state.round_number, "amount": at_end})
 	_fervor_label.text = texts.t(&"fervor", {"amount": ctrl.fervor.amount, "max": cap})
 	_fervor_flames.queue_redraw()
-	_boss_bar.visible = _bar_leader() != null
+	var leader: Combatant = _bar_leader()
+	_boss_bar.visible = leader != null
 	_boss_bar.queue_redraw()
+	for id: Variant in _badges:
+		(_badges[id] as CombatantBadge).bar_hidden = leader != null and id == leader.id
 	_speed_button.text = texts.t(SPEED_KEYS[speed_index])
 	_pause_button.text = texts.t(&"pause")
 	_refresh_lume()

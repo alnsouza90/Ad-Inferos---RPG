@@ -228,7 +228,12 @@ func test_the_elites_have_the_big_bar_too() -> void:
 		screen.setup(data, BattleController.new(data.battle(encounter, SEED)))
 		add_child_autofree(screen)
 		assert_true(screen.boss_bar_shown(), "%s com a barra grande (D-456)" % encounter)
-		assert_eq(screen._bar_leader().category, &"elite")
+		var leader: Combatant = screen._bar_leader()
+		assert_eq(leader.category, &"elite")
+		assert_true(screen.badge_of(leader.id).bar_hidden, "sem a segunda barra debaixo dos pés")
+		for c: Combatant in screen.ctrl.state.enemies:
+			if c != leader:
+				assert_false(screen.badge_of(c.id).bar_hidden, "os outros mantêm a barra")
 
 
 func test_the_sheet_shows_the_intent_as_an_icon() -> void:

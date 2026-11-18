@@ -33,6 +33,12 @@ var hp_share: float = 1.0
 ## Pips lit for desolation, out of PIPS.
 var desolation_pips: int = 0
 var down: bool = false
+## The boss or the elite shows its life in the great bar on top: no second
+## bar under its feet (D-456).
+var bar_hidden: bool = false:
+	set(value):
+		bar_hidden = value
+		queue_redraw()
 var mark: CombatantView.Mark = CombatantView.Mark.NONE
 ## Height of the head above the feet, in pixels of the stage.
 var head_height: float = 138.0
@@ -231,6 +237,9 @@ func _layout() -> void:
 func _draw() -> void:
 	var y: float = BAR_GAP
 	var left: float = -BAR_WIDTH * 0.5
+	if bar_hidden:
+		_draw_mark()
+		return
 	draw_rect(Rect2(left - 1, y - 1, BAR_WIDTH + 2, BAR_HEIGHT + 2), PixelStyle.COLOR_PITCH)
 	if not down:
 		draw_rect(Rect2(left, y, roundf(BAR_WIDTH * hp_share), BAR_HEIGHT), PixelStyle.COLOR_BLOOD)
