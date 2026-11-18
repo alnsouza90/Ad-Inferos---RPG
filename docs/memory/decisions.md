@@ -497,3 +497,10 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - Sai `chapel_desolation_per_week` (D-474).
   - Os textos das recusas entram em `ui_text.csv` (`reason_*`).
   - "Planejar a semana" deixa de ser uma tela única (D-474): cada ação está no edifício dela.
+- **D-485 · 18/11/2026 · Alan** — **Arte da vila e do Mapa do Inferno (T49):**
+  - **(1)** A Despensa feita **só com o prompt** foi a aprovada. Os edifícios saem do prompt salvo, com a forma descrita a partir das imagens de Alan; nem conversão nem imagem de referência. A primeira peça aprovada está em `art_source/environments/village/pixel/village_pantry_l1_px_v01.png`.
+  - **(2) Estilo:** o gótico de *Darkest Dungeon* como referência; *Blasphemous* só como acabamento em pixel, **sem o lado contraventor dele** (nada grotesco, nada de sangue, nenhuma imagem sagrada profanada).
+  - **(3) Montagem como no *Darkest Dungeon*:** edifícios de frente, em fileira, com a **praça central e a imagem de Nossa Senhora** no meio. O chão e a beira do abismo são feitos no motor. A montagem vista de cima enviada por Alan é só referência geral.
+  - **(4) Mapa do Inferno em faixas** (sai a ideia das nove janelas). Uma faixa por vez, cada uma colada à anterior para as bordas se encaixarem, e cada uma aprovada antes da próxima.
+  
+  Prompts em `docs/art/prompts-vila-mapa-pixel.md`.
