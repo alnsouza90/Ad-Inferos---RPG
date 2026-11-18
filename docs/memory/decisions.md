@@ -504,3 +504,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **(4) Mapa do Inferno em faixas** (sai a ideia das nove janelas). Uma faixa por vez, cada uma colada à anterior para as bordas se encaixarem, e cada uma aprovada antes da próxima.
   
   Prompts em `docs/art/prompts-vila-mapa-pixel.md`.
+- **D-486 · 18/11/2026 · Alan** — Reprovados o **Portão** gerado (cortado dos lados e com prédios atrás) e a **faixa 0** do mapa ("não entregou nada"; o primeiro teste, com duas faixas numa imagem só, estava bem melhor). **Alan vai gerar as artes**, ao menos como referência, a partir dos prompts de `docs/art/prompts-vila-mapa-pixel.md`, reescritos com as correções: um edifício só, inteiro, com margem, nada atrás, fundo cinza liso; o mapa em pedidos de duas faixas que emendam pela faixa repetida. Depois o agente converte para o pixel do jogo.

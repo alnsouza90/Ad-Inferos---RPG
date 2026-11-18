@@ -1,57 +1,69 @@
-# Prompts da vila e do Mapa do Inferno em pixel (T49, D-485)
+# Prompts da vila e do Mapa do Inferno · para Alan gerar (T49, D-485, D-486)
 
-**Situação:** prompts reescritos com as decisões de Alan de 18/11/2026 (D-485). As artes são feitas **uma a uma** no PixelLab, cada uma aprovada por Alan antes da próxima, com o custo dito antes.
+**Como funciona agora (D-486):** Alan gera as artes, ao menos como referência, no Meta AI ou no PixelLab. Depois o agente converte para o pixel do jogo, peça por peça, e Alan aprova cada uma.
 
-**Estilo (D-485):**
-- O gótico de *Darkest Dungeon* é a referência principal.
-- *Blasphemous* entra só como **referência de acabamento em pixel**: pixel nítido, contorno preto, sombra em blocos. Fica de fora o lado contraventor dele: nada grotesco, nada de sangue, nenhuma imagem religiosa profanada ou deformada. As figuras sagradas aparecem com reverência (`writing-guide.md`).
+**O que já está aprovado:** a Despensa (`art_source/environments/village/pixel/village_pantry_l1_px_v01.png`). Ela é a **referência de estilo** para as outras peças: no Meta AI ou no PixelLab, anexe a imagem dela como estilo.
 
-**Montagem da vila (D-485, D-352):**
-- Como na vila do *Darkest Dungeon*: os edifícios **de frente**, em **fileira**, com o céu atrás em camada própria e a câmera correndo para os lados.
-- A **praça central com a imagem de Nossa Senhora** fica no meio da fileira. É cena: não se toca nela e ela não tem efeito (D-262).
-- O chão e a beira do abismo são feitos **no motor**.
-- A montagem vista de cima, enviada por Alan, é só referência geral: o lugar de cada coisa e o clima. O desenho de cada edifício segue as imagens dele no Drive (`environments/village/buildings/level_1/day`).
-- A Despensa feita só com o prompt, sem imagem de referência, foi a aprovada (D-485). Por isso as próximas também saem só do prompt, com a forma de cada edifício descrita em texto a partir das imagens de Alan.
+## 0. Regras para toda peça da vila
 
-## 1. Bloco da vila (um edifício por vez)
+As regras saem do que deu errado no Portão:
+- **Um edifício só**, inteiro dentro da imagem, com **margem dos quatro lados**. Nada cortado nas bordas.
+- **Nada atrás nem do lado:** sem outros prédios, muralhas ou torres de fundo, sem paisagem.
+- **Fundo cinza claro liso**, para recortar. Sem chão em volta e sem sombra projetada; o chão é feito no motor.
+- **De frente**, como na vila do *Darkest Dungeon*: nem visto de cima, nem isométrico.
+- **Luz da esquerda**, janelas em âmbar, sem ouro, sem céu azul.
+- **Estilo:** o gótico de *Darkest Dungeon*, com o acabamento em pixel de *Blasphemous*, **sem o lado contraventor**: nada grotesco, nada de sangue, nenhuma imagem sagrada deformada.
 
-`create_image_pro`, fundo transparente, paleta do jogo (`docs/fable/piloto-pixel/paleta.json`), imagem de estilo `env_circle_02_t1_mid.png`. Custo: 10 gerações até 256 px de lado.
+## 1. Vila · bloco comum
 
-```text
-dark gothic pixel art building, 16-bit style, in the gothic style of Darkest Dungeon, with crisp pixel rendering like Blasphemous but reverent, front view, a single isolated <edifício> of a small fortified medieval monastery village, standing on a flat ground line, warm amber candlelight in the windows, soft light from the left, painted in black, bone and ash grey, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, selective dithering in the shadows, no anti-aliasing, no ground patch, no cast shadow, no people, no gold, no blue night sky, not isometric, not top-down, no gore, no grotesque or profane imagery, no text
-```
-
-| Peça | Tela | `<edifício>` (a partir da imagem de Alan) | Estado |
-| --- | --- | --- | --- |
-| Despensa | 192 × 160 | `stone storehouse with a wide wooden double door, barrels and sacks beside it` | **Aprovada (D-485)** |
-| Portão | 192 × 224 | `fortified stone gatehouse with two crenellated towers, a heavy closed wooden gate bound with iron, two burning wall torches, a narrow stone stair going down in front` | |
-| Enfermaria | 224 × 144 | `long low stone infirmary with a slate roof, a row of small arched lit windows, a small wooden cross over the plain door, raised herb beds along the front wall` | |
-| Casa de Exercícios | 192 × 160 | `small stone house with a tall chimney and an arched wooden door, a low stone wall around a yard with a straw training dummy and a hanging cloth banner` | |
-| Jardim e Claustro | 224 × 176 | `square stone cloister with an arcade of pointed arches around a small green garden with a stone well and a wooden pulley frame, candles in the inner arches` | |
-| Capela | 160 × 208 | `small stone chapel with two tall lit lancet windows, an arched wooden door with iron studs, a square bell tower with a wooden belfry, an iron bell and a small iron cross on top` | |
-| Forja | 192 × 192 | `small stone forge with an open front shed, an anvil on a stump, tools on the wall, a glowing fire in a brick hearth, a tall square chimney, a small iron cross on the gable` | |
-| Biblioteca | 128 × 240 | `tall narrow stone tower with tall lit arched windows, crenellated top with a small spire and iron cross, a small stone house with a door at its foot` | |
-| Carmelo em ruínas | 192 × 176 | `ruined roofless whitewashed stone convent with a small bell gable, seven dark empty arched windows in a row, cracked walls` | |
-| Relicário | 160 × 176 | `small square stone shrine with a low stone dome topped by a stone ball and a small iron cross, an iron grated door, two small lit niches` | |
-| Praça central | 224 × 224 | `round paved stone plaza with a weathered stone statue of the Virgin Mary standing in prayer with joined hands, a veil and a simple stone halo, on a stepped pedestal, votive candles and wild flowers at its base` (cena; sem toque) | |
-| Céu | 640 × 180 | `pale dawn sky with long streaked clouds, pale amber light on the horizon, painted not flat gold` (fundo, sem transparência) | |
-
-**Fechados no M2** (Capela, Forja, Biblioteca, Carmelo, Relicário): desenhados inteiros, como os outros. O motor os mostra escurecidos, como silhueta, com o aviso de quando abrem (D-459, §10A da Bíblia de Arte). O Carmelo já é uma ruína na história (D-262).
-
-## 2. Bloco do Mapa do Inferno (uma faixa por vez)
-
-O mapa é um **corte do funil visto de lado**, em faixas horizontais empilhadas, como o mapa de Botticelli (D-485). Cada faixa é **uma geração**, e a próxima nasce **colada à anterior**: a faixa de cima entra como contexto e só a parte de baixo é pintada. Assim as bordas se encaixam. Tela de cada faixa: 480 × 120 (o motor amplia 2×, para 960 × 240). Custo: cerca de 25 gerações por faixa.
+Troque `<EDIFÍCIO>` pela linha da tabela. Proporção indicada em cada peça.
 
 ```text
-dark gothic pixel art game map band, 16-bit style, in the gothic style of Darkest Dungeon, with crisp pixel rendering like Blasphemous but reverent, inspired by Botticelli's Map of Hell, one wide horizontal slice of a cross-section of the funnel of Hell seen from the side, <conteúdo da faixa>, steep sloped rock walls of the funnel on both sides, outside the funnel dark earth in cross-section with rock strata and roots, an empty quiet area at the far left inside the band for a medallion, the top and bottom edges continuous and seamless for stacking, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and <cor do círculo>, selective dithering in the shadows, no anti-aliasing, no separating line between bands, no text, no letters, no numbers, no labels, no flat gold, no frame, no border, no gore
+dark gothic pixel art building, 16-bit style, in the gothic style of Darkest Dungeon with crisp pixel rendering like Blasphemous but reverent and calm, front view, ONE single isolated <EDIFÍCIO> of a small fortified medieval monastery village, the whole building fully visible and centered with empty margin on all four sides, nothing behind it and nothing beside it, standing on a thin flat ground line, warm amber candlelight in the windows, soft light from the left, painted in black, bone and ash grey, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, selective dithering in the shadows, no anti-aliasing, isolated on a plain flat solid light grey background --no other buildings, background buildings, walls behind, towers behind, landscape, ground patch, cast shadow, cropped edges, people, gold, blue sky, night sky, isometric, top-down, gore, blood, grotesque, text, watermark
 ```
 
-| Faixa | Largura do funil (topo → base) | `<conteúdo da faixa>` | `<cor do círculo>` |
+| # | Peça | Proporção | `<EDIFÍCIO>` |
 | --- | --- | --- | --- |
-| 0 · Átrio e a Porta | abertura de quase toda a largura | `the top rim of the abyss: a small fortified monastery village with a chapel bell tower and candlelit windows on the cliff edge at the left under a pale dawn sky, a narrow stair descending from it to a great dark gate carved in the rock at the mouth of the funnel, no storm, no whirlwind` | warm amber |
-| 1 · Antinferno | 100% → 95% | `the vestibule: a barren plain with a tattered empty banner on a pole and a crowd of tiny souls running after it, swarms of wasps, the wide black river Acheron crossing the whole band at the bottom with a small ferry boat` | pale pearl grey |
-| 2 · Limbo | 95% → 88% | `the first circle: a quiet meadow in eternal dusk, a pale castle with seven walls and seven gates on the right, a small stream around it, tiny robed figures walking in silence` | pale pearl grey |
-| 3 · Luxúria (Círculo 2) | 88% → 80% | `the second circle: a howling hurricane filling the whole band, tiny shrouded souls tumbling in a spiral of wind, a stone seat of judgment carved into the left wall` | stormy violet |
-| 4 a 10 · Círculos 3 a 9 | estreitando até a ponta | um por vez, com o conteúdo de Dante de cada círculo (a escrever quando chegar a vez; no M2 aparecem bloqueados, escurecidos pelo motor) | a cor de cada círculo (`biblia-de-arte.md`) |
+| 1 | Despensa | — | **aprovada** (usar como estilo) |
+| 2 | Portão | 4:5 | `fortified stone gatehouse with two crenellated round towers joined by a wall with a single heavy closed wooden gate bound with iron, two burning wall torches beside the gate, a few stone steps going up to the gate` |
+| 3 | Enfermaria | 3:2 | `long low stone infirmary with a slate roof, a row of small arched windows lit amber, a plain wooden door with a small wooden cross above it, raised herb beds with green plants along the front wall` |
+| 4 | Casa de Exercícios | 1:1 | `small stone house with a tall chimney and an arched wooden door, a low stone wall around a small yard in front with a straw training dummy and a hanging cloth banner on a pole` |
+| 5 | Jardim e Claustro | 4:3 | `square stone cloister seen from the front with an arcade of pointed arches, through the arches a small green garden with a stone well and a wooden pulley frame, candles glowing in the inner arches` |
+| 6 | Capela | 3:4 | `small stone chapel with two tall lancet windows lit amber, an arched wooden door with iron studs, a square stone bell tower beside it with a wooden belfry, an iron bell and a small iron cross on top` |
+| 7 | Forja | 1:1 | `small stone forge with an open front shed, an anvil on a tree stump, tools hanging on the wall, a glowing fire in a brick hearth, a tall square stone chimney, a small iron cross on the gable` |
+| 8 | Biblioteca | 1:2 | `tall narrow stone tower with tall arched windows lit amber, a crenellated top with a small slate spire and an iron cross, a small stone house with a door at its foot` |
+| 9 | Carmelo (em ruínas) | 4:3 | `ruined roofless whitewashed stone convent with a small bell gable without bell, seven dark empty arched windows in a row, cracked walls, fallen stones at its foot` |
+| 10 | Relicário | 1:1 | `small square stone shrine with a low stone dome topped by a stone ball and a small iron cross, a grated iron door, two small niches with candles` |
+| 11 | Praça central | 1:1 | `round paved stone plaza seen from the front at a low angle, in its center a weathered stone statue of the Virgin Mary standing in prayer with joined hands, a veil and a simple stone halo, on a stepped stone pedestal, votive candles and wild flowers at its base, serene and reverent` |
+| 12 | Céu (fundo) | 32:9 | (bloco próprio abaixo) |
 
-**No motor:** a faixa do círculo atual recebe a lanterna; a luz pálida fica um círculo à frente (D-276); os círculos vencidos acendem; os bloqueados ficam escurecidos, com o aviso (D-459).
+**Céu** (sem fundo cinza, imagem cheia):
+
+```text
+dark gothic pixel art background, 16-bit style, in the gothic style of Darkest Dungeon, a wide pale dawn sky with long streaked clouds drawn with ink hatching, pale amber light low on the horizon, the rest of the sky ash grey, no buildings, no ground, no sun disk, a single consistent pixel size, crisp hard pixel edges, selective dithering, no anti-aliasing --no flat gold, blue sky, text, watermark
+```
+
+## 2. Mapa do Inferno · faixas
+
+O teste que funcionou foi o primeiro: **duas faixas geradas numa imagem só**, que por isso se encaixam. Então cada pedido gera **duas faixas empilhadas**, e a de baixo de um pedido repete como a de cima do seguinte. Isso dá a continuidade. A faixa da vila precisa de mais altura, para a vila caber inteira.
+
+**Bloco comum** (proporção 2:1, duas faixas de 4:1 empilhadas):
+
+```text
+dark gothic pixel art game map, 16-bit style, in the gothic style of Darkest Dungeon with crisp pixel rendering like Blasphemous but reverent, inspired by Botticelli's Map of Hell, a cross-section of the funnel of Hell seen from the side, made of TWO wide horizontal bands stacked one on top of the other inside one continuous funnel, the funnel walls of steep rock sloping inward evenly so each band is a little narrower than the one above, outside the funnel dark earth in cross-section with rock strata and roots, in each band an empty quiet area at the far left for a round medallion. TOP BAND: <FAIXA DE CIMA>. BOTTOM BAND: <FAIXA DE BAIXO>. The two bands joined without any line between them, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and <COR>, selective dithering, no anti-aliasing --no text, letters, numbers, labels, flat gold, frame, border, separating line, gore, close-up figures
+```
+
+| Pedido | `<FAIXA DE CIMA>` | `<FAIXA DE BAIXO>` | `<COR>` |
+| --- | --- | --- | --- |
+| A | `the top rim of the abyss under a pale dawn sky: a small fortified monastery village fully visible and small, with a chapel bell tower and candlelit windows on the cliff edge at the left, a narrow stair descending from the village down to a great dark gate carved in the rock at the mouth of the funnel, calm air, no storm, no whirlwind` | `the vestibule of Hell: a barren plain with a tattered empty banner on a pole and a crowd of tiny souls running after it, small swarms of wasps, the wide black river Acheron crossing the band near the bottom with a small ferry boat` | warm amber and pale pearl grey |
+| B | (a mesma do vestíbulo, para emendar) | `the first circle, Limbo: a quiet meadow in eternal dusk, a pale castle with seven walls and seven gates on the right, a small stream around it, tiny robed figures walking in silence` | pale pearl grey |
+| C | (a mesma do Limbo, para emendar) | `the second circle: a howling hurricane filling the whole band, tiny shrouded souls tumbling in a spiral of wind, a stone seat of judgment carved into the left wall` | stormy violet |
+| D em diante | (a de baixo do pedido anterior) | um círculo por vez, de 3 a 9, com o conteúdo de Dante (escrevo quando chegar a vez) | a cor do círculo |
+
+**Na conversão:** o agente corta cada pedido nas duas faixas e usa a de cima de cada pedido para conferir a emenda com o pedido anterior. Depois converte as faixas para o pixel do jogo, numa tela de 480 × 120 por faixa, que o motor amplia 2×.
+
+**No motor:**
+- o círculo atual recebe a lanterna;
+- a luz pálida fica um círculo à frente (D-276);
+- os círculos vencidos acendem;
+- os bloqueados ficam escuros, com o aviso (D-459).
