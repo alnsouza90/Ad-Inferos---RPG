@@ -347,3 +347,31 @@ saint_bio_saint_george,"Soldado romano, provavelmente nascido na Capadócia. Qua
 saint_bio_saint_benedict,"Nasceu em Núrsia, na Itália, por volta de 480. Deixou os estudos em Roma e foi viver numa gruta em Subíaco. Fundou mosteiros e, em Monte Cassino, escreveu a Regra que formou os monges do Ocidente. Ao sinal da cruz, o cálice envenenado que lhe ofereceram se partiu. Um corvo levou para longe o pão envenenado. Morreu por volta de 547."
 saint_bio_saint_therese,"Nasceu em Alençon, na França, em 1873, e entrou no Carmelo de Lisieux aos quinze anos. Ensinou a ""pequena via"": a santidade nas coisas pequenas, com confiança de criança em Deus. Nos últimos meses, doente de tuberculose, passou pela noite da fé sem deixar de confiar. Morreu aos vinte e quatro anos, em 1897, prometendo passar o céu fazendo o bem na terra."
 saint_bio_saint_anthony_abbot,"Ainda jovem, ouviu na igreja o Evangelho: ""Se queres ser perfeito, vai, vende o que tens e dá aos pobres"". Deu tudo e foi viver na solidão, primeiro entre os sepulcros, depois no deserto. Ali enfrentou por anos as tentações e os ataques dos demônios, armado só de oração, jejum e do sinal da cruz. Muitos foram procurá-lo, e por isso é chamado pai dos monges. Morreu com mais de cem anos."
+saint_card_page_life,A vida
+saint_card_page_abilities,Habilidades
+rule_damage,{amount} de {kind}
+rule_kind_exorcism,exorcismo
+rule_kind_strike,golpe
+rule_vs_elites,(×{mult} contra elites e chefes)
+rule_heal,cura {amount}
+rule_desolation_up,+{amount} de desolação
+rule_desolation_down,−{amount} de desolação
+rule_remove,tira {what}
+rule_strip,tira as fichas positivas
+rule_move_push,empurra {n} posições
+rule_revive,levanta com {percent}% da vida
+rule_on_self,{what} em si
+rule_target_enemy,num inimigo {where}
+rule_target_enemy_group,em todos os inimigos {where}
+rule_target_all_enemies,em todos os inimigos
+rule_target_ally,num aliado {where}
+rule_target_all_allies,em toda a companhia
+rule_target_self,em si
+rule_target_ally_fallen,num aliado caído
+rule_from_one,usa da posição {a}
+rule_from_many,usa das posições {list}
+rule_once,uma vez por combate
+rule_where_one,na posição {a}
+rule_where_many,nas posições {list}
+rule_pair,{a} e {b}
+rule_range,{a} a {b}

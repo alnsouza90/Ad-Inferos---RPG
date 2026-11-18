@@ -68,3 +68,42 @@ func test_every_card_fits_the_screen() -> void:
 		var card := _card(saint_id)
 		await wait_process_frames(3)
 		assert_lte(card.column_bottom(), SaintCard.PLATE_RECT.end.y - 6.0, String(saint_id))
+
+
+const CARD_SAINTS: Array[StringName] = [&"saint_george", &"saint_benedict", &"saint_therese", &"saint_anthony_abbot"]
+
+
+func test_every_ability_has_a_whole_rule_line_from_its_data() -> void:
+	# D-475: the numbers of the card are the battle's own, and no key is missing.
+	for saint_id: StringName in CARD_SAINTS:
+		var saint: SaintDef = data.saints[saint_id]
+		for ability_id: StringName in saint.abilities + [saint.miracle]:
+			var ability: AbilityDef = data.catalog.abilities[ability_id]
+			var rule: String = AbilityRule.line(ability, data.ui, data.catalog)
+			assert_false(rule.contains("["), "%s: %s" % [ability_id, rule])
+			for effect: EffectDef in ability.effects:
+				if effect.type == &"damage" or effect.type == &"heal" or effect.type == &"desolation":
+					assert_string_contains(rule, str(roundi(absf(effect.amount))), String(ability_id))
+				if effect.type == &"apply_condition":
+					assert_string_contains(rule, (data.catalog.conditions[effect.condition_id] as ConditionDef).name_pt, String(ability_id))
+
+
+func test_the_rule_says_whom_and_from_where() -> void:
+	var spear: AbilityDef = data.catalog.abilities[&"george_spear_thrust"]
+	var rule: String = AbilityRule.line(spear, data.ui, data.catalog)
+	assert_string_contains(rule, data.ui.text(&"rule_target_enemy", {"where": data.ui.text(&"rule_where_many", {"list": data.ui.text(&"rule_pair", {"a": 1, "b": 2})})}))
+	assert_string_contains(rule, data.ui.text(&"rule_from_many", {"list": data.ui.text(&"rule_pair", {"a": 1, "b": 2})}))
+
+
+func test_the_abilities_show_rule_and_story() -> void:
+	var card := _card(&"saint_anthony_abbot")
+	var cross: AbilityDef = data.catalog.abilities[&"antony_sign_of_cross"]
+	assert_string_contains(card.abilities_shown()[0], AbilityRule.line(cross, data.ui, data.catalog))
+	assert_string_contains(card.abilities_shown()[0], cross.desc_pt)
+
+
+func test_the_card_opens_on_the_life_and_turns_to_the_abilities() -> void:
+	var card := _card(&"saint_george")
+	assert_eq(card.page_index, 0)
+	card.show_page(1)
+	assert_eq(card.page_index, 1)

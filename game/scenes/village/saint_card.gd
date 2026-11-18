@@ -28,6 +28,12 @@ const BUTTON_SIZE := Vector2(130, 30)
 ## Wrapped lines sit closer than the font's own spacing, so the longest
 ## sheet (Anthony's) fits the card.
 const LINE_TIGHTEN: int = -4
+const PAGE_KEYS: Array[String] = ["saint_card_page_life", "saint_card_page_abilities"]
+const TAB_SIZE := Vector2(150, 28)
+## Where the pages start, under the name, the feast and the tabs.
+const PAGE_TOP: float = 108.0
+## Space between two abilities on their page.
+const ABILITY_GAP: int = 3
 ## The part of each portrait that fills the window of the arch, so that every
 ## face shows the same size (D-467: Therese is smaller in her picture). Each
 ## region keeps the window's proportion (60:96). A saint without one shows
@@ -51,6 +57,9 @@ var _stats: Label
 var _trait: RichTextLabel
 var _abilities: Array[RichTextLabel] = []
 var _miracle: RichTextLabel
+var _tabs: Array[Button] = []
+var _pages: Array[VBoxContainer] = []
+var page_index: int = 0
 
 
 func setup(p_data: GameData, saint_id: StringName) -> void:
@@ -104,9 +113,13 @@ func miracle_shown() -> String:
 	return _miracle.get_parsed_text()
 
 
-## The bottom of the texts, in the card's coordinates.
+## The bottom of the lowest page, in the card's coordinates.
 func column_bottom() -> float:
-	return _miracle.get_global_rect().end.y - _stage.global_position.y
+	var bottom: float = 0.0
+	for page: VBoxContainer in _pages:
+		var last: Control = page.get_child(page.get_child_count() - 1)
+		bottom = maxf(bottom, last.get_global_rect().end.y - _stage.global_position.y)
+	return bottom
 
 
 func portrait_texture() -> Texture2D:
@@ -178,43 +191,103 @@ static func _face(saint_id: StringName) -> Texture2D:
 
 
 func _build_column() -> void:
-	var column := VBoxContainer.new()
-	column.position = Vector2(COLUMN_X, 14)
-	column.size = Vector2(COLUMN_WIDTH, 0)
-	column.add_theme_constant_override("separation", 0)
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(column)
+	var head := VBoxContainer.new()
+	head.position = Vector2(COLUMN_X, 14)
+	head.size = Vector2(COLUMN_WIDTH, 0)
+	head.add_theme_constant_override("separation", 0)
+	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(head)
 	_name = _label(saint.name_pt, NAME_SIZE)
 	PixelStyle.title(_name, PixelStyle.COLOR_BONE, NAME_SIZE)
-	column.add_child(_name)
+	head.add_child(_name)
 	var feast_key: String = "saint_feast_%s" % saint.id
 	_feast = _label(_text("saint_card_feast", {"date": _text(feast_key)}) if data.ui.has_text(StringName(feast_key)) else "", BODY_SIZE)
 	_feast.add_theme_color_override("font_color", PixelStyle.COLOR_GOLD)
-	column.add_child(_feast)
-	column.add_child(_heading("saint_card_life"))
+	head.add_child(_feast)
+	# Two pages in the same panel (D-475): the rule line of each ability
+	# leaves no room for the life on the same page.
+	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 8)
+	head.add_child(tabs)
+	for i: int in PAGE_KEYS.size():
+		var tab := Button.new()
+		tab.text = _text(PAGE_KEYS[i])
+		tab.toggle_mode = true
+		tab.add_theme_font_size_override("font_size", BODY_SIZE)
+		# The chosen page in bone, never gold (gold is for grace, D-293).
+		tab.add_theme_color_override("font_pressed_color", PixelStyle.COLOR_BONE)
+		tab.add_theme_color_override("font_hover_pressed_color", PixelStyle.COLOR_BONE)
+		tab.add_theme_color_override("font_color", PixelStyle.COLOR_GREY)
+		tab.custom_minimum_size = TAB_SIZE
+		tab.pressed.connect(show_page.bind(i))
+		tabs.add_child(tab)
+		_tabs.append(tab)
+	_pages.append(_page_life())
+	_pages.append(_page_abilities())
+	show_page(0)
+
+
+func _new_page() -> VBoxContainer:
+	var page := VBoxContainer.new()
+	page.position = Vector2(COLUMN_X, PAGE_TOP)
+	page.size = Vector2(COLUMN_WIDTH, 0)
+	page.add_theme_constant_override("separation", 0)
+	page.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(page)
+	return page
+
+
+func _page_life() -> VBoxContainer:
+	var page := _new_page()
+	page.add_child(_heading("saint_card_life"))
 	_bio = _label(_text("saint_bio_%s" % saint.id), BODY_SIZE)
 	_bio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_bio.add_theme_constant_override("line_spacing", LINE_TIGHTEN)
 	_bio.custom_minimum_size.x = COLUMN_WIDTH
-	column.add_child(_bio)
-	column.add_child(_heading("saint_card_sheet"))
+	page.add_child(_bio)
+	page.add_child(_heading("saint_card_sheet"))
 	_stats = _label("   ".join([
 		_text("stat_max_hp", {"value": saint.max_hp}),
 		_text("stat_armor", {"value": saint.armor}),
 		_text("stat_faith", {"value": saint.faith}),
 		_text("stat_will", {"value": saint.will}),
 	]), BODY_SIZE)
-	column.add_child(_stats)
+	page.add_child(_stats)
 	_trait = _entry(_text("saint_card_trait") + ": " + saint.trait_def.name_pt, saint.trait_def.desc_pt)
-	column.add_child(_trait)
+	page.add_child(_trait)
+	return page
+
+
+## Each ability: its name and cost, the rule line from the data (D-475), and
+## the line of the story in grey.
+func _page_abilities() -> VBoxContainer:
+	var page := _new_page()
+	page.add_theme_constant_override("separation", ABILITY_GAP)
 	for ability_id: StringName in saint.abilities:
-		var ability: AbilityDef = data.catalog.abilities[ability_id]
-		var line := _entry(_ability_name(ability), ability.desc_pt)
+		var line := _ability_entry(data.catalog.abilities[ability_id], "")
 		_abilities.append(line)
-		column.add_child(line)
-	var miracle: AbilityDef = data.catalog.abilities[saint.miracle]
-	_miracle = _entry(_text("saint_card_miracle") + ": " + _ability_name(miracle), miracle.desc_pt, PixelStyle.COLOR_GOLD)
-	column.add_child(_miracle)
+		page.add_child(line)
+	_miracle = _ability_entry(data.catalog.abilities[saint.miracle], _text("saint_card_miracle") + ": ", PixelStyle.COLOR_GOLD)
+	page.add_child(_miracle)
+	return page
+
+
+func _ability_entry(ability: AbilityDef, prefix: String, color: Color = PixelStyle.COLOR_AMBER) -> RichTextLabel:
+	var line := _rich()
+	line.text = "[color=#%s]%s[/color]  %s\n[color=#%s]%s[/color]" % [
+		color.to_html(false), _escape(prefix + _ability_name(ability)),
+		_escape(AbilityRule.line(ability, data.ui, data.catalog)),
+		PixelStyle.COLOR_GREY.to_html(false), _escape(ability.desc_pt),
+	]
+	return line
+
+
+## Shows page `index` (0: the life and the sheet; 1: the abilities).
+func show_page(index: int) -> void:
+	for i: int in _pages.size():
+		_pages[i].visible = i == index
+		_tabs[i].button_pressed = i == index
+	page_index = index
 
 
 func _ability_name(ability: AbilityDef) -> String:
@@ -231,6 +304,12 @@ func _heading(key: String) -> Label:
 
 ## One line of the sheet: the name in colour, then what it does.
 func _entry(title_text: String, desc: String, color: Color = PixelStyle.COLOR_AMBER) -> RichTextLabel:
+	var line := _rich()
+	line.text = "[color=#%s]%s[/color]  %s" % [color.to_html(false), _escape(title_text), _escape(desc)]
+	return line
+
+
+func _rich() -> RichTextLabel:
 	var line := RichTextLabel.new()
 	line.bbcode_enabled = true
 	line.fit_content = true
@@ -241,7 +320,6 @@ func _entry(title_text: String, desc: String, color: Color = PixelStyle.COLOR_AM
 	line.add_theme_constant_override("line_separation", LINE_TIGHTEN)
 	line.add_theme_color_override("default_color", PixelStyle.COLOR_BONE)
 	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	line.text = "[color=#%s]%s[/color]  %s" % [color.to_html(false), _escape(title_text), _escape(desc)]
 	return line
 
 
