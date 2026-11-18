@@ -32,7 +32,7 @@ Todo texto de lore declara `origin` (`narrative-system.md` §6).
 7. Almas condenadas mostradas com humanidade, sem relativizar o pecado e sem caricatura.
 8. Proibido: ato sexual explícito, criança como vítima, método de suicídio, profanação de santos e figuras sagradas, figuras de outras religiões.
 9. Fora do Martirológio, nenhuma explicação doutrinal passa de **três frases**.
-10. As almas inspiradas em Dante **não** usam o nome original do poema; a inspiração fica no Arquivo.
+10. As almas **criadas pelo jogo** a partir de Dante **não** usam o nome original do poema; a inspiração fica no Arquivo. Filósofos, figuras históricas e lendas que aparecem em Dante (Aristóteles, Sócrates, Helena, Cleópatra…) **mantêm o nome** quando entram como diálogo (D-459).
 
 ## 4. Tom e estilo
 
