@@ -41,7 +41,7 @@ Depois, tocar no guardião repete a fala e a instrução. As referências ficam 
 
 Com isso, a instrução da Capela muda: "Deixe um santo rezando na Capela durante a semana: ele não vai à expedição, e a companhia ganha Sufrágios." Sai o "descansa da desolação", que agora é do Jardim e Claustro.
 
-## Carmelo · fala nova de Santa Teresa d'Ávila (D-490, para Alan aprovar)
+## Carmelo · fala nova de Santa Teresa d'Ávila (D-491: Alan escolheu o "Nada te perturbe")
 
 O Carmelo agora é **inteiro**, fica bloqueado no motor e tem uma **reforma espiritual** (D-489). Por isso a fala aprovada, que termina em *"e ainda está em ruínas"*, muda. Alan pediu uma fala sobre as sete moradas.
 
@@ -51,3 +51,9 @@ O Carmelo agora é **inteiro**, fica bloqueado no motor e tem uma **reforma espi
 | B | Sete moradas tem a alma, e no centro mora o Rei. Esta casa espera quem quiser entrar. | *Castelo Interior*, Moradas I, 1 e VII: o Rei na morada do centro (paráfrase) |
 
 A instrução do prédio continua: *(aviso: reforma depois do Círculo 3)* "Reformado o Carmelo, uma nova morada se abre a cada círculo vencido."
+
+**Escolha de Alan (D-491):** a fala é o poema de Santa Teresa. Proposta de texto (tradução própria), para Alan confirmar o tamanho:
+
+> Nada te perturbe, nada te espante. Tudo passa; Deus não muda. Só Deus basta.
+
+**De onde vem (só no Arquivo):** o poema "Nada te turbe", encontrado no breviário de Santa Teresa de Ávila; atribuído a ela pela tradição carmelita. Tradução própria; o texto completo diz ainda "a paciência tudo alcança; quem a Deus tem nada lhe falta".
