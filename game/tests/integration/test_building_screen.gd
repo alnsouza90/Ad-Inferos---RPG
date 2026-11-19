@@ -195,3 +195,8 @@ func test_every_guardian_has_a_halo_behind_the_head() -> void:
 	for id: StringName in BuildingScreen.GUARDIANS:
 		assert_false((BuildingScreen.HALO_HEADS.get(id, []) as Array).is_empty(), "auréola %s" % id)
 	assert_eq((BuildingScreen.HALO_HEADS[&"infirmary"] as Array).size(), 2, "Cosme e Damião")
+
+
+func test_the_gate_has_the_christ_child_painting_on_its_wall() -> void:
+	for prop: Dictionary in BuildingScreen.PROPS[&"gate"]:
+		assert_true(ResourceLoader.exists(BuildingScreen.PROP_PATH % prop["file"]), prop["file"])

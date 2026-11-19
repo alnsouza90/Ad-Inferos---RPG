@@ -25,6 +25,14 @@ const GUARDIANS: Dictionary = {
 }
 ## What the Pantry sells, in the order of the shelf.
 const PROVISIONS: Array[StringName] = [&"bread", &"candle", &"holy_water", &"bandages", &"incense"]
+## Props on the walls of an interior (D-516): the Christ Child's painting
+## at the Gate, below the stack of saints, lit by the torches. Iconography
+## only (art-direction): it never speaks, acts or gives a bonus.
+const PROP_PATH: String = "res://assets/pixel/environments/village/props/%s.png"
+const PROPS: Dictionary = {
+	&"gate": [{"file": "gate_painting", "at": Vector2(846, 318)}],
+}
+const PROP_LIGHT := Color(0.95, 0.88, 0.8)
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
 const HALO_PATH: String = "res://assets/pixel/vfx/guardian_halo.png"
@@ -288,6 +296,12 @@ func _build() -> void:
 	if interior != null:
 		interior.size = STAGE_SIZE
 		interior.modulate = INTERIOR_SHADE
+	# Props hung on the interior's wall, behind the board and the stack
+	# (D-516: the Christ Child's painting at the Gate, D-501).
+	for prop: Dictionary in PROPS.get(building, []):
+		var hung := _picture(PROP_PATH % prop["file"], prop["at"], 1.0)
+		if hung != null:
+			hung.modulate = PROP_LIGHT
 	_build_guardian()
 	_build_header()
 	_stage.add_child(PixelStyle.iron_plate(BOARD_RECT))
