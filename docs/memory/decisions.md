@@ -596,3 +596,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Na volta:** o botão do resumo vira "Voltar à vila", `Campaign.finish_expedition` vira a semana, e a vila abre.
   - **Save na vila:** sem expedição e com a cena "village" (save-load §3.4). A versão do save não mudou.
   - **Textos do título** ajustados à campanha: "Nova campanha", "Já existe uma campanha salva…" e "Nada salvo.".
+- **D-515 · 19/11/2026 · Alan** — Textos novos do título aprovados. **Animação da corrente no Mapa do Inferno:** a lanterna balança devagar na corrente (±3°). Quando a faixa da companhia fica mais funda do que da última vez que o mapa abriu, a lanterna **desce pela corrente** até lá, com o mapa rolando junto (0,7 s por faixa). Na primeira abertura ela desce da Porta do Inferno até o Círculo 2, e a cena acontece uma vez só. A última faixa mostrada fica na campanha (`map_lantern_band`, −1 em saves antigos: nunca aberto).

@@ -40,6 +40,10 @@ const DOT_SIZE: float = 2.0
 const CHAIN_X: float = 830.0
 const CHAIN_TOP: float = 214.0
 const LANTERN_DROP: float = 120.0
+## The descent (D-515): seconds per band, and the lantern's gentle sway.
+const DESCENT_PER_BAND: float = 0.7
+const SWAY_DEGREES: float = 3.0
+const SWAY_SECONDS: float = 1.8
 ## The funnel: the dark of each side grows band after band.
 const FUNNEL_START: float = 20.0
 const FUNNEL_STEP: float = 22.0
@@ -66,6 +70,11 @@ var _map: Control
 var _plate: NinePatchRect
 var _plate_text: Label
 var _plate_button: Button
+var _chain: TextureRect
+var _lantern: TextureRect
+## The band the lantern shows now (moves during the descent).
+var lantern_shown_band: int = 0
+var descending: bool = false
 
 
 func setup(p_data: GameData, p_catalog: ExpeditionCatalog, p_campaign: CampaignState) -> void:
@@ -78,7 +87,17 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_build()
 	_center_stage()
-	scroll_to_band(HellMap.lantern_band(campaign, catalog))
+	var band: int = HellMap.lantern_band(campaign, catalog)
+	var seen: int = campaign.map_lantern_band
+	campaign.map_lantern_band = band
+	if seen < band:
+		# A new circle (or the first visit): the lantern comes down its chain
+		# from where it was, from the Gate of Hell the first time.
+		descend(maxi(seen, 0), band)
+	else:
+		place_lantern(band)
+		scroll_to_band(band)
+	_sway()
 
 
 func _notification(what: int) -> void:
@@ -137,11 +156,54 @@ func point_text(place: StringName, camp: int) -> String:
 	return "%s\n%s" % [name_text, data.ui.text(&"map_camp_not_consecrated", {"camp": camp})]
 
 
+## The lantern hangs at `band`: the chain's length and the lantern's place.
+func place_lantern(band: int) -> void:
+	lantern_shown_band = band
+	_set_lantern_y(band * BAND_SIZE.y + LANTERN_DROP)
+
+
+## The lantern comes down its chain from `from_band` to `to_band`, the map
+## following it (D-515).
+func descend(from_band: int, to_band: int) -> void:
+	place_lantern(from_band)
+	scroll_to_band(from_band)
+	lantern_shown_band = to_band
+	if not is_inside_tree() or from_band == to_band:
+		place_lantern(to_band)
+		scroll_to_band(to_band)
+		return
+	descending = true
+	var seconds: float = DESCENT_PER_BAND * (to_band - from_band)
+	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_method(_set_lantern_y, from_band * BAND_SIZE.y + LANTERN_DROP, to_band * BAND_SIZE.y + LANTERN_DROP, seconds)
+	tween.tween_property(_scroll, "scroll_vertical", _scroll_target(to_band), seconds)
+	tween.chain().tween_callback(func() -> void: descending = false)
+
+
+func _set_lantern_y(bottom: float) -> void:
+	_chain.size.y = bottom - CHAIN_TOP
+	_lantern.position.y = roundf(bottom)
+
+
+## The lantern sways gently on its chain.
+func _sway() -> void:
+	if not is_inside_tree():
+		return
+	_lantern.pivot_offset = Vector2(_lantern.size.x * 0.5, 0)
+	var tween := _lantern.create_tween().set_loops().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(_lantern, "rotation_degrees", SWAY_DEGREES, SWAY_SECONDS)
+	tween.tween_property(_lantern, "rotation_degrees", -SWAY_DEGREES, SWAY_SECONDS)
+
+
 ## Scrolls so that `band` is in the middle of the screen.
 func scroll_to_band(band: int) -> void:
+	_scroll.scroll_vertical = _scroll_target(band)
+
+
+func _scroll_target(band: int) -> int:
 	var visible_height: float = STAGE_SIZE.y - TOP_HEIGHT
 	var target: float = band * BAND_SIZE.y + BAND_SIZE.y * 0.5 - visible_height * 0.5
-	_scroll.scroll_vertical = int(clampf(target, 0.0, HellMap.PLACES.size() * BAND_SIZE.y - visible_height))
+	return int(clampf(target, 0.0, HellMap.PLACES.size() * BAND_SIZE.y - visible_height))
 
 
 # --- building --------------------------------------------------------------------
@@ -267,7 +329,8 @@ func _build_lantern() -> void:
 	var band: int = HellMap.lantern_band(campaign, catalog)
 	var bottom: float = band * BAND_SIZE.y + LANTERN_DROP
 	var chain_texture: Texture2D = load(CHAIN_PATH) as Texture2D
-	var chain := TextureRect.new()
+	_chain = TextureRect.new()
+	var chain := _chain
 	chain.texture = chain_texture
 	chain.stretch_mode = TextureRect.STRETCH_TILE
 	chain.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -277,7 +340,8 @@ func _build_lantern() -> void:
 	chain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_map.add_child(chain)
 	var lantern_texture: Texture2D = PixelStyle.piece("ui_lantern_on")
-	_map.add_child(_picture(lantern_texture, Rect2(Vector2(CHAIN_X - lantern_texture.get_width() * 0.5, bottom).round(), lantern_texture.get_size())))
+	_lantern = _picture(lantern_texture, Rect2(Vector2(CHAIN_X - lantern_texture.get_width() * 0.5, bottom).round(), lantern_texture.get_size()))
+	_map.add_child(_lantern)
 	var pale: int = HellMap.pale_light_band(campaign, catalog)
 	if pale == band:
 		return
