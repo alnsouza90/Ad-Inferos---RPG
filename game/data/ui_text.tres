@@ -197,6 +197,8 @@ texts = {
 "intercede_more": "Toque em Interceder para tomar outra coisa.",
 "intercede_take_condition": "Tomar todo o {condition} de {saint}.",
 "intercede_take_desolation": "Tomar {amount} de desolação de {saint}.",
+"interface_hide": "Ver o interior",
+"interface_show": "Mostrar painéis",
 "line_boss_asmodeus_asmodeus_seven_nights": "Duas noites. Depois, a terceira é minha.",
 "line_boss_asmodeus_bound": "Ele mandou o anjo outra vez. Sempre o mesmo anjo.",
 "line_boss_asmodeus_fled": "O vento me leva. Ele sempre me trouxe de volta.",

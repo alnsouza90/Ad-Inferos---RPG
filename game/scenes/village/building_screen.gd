@@ -26,13 +26,14 @@ const GUARDIANS: Dictionary = {
 ## What the Pantry sells, in the order of the shelf.
 const PROVISIONS: Array[StringName] = [&"bread", &"candle", &"holy_water", &"bandages", &"incense"]
 ## Props on the walls of an interior (D-516): the Christ Child's painting
-## at the Gate, below the stack of saints, lit by the torches. Iconography
+## on the Gate's right tower, above the packs, by the torch. Iconography
 ## only (art-direction): it never speaks, acts or gives a bonus.
 const PROP_PATH: String = "res://assets/pixel/environments/village/props/%s.png"
 const PROPS: Dictionary = {
-	&"gate": [{"file": "gate_painting", "at": Vector2(846, 318)}],
+	&"gate": [{"file": "gate_painting", "at": Vector2(586, 30)}],
 }
-const PROP_LIGHT := Color(0.95, 0.88, 0.8)
+## The button that hides and shows the interface (D-517).
+const TOGGLE_RECT := Rect2(10, 492, 150, 38)
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
 const HALO_PATH: String = "res://assets/pixel/vfx/guardian_halo.png"
@@ -104,6 +105,13 @@ var _roster: SaintRoster
 var _alms: Label
 var _status: Label
 var _arrivals: Array[StringName] = []
+## The interior and its props, under the interface.
+var _scenery: Array[CanvasItem] = []
+## The first child of the stage that belongs to the interface.
+var _interface_from: int = 0
+var _toggle: Button
+## False while the player looks at the whole interior (D-517).
+var interface_shown: bool = true
 
 
 func setup(p_data: GameData, p_catalog: ExpeditionCatalog, p_campaign: CampaignState, p_building: StringName) -> void:
@@ -295,13 +303,14 @@ func _build() -> void:
 	var interior := _picture(INTERIOR_PATH % building, Vector2.ZERO, 1.0)
 	if interior != null:
 		interior.size = STAGE_SIZE
-		interior.modulate = INTERIOR_SHADE
-	# Props hung on the interior's wall, behind the board and the stack
-	# (D-516: the Christ Child's painting at the Gate, D-501).
+		_scenery.append(interior)
+	# Props hung on the interior's wall (D-516: the Christ Child's painting
+	# at the Gate, D-501).
 	for prop: Dictionary in PROPS.get(building, []):
 		var hung := _picture(PROP_PATH % prop["file"], prop["at"], 1.0)
 		if hung != null:
-			hung.modulate = PROP_LIGHT
+			_scenery.append(hung)
+	_interface_from = _stage.get_child_count()
 	_build_guardian()
 	_build_header()
 	_stage.add_child(PixelStyle.iron_plate(BOARD_RECT))
@@ -316,7 +325,32 @@ func _build() -> void:
 	_roster.saint_tapped.connect(func(id: StringName) -> void: tap_saint(id))
 	_stage.add_child(_roster)
 	_build_bottom()
+	_build_toggle()
 	_refresh()
+	_shade_scenery()
+
+
+## The button that hides the interface to see the whole interior, and
+## brings it back (D-517).
+func toggle_interface() -> void:
+	interface_shown = not interface_shown
+	for i: int in range(_interface_from, _stage.get_child_count()):
+		var child: Node = _stage.get_child(i)
+		if child != _toggle and child is CanvasItem:
+			(child as CanvasItem).visible = interface_shown
+	_toggle.text = data.ui.text(&"interface_hide" if interface_shown else &"interface_show")
+	_shade_scenery()
+
+
+## The interior a little darker under the interface, in full light without it.
+func _shade_scenery() -> void:
+	for item: CanvasItem in _scenery:
+		item.modulate = INTERIOR_SHADE if interface_shown else Color.WHITE
+
+
+func _build_toggle() -> void:
+	_toggle = _button(data.ui.text(&"interface_hide"), toggle_interface, TOGGLE_RECT)
+	_stage.add_child(_toggle)
 
 
 ## The guardian on his stage (D-504): cut at the ledge of the bottom bar, as

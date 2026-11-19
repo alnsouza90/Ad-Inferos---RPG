@@ -200,3 +200,18 @@ func test_every_guardian_has_a_halo_behind_the_head() -> void:
 func test_the_gate_has_the_christ_child_painting_on_its_wall() -> void:
 	for prop: Dictionary in BuildingScreen.PROPS[&"gate"]:
 		assert_true(ResourceLoader.exists(BuildingScreen.PROP_PATH % prop["file"]), prop["file"])
+
+
+func test_the_interface_hides_to_show_the_whole_interior_and_comes_back() -> void:
+	for id: StringName in BuildingScreen.GUARDIANS:
+		var b := _screen(id)
+		await wait_process_frames(1)
+		assert_true(b.interface_shown)
+		b.toggle_interface()
+		assert_false(b.interface_shown, String(id))
+		assert_false(b._roster.visible, "a pilha some")
+		assert_true(b._toggle.visible, "o botão fica")
+		assert_eq(b._toggle.text, data.ui.text(&"interface_show"))
+		b.toggle_interface()
+		assert_true(b._roster.visible)
+		assert_eq(b._toggle.text, data.ui.text(&"interface_hide"))

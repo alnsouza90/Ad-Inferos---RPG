@@ -526,3 +526,5 @@ map_camp_not_consecrated,"Pouso {camp}: ainda não consagrado. Chegue até ele p
 map_boss,O chefe do círculo
 map_depart_here,Partir daqui
 map_choose,Toque no Portão do círculo ou num Pouso consagrado.
+interface_hide,Ver o interior
+interface_show,Mostrar painéis
