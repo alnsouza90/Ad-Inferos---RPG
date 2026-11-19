@@ -46,7 +46,7 @@ func test_every_outline_is_found_by_its_centre_and_has_a_name() -> void:
 
 func test_the_sky_and_the_scenery_house_are_not_buildings() -> void:
 	assert_eq(VillageLayout.building_at(Vector2(800, 100)), &"", "o céu")
-	assert_eq(VillageLayout.building_at(Vector2(480, 470)), &"", "a praça com Nossa Senhora é só cenário")
+	assert_eq(VillageLayout.building_at(Vector2(380, 480)), &"", "o chão da praça")
 
 
 func test_an_open_building_is_chosen_and_a_closed_one_only_says_so() -> void:
@@ -106,3 +106,19 @@ func test_grey_sky_in_advent_and_lent_clear_otherwise() -> void:
 	assert_true(_screen(int(starts[2])).sunset_shown())
 	assert_false(_screen(1).sunset_shown())
 	assert_string_contains(_screen(1).week_shown(), data.ui.text(&"season_advent"))
+
+
+func test_touching_the_statue_types_the_ave_maria() -> void:
+	# D-497: the Ave Maria in Latin, typed letter by letter, in an iron plate.
+	var v := _screen()
+	v.tap_at(Vector2(475, 400))
+	assert_eq(v.prayer_shown(), "", "começa vazia")
+	v.type_prayer(1.0)
+	var some: String = v.prayer_shown()
+	assert_gt(some.length(), 0)
+	assert_true(data.ui.text(&"statue_prayer").begins_with(some))
+	for i: int in 60:
+		v.type_prayer(1.0)
+	assert_eq(v.prayer_shown(), data.ui.text(&"statue_prayer"))
+	v.tap_at(Vector2(475, 400))
+	assert_eq(v.prayer_shown(), "", "outro toque fecha")

@@ -30,6 +30,11 @@ const TITLE_SIZE: int = PixelStyle.TITLE_SIZE * 2
 const TEXT_SIZE: int = PixelStyle.TEXT_SIZE * 2
 ## The note of the touched building, in the sky corner.
 const NOTE_RECT := Rect2(586, 24, 360, 68)
+## The Ave Maria, when the statue is touched (D-497): an iron plate under
+## the sky, so the statue stays in sight, the prayer typed one letter at a
+## time.
+const PRAYER_RECT := Rect2(276, 22, 664, 140)
+const PRAYER_CHARS_PER_SECOND: float = 22.0
 
 var data: GameData
 var campaign: CampaignState
@@ -46,6 +51,9 @@ var _week: Label
 var _note: NinePatchRect
 var _note_title: Label
 var _note_text: Label
+var _prayer: NinePatchRect
+var _prayer_text: Label
+var _prayer_chars: float = 0.0
 
 
 func setup(p_data: GameData, p_campaign: CampaignState, p_economy: ConstantsDef) -> void:
@@ -67,6 +75,25 @@ func _notification(what: int) -> void:
 
 func _process(delta: float) -> void:
 	drift_sky(delta)
+	type_prayer(delta)
+
+
+## Types the prayer, letter by letter, while it is open.
+func type_prayer(delta: float) -> void:
+	if _prayer == null or not _prayer.visible or _prayer_text.visible_ratio >= 1.0:
+		return
+	_prayer_chars += PRAYER_CHARS_PER_SECOND * delta
+	_prayer_text.visible_characters = int(_prayer_chars)
+	if _prayer_text.visible_characters >= _prayer_text.get_total_character_count():
+		_prayer_text.visible_characters = -1
+
+
+func prayer_shown() -> String:
+	if _prayer == null or not _prayer.visible:
+		return ""
+	if _prayer_text.visible_characters < 0:
+		return _prayer_text.text
+	return _prayer_text.text.left(_prayer_text.visible_characters)
 
 
 ## Moves the clouds; they wrap, so the sky never ends.
@@ -90,7 +117,14 @@ func is_grey() -> bool:
 ## open building is chosen, a closed one only says it is closed.
 func tap_at(point: Vector2) -> void:
 	var building: StringName = VillageLayout.building_at(point)
+	if _prayer.visible:
+		_prayer.visible = false
+		if building == VillageLayout.STATUE:
+			return
 	if building == &"":
+		return
+	if building == VillageLayout.STATUE:
+		_open_prayer()
 		return
 	selected = building
 	for id: StringName in _outlines:
@@ -193,6 +227,42 @@ func _build() -> void:
 		_outlines[id] = outline
 	_build_top_band()
 	_build_note()
+	_build_prayer()
+
+
+func _build_prayer() -> void:
+	_prayer = PixelStyle.iron_plate(PRAYER_RECT)
+	_prayer.visible = false
+	_stage.add_child(_prayer)
+	var title := Label.new()
+	title.text = data.ui.text(&"statue_title")
+	title.position = Vector2(18, 8)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	PixelStyle.title(title, PixelStyle.COLOR_AMBER, TITLE_SIZE)
+	_prayer.add_child(title)
+	# A Label wraps only inside a container (as in the saint's card).
+	var column := VBoxContainer.new()
+	column.position = Vector2(18, 38)
+	column.size = Vector2(PRAYER_RECT.size.x - 36.0, 0)
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_prayer.add_child(column)
+	_prayer_text = Label.new()
+	_prayer_text.text = data.ui.text(&"statue_prayer")
+	_prayer_text.custom_minimum_size.x = PRAYER_RECT.size.x - 36.0
+	_prayer_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_prayer_text.add_theme_font_size_override("font_size", TEXT_SIZE)
+	_prayer_text.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
+	_prayer_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(_prayer_text)
+
+
+func _open_prayer() -> void:
+	for id: StringName in _outlines:
+		(_outlines[id] as CanvasItem).visible = false
+	_note.visible = false
+	_prayer_chars = 0.0
+	_prayer_text.visible_characters = 0
+	_prayer.visible = true
 
 
 func _weather(amount: float) -> ShaderMaterial:

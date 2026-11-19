@@ -435,3 +435,74 @@ season_lent,Quaresma
 season_easter,Páscoa
 season_ordinary_2,Tempo Comum
 village_week,Semana {week} · {season}
+statue_title,Ave Maria
+statue_prayer,"Ave Maria, gratia plena, Dominus tecum. Benedicta tu in mulieribus, et benedictus fructus ventris tui, Iesus. Sancta Maria, Mater Dei, ora pro nobis peccatoribus, nunc et in hora mortis nostrae. Amen."
+guardian_gate,São Cristóvão
+guardian_pantry,Santa Isabel da Hungria
+guardian_infirmary,São Cosme e São Damião
+guardian_garden,São Francisco de Assis
+guardian_retreat_house,Santo Inácio de Loyola
+guardian_line_gate,"Por esta porta chega quem foi chamado, e por ela sai quem vai buscar."
+guardian_line_pantry,O pão que guardo não é meu. É de quem vai precisar dele lá embaixo.
+guardian_line_infirmary,"Fomos médicos dos pobres. Aqui o corpo descansa, e a ferida tem tempo de fechar."
+guardian_line_garden,"Louvado sejas, meu Senhor, com todas as tuas criaturas."
+guardian_line_retreat_house,"Também fui soldado, e uma ferida me ensinou mais que todas as vitórias."
+guardian_help_gate,"Toque numa vaga e depois num santo da reserva para trocar. A ordem das vagas é a ordem na luta."
+guardian_help_pantry,"Toque numa provisão do estoque para comprá-la e pô-la no alforje. Toque nela no alforje para devolver."
+guardian_help_infirmary,"Toque num santo ferido e depois num leito livre. No leito, o ferimento grave sara mais depressa."
+guardian_help_garden,"Toque num santo e depois num lugar livre: ele descansa a semana, não desce, e volta com a desolação aliviada. Toque nele de novo para tirá-lo."
+guardian_help_retreat_house,"Toque num santo à direita e depois numa habilidade. Cada nível novo dá uma melhoria."
+building_back,Voltar à vila
+village_alms,Esmolas {alms}
+pantry_pack,Alforje {count}/{of}
+pantry_buy,{name} · {price}
+pantry_give_back,Devolver
+infirmary_bed,Leito · {cost}
+infirmary_in_bed,No leito
+infirmary_none,Ninguém ferido.
+injury_minor,ferimento leve
+injury_major,ferimento grave
+garden_rest,Descansar
+garden_resting,Descansando
+garden_desolation,desolação {value}
+retreat_upgrades,Nível {level} · melhorias {left}
+retreat_upgraded,{name} (melhorada)
+gate_party,A companhia
+gate_slot,{slot}. {name}
+gate_depart,Partir
+gate_arrival,Chegou: {name}
+roster_title,Os santos
+roster_level,Nv {level}
+roster_in_bed,No leito
+roster_resting,No Jardim
+roster_in_party,Na companhia
+gate_reserve,Na reserva
+gate_empty,Vaga livre
+lock_week,Chega na semana {week}.
+lock_circle,Chega quando a companhia vencer o Círculo {circle}.
+lock_carmel,Chega com a reforma espiritual do Carmelo.
+lock_milestone,Chega num marco da campanha.
+pantry_stock_title,Estoque da despensa
+infirmary_title,Leitos
+infirmary_free,Leito livre
+infirmary_cost,{cost} esmolas
+infirmary_weeks,{weeks} sem. de cura
+garden_title,Lugares de repouso
+garden_free,Lugar livre
+place_locked,Abre no nível {level}
+retreat_title,Escolha um santo à direita
+retreat_now,Hoje: {rule}
+retreat_after,Melhorada: {rule}
+retreat_improve,Melhorar
+saint_short_saint_george,Jorge
+saint_short_saint_benedict,Bento
+saint_short_saint_therese,Teresinha
+saint_short_saint_nicholas,Nicolau
+saint_short_saint_anthony_abbot,Antão
+saint_short_saint_joan,Joana
+saint_short_saint_john_cross,João
+saint_short_saint_pio,Padre Pio
+saint_short_saint_rita,Rita
+saint_short_saint_anthony_padua,Antônio
+saint_short_saint_sebastian,Sebastião
+saint_short_saint_gertrude,Gertrudes

@@ -287,7 +287,7 @@ func _build_portrait() -> void:
 	_stage.add_child(_picture(PixelStyle.piece("ui_portrait_arch"), ARCH_POS, ARCH_SCALE))
 	# The same portrait as everywhere (D-442), in the window of the arch.
 	_portrait = TextureRect.new()
-	_portrait.texture = _face(saint.id)
+	_portrait.texture = face(saint.id)
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -298,7 +298,7 @@ func _build_portrait() -> void:
 
 
 ## The portrait cut around the face (FACE_REGIONS), or the whole picture.
-static func _face(saint_id: StringName) -> Texture2D:
+static func face(saint_id: StringName) -> Texture2D:
 	var whole: Texture2D = BattleScreen.saint_portrait(saint_id)
 	if whole == null or not FACE_REGIONS.has(saint_id):
 		return whole

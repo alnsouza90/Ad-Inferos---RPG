@@ -29,12 +29,20 @@ const AREAS: Dictionary = {
 }
 
 
+## The statue of Our Lady in the square: scenery, but touching it shows the
+## Ave Maria (D-497).
+const STATUE: StringName = &"statue"
+const STATUE_AREA: Array[Vector2] = [Vector2(452, 352), Vector2(500, 352), Vector2(504, 440), Vector2(522, 470), Vector2(522, 520), Vector2(426, 520), Vector2(426, 470), Vector2(448, 440)]
+
+
 static func area(building: StringName) -> PackedVector2Array:
 	return PackedVector2Array(AREAS.get(building, []))
 
 
 ## The building under `point` (picture pixels), or &"".
 static func building_at(point: Vector2) -> StringName:
+	if Geometry2D.is_point_in_polygon(point, PackedVector2Array(STATUE_AREA)):
+		return STATUE
 	for id: StringName in AREAS:
 		if Geometry2D.is_point_in_polygon(point, area(id)):
 			return id
