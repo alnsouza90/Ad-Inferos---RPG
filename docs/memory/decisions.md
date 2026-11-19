@@ -602,3 +602,9 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Nome do prédio:** tocar no nome e no brasão (Portão, Despensa, Enfermaria…) fecha o painel do centro e a pilha de santos, e o interior aparece em luz plena; tocar de novo abre. O guardião, a fala e a barra de baixo ficam sempre.
   - **Ficha do santo:** tocar na **miniatura** de um santo na pilha abre a ficha dele (`SaintCard`); tocar de novo, ou em "Fechar", fecha. Tocar no resto do cartão continua escolhendo o santo para as vagas. As habilidades escolhidas na ficha vão para a campanha.
   - **Quadro do Menino Jesus:** aprovado na torre da direita do Portão.
+- **D-518 · 19/11/2026 · Alan** — Ordem das próximas tarefas aprovada: T50 (santo novo), T51 (Prólogo), T61 e T55 (simulação), T52 e T53 (arte final), T54 (áudio) e T56 (abusos). **Antes de fechar o M2, ainda na fatia vertical**, entram três tarefas novas (backlog `m2.md`):
+  - **T66 · refatoração do código:** levantamento, plano em passos pequenos sem mudar o comportamento, execução do que Alan aprovar.
+  - **T67 · revisão de segurança:** saves, Android, repositório e CI, dados, abusos.
+  - **T68 · regras de ouro e lições aprendidas:** regras de ouro para crescer no M3 e no M4, sessão de lições aprendidas do M2 e estrutura do backlog do M3.
+  - **Fechamento:** a T57 (teste completo no Android) vem depois das três.
+  - **Agora:** Alan joga o ciclo da T49 no celular e traz o retorno.
