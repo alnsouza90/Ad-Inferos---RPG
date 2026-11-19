@@ -188,3 +188,10 @@ func test_the_saints_to_come_are_in_the_order_they_arrive() -> void:
 	assert_lt(coming.find(&"saint_nicholas"), coming.find(&"saint_anthony_abbot"), "semana 3 antes do Círculo 2")
 	assert_lt(coming.find(&"saint_anthony_abbot"), coming.find(&"saint_joan"))
 	assert_eq(coming.back(), &"saint_gertrude", "o marco por último")
+
+
+func test_every_guardian_has_a_halo_behind_the_head() -> void:
+	assert_true(ResourceLoader.exists(BuildingScreen.HALO_PATH))
+	for id: StringName in BuildingScreen.GUARDIANS:
+		assert_false((BuildingScreen.HALO_HEADS.get(id, []) as Array).is_empty(), "auréola %s" % id)
+	assert_eq((BuildingScreen.HALO_HEADS[&"infirmary"] as Array).size(), 2, "Cosme e Damião")

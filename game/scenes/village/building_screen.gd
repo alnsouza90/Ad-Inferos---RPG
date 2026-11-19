@@ -27,8 +27,20 @@ const GUARDIANS: Dictionary = {
 const PROVISIONS: Array[StringName] = [&"bread", &"candle", &"holy_water", &"bandages", &"incense"]
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
+const HALO_PATH: String = "res://assets/pixel/vfx/guardian_halo.png"
+## Alan's halo (D-506), drawn at 130 pixels: shown at its own size.
+const HALO_SCALE: float = 1.0
+## The centre of each guardian's head, in pixels of his portrait (two for
+## Cosmas and Damian).
+const HALO_HEADS: Dictionary = {
+	&"gate": [Vector2(98, 26)],
+	&"pantry": [Vector2(88, 38)],
+	&"infirmary": [Vector2(72, 34), Vector2(140, 48)],
+	&"garden": [Vector2(92, 34)],
+	&"retreat_house": [Vector2(80, 26)],
+}
 ## How much of the guardian's lower edge the ledge hides.
-const PORTRAIT_CUT: float = 56.0
+const PORTRAIT_CUT: float = 84.0
 ## The interior a little darker, so the board and the cards read first.
 const INTERIOR_SHADE := Color(0.62, 0.6, 0.62)
 const HEADER_WIDTH: float = 276.0
@@ -307,7 +319,14 @@ func _build_guardian() -> void:
 	var texture: Texture2D = load(path) as Texture2D
 	var size_shown: Vector2 = texture.get_size() * PORTRAIT_SCALE
 	var x: float = floorf((stage.size.x - size_shown.x) * 0.5)
-	stage.add_child(SaintMini.picture(texture, Rect2(Vector2(x, BOTTOM_Y - size_shown.y + PORTRAIT_CUT), size_shown)))
+	var corner := Vector2(x, BOTTOM_Y - size_shown.y + PORTRAIT_CUT)
+	# The halo behind each head (D-505; Alan's drawing, D-506).
+	var halo: Texture2D = load(HALO_PATH) as Texture2D
+	for head: Vector2 in HALO_HEADS.get(building, []):
+		var side: float = halo.get_size().x * HALO_SCALE
+		var center: Vector2 = corner + head * PORTRAIT_SCALE
+		stage.add_child(SaintMini.picture(halo, Rect2((center - Vector2(side, side) * 0.5).round(), Vector2(side, side))))
+	stage.add_child(SaintMini.picture(texture, Rect2(corner, size_shown)))
 
 
 func _build_header() -> void:
