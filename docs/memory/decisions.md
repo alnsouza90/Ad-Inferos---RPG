@@ -630,3 +630,15 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
     - o início de luta com sino e mancha de tinta é ponto de partida, a definir na F3;
     - a seleção e o toque com vibração (S01) estão aprovados;
     - os inimigos entram pela direita na luta do corredor.
+- **D-521 · 19/11/2026 · agente (proposta)** — **Revisão criativa: diversão e imersão** (`docs/playtests/2026-11-19-revisao-criativa.md`), a pedido de Alan.
+  - **Diagnóstico:**
+    - o jogo é mudo;
+    - nada reage ao toque;
+    - o ritmo alterna espera e menu;
+    - a ameaça (Lume, desolação) não se sente;
+    - as recompensas não viram momento;
+    - os santos não têm voz nem presença.
+  - **Cinco pilares:** o Inferno respira; a luz é a vida; cada conquista é um momento; os santos estão vivos; um polegar, uma decisão.
+  - **Propostas** para o combate, a caminhada, o Pouso, a vila e o celular.
+  - **Método:** a **F1.5 · fatia da diversão**: um corredor e uma luta com o tratamento completo, aprovados por Alan antes de replicar no resto.
+  - **Pendente de Alan:** seis perguntas, entre elas as falas dos santos (texto dele) e a direção de som.

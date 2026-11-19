@@ -73,6 +73,7 @@ A ordem do §8 do playtest está boa. Ajustei três pontos:
 | Fase | Conteúdo | Tamanho | Build no fim |
 | --- | --- | --- | --- |
 | **F1 · Correções e saídas** | B03, B04, V01 (toque duplo); B13 e D8; D9, D10 e V06; B05, B06, B07, B09, B11, B12; D11 e V04; V05, V10, V11 | M (3–4 dias) | Sim |
+| **F1.5 · Fatia da diversão** (proposta, `2026-11-19-revisao-criativa.md` §4) | Um corredor e uma luta comum com o tratamento completo: HUD novo, som, câmera, peso, vibração, santos que reagem, vitória com cerimônia, letras grandes. Alan aprova a **sensação** antes de replicar | M–G | Sim |
 | **F2 · HUD e legibilidade** | D1, D2, D4 (desenho), D12; H01–H10; metas do §1.2 em todas as telas; V07, V08, V03, V05; P02, P03, B10 | G (1–2 semanas) | Sim |
 | **F3 · Sensação de combate** | C01–C11, C13, S01; B01, B02 (visibilidade das ações e da espera); B08 (só estampa); áudio mínimo (ADR, sino, toque, Ave Maria) | G (1–2 semanas) | Sim |
 | **F4 · Mundo contínuo** | T66 (refatoração da caminhada e do combate); D3, D5, C12, M02, M04; P01 | G+ (2–3 semanas) | Sim |

@@ -10,6 +10,7 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
     1. Fazer o merge do PR #103, se ainda aberto, com o "aprovado" de Alan.
     2. Atualizar as especificações do §5 do plano (D1, D2, D7, D8, D9, D10, D11 e D12, com as respostas do §8). Mexem no GDD: só depois do pedido explícito do playtest, já dado.
     3. Começar a **F1** (correções e saídas): toque duplo da vila (B03, B04, V01), equipe e reserva (B13, D8, D11, V04), "Passar a semana" (D9, D10, V06), Casa de Exercícios clara (V05, V10, V11), bugs B05, B06, B07, B09, B11 e B12.
+  - **Revisão criativa:** Alan pediu também uma análise crítica de diversão e imersão. Ela está em `docs/playtests/2026-11-19-revisao-criativa.md`: o diagnóstico, cinco pilares e propostas por momento do jogo. Propõe a **F1.5 · fatia da diversão** (um corredor e uma luta com o tratamento completo antes de replicar) e faz seis perguntas a Alan, ainda sem resposta.
   - **Fim da fase:** build Android para Alan testar.
   - **Auditoria:** tabela no §4 do plano.
   - **APK atual:** release `teste-android`.
