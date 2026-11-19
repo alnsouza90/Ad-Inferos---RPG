@@ -78,8 +78,6 @@ const LANCET_SIZE := Vector2(64, 153)
 const BLOCKED_TINT := Color(0.45, 0.42, 0.45)
 ## The reserve of the Gate: room for every saint of the game, and more.
 const RESERVE_COLUMNS: int = 6
-## The kinds of `unlock` (saints.csv), in the order the saints come.
-const ARRIVAL_ORDER: Array[String] = ["week", "circle", "carmel", "milestone"]
 const RESERVE_ROWS: int = 2
 const RESERVE_CELL := Vector2(65, 74)
 const RESERVE_TILE := Vector2(52, 52)
@@ -559,11 +557,9 @@ func _board_gate(column: VBoxContainer) -> void:
 		if not party.has(id):
 			reserve.add_child(_reserve_cell(id))
 			shown += 1
-	for id: StringName in coming_saints():
-		reserve.add_child(_locked_cell(id))
-		shown += 1
-	# Room to spare for the saints still to come (D-504).
-	var cells: int = maxi(RESERVE_COLUMNS * RESERVE_ROWS, shown)
+	# The saints still to come are only empty places, with no names, to keep
+	# the surprise (D11, D-519); room to spare for all of them.
+	var cells: int = maxi(RESERVE_COLUMNS * RESERVE_ROWS, catalog.saints.size() - party_ids().size())
 	for i: int in cells - shown:
 		var cell := _cell(RESERVE_CELL)
 		cell.add_child(SaintMini.tile(Rect2(_reserve_tile_pos(), RESERVE_TILE), null, Callable()))
@@ -601,54 +597,16 @@ func _reserve_cell(id: StringName) -> Control:
 	if blocked:
 		tile.get_child(1).modulate = BLOCKED_TINT
 	cell.add_child(tile)
+	# In another building (Garden, bed) or badly hurt: padlock, and a tap
+	# says why (D8, D-520).
+	if blocked:
+		cell.add_child(SaintMini.padlock(Rect2(_reserve_tile_pos(), RESERVE_TILE).get_center()))
 	cell.add_child(_centered(_short_name(id), RESERVE_TILE.y, RESERVE_CELL.x - 12, PixelStyle.COLOR_BLOOD if blocked else PixelStyle.COLOR_BONE))
-	return cell
-
-
-## A saint not arrived yet: dark, with the padlock; a tap tells the reason.
-func _locked_cell(id: StringName) -> Control:
-	var cell := _cell(RESERVE_CELL)
-	var rect := Rect2(_reserve_tile_pos(), RESERVE_TILE)
-	cell.add_child(SaintMini.tile(rect, SaintMini.head(id), func() -> void: tap_locked(id), false, true))
-	cell.add_child(SaintMini.padlock(rect.get_center()))
-	cell.add_child(_centered(_short_name(id), RESERVE_TILE.y, RESERVE_CELL.x - 12, PixelStyle.COLOR_GREY))
 	return cell
 
 
 func _reserve_tile_pos() -> Vector2:
 	return Vector2(floorf((RESERVE_CELL.x - RESERVE_TILE.x) * 0.5), 0)
-
-
-## The Gate: a saint not arrived yet, tapped: who and why, at the foot.
-func tap_locked(saint_id: StringName) -> void:
-	_refresh()
-	_status.text = "%s: %s" % [catalog.saint(saint_id).name_pt, lock_reason(saint_id)]
-	_status.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
-
-
-## The saints still to come, in the order they arrive: by week, then by
-## circle, then the Carmel, then the milestones.
-func coming_saints() -> Array[StringName]:
-	var coming: Array[StringName] = []
-	for id: StringName in catalog.saints:
-		if not campaign.unlocked_saints.has(id):
-			coming.append(id)
-	coming.sort_custom(func(a: StringName, b: StringName) -> bool: return _arrival_rank(a) < _arrival_rank(b))
-	return coming
-
-
-func _arrival_rank(saint_id: StringName) -> float:
-	var parts: PackedStringArray = catalog.saint(saint_id).unlock.split(":")
-	var order: int = ARRIVAL_ORDER.find(parts[0])
-	return (order if order >= 0 else ARRIVAL_ORDER.size()) * 100.0 + (float(parts[1]) if parts.size() > 1 else 0.0)
-
-
-## Why a saint has not arrived, from its `unlock` (saints.csv).
-func lock_reason(saint_id: StringName) -> String:
-	var unlock: String = (catalog.saint(saint_id) as SaintDef).unlock
-	var parts: PackedStringArray = unlock.split(":")
-	var value: String = parts[1] if parts.size() > 1 else ""
-	return data.ui.text(StringName("lock_%s" % parts[0]), {"week": value, "circle": value, "milestone": value})
 
 
 # --- the Pantry -----------------------------------------------------------------

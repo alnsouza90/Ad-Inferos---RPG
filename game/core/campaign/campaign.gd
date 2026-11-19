@@ -189,6 +189,13 @@ static func advance_week(c: CampaignState, catalog: ExpeditionCatalog) -> void:
 	c.infirmary_beds.clear()
 
 
+## "Passar a semana" in the village (D9, D10, D-520): the week turns with no
+## expedition, so wounded saints heal and rested ones recover, and a company
+## that cannot go down is never stuck. The Retreat keeps its own bonus.
+static func pass_week(c: CampaignState, catalog: ExpeditionCatalog) -> void:
+	advance_week(c, catalog)
+
+
 ## Levels the experience reached bring (§9): Vigor and Faith of
 ## `saints.csv` per level; the miracle improved at [miracle_upgrade_level].
 static func settle_level(s: CampaignSaint, catalog: ExpeditionCatalog) -> void:

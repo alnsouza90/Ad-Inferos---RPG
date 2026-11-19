@@ -642,3 +642,18 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Propostas** para o combate, a caminhada, o Pouso, a vila e o celular.
   - **Método:** a **F1.5 · fatia da diversão**: um corredor e uma luta com o tratamento completo, aprovados por Alan antes de replicar no resto.
   - **Pendente de Alan:** seis perguntas, entre elas as falas dos santos (texto dele) e a direção de som.
+- **D-522 · 19/11/2026 · Alan** — **Revisão criativa aprovada** (respostas às seis perguntas da `revisao-criativa.md`):
+  - **Os cinco pilares:** aprovados.
+  - **F1.5 · fatia da diversão:** aprovada.
+  - **Falas curtas dos santos:** entram; o agente escreve e Alan aprova (seguindo o `writing-guide.md`).
+  - **Som:** como recomendado (canto gregoriano e sinos na vila, coro grave e silêncio na descida, órgão e percussão no chefe). Cada prédio com o seu som: passarinhos no Jardim, ferro batendo na Forja quando abrir, e assim por diante, com imaginação.
+  - **Toque:** regra única "segurar para ver, tocar para fazer".
+  - **Volta para casa:** cena curta subindo a escada até o Portão, com o sino, que se pode pular.
+  - **Execução:** Alan pediu para adiantar a F1 nesta sessão.
+- **D-523 · 19/11/2026 · agente (F1, parte 1)** — Feito, no PR #103:
+  - **Vila:** só o clique conta (o toque cru do celular vinha duplicado); 1º toque acende o prédio aberto, 2º entra; a estátua volta a abrir a Ave Maria.
+  - **Equipe:** `Village.suggestions` não põe na companhia quem está no Jardim ou no leito.
+  - **Portão:** na reserva, quem está bloqueado tem cadeado e diz o motivo ao toque; quem não chegou é só vaga vazia (os textos `lock_*` saíram).
+  - **"Passar a semana":** na vila, canto de baixo, com dois toques (`Campaign.pass_week` = virar a semana sem expedição).
+  - **Casa de Exercícios:** "Melhorias para escolher: N" e a instrução "Cada nível novo dá 1 melhoria, de graça…"; o cartão do santo leva "Melhoria!" em dourado enquanto houver melhoria; na volta, a vila avisa "X subiu para o nível N".
+  - **Placa de aviso da vila:** maior, com quebra de linha.

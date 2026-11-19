@@ -123,12 +123,6 @@ func test_the_gate_refuses_a_saint_who_cannot_go_down_with_its_reason() -> void:
 	assert_false(b.party.has(&"saint_george"))
 
 
-func test_the_gate_tells_why_a_saint_has_not_arrived() -> void:
-	var b := _screen(&"gate")
-	assert_eq(b.lock_reason(&"saint_anthony_abbot"), data.ui.text(&"lock_circle", {"circle": "2"}))
-	assert_eq(b.lock_reason(&"saint_nicholas"), data.ui.text(&"lock_week", {"week": "3"}))
-
-
 func test_the_gate_announces_who_arrived() -> void:
 	var c := Campaign.start(cat, 1)
 	c.unlocked_saints.append(&"saint_anthony_abbot")
@@ -160,19 +154,9 @@ func test_the_garden_takes_a_free_place_then_a_saint_and_gives_it_back() -> void
 	assert_false(b.campaign.garden_saints.has(&"saint_therese"), "tocar nele de novo o tira")
 
 
-func test_every_saint_has_a_short_name_and_every_unlock_a_reason() -> void:
+func test_every_saint_has_a_short_name() -> void:
 	for id: StringName in cat.saints:
 		assert_true(data.ui.has_text(StringName("saint_short_%s" % id)), "nome curto %s" % id)
-		var unlock: String = cat.saint(id).unlock
-		if unlock != Campaign.UNLOCK_START:
-			assert_true(data.ui.has_text(StringName("lock_%s" % unlock.split(":")[0])), "motivo %s" % id)
-
-
-func test_the_gate_tells_who_is_coming_when_the_padlock_is_tapped() -> void:
-	var b := _screen(&"gate")
-	await wait_process_frames(1)
-	b.tap_locked(&"saint_anthony_abbot")
-	assert_eq(b.warning_shown(), "%s: %s" % [cat.saint(&"saint_anthony_abbot").name_pt, b.lock_reason(&"saint_anthony_abbot")])
 
 
 func test_the_reserve_has_room_for_every_saint_still_to_come() -> void:
@@ -180,14 +164,6 @@ func test_the_reserve_has_room_for_every_saint_still_to_come() -> void:
 	var coming: int = cat.saints.size() - b.campaign.unlocked_saints.size()
 	var free: int = b.campaign.unlocked_saints.size() - b.party_ids().size()
 	assert_true(BuildingScreen.RESERVE_COLUMNS * BuildingScreen.RESERVE_ROWS > coming + free, "com sobra")
-
-
-func test_the_saints_to_come_are_in_the_order_they_arrive() -> void:
-	var b := _screen(&"gate")
-	var coming: Array[StringName] = b.coming_saints()
-	assert_lt(coming.find(&"saint_nicholas"), coming.find(&"saint_anthony_abbot"), "semana 3 antes do Círculo 2")
-	assert_lt(coming.find(&"saint_anthony_abbot"), coming.find(&"saint_joan"))
-	assert_eq(coming.back(), &"saint_gertrude", "o marco por último")
 
 
 func test_every_guardian_has_a_halo_behind_the_head() -> void:
@@ -234,3 +210,25 @@ func test_abilities_chosen_on_the_card_go_to_the_campaign() -> void:
 	var list: Array[StringName] = [&"george_spear_thrust"]
 	b._card.loadout_changed.emit(list)
 	assert_eq(b.campaign.saint(&"saint_george").equipped, list)
+
+
+func test_the_saints_to_come_are_only_empty_places_without_names() -> void:
+	# D11: the reserve keeps the surprise.
+	var b := _screen(&"gate")
+	await wait_process_frames(1)
+	var texts: Array[String] = []
+	for label: Node in b.find_children("*", "Label", true, false):
+		texts.append((label as Label).text)
+	assert_false(texts.has(data.ui.text(&"saint_short_saint_anthony_abbot")), "Antão não aparece antes de chegar")
+	assert_false(texts.has(data.ui.text(&"saint_short_saint_nicholas")))
+
+
+func test_a_saint_in_the_garden_is_not_in_the_company_and_waits_in_the_reserve() -> void:
+	# B13, D8: Bento in the Garden leaves the company.
+	var c := Campaign.start(cat, 1)
+	c.garden_saints.append(&"saint_benedict")
+	var b := _screen(&"gate", c)
+	assert_false(b.party.has(&"saint_benedict"))
+	assert_eq(b.tap_saint(&"saint_benedict"), Campaign.RESTING, "o toque diz o motivo")
+	assert_eq(b.warning_shown(), data.ui.text(&"reason_saint_resting"))
+

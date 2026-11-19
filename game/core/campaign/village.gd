@@ -178,6 +178,9 @@ static func suggestions(c: CampaignState, catalog: ExpeditionCatalog) -> Diction
 			bed.append(id)
 		elif s.status.desolation >= catalog.constants.get_int(&"faith_check_threshold"):
 			garden.append(id)
+		elif c.garden_saints.has(id) or c.infirmary_beds.has(id):
+			# In another building: not in the company (D8, D-519).
+			continue
 		elif party.size() < catalog.constants.get_int(&"party_size"):
 			party.append(id)
 	return {"bed": bed, "garden": garden, "party": party}
