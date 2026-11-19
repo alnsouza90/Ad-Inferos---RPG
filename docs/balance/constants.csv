@@ -101,3 +101,4 @@ upgrade_gain,0.3,"Versão +: ganho do primeiro efeito com número (meio para cim
 upgrade_hp_fraction,0.1,Versão +: ganho de hp_fraction (village-economy.md §9)
 upgrade_levels,2|3|4,Níveis que dão uma melhoria de habilidade (village-economy.md §9)
 miracle_upgrade_level,5,Nível do milagre aprimorado (village-economy.md §9)
+map_open_circles,2,"Círculos abertos no Mapa do Inferno no M2: só o Círculo 2 (D-192, D-459, D-511)"

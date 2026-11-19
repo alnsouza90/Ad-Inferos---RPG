@@ -506,3 +506,23 @@ saint_short_saint_rita,Rita
 saint_short_saint_anthony_padua,Antônio
 saint_short_saint_sebastian,Sebastião
 saint_short_saint_gertrude,Gertrudes
+map_title,Mapa do Inferno
+map_back,Voltar ao Portão
+map_place_gate_of_hell,Porta do Inferno
+map_place_antehell,Antinferno
+map_place_circle_01,Limbo · Círculo 1
+map_place_circle_02,Luxúria · Círculo 2
+map_place_circle_03,Gula · Círculo 3
+map_place_circle_04,Avareza e Prodigalidade · Círculo 4
+map_place_circle_05,Ira e Acídia · Círculo 5
+map_place_circle_06,Heresia · Círculo 6
+map_place_circle_07,Violência · Círculo 7
+map_place_circle_08,Fraude · Círculo 8
+map_place_circle_09,Traição · Círculo 9
+map_locked,Ainda fechado: a companhia ainda não chegou aqui.
+map_start_gate,Portão do círculo
+map_start_camp,Pouso {camp}
+map_camp_not_consecrated,"Pouso {camp}: ainda não consagrado. Chegue até ele para poder partir dali."
+map_boss,O chefe do círculo
+map_depart_here,Partir daqui
+map_choose,Toque no Portão do círculo ou num Pouso consagrado.
