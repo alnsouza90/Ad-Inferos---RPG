@@ -657,3 +657,13 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **"Passar a semana":** na vila, canto de baixo, com dois toques (`Campaign.pass_week` = virar a semana sem expedição).
   - **Casa de Exercícios:** "Melhorias para escolher: N" e a instrução "Cada nível novo dá 1 melhoria, de graça…"; o cartão do santo leva "Melhoria!" em dourado enquanto houver melhoria; na volta, a vila avisa "X subiu para o nível N".
   - **Placa de aviso da vila:** maior, com quebra de linha.
+- **D-524 · 19/11/2026 · agente (a pedido de Alan)** — **Prompts de arte da revisão do M2**, separados por tipo em `docs/art/revisao-m2/` (o índice no `README.md`), todos no estilo aprovado e completos para colar:
+  - **01 · cenários dos três trechos:** fundo por trecho, mais três tipos de corredor com segundo plano e pista. Os temas, criação do jogo sobre o vendaval de Dante:
+    - T1, borda do vendaval com o trono de Minos ao longe;
+    - T2, arcadas em ruína;
+    - T3, pináculos e pontes junto ao olho.
+  - **02 · nós fixos:** entrada, Tentação com a tenda nova, alma, pré-guardião, Júri, Pouso, Vigília nova, arena; três camadas cada.
+  - **03 · props na escala dos santos:** escadas, porta, caverna, ponte, passagem.
+  - **04 · peças soltas de primeiro plano:** inteiras e escuras, por trecho.
+  - **05 · interface e efeitos:** vitral dourado do milagre, moldura fina, botões, estampas (início de luta, milagre de Teresinha com a chuva de rosas como proposta), projéteis, tinta espiritual, caixa de recompensa, relicário maior, marcador de seleção; as animações com os props no PixelLab (cerca de 24 gerações, a confirmar).
+  - **Escala de referência:** santo com 166 px e chão a 338 px numa tela de 960 × 540.
