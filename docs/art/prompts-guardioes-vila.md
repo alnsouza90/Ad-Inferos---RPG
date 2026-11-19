@@ -61,7 +61,7 @@ dark gothic pixel art portrait, 16-bit style, in the style of Blasphemous with t
 | Catedral (Capela) | Santo Agostinho | "Fizeste-nos para ti, e inquieto está o nosso coração enquanto não repousa em ti." |
 | Carmelo | Santa Teresa d'Ávila | "Nada te perturbe, nada te espante. Tudo passa; Deus não muda. Só Deus basta." |
 | Jardim e Claustro | São Francisco de Assis | "Louvado sejas, meu Senhor, com todas as tuas criaturas." |
-| Enfermaria | São Cosme e São Damião | "Curávamos sem cobrar. Aqui também ninguém paga para ser cuidado." |
+| Enfermaria | São Cosme e São Damião | "Fomos médicos dos pobres. Aqui o corpo descansa, e a ferida tem tempo de fechar." |
 | Forja | Santo Elói | "Trabalhei o ouro para reis. Aqui o ferro serve melhor." |
 | Despensa | Santa Isabel da Hungria | "O pão que guardo não é meu. É de quem vai precisar dele lá embaixo." |
 
