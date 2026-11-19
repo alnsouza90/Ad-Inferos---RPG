@@ -19,6 +19,10 @@ Termos oficiais do jogo. A coluna "Código" é o nome obrigatório em classes, v
 | Pouso consagrado | `consecrated_camp` | Ponto de retomada |
 | Vigília (nó antes do chefe) | `vigil_node` | |
 | Vila / Átrio | `village` | |
+| Mapa do Inferno | `hell_map` | O corte do funil em faixas, aberto pelo Portão (D-208, D-511) |
+| Porta do Inferno | `gate_of_hell` | Faixa 0 do mapa, com o Átrio; parte do Círculo 1 (D-459) |
+| Antinferno | `antehell` | Faixa 1 do mapa; parte do Círculo 1 (D-459) |
+| Ponto de partida | `start_point` | Portão do círculo (`camp` 0) ou um Pouso consagrado |
 | Instalação | `facility` | |
 | Guardião | `guardian` | Santo não jogável de uma instalação |
 | Semana | `week` | |
