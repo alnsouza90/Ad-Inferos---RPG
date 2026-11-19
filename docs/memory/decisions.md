@@ -667,3 +667,10 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **04 · peças soltas de primeiro plano:** inteiras e escuras, por trecho.
   - **05 · interface e efeitos:** vitral dourado do milagre, moldura fina, botões, estampas (início de luta, milagre de Teresinha com a chuva de rosas como proposta), projéteis, tinta espiritual, caixa de recompensa, relicário maior, marcador de seleção; as animações com os props no PixelLab (cerca de 24 gerações, a confirmar).
   - **Escala de referência:** santo com 166 px e chão a 338 px numa tela de 960 × 540.
+- **D-525 · 19/11/2026 · Alan e agente** — **Animações dos santos com os props** (M04), geradas no **PixelLab** com o sim de Alan: 7 gerações em `animate_image_pixminimax`, de um orçamento estimado de 24.
+  - **Por santo:** Jorge, Bento e Teresinha ganham **virar de costas** (`saint_<id>_turn.png`, 9 quadros) e **andar de costas** (`saint_<id>_walk_back.png`, 9 quadros).
+  - **Subir a escada e entrar na porta ou na caverna** saem do motor, com o andar de costas: a figura sobe na diagonal pela escada, ou entra encolhendo e escurecendo. Assim não precisaram de quadros próprios.
+  - **Limpeza:** os arcos de golpe que a ferramenta inventou no giro de Jorge e os respingos vermelhos no andar de Teresinha foram tirados. O giro de Jorge junta duas gerações.
+  - **Santo Antão:** ainda não tem quadros de corpo (só o retrato), então fica para quando ganhar a figura (T50, T52).
+  - **Estado:** os quadros estão no jogo, mas ainda não ligados; isso vem na F4.
+  - **Arte no Meta AI:** o resto (cenários, nós, props, primeiro plano, interface) Alan gera e envia.
