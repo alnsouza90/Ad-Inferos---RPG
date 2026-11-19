@@ -13,6 +13,26 @@ var campaign: CampaignState
 var corridor_place: Dictionary = {}
 
 
+## A new campaign, in the village (T49): saved at once.
+func start_campaign(p_catalog: ExpeditionCatalog, p_seed: int) -> void:
+	catalog = p_catalog
+	campaign_seed = p_seed
+	campaign = Campaign.start(p_catalog, p_seed)
+	expedition = null
+	corridor_place = {}
+	save_now()
+
+
+## Back from the expedition (T49): the campaign takes what it brought
+## (Campaign.finish_expedition, the week turns), then the village is saved.
+func finish_expedition() -> void:
+	if expedition != null and campaign != null:
+		Campaign.finish_expedition(campaign, catalog, expedition)
+	expedition = null
+	corridor_place = {}
+	save_now()
+
+
 func start_expedition(p_catalog: ExpeditionCatalog, ctrl: ExpeditionController, p_seed: int) -> void:
 	catalog = p_catalog
 	expedition = ctrl
@@ -28,11 +48,11 @@ func continue_saved(p_catalog: ExpeditionCatalog) -> StringName:
 	catalog = p_catalog
 	var result: Dictionary = _service().call("load_expedition", p_catalog)
 	expedition = result["controller"]
-	if expedition != null:
-		var data: Dictionary = result["data"]
-		campaign_seed = int(data.get("campaign", {}).get("seed", 0))
+	var data: Variant = result["data"]
+	if data is Dictionary and (expedition != null or ExpeditionSave.is_village(data)):
+		campaign_seed = int((data as Dictionary).get("campaign", {}).get("seed", 0))
 		campaign = ExpeditionSave.campaign_of(p_catalog, data)
-		corridor_place = ExpeditionSave.corridor_place(data)
+		corridor_place = ExpeditionSave.corridor_place(data) if expedition != null else {}
 	return result["status"]
 
 
@@ -50,6 +70,8 @@ func execute(cmd: ExpeditionCommand) -> StringName:
 func save_now() -> void:
 	if expedition != null:
 		_service().call("save_expedition", expedition, campaign_seed, corridor_place, campaign)
+	elif campaign != null:
+		_service().call("save_village", campaign)
 
 
 ## The party stopped walking: keep the place and save it (§3.1, §4).

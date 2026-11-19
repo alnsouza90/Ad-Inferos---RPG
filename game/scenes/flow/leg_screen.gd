@@ -12,7 +12,8 @@ const BUTTON_SIZE := Vector2(760, 96)
 const COLOR_BACKGROUND := Color(0.06, 0.05, 0.06)
 const COLOR_CHOSEN := Color(1.0, 0.9, 0.55)
 
-## The summary's "Voltar ao título".
+## The summary's button: "Voltar ao título", or "Voltar à vila" in the
+## campaign (end_text_key).
 signal title_requested
 
 var data: GameData
@@ -23,6 +24,8 @@ var speed_index: int = 0
 ## True in the game: commands go through GameState, which saves after each
 ## one. Tests turn it off so they never touch the player's save slot.
 var use_game_state: bool = true
+## The text of the summary's button (VillageFlow sets "Voltar à vila").
+var end_text_key: StringName = &"back_to_title"
 ## The screen shown now (WalkScreen, BattleScreen, EventScreen, CampScreen
 ## or one of the panels below).
 var current: Control
@@ -256,7 +259,7 @@ func _show_summary() -> void:
 		"charity": ctrl.virtues.get_value(Virtues.CHARITY),
 	}))
 	var box: VBoxContainer = _panel(&"summary", "\n".join(lines))
-	var button := _button(t.text(&"back_to_title"))
+	var button := _button(t.text(end_text_key))
 	button.pressed.connect(press_title)
 	box.add_child(button)
 

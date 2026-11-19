@@ -122,6 +122,14 @@ Os Pousos consagrados continuam nas bandeiras (`<círculo>_camp_<trecho>`, D-435
 - Um save da versão 5 sem expedição, por exemplo no resumo do trecho, abre na vila com a campanha criada do mesmo jeito.
 - Nada do save antigo se perde: virtudes, bandeiras e Pousos consagrados passam como estão.
 
+
+### 3.4 Save na vila (T49, D-514)
+
+Entre expedições, o jogo salva **só a campanha**: `"expedition": null` e `"scene": {"kind": "village"}`, como no modelo do §3 (`ExpeditionSave.build_village`). A versão do save não muda: o formato já previa a vila. Ao carregar:
+- um save de vila é válido sem replay;
+- o jogo abre na vila;
+- ao voltar de uma expedição, `Campaign.finish_expedition` vira a semana e a vila é salva.
+
 ## 4. Quando salvar
 
 | Momento | Observação |

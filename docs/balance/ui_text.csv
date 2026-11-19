@@ -302,10 +302,10 @@ result_continue,Continuar
 title_name,Ad Inferos
 title_subtitle,A Companhia dos Santos
 title_continue,Continuar
-title_new_leg,Novo trecho
+title_new_leg,Nova campanha
 title_arena,Arena (teste)
-title_confirm_new,Já existe um trecho salvo. Toque de novo em Novo trecho para começar outro; o salvo será apagado.
-title_no_save,Nenhum trecho salvo.
+title_confirm_new,Já existe uma campanha salva. Toque de novo em Nova campanha para começar outra; a salva será apagada.
+title_no_save,Nada salvo.
 title_save_corrupt,O salvamento estava danificado e não pôde ser lido.
 title_save_future,O salvamento é de uma versão mais nova do jogo.
 title_save_from_backup,O salvamento principal estava danificado; o jogo voltou à cópia anterior.

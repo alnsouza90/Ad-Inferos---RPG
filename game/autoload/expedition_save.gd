@@ -34,6 +34,27 @@ static func build(ctrl: ExpeditionController, campaign_seed: int, scene_kind: St
 	}
 
 
+## The village between expeditions (T49, save-load §3): the campaign alone,
+## no expedition, the scene "village".
+static func build_village(campaign: CampaignState) -> Dictionary:
+	return {
+		"save_version": SaveMigrations.CURRENT_VERSION,
+		"game_version": str(ProjectSettings.get_setting(GAME_VERSION_SETTING, "0.0.0")),
+		"saved_at_unix": int(Time.get_unix_time_from_system()),
+		"campaign": campaign.to_dict(),
+		"saints": {},
+		"expedition": null,
+		"battle": null,
+		"scene": {"kind": "village", "id": ""},
+	}
+
+
+## A village save: no expedition and a whole campaign.
+static func is_village(data: Dictionary) -> bool:
+	var section: Variant = data.get("campaign")
+	return data.get("expedition") == null and section is Dictionary and (section as Dictionary).has("week")
+
+
 ## The corridor place kept in a save, or {} when missing or invalid (then
 ## the party appears at the start or before pending content, §3.1).
 static func corridor_place(data: Dictionary) -> Dictionary:

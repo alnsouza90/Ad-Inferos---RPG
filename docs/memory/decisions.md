@@ -589,3 +589,10 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Tela:** rolagem vertical com as faixas, o escurecimento das laterais crescendo a cada faixa, o véu escuro e o cadeado nas fechadas, o medalhão escuro até o chefe cair, o nome ao lado, a corrente da Porta do Inferno até a faixa da companhia, a lanterna na ponta e a luz pálida pulsando. A trilha pontilhada liga o Portão, os Pousos (cinza ou âmbar) e o Chefe, e a plaquinha traz "Partir daqui" e "Voltar ao Portão".
   - **Glossário:** termos novos `hell_map`, `gate_of_hell`, `antehell` e `start_point`.
   - **Ainda falta:** a animação da lanterna descendo ao abrir um círculo (só quando houver mais de um círculo aberto) e ligar o Portão ao mapa e o mapa à expedição.
+- **D-514 · 19/11/2026 · Alan e agente** — PR #101 aprovado. **O ciclo da campanha ligado** (`VillageFlow`):
+  - **Título:** "Nova campanha" (antes "Novo trecho") abre a vila; a preparação do M1 saiu. "Continuar" abre a vila, ou a expedição em andamento dentro do ciclo.
+  - **Na vila:** tocar num prédio abre a tela dele, e "Voltar à vila" volta. O "Partir" do Portão guarda a companhia e abre o Mapa do Inferno; "Voltar ao Portão" volta.
+  - **Do mapa à expedição:** "Partir daqui" chama `Village.depart` com o Portão do círculo ou o Pouso consagrado. A semente do mapa vem da campanha e da semana; a recusa fica no mapa.
+  - **Na volta:** o botão do resumo vira "Voltar à vila", `Campaign.finish_expedition` vira a semana, e a vila abre.
+  - **Save na vila:** sem expedição e com a cena "village" (save-load §3.4). A versão do save não mudou.
+  - **Textos do título** ajustados à campanha: "Nova campanha", "Já existe uma campanha salva…" e "Nada salvo.".
