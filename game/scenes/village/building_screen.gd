@@ -27,9 +27,9 @@ const GUARDIANS: Dictionary = {
 const PROVISIONS: Array[StringName] = [&"bread", &"candle", &"holy_water", &"bandages", &"incense"]
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
-const HALO_PATH: String = "res://assets/pixel/vfx/halo_disk.png"
-## The halo disk at 5× (26 → 130 pixels), about the guardian's head.
-const HALO_SCALE: float = 5.0
+const HALO_PATH: String = "res://assets/pixel/vfx/guardian_halo.png"
+## Alan's halo (D-506), drawn at 130 pixels: shown at its own size.
+const HALO_SCALE: float = 1.0
 ## The centre of each guardian's head, in pixels of his portrait (two for
 ## Cosmas and Damian).
 const HALO_HEADS: Dictionary = {
@@ -320,7 +320,7 @@ func _build_guardian() -> void:
 	var size_shown: Vector2 = texture.get_size() * PORTRAIT_SCALE
 	var x: float = floorf((stage.size.x - size_shown.x) * 0.5)
 	var corner := Vector2(x, BOTTOM_Y - size_shown.y + PORTRAIT_CUT)
-	# The halo behind each head, drawn by the engine as for the saints (D-505).
+	# The halo behind each head (D-505; Alan's drawing, D-506).
 	var halo: Texture2D = load(HALO_PATH) as Texture2D
 	for head: Vector2 in HALO_HEADS.get(building, []):
 		var side: float = halo.get_size().x * HALO_SCALE
