@@ -237,3 +237,42 @@ dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous toget
 ```text
 dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a shard of cracked ice with two folded wings frozen in it carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
 ```
+
+---
+
+## 5. Os pontos da trilha · proporção 1:1 (D-511)
+
+**Como funcionam:** em cada círculo, uma trilha pontilhada liga o Portão do círculo, os Pousos e o Chefe. Cada ponto é um **medalhãozinho** no mesmo desenho dos medalhões grandes, mais simples, reduzido pelo agente para **32 × 32**.
+
+**O que o motor faz (não entra na imagem):**
+- o cinza do Pouso ainda não consagrado e o âmbar do consagrado;
+- o brilho do ponto escolhido;
+- a trilha pontilhada;
+- a plaquinha "Partir daqui".
+
+Por isso basta **uma imagem de cada**.
+
+
+### Ponto · Portão do círculo
+
+*o começo da trilha de cada círculo*
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single small round medallion seen straight from the front, the same design as a larger map medallion but simpler: a thick ring of dark forged iron with four small rivets, inside it a dark recessed round field with a simple arched stone gateway in bone white with a warm amber rim light from the left, one bold simple shape readable at 32 pixels, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, labels, flat gold, glowing gold, blue, gore, blood, grotesque, profane imagery, faces, fine detail, scenery, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Ponto · Pouso
+
+*o ponto de descanso; o motor deixa cinza enquanto não consagrado e âmbar depois de consagrado*
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single small round medallion seen straight from the front, the same design as a larger map medallion but simpler: a thick ring of dark forged iron with four small rivets, inside it a dark recessed round field with a small campfire with three crossed logs and a single flame in bone white with a warm amber rim light from the left, one bold simple shape readable at 32 pixels, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, labels, flat gold, glowing gold, blue, gore, blood, grotesque, profane imagery, faces, fine detail, scenery, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Ponto · Chefe
+
+*o fim da trilha; vencido, o medalhão grande do círculo acende*
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single small round medallion seen straight from the front, the same design as a larger map medallion but simpler: a thick ring of dark forged iron with four small rivets, inside it a dark recessed round field with a crown of black horns in bone white with a warm amber rim light from the left, one bold simple shape readable at 32 pixels, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, labels, flat gold, glowing gold, blue, gore, blood, grotesque, profane imagery, faces, fine detail, scenery, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
