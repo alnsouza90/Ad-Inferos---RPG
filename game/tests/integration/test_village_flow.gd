@@ -96,3 +96,14 @@ func test_the_save_service_writes_and_reads_the_village() -> void:
 	assert_null(result["controller"])
 	assert_eq(ExpeditionSave.campaign_of(cat, result["data"]).alms, 77)
 	(service.get("store") as SaveStore).delete_all()
+
+
+func test_passing_the_week_in_the_village_takes_two_touches() -> void:
+	var flow := _flow()
+	var week: int = flow.campaign.week
+	var v: VillageScreen = flow.screen
+	v.press_pass_week()
+	assert_eq(flow.campaign.week, week, "o primeiro toque só explica")
+	v.press_pass_week()
+	assert_eq(flow.campaign.week, week + 1)
+	assert_true(flow.screen is VillageScreen)

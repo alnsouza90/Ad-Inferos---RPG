@@ -90,6 +90,9 @@ func _card(id: StringName) -> Button:
 	var place: String = place_of(id)
 	var level: String = data.ui.text(&"roster_level", {"level": s.level})
 	card.add_child(_text(level, Vector2(x, 17), PixelStyle.COLOR_GREY))
+	# An improvement to choose at the Retreat House (V10, V11): a mark in gold.
+	if Campaign.upgrades_left(s, catalog) > 0:
+		card.add_child(_text(data.ui.text(&"roster_upgrade"), Vector2(CARD_SIZE.x - 64, 0), PixelStyle.COLOR_GOLD))
 	if not place.is_empty():
 		var hurt: bool = s.status.injury != SaintStatus.INJURY_NONE and not campaign.infirmary_beds.has(id)
 		card.add_child(_text(place, Vector2(x + 40, 17), PixelStyle.COLOR_BLOOD if hurt else PixelStyle.COLOR_AMBER))

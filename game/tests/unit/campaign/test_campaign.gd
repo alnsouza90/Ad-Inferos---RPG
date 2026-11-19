@@ -202,3 +202,17 @@ func test_one_saint_refusal_names_why_it_cannot_go_down() -> void:
 	assert_eq(Campaign.saint_refusal(c, &"saint_george"), Campaign.INJURED)
 	c.garden_saints.append(&"saint_therese")
 	assert_eq(Campaign.saint_refusal(c, &"saint_therese"), Campaign.RESTING)
+
+
+func test_passing_the_week_heals_without_an_expedition() -> void:
+	# D9, D10: three saints badly hurt and no one else is never a dead end.
+	var c := Campaign.start(cat, 1)
+	for id: StringName in c.unlocked_saints:
+		c.saint(id).status.injury = SaintStatus.INJURY_MAJOR
+		c.saint(id).injury_weeks_left = 2
+	assert_ne(Campaign.party_refusal(c, cat, RealData.m0_party_ids()), Campaign.OK)
+	var week: int = c.week
+	Campaign.pass_week(c, cat)
+	Campaign.pass_week(c, cat)
+	assert_eq(c.week, week + 2)
+	assert_eq(Campaign.party_refusal(c, cat, RealData.m0_party_ids()), Campaign.OK, "duas semanas depois descem")

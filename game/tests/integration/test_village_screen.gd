@@ -53,8 +53,11 @@ func test_an_open_building_is_chosen_and_a_closed_one_only_says_so() -> void:
 	var v := _screen()
 	watch_signals(v)
 	v.tap_at(_centre(&"pantry"))
+	assert_signal_not_emitted(v, "building_chosen", "o primeiro toque só acende (V01)")
+	assert_eq(v.outline_shown(), &"pantry")
+	v.tap_at(_centre(&"pantry"))
 	assert_signal_emitted_with_parameters(v, "building_chosen", [&"pantry"])
-	assert_eq(v.name_shown(), data.ui.text(&"building_pantry"))
+	assert_string_contains(v.name_shown(), data.ui.text(&"building_pantry"))
 	v.tap_at(_centre(&"library"))
 	assert_signal_emit_count(v, "building_chosen", 1)
 	assert_string_contains(v.name_shown(), data.ui.text(&"building_closed"))
@@ -122,3 +125,30 @@ func test_touching_the_statue_types_the_ave_maria() -> void:
 	assert_eq(v.prayer_shown(), data.ui.text(&"statue_prayer"))
 	v.tap_at(Vector2(475, 400))
 	assert_eq(v.prayer_shown(), "", "outro toque fecha")
+
+
+func test_a_touch_on_the_phone_counts_once() -> void:
+	# B03, B04: the touch and the click Godot makes from it came both.
+	var v := _screen()
+	await wait_process_frames(1)
+	var touch := InputEventScreenTouch.new()
+	touch.pressed = true
+	touch.position = _centre(&"pantry")
+	v._gui_input(touch)
+	assert_eq(v.outline_shown(), &"", "o toque cru é ignorado; vale o clique")
+	var click := InputEventMouseButton.new()
+	click.pressed = true
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.position = _centre(&"pantry") + v._stage.position
+	v._gui_input(click)
+	assert_eq(v.outline_shown(), &"pantry")
+
+
+func test_another_building_after_the_first_does_not_enter() -> void:
+	var v := _screen()
+	watch_signals(v)
+	v.tap_at(_centre(&"pantry"))
+	v.tap_at(_centre(&"gate"))
+	assert_signal_not_emitted(v, "building_chosen")
+	v.tap_at(_centre(&"gate"))
+	assert_signal_emitted_with_parameters(v, "building_chosen", [&"gate"])

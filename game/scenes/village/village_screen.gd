@@ -10,6 +10,13 @@ extends Control
 
 ## Emitted when an open building is touched (its id, as in VillageLayout).
 signal building_chosen(building: StringName)
+## "Passar a semana" confirmed (D9, D-520): the campaign turns the week.
+signal week_pass_requested
+
+## The open building lit by the last touch: a second touch on it enters.
+var entered_on_next: StringName = &""
+## "Passar a semana" touched once: the second touch passes it.
+var pass_week_armed: bool = false
 
 const STAGE_SIZE := VillageLayout.PICTURE_SIZE
 const WEATHER_SHADER_PATH: String = "res://shaders/village_weather.gdshader"
@@ -29,7 +36,9 @@ const WEEK_POS := Vector2(14, 18)
 const TITLE_SIZE: int = PixelStyle.TITLE_SIZE * 2
 const TEXT_SIZE: int = PixelStyle.TEXT_SIZE * 2
 ## The note of the touched building, in the sky corner.
-const NOTE_RECT := Rect2(586, 24, 360, 68)
+const NOTE_RECT := Rect2(566, 24, 380, 104)
+## "Passar a semana", at the bottom left (D9, D-520).
+const PASS_WEEK_RECT := Rect2(12, 492, 200, 38)
 ## The Ave Maria, when the statue is touched (D-497): an iron plate under
 ## the sky, so the statue stays in sight, the prayer typed one letter at a
 ## time.
@@ -127,14 +136,22 @@ func tap_at(point: Vector2) -> void:
 		_open_prayer()
 		return
 	selected = building
+	pass_week_armed = false
 	for id: StringName in _outlines:
 		(_outlines[id] as CanvasItem).visible = id == building
 	_note.visible = true
 	_note_title.text = data.ui.text(StringName("building_%s" % building))
 	if is_open(building):
-		_note_text.text = ""
-		building_chosen.emit(building)
+		# First touch lights the outline; a second touch on the same
+		# building goes inside (V01, D-519).
+		_note_text.text = data.ui.text(&"building_enter_hint")
+		if entered_on_next == building:
+			entered_on_next = &""
+			building_chosen.emit(building)
+		else:
+			entered_on_next = building
 	else:
+		entered_on_next = &""
 		_note_text.text = data.ui.text(&"building_closed")
 
 
@@ -165,10 +182,12 @@ func sunset_shown() -> bool:
 	return _sunset.visible
 
 
+## Only the mouse button: on the phone, Godot turns each touch into a click
+## too, and taking both made every touch count twice (B03, B04).
 func _gui_input(event: InputEvent) -> void:
-	var touch: bool = event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed
-	var click: bool = event is InputEventMouseButton and (event as InputEventMouseButton).pressed
-	if touch or click:
+	var click: bool = event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+		and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
+	if click:
 		tap_at((event as InputEvent).position - _stage.position)
 
 
@@ -227,6 +246,7 @@ func _build() -> void:
 		_outlines[id] = outline
 	_build_top_band()
 	_build_note()
+	_build_pass_week()
 	_build_prayer()
 
 
@@ -308,6 +328,40 @@ func _build_top_band() -> void:
 	_stage.add_child(_week)
 
 
+## "Passar a semana": a first touch explains, a second one passes it, as the
+## buildings (lit, then entered).
+func press_pass_week() -> void:
+	if pass_week_armed:
+		pass_week_armed = false
+		week_pass_requested.emit()
+		return
+	pass_week_armed = true
+	entered_on_next = &""
+	for id: StringName in _outlines:
+		(_outlines[id] as CanvasItem).visible = false
+	_note.visible = true
+	_note_title.text = data.ui.text(&"village_pass_week")
+	_note_text.text = data.ui.text(&"village_pass_week_hint")
+
+
+## A news plate on arrival (a level up, V11): the same plate as the names.
+func show_news(title: String, text: String) -> void:
+	_note.visible = true
+	_note_title.text = title
+	_note_text.text = text
+
+
+func _build_pass_week() -> void:
+	var button := Button.new()
+	button.text = data.ui.text(&"village_pass_week")
+	button.add_theme_font_size_override("font_size", TEXT_SIZE)
+	button.position = PASS_WEEK_RECT.position
+	button.size = PASS_WEEK_RECT.size
+	button.focus_mode = Control.FOCUS_NONE
+	button.pressed.connect(press_pass_week)
+	_stage.add_child(button)
+
+
 func _build_note() -> void:
 	_note = PixelStyle.iron_plate(NOTE_RECT)
 	_note.visible = false
@@ -322,6 +376,8 @@ func _build_note() -> void:
 	_note_text.position = Vector2(14, 34)
 	_note_text.size = Vector2(NOTE_RECT.size.x - 28.0, NOTE_RECT.size.y - 40.0)
 	_note_text.add_theme_font_size_override("font_size", TEXT_SIZE)
+	_note_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note_text.add_theme_constant_override("line_spacing", -4)
 	_note_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_note.add_child(_note_text)
 

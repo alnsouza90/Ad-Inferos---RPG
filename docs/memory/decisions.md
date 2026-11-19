@@ -602,3 +602,58 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Nome do prédio:** tocar no nome e no brasão (Portão, Despensa, Enfermaria…) fecha o painel do centro e a pilha de santos, e o interior aparece em luz plena; tocar de novo abre. O guardião, a fala e a barra de baixo ficam sempre.
   - **Ficha do santo:** tocar na **miniatura** de um santo na pilha abre a ficha dele (`SaintCard`); tocar de novo, ou em "Fechar", fecha. Tocar no resto do cartão continua escolhendo o santo para as vagas. As habilidades escolhidas na ficha vão para a campanha.
   - **Quadro do Menino Jesus:** aprovado na torre da direita do Portão.
+- **D-518 · 19/11/2026 · Alan** — Ordem das próximas tarefas aprovada: T50 (santo novo), T51 (Prólogo), T61 e T55 (simulação), T52 e T53 (arte final), T54 (áudio) e T56 (abusos). **Antes de fechar o M2, ainda na fatia vertical**, entram três tarefas novas (backlog `m2.md`):
+  - **T66 · refatoração do código:** levantamento, plano em passos pequenos sem mudar o comportamento, execução do que Alan aprovar.
+  - **T67 · revisão de segurança:** saves, Android, repositório e CI, dados, abusos.
+  - **T68 · regras de ouro e lições aprendidas:** regras de ouro para crescer no M3 e no M4, sessão de lições aprendidas do M2 e estrutura do backlog do M3.
+  - **Fechamento:** a T57 (teste completo no Android) vem depois das três.
+  - **Agora:** Alan joga o ciclo da T49 no celular e traz o retorno.
+- **D-519 · 19/11/2026 · Alan e agente** — **Playtest da fatia vertical** (`docs/playtests/2026-11-19-playtest-vertical-slice.md`, de Alan): o jogo funciona, mas está monótono, pouco intuitivo e pequeno para o celular. O agente fez a auditoria e o **plano de revisão** (`docs/playtests/2026-11-19-plano-de-revisao.md`), ainda **sem mudar o jogo**:
+  - **Causas achadas:**
+    - B03 e B04: o toque chega duas vezes na vila (toque e clique imitado), e o prédio abre já no primeiro toque;
+    - B13 e D8: a sugestão da equipe ignora o Jardim e o leito;
+    - D10: com menos de 3 santos aptos, o jogo fica sem saída.
+  - **Não reproduzidos no núcleo:** B01 e B02 (os inimigos e as escoltas agem em todas as rodadas da prova); a causa provável é a apresentação.
+  - **Proposta:** seis fases, de F1 a F6.
+  - **Para Alan responder:** os conflitos com D-477, D-504, D-379 e D-497, e seis perguntas.
+- **D-520 · 19/11/2026 · Alan** — **Respostas ao plano de revisão** (`plano-de-revisao.md` §8):
+  - **Combate:** o atordoado ou caído conta como "já agiu" para o fim de turno automático.
+  - **Expedição:** os nós de evento e os cenários de cada trecho são **fixos**; só as batalhas são sorteadas.
+  - **Vila:**
+    - "Passar a semana" sempre disponível;
+    - a Casa de Exercícios continua grátis (1 melhoria por nível), mas a tela deixa claro o saldo de melhorias e a subida de nível (V10, V11 na F1);
+    - no Portão, quem está noutro prédio vai para a reserva com cadeado e o motivo, e quem não chegou é só vaga vazia;
+    - a Ave Maria tem áudio e texto.
+  - **Fases:** F1 a F6 aprovadas.
+  - **Vestígios:** são os objetos da vida do Peregrino (D-262, D-287, M3 e M4), sem o filtro do círculo quando entrarem.
+  - **Combate (apresentação):**
+    - o início de luta com sino e mancha de tinta é ponto de partida, a definir na F3;
+    - a seleção e o toque com vibração (S01) estão aprovados;
+    - os inimigos entram pela direita na luta do corredor.
+- **D-521 · 19/11/2026 · agente (proposta)** — **Revisão criativa: diversão e imersão** (`docs/playtests/2026-11-19-revisao-criativa.md`), a pedido de Alan.
+  - **Diagnóstico:**
+    - o jogo é mudo;
+    - nada reage ao toque;
+    - o ritmo alterna espera e menu;
+    - a ameaça (Lume, desolação) não se sente;
+    - as recompensas não viram momento;
+    - os santos não têm voz nem presença.
+  - **Cinco pilares:** o Inferno respira; a luz é a vida; cada conquista é um momento; os santos estão vivos; um polegar, uma decisão.
+  - **Propostas** para o combate, a caminhada, o Pouso, a vila e o celular.
+  - **Método:** a **F1.5 · fatia da diversão**: um corredor e uma luta com o tratamento completo, aprovados por Alan antes de replicar no resto.
+  - **Pendente de Alan:** seis perguntas, entre elas as falas dos santos (texto dele) e a direção de som.
+- **D-522 · 19/11/2026 · Alan** — **Revisão criativa aprovada** (respostas às seis perguntas da `revisao-criativa.md`):
+  - **Os cinco pilares:** aprovados.
+  - **F1.5 · fatia da diversão:** aprovada.
+  - **Falas curtas dos santos:** entram; o agente escreve e Alan aprova (seguindo o `writing-guide.md`).
+  - **Som:** como recomendado (canto gregoriano e sinos na vila, coro grave e silêncio na descida, órgão e percussão no chefe). Cada prédio com o seu som: passarinhos no Jardim, ferro batendo na Forja quando abrir, e assim por diante, com imaginação.
+  - **Toque:** regra única "segurar para ver, tocar para fazer".
+  - **Volta para casa:** cena curta subindo a escada até o Portão, com o sino, que se pode pular.
+  - **Execução:** Alan pediu para adiantar a F1 nesta sessão.
+- **D-523 · 19/11/2026 · agente (F1, parte 1)** — Feito, no PR #103:
+  - **Vila:** só o clique conta (o toque cru do celular vinha duplicado); 1º toque acende o prédio aberto, 2º entra; a estátua volta a abrir a Ave Maria.
+  - **Equipe:** `Village.suggestions` não põe na companhia quem está no Jardim ou no leito.
+  - **Portão:** na reserva, quem está bloqueado tem cadeado e diz o motivo ao toque; quem não chegou é só vaga vazia (os textos `lock_*` saíram).
+  - **"Passar a semana":** na vila, canto de baixo, com dois toques (`Campaign.pass_week` = virar a semana sem expedição).
+  - **Casa de Exercícios:** "Melhorias para escolher: N" e a instrução "Cada nível novo dá 1 melhoria, de graça…"; o cartão do santo leva "Melhoria!" em dourado enquanto houver melhoria; na volta, a vila avisa "X subiu para o nível N".
+  - **Placa de aviso da vila:** maior, com quebra de linha.

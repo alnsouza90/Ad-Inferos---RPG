@@ -38,7 +38,17 @@ func show_village() -> void:
 	var village := VillageScreen.new()
 	village.setup(data, campaign, catalog.economy)
 	village.building_chosen.connect(open_building)
+	village.week_pass_requested.connect(pass_week)
 	_show(village)
+
+
+## "Passar a semana" (D9): the week turns, the village is saved and redrawn.
+func pass_week() -> void:
+	Campaign.pass_week(campaign, catalog)
+	var state: Node = _game_state()
+	if state != null:
+		state.call("save_now")
+	show_village()
 
 
 func open_building(building: StringName) -> void:
@@ -88,12 +98,23 @@ func open_leg(ctrl: ExpeditionController) -> void:
 ## The summary's "Voltar à vila": the campaign takes what the expedition
 ## brought and the week turns (Campaign.finish_expedition), then the village.
 func finish_expedition(ctrl: ExpeditionController) -> void:
+	var levels: Dictionary = {}
+	for id: StringName in campaign.saints:
+		levels[id] = (campaign.saints[id] as CampaignSaint).level
 	var state: Node = _game_state()
 	if state != null:
 		state.call("finish_expedition")
 	else:
 		Campaign.finish_expedition(campaign, catalog, ctrl)
 	show_village()
+	# Who went up a level is told on arrival (V11, D-520).
+	var news: Array[String] = []
+	for id: StringName in levels:
+		var s: CampaignSaint = campaign.saints[id]
+		if s.level > int(levels[id]):
+			news.append(data.ui.text(&"village_level_up", {"name": catalog.saint(id).name_pt, "level": s.level}))
+	if not news.is_empty():
+		(screen as VillageScreen).show_news(data.ui.text(&"village_news_title"), "\n".join(news))
 
 
 func _show(next: Control) -> void:
