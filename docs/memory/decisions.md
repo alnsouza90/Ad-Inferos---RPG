@@ -583,3 +583,4 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Círculos não alcançados:** faixa escurecida, com cadeado sobre o medalhão.
   - **Funil:** as laterais escurecem um pouco mais a cada faixa.
   - **Pontos da trilha:** medalhõezinhos no estilo dos medalhões; prompts em `prompts-mapa-inferno.md` §5, para Alan gerar no Meta AI.
+- **D-512 · 19/11/2026 · Alan e agente** — **Pontos da trilha** gerados por Alan no Meta AI (Portão do círculo, Pouso e Chefe), recortados em 32 × 32 (`ui/map/map_point_{gate,camp,boss}.png`; originais em `art_source/ui/map_medallions/`). **Corrente da lanterna** gerada pelo agente no PixelLab, com o sim de Alan (`create_image_pixen`, 2 gerações, duas opções): escolhida a de ferro escuro com luz âmbar, que combina com a lanterna (`ui/map/map_chain.png`, 32 × 64, repetida na vertical pelo motor).
