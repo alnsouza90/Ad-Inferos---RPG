@@ -608,3 +608,11 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **T68 · regras de ouro e lições aprendidas:** regras de ouro para crescer no M3 e no M4, sessão de lições aprendidas do M2 e estrutura do backlog do M3.
   - **Fechamento:** a T57 (teste completo no Android) vem depois das três.
   - **Agora:** Alan joga o ciclo da T49 no celular e traz o retorno.
+- **D-519 · 19/11/2026 · Alan e agente** — **Playtest da fatia vertical** (`docs/playtests/2026-11-19-playtest-vertical-slice.md`, de Alan): o jogo funciona, mas está monótono, pouco intuitivo e pequeno para o celular. O agente fez a auditoria e o **plano de revisão** (`docs/playtests/2026-11-19-plano-de-revisao.md`), ainda **sem mudar o jogo**:
+  - **Causas achadas:**
+    - B03 e B04: o toque chega duas vezes na vila (toque e clique imitado), e o prédio abre já no primeiro toque;
+    - B13 e D8: a sugestão da equipe ignora o Jardim e o leito;
+    - D10: com menos de 3 santos aptos, o jogo fica sem saída.
+  - **Não reproduzidos no núcleo:** B01 e B02 (os inimigos e as escoltas agem em todas as rodadas da prova); a causa provável é a apresentação.
+  - **Proposta:** seis fases, de F1 a F6.
+  - **Para Alan responder:** os conflitos com D-477, D-504, D-379 e D-497, e seis perguntas.
