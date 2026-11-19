@@ -202,16 +202,35 @@ func test_the_gate_has_the_christ_child_painting_on_its_wall() -> void:
 		assert_true(ResourceLoader.exists(BuildingScreen.PROP_PATH % prop["file"]), prop["file"])
 
 
-func test_the_interface_hides_to_show_the_whole_interior_and_comes_back() -> void:
+func test_the_name_of_the_building_closes_and_opens_the_panels_but_not_the_guardian() -> void:
 	for id: StringName in BuildingScreen.GUARDIANS:
 		var b := _screen(id)
 		await wait_process_frames(1)
-		assert_true(b.interface_shown)
-		b.toggle_interface()
+		b._toggle.pressed.emit()
 		assert_false(b.interface_shown, String(id))
-		assert_false(b._roster.visible, "a pilha some")
-		assert_true(b._toggle.visible, "o botão fica")
-		assert_eq(b._toggle.text, data.ui.text(&"interface_show"))
-		b.toggle_interface()
-		assert_true(b._roster.visible)
-		assert_eq(b._toggle.text, data.ui.text(&"interface_hide"))
+		assert_false(b._roster.visible, "a pilha fecha")
+		assert_false(b._board.visible, "o painel fecha")
+		b._toggle.pressed.emit()
+		assert_true(b._roster.visible and b._board.visible, "abre de novo")
+
+
+func test_the_small_portrait_opens_the_card_and_a_second_tap_closes_it() -> void:
+	var b := _screen(&"gate")
+	await wait_process_frames(1)
+	b._roster.head_tapped.emit(&"saint_george")
+	assert_eq(b.card_saint, &"saint_george")
+	assert_true(b._card is SaintCard)
+	b.toggle_card(&"saint_george")
+	assert_eq(b.card_saint, &"")
+	b.toggle_card(&"saint_benedict")
+	b._card.closed.emit()
+	assert_eq(b.card_saint, &"", "fechar a ficha também volta")
+
+
+func test_abilities_chosen_on_the_card_go_to_the_campaign() -> void:
+	var b := _screen(&"gate")
+	await wait_process_frames(1)
+	b.toggle_card(&"saint_george")
+	var list: Array[StringName] = [&"george_spear_thrust"]
+	b._card.loadout_changed.emit(list)
+	assert_eq(b.campaign.saint(&"saint_george").equipped, list)

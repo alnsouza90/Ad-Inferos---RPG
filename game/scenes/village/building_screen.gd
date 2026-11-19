@@ -32,8 +32,8 @@ const PROP_PATH: String = "res://assets/pixel/environments/village/props/%s.png"
 const PROPS: Dictionary = {
 	&"gate": [{"file": "gate_painting", "at": Vector2(586, 30)}],
 }
-## The button that hides and shows the interface (D-517).
-const TOGGLE_RECT := Rect2(10, 492, 150, 38)
+## The building's name and crest: a tap closes or opens the panels (D-517).
+const TOGGLE_RECT := Rect2(8, 18, 276, 64)
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
 const HALO_PATH: String = "res://assets/pixel/vfx/guardian_halo.png"
@@ -107,11 +107,13 @@ var _status: Label
 var _arrivals: Array[StringName] = []
 ## The interior and its props, under the interface.
 var _scenery: Array[CanvasItem] = []
-## The first child of the stage that belongs to the interface.
-var _interface_from: int = 0
 var _toggle: Button
-## False while the player looks at the whole interior (D-517).
+var _board_plate: NinePatchRect
+var _card: SaintCard
+## False while the panels are closed (D-517).
 var interface_shown: bool = true
+## The saint whose card is open (&"" when none).
+var card_saint: StringName = &""
 
 
 func setup(p_data: GameData, p_catalog: ExpeditionCatalog, p_campaign: CampaignState, p_building: StringName) -> void:
@@ -310,10 +312,10 @@ func _build() -> void:
 		var hung := _picture(PROP_PATH % prop["file"], prop["at"], 1.0)
 		if hung != null:
 			_scenery.append(hung)
-	_interface_from = _stage.get_child_count()
 	_build_guardian()
 	_build_header()
-	_stage.add_child(PixelStyle.iron_plate(BOARD_RECT))
+	_board_plate = PixelStyle.iron_plate(BOARD_RECT)
+	_stage.add_child(_board_plate)
 	_board = Control.new()
 	_board.position = BOARD_RECT.position
 	_board.size = BOARD_RECT.size
@@ -323,6 +325,7 @@ func _build() -> void:
 	_roster.setup(data, catalog, campaign)
 	_roster.position = ROSTER_POS
 	_roster.saint_tapped.connect(func(id: StringName) -> void: tap_saint(id))
+	_roster.head_tapped.connect(toggle_card)
 	_stage.add_child(_roster)
 	_build_bottom()
 	_build_toggle()
@@ -330,16 +333,38 @@ func _build() -> void:
 	_shade_scenery()
 
 
-## The button that hides the interface to see the whole interior, and
-## brings it back (D-517).
+## Tapping the building's name closes its panels (the board and the stack
+## of saints) to see the interior; tapping again opens them (D-517). The
+## guardian, his words and the bottom bar stay.
 func toggle_interface() -> void:
 	interface_shown = not interface_shown
-	for i: int in range(_interface_from, _stage.get_child_count()):
-		var child: Node = _stage.get_child(i)
-		if child != _toggle and child is CanvasItem:
-			(child as CanvasItem).visible = interface_shown
-	_toggle.text = data.ui.text(&"interface_hide" if interface_shown else &"interface_show")
+	for item: CanvasItem in [_board_plate, _board, _roster]:
+		item.visible = interface_shown
 	_shade_scenery()
+
+
+## A saint's small portrait tapped: its card opens; tapped again (or the
+## card closed), it closes (D-517). Abilities changed on the card go to the
+## campaign.
+func toggle_card(saint_id: StringName) -> void:
+	var was: StringName = card_saint
+	close_card()
+	if was == saint_id:
+		return
+	var s: CampaignSaint = campaign.saints[saint_id]
+	_card = SaintCard.new()
+	_card.setup(data, saint_id, s.equipped, s.status.relics, s.level)
+	_card.closed.connect(close_card)
+	_card.loadout_changed.connect(func(list: Array[StringName]) -> void: s.equipped = list.duplicate())
+	add_child(_card)
+	card_saint = saint_id
+
+
+func close_card() -> void:
+	if _card != null and is_instance_valid(_card):
+		_card.queue_free()
+	_card = null
+	card_saint = &""
 
 
 ## The interior a little darker under the interface, in full light without it.
@@ -348,8 +373,16 @@ func _shade_scenery() -> void:
 		item.modulate = INTERIOR_SHADE if interface_shown else Color.WHITE
 
 
+## The building's name and crest, tappable: they close and open the panels.
 func _build_toggle() -> void:
-	_toggle = _button(data.ui.text(&"interface_hide"), toggle_interface, TOGGLE_RECT)
+	_toggle = Button.new()
+	_toggle.flat = true
+	_toggle.focus_mode = Control.FOCUS_NONE
+	_toggle.position = TOGGLE_RECT.position
+	_toggle.size = TOGGLE_RECT.size
+	for state: String in ["normal", "hover", "pressed", "focus"]:
+		_toggle.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	_toggle.pressed.connect(toggle_interface)
 	_stage.add_child(_toggle)
 
 

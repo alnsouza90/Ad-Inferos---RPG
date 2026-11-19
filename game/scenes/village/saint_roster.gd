@@ -6,6 +6,8 @@ extends Control
 ## a bed, resting in the Garden, wounded). Tapping a card tells the building.
 
 signal saint_tapped(saint_id: StringName)
+## The small portrait tapped: the saint's card (D-517).
+signal head_tapped(saint_id: StringName)
 
 const CARD_SIZE := Vector2(216, 56)
 const CARD_GAP: float = 4.0
@@ -82,7 +84,7 @@ func _card(id: StringName) -> Button:
 		PixelStyle.COLOR_AMBER if id == selected else PixelStyle.COLOR_LEAD)
 	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(back)
-	card.add_child(SaintMini.tile(HEAD_RECT, SaintMini.head(id), Callable(), id == selected))
+	card.add_child(SaintMini.tile(HEAD_RECT, SaintMini.head(id), func() -> void: head_tapped.emit(id), id == selected))
 	var x: float = HEAD_RECT.end.x + 6.0
 	card.add_child(_text(catalog.saint(id).name_pt, Vector2(x, 0), PixelStyle.COLOR_BONE))
 	var place: String = place_of(id)
