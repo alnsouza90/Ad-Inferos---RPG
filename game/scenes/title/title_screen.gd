@@ -1,11 +1,11 @@
 class_name TitleScreen
 extends Control
-## The game's first screen in the M1 (screens §2): Continue (the saved leg)
-## and New leg (preparation, then the walk). In dev builds it also opens the
-## M0 arena. It holds the loaded data and swaps the screens it opens.
+## The game's first screen (screens §2): Continue (the saved village or
+## expedition) and New campaign (the village, T49). In dev builds it also
+## opens the M0 arena. It holds the loaded data and swaps the screens it opens.
 
-## M1 data ids: one leg of Circle 2 with the arena groups and the fixed kit
-## (expedition §13, D-123).
+## The M1 leg's data ids (expedition §13, D-123), kept for the tests that
+## build an M1 expedition directly.
 const CIRCLE: StringName = &"circle_02"
 const KIT: StringName = &"m1_kit"
 const EXPEDITION_NUMBER: int = 1
@@ -24,9 +24,8 @@ var fixed_seed: int = 0
 var speed_override: int = -1
 ## Dev builds (debug or "dev_tools" exports) show the arena button.
 var dev_tools: bool = OS.is_debug_build() or OS.has_feature("dev_tools")
-## The leg, preparation or arena on top of the menu, or null.
+## The village (with its expedition) or the arena on top of the menu, or null.
 var screen: Control
-var leg: LegScreen
 ## New leg tapped once while a save exists (the second tap confirms).
 var new_armed: bool = false
 
@@ -70,6 +69,10 @@ func press_continue() -> void:
 		return
 	var status: StringName = state.call("continue_saved", catalog)
 	var ctrl: ExpeditionController = state.get("expedition")
+	if ctrl == null and state.get("campaign") != null and status != SaveStore.STATUS_NONE:
+		_message.text = ""
+		open_village(state.get("campaign"))
+		return
 	if ctrl == null:
 		var key: StringName = &"title_save_corrupt"
 		if status == SaveStore.STATUS_FUTURE:
@@ -79,7 +82,8 @@ func press_continue() -> void:
 		_message.text = data.ui.text(key)
 		return
 	_message.text = data.ui.text(&"title_save_from_backup") if status == SaveStore.STATUS_FROM_BACKUP else ""
-	open_leg(ctrl)
+	var flow := open_village(state.get("campaign"))
+	flow.open_leg(ctrl)
 
 
 ## New leg: with a save, the first tap warns that it will be replaced.
@@ -91,18 +95,20 @@ func press_new_leg() -> void:
 		return
 	new_armed = false
 	_message.text = ""
-	_open(_preparation())
+	start_campaign()
 
 
-## Preparation's "Partir": a new expedition from the gate, saved at once.
-func press_depart() -> void:
+## A new campaign: saved at once, and the village opens (T49).
+func start_campaign() -> void:
 	var campaign_seed: int = fixed_seed if fixed_seed != 0 else int(Time.get_unix_time_from_system()) ^ Time.get_ticks_usec()
-	var map_seed: int = ExpeditionController.map_seed_for(campaign_seed, CIRCLE, EXPEDITION_NUMBER)
-	var ctrl := ExpeditionController.start_new(catalog, CIRCLE, map_seed, GameData.M0_FORMATION, catalog.kit_provisions(KIT), GameData.EXPEDITION_ENCOUNTER_CIRCLE)
+	var campaign: CampaignState
 	var state: Node = _game_state()
 	if state != null:
-		state.call("start_expedition", catalog, ctrl, campaign_seed)
-	open_leg(ctrl)
+		state.call("start_campaign", catalog, campaign_seed)
+		campaign = state.get("campaign")
+	else:
+		campaign = Campaign.start(catalog, campaign_seed)
+	open_village(campaign)
 
 
 func press_arena() -> void:
@@ -114,20 +120,21 @@ func press_arena() -> void:
 	_open(arena)
 
 
-func open_leg(ctrl: ExpeditionController) -> void:
-	leg = LegScreen.new()
-	leg.use_game_state = use_game_state
-	leg.speed_index = speed_override if speed_override >= 0 else _speed()
-	leg.setup(data, catalog, ctrl)
-	leg.title_requested.connect(back_to_menu)
-	_open(leg)
+## The campaign's cycle: the village, its buildings, the map and the
+## expeditions (VillageFlow).
+func open_village(campaign: CampaignState) -> VillageFlow:
+	var flow := VillageFlow.new()
+	flow.use_game_state = use_game_state
+	flow.speed_index = speed_override if speed_override >= 0 else _speed()
+	flow.setup(data, catalog, campaign)
+	_open(flow)
+	return flow
 
 
 func back_to_menu() -> void:
 	if screen != null and is_instance_valid(screen):
 		screen.queue_free()
 	screen = null
-	leg = null
 	_menu.visible = true
 	refresh()
 
@@ -148,40 +155,6 @@ func _open(p_screen: Control) -> void:
 	screen = p_screen
 	_menu.visible = false
 	add_child(p_screen)
-
-
-## Party in formation and the provisions of the kit, then "Partir".
-func _preparation() -> Control:
-	var root := CenterContainer.new()
-	LegacyStage.fill(root)
-	root.set_meta(&"kind", &"preparation")
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 24)
-	root.add_child(box)
-	box.add_child(_label(data.ui.text(&"prep_title"), 52))
-	var names: Array[String] = []
-	for id: StringName in GameData.M0_FORMATION:
-		var def: SaintDef = data.saints.get(id)
-		names.append(def.name_pt if def != null else String(id))
-	box.add_child(_label(data.ui.text(&"prep_party") + "\n" + " · ".join(names), 30))
-	var counts: Dictionary = {}
-	var order: Array[StringName] = []
-	for id: StringName in catalog.kit_provisions(KIT):
-		if not counts.has(id):
-			order.append(id)
-		counts[id] = int(counts.get(id, 0)) + 1
-	var items: Array[String] = []
-	for id: StringName in order:
-		var def: ProvisionDef = data.catalog.provision(id)
-		items.append(data.ui.text(&"walk_provision_line", {"provision": def.name_pt if def != null else String(id), "count": counts[id]}))
-	box.add_child(_label(data.ui.text(&"prep_kit") + "\n" + " · ".join(items), 30))
-	var depart := _button(data.ui.text(&"prep_depart"))
-	depart.pressed.connect(press_depart)
-	box.add_child(depart)
-	var back := _button(data.ui.text(&"prep_back"))
-	back.pressed.connect(back_to_menu)
-	box.add_child(back)
-	return root
 
 
 func _build() -> void:

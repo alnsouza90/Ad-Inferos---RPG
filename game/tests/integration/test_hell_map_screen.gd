@@ -70,3 +70,23 @@ func test_back_goes_to_the_gate() -> void:
 	watch_signals(m)
 	m.press_back()
 	assert_signal_emitted(m, "back_pressed")
+
+
+func test_the_first_visit_brings_the_lantern_down_from_the_gate_of_hell_once() -> void:
+	var c := Campaign.start(cat, 1)
+	assert_eq(c.map_lantern_band, -1)
+	var m := _screen(c)
+	await wait_process_frames(1)
+	assert_true(m.descending, "a lanterna desce na primeira vez")
+	assert_eq(m.lantern_shown_band, HellMap.lantern_band(c, cat))
+	assert_eq(c.map_lantern_band, HellMap.lantern_band(c, cat), "lembrada na campanha")
+	var again := _screen(c)
+	await wait_process_frames(1)
+	assert_false(again.descending, "da segunda vez ela já está lá")
+
+
+func test_the_lantern_band_is_kept_in_the_save() -> void:
+	var c := Campaign.start(cat, 1)
+	c.map_lantern_band = 3
+	assert_eq(CampaignState.from_dict(JSON.parse_string(JSON.stringify(c.to_dict()))).map_lantern_band, 3)
+	assert_eq(CampaignState.from_dict({}).map_lantern_band, -1, "save antigo: nunca aberto")

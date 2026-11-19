@@ -258,20 +258,15 @@ func _title() -> TitleScreen:
 	return title
 
 
-func test_new_leg_goes_through_preparation_to_the_walk() -> void:
+func test_new_campaign_opens_the_village() -> void:
 	var title := _title()
 	assert_true(title.menu_shown())
 	title.press_new_leg()
 	assert_false(title.menu_shown())
-	assert_eq(StringName(str(title.screen.get_meta(&"kind", ""))), &"preparation")
-	title.press_depart()
-	assert_not_null(title.leg)
-	assert_eq(title.leg.screen_kind(), &"walk")
-	var expected: int = ExpeditionController.map_seed_for(CAMPAIGN_SEED, TitleScreen.CIRCLE, TitleScreen.EXPEDITION_NUMBER)
-	assert_eq(title.leg.ctrl.state.map_seed, expected)
-	assert_eq(title.leg.ctrl.state.provisions, cat.kit_provisions(TitleScreen.KIT), "parte com o kit (D-123)")
-	title.leg.press_title()
-	assert_true(title.menu_shown(), "o resumo volta ao título")
+	assert_true(title.screen is VillageFlow, "T49: a campanha começa na vila")
+	var flow: VillageFlow = title.screen
+	assert_eq(flow.campaign.seed, CAMPAIGN_SEED)
+	assert_true(flow.screen is VillageScreen)
 
 
 func test_continue_is_off_without_a_save() -> void:
@@ -303,7 +298,7 @@ func test_every_flow_text_exists_in_the_data() -> void:
 	var keys: Array[String] = [
 		"back_to_title", "result_continue", "title_name", "title_subtitle", "title_continue", "title_new_leg",
 		"title_arena", "title_confirm_new", "title_no_save", "title_save_corrupt", "title_save_future",
-		"title_save_from_backup", "prep_title", "prep_party", "prep_kit", "prep_depart", "prep_back",
+		"title_save_from_backup", "building_back",
 		"relic_found", "relic_give", "relic_pack", "relic_no_slot", "relic_confirm", "node_empty",
 		"node_continue", "summary_title", "summary_alms", "summary_saint", "summary_virtues", "summary_relics",
 	]

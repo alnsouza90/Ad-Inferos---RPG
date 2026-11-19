@@ -27,6 +27,10 @@ var flags: Array[StringName] = []
 var virtues: Virtues
 ## saint id -> CampaignSaint
 var saints: Dictionary = {}
+## The band where the Map of Hell last showed the lantern (-1: never
+## opened). When the lantern's band is deeper, the map shows it descending
+## (D-515). Presentation memory, kept with the campaign so it plays once.
+var map_lantern_band: int = -1
 ## Draws made from the campaign stream (RngStreams.CAMPAIGN).
 var rng_counter: int = 0
 
@@ -48,7 +52,7 @@ func to_dict() -> Dictionary:
 		"unlocked_saints": _strings(unlocked_saints), "pending_arrivals": _strings(pending_arrivals),
 		"infirmary_beds": _strings(infirmary_beds), "garden_saints": _strings(garden_saints),
 		"village_intro_done": village_intro_done, "flags": _strings(flags), "virtues": virtues.to_dict(),
-		"saints": saint_dicts, "rng_counter": rng_counter,
+		"saints": saint_dicts, "rng_counter": rng_counter, "map_lantern_band": map_lantern_band,
 	}
 
 
@@ -74,6 +78,7 @@ static func from_dict(data: Dictionary) -> CampaignState:
 	for id: Variant in raw:
 		c.saints[StringName(str(id))] = CampaignSaint.from_dict(raw[id])
 	c.rng_counter = int(data.get("rng_counter", 0))
+	c.map_lantern_band = int(data.get("map_lantern_band", -1))
 	return c
 
 
