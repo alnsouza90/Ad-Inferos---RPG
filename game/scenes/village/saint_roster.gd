@@ -9,7 +9,7 @@ signal saint_tapped(saint_id: StringName)
 
 const CARD_SIZE := Vector2(216, 56)
 const CARD_GAP: float = 4.0
-const HEAD_RECT := Rect2(4, 2, 56, 52)
+const HEAD_RECT := Rect2(4, 4, 48, 48)
 const BAR_SIZE := Vector2(64, 4)
 const TEXT_SIZE: int = PixelStyle.TEXT_SIZE * 2
 

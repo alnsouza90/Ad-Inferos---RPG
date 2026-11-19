@@ -27,6 +27,8 @@ const GUARDIANS: Dictionary = {
 const PROVISIONS: Array[StringName] = [&"bread", &"candle", &"holy_water", &"bandages", &"incense"]
 ## The guardian, large at the left, from the waist up (D-499).
 const PORTRAIT_SCALE: float = 1.5
+## How much of the guardian's lower edge the ledge hides.
+const PORTRAIT_CUT: float = 56.0
 ## The interior a little darker, so the board and the cards read first.
 const INTERIOR_SHADE := Color(0.62, 0.6, 0.62)
 const HEADER_WIDTH: float = 276.0
@@ -34,7 +36,7 @@ const BOARD_RECT := Rect2(292, 22, 428, 456)
 const ROSTER_POS := Vector2(730, 22)
 const BOTTOM_Y: float = 484.0
 const BACK_RECT := Rect2(790, 494, 160, 36)
-const DEPART_RECT := Rect2(426, 490, 160, 42)
+const DEPART_RECT := Rect2(410, 484, 192, 56)
 const ALMS_POS := Vector2(296, 496)
 const BAND_HEIGHT: float = 16.0
 const TITLE_SIZE: int = PixelStyle.TITLE_SIZE * 2
@@ -43,15 +45,23 @@ const LINE_TIGHTEN: int = -4
 ## The places of the board.
 const TILE := Vector2(60, 56)
 const BIG_TILE := Vector2(96, 90)
+## The bed and the bench are drawn at 64 × 64.
+const PLACE_PIECE: float = 64.0
+const CREST_SIZE := Vector2(64, 64)
+const CREST_PATH: String = "res://assets/pixel/icons/crest_%s.png"
 const CELL_GAP: float = 12.0
 const ARCH_GAP: float = 18.0
 const LANCET_SCALE: float = 0.62
 const LANCET_SIZE := Vector2(64, 153)
-## The plate of "Partir" in blood red, as the call to leave.
-const DEPART_TINT := Color(1.5, 0.5, 0.45)
 ## A saint who cannot go down: its head darker, still known.
 const BLOCKED_TINT := Color(0.45, 0.42, 0.45)
-const LOCKED_CELL_WIDTH: float = 296.0
+## The reserve of the Gate: room for every saint of the game, and more.
+const RESERVE_COLUMNS: int = 6
+## The kinds of `unlock` (saints.csv), in the order the saints come.
+const ARRIVAL_ORDER: Array[String] = ["week", "circle", "carmel", "milestone"]
+const RESERVE_ROWS: int = 2
+const RESERVE_CELL := Vector2(65, 74)
+const RESERVE_TILE := Vector2(52, 52)
 
 var data: GameData
 var catalog: ExpeditionCatalog
@@ -266,10 +276,7 @@ func _build() -> void:
 	if interior != null:
 		interior.size = STAGE_SIZE
 		interior.modulate = INTERIOR_SHADE
-	var portrait := _picture(PORTRAIT_PATH % GUARDIANS.get(building, &""), Vector2.ZERO, PORTRAIT_SCALE)
-	if portrait != null:
-		# Standing on the bottom edge, at the left.
-		portrait.position = Vector2(0, STAGE_SIZE.y - portrait.size.y)
+	_build_guardian()
 	_build_header()
 	_stage.add_child(PixelStyle.iron_plate(BOARD_RECT))
 	_board = Control.new()
@@ -286,6 +293,23 @@ func _build() -> void:
 	_refresh()
 
 
+## The guardian on his stage (D-504): cut at the ledge of the bottom bar, as
+## behind a counter, never spilling past the stage.
+func _build_guardian() -> void:
+	var stage := Control.new()
+	stage.size = Vector2(BOARD_RECT.position.x - 4, BOTTOM_Y)
+	stage.clip_contents = true
+	stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(stage)
+	var path: String = PORTRAIT_PATH % GUARDIANS.get(building, &"")
+	if not ResourceLoader.exists(path):
+		return
+	var texture: Texture2D = load(path) as Texture2D
+	var size_shown: Vector2 = texture.get_size() * PORTRAIT_SCALE
+	var x: float = floorf((stage.size.x - size_shown.x) * 0.5)
+	stage.add_child(SaintMini.picture(texture, Rect2(Vector2(x, BOTTOM_Y - size_shown.y + PORTRAIT_CUT), size_shown)))
+
+
 func _build_header() -> void:
 	var band := TextureRect.new()
 	band.texture = PixelStyle.piece("ui_top_band")
@@ -294,19 +318,29 @@ func _build_header() -> void:
 	band.size = Vector2(STAGE_SIZE.x, BAND_HEIGHT)
 	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(band)
+	# The crest of the building beside its name, as in Darkest Dungeon.
+	var crest_path: String = CREST_PATH % building
+	var title_x: float = 14.0
+	if ResourceLoader.exists(crest_path):
+		_stage.add_child(SaintMini.picture(load(crest_path) as Texture2D, Rect2(Vector2(8, 18), CREST_SIZE)))
+		title_x = 8.0 + CREST_SIZE.x + 6.0
+	var title := _label(data.ui.text(StringName("building_%s" % building)), TITLE_SIZE, PixelStyle.COLOR_BONE)
+	# The big title, smaller when the name is long (Casa de Exercícios).
+	var room: float = HEADER_WIDTH + 14.0 - title_x
+	var big: int = PixelStyle.BIG_TITLE_SIZE * 2
+	if PixelStyle.title_font().get_string_size(title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, big).x > room:
+		big = PixelStyle.TITLE_SIZE * 3
+	if PixelStyle.title_font().get_string_size(title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, big).x > room:
+		big = PixelStyle.BIG_TITLE_SIZE
+	PixelStyle.title(title, PixelStyle.COLOR_BONE, big)
+	title.position = Vector2(title_x, 18 + floorf((CREST_SIZE.y - title.get_minimum_size().y) * 0.5))
+	_stage.add_child(title)
 	var column := VBoxContainer.new()
-	column.position = Vector2(14, 20)
+	column.position = Vector2(14, 18 + CREST_SIZE.y + 2)
 	column.size = Vector2(HEADER_WIDTH, 0)
 	column.add_theme_constant_override("separation", 0)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(column)
-	var title := _label(data.ui.text(StringName("building_%s" % building)), TITLE_SIZE, PixelStyle.COLOR_BONE)
-	# The big title, smaller when the name is long (Casa de Exercícios).
-	var big: int = PixelStyle.BIG_TITLE_SIZE * 2
-	if PixelStyle.title_font().get_string_size(title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, big).x > HEADER_WIDTH:
-		big = PixelStyle.TITLE_SIZE * 3
-	PixelStyle.title(title, PixelStyle.COLOR_BONE, big)
-	column.add_child(title)
 	var guardian := _label(data.ui.text(StringName("guardian_%s" % building)), TITLE_SIZE, PixelStyle.COLOR_AMBER)
 	PixelStyle.title(guardian, PixelStyle.COLOR_AMBER, TITLE_SIZE)
 	column.add_child(guardian)
@@ -316,10 +350,18 @@ func _build_header() -> void:
 func _build_bottom() -> void:
 	var bar := ColorRect.new()
 	bar.color = Color(PixelStyle.COLOR_PITCH, 0.88)
-	bar.position = Vector2(BOARD_RECT.position.x, BOTTOM_Y)
-	bar.size = Vector2(STAGE_SIZE.x - BOARD_RECT.position.x, STAGE_SIZE.y - BOTTOM_Y)
+	bar.position = Vector2(0, BOTTOM_Y)
+	bar.size = Vector2(STAGE_SIZE.x, STAGE_SIZE.y - BOTTOM_Y)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(bar)
+	var ledge := TextureRect.new()
+	ledge.texture = PixelStyle.piece("ui_top_band")
+	ledge.stretch_mode = TextureRect.STRETCH_TILE
+	ledge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ledge.position = Vector2(0, BOTTOM_Y - BAND_HEIGHT * 0.5)
+	ledge.size = Vector2(STAGE_SIZE.x, BAND_HEIGHT)
+	ledge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(ledge)
 	var coin := _picture(ICON_PATH % "alms", ALMS_POS, 1.0)
 	if coin != null:
 		coin.position.y = BOTTOM_Y + 10
@@ -328,13 +370,26 @@ func _build_bottom() -> void:
 	_alms.position = ALMS_POS + Vector2(38, 0)
 	_stage.add_child(_alms)
 	if building == &"gate":
-		var go := _button(data.ui.text(&"gate_depart"), func() -> void: depart(), DEPART_RECT)
-		go.add_theme_font_override("font", PixelStyle.title_font())
-		go.add_theme_font_size_override("font_size", TITLE_SIZE)
-		go.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
-		go.self_modulate = DEPART_TINT
-		_stage.add_child(go)
+		_stage.add_child(_depart_banner())
 	_stage.add_child(_button(data.ui.text(&"building_back"), press_back, BACK_RECT))
+
+
+## "Partir" on the blood-red banner (PixelLab, D-504).
+func _depart_banner() -> Control:
+	var banner := TextureButton.new()
+	banner.texture_normal = PixelStyle.piece("ui_depart_banner")
+	banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	banner.position = DEPART_RECT.position
+	banner.focus_mode = Control.FOCUS_NONE
+	banner.pressed.connect(func() -> void: depart())
+	var word := _label(data.ui.text(&"gate_depart"), TITLE_SIZE, PixelStyle.COLOR_BONE)
+	PixelStyle.title(word, PixelStyle.COLOR_BONE, PixelStyle.BIG_TITLE_SIZE)
+	word.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	word.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	word.position = Vector2(0, 8)
+	word.size = DEPART_RECT.size - Vector2(0, 8)
+	banner.add_child(word)
+	return banner
 
 
 func _refresh() -> void:
@@ -384,7 +439,7 @@ func _board_gate(column: VBoxContainer) -> void:
 	column.add_child(_section(data.ui.text(&"gate_party")))
 	var arches := Control.new()
 	var arch_size: Vector2 = PixelStyle.piece("ui_portrait_arch").get_size()
-	arches.custom_minimum_size = Vector2(0, arch_size.y + 26)
+	arches.custom_minimum_size = Vector2(0, arch_size.y)
 	arches.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(arches)
 	var width: float = party.size() * arch_size.x + (party.size() - 1) * ARCH_GAP
@@ -393,17 +448,26 @@ func _board_gate(column: VBoxContainer) -> void:
 		arches.add_child(_party_arch(i, Vector2(x, 0), arch_size))
 		x += arch_size.x + ARCH_GAP
 	column.add_child(_section(data.ui.text(&"gate_reserve")))
-	var reserve := HFlowContainer.new()
-	reserve.add_theme_constant_override("h_separation", int(CELL_GAP))
-	reserve.add_theme_constant_override("v_separation", 4)
+	var reserve := GridContainer.new()
+	reserve.columns = RESERVE_COLUMNS
+	reserve.add_theme_constant_override("h_separation", 0)
+	reserve.add_theme_constant_override("v_separation", 2)
 	reserve.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(reserve)
+	var shown: int = 0
 	for id: StringName in campaign.unlocked_saints:
 		if not party.has(id):
 			reserve.add_child(_reserve_cell(id))
-	for id: StringName in catalog.saints:
-		if not campaign.unlocked_saints.has(id) and SaintMini.head(id) != null:
-			reserve.add_child(_locked_cell(id))
+			shown += 1
+	for id: StringName in coming_saints():
+		reserve.add_child(_locked_cell(id))
+		shown += 1
+	# Room to spare for the saints still to come (D-504).
+	var cells: int = maxi(RESERVE_COLUMNS * RESERVE_ROWS, shown)
+	for i: int in cells - shown:
+		var cell := _cell(RESERVE_CELL)
+		cell.add_child(SaintMini.tile(Rect2(_reserve_tile_pos(), RESERVE_TILE), null, Callable()))
+		reserve.add_child(cell)
 
 
 func _party_arch(index: int, pos: Vector2, arch_size: Vector2) -> Control:
@@ -412,7 +476,7 @@ func _party_arch(index: int, pos: Vector2, arch_size: Vector2) -> Control:
 	place.flat = true
 	place.focus_mode = Control.FOCUS_NONE
 	place.position = pos
-	place.size = arch_size + Vector2(0, 26)
+	place.size = arch_size
 	place.pressed.connect(func() -> void: tap_slot(index))
 	var arch := TextureRect.new()
 	arch.texture = PixelStyle.piece("ui_portrait_arch")
@@ -427,44 +491,56 @@ func _party_arch(index: int, pos: Vector2, arch_size: Vector2) -> Control:
 	PixelStyle.title(number, PixelStyle.COLOR_AMBER, TITLE_SIZE)
 	number.position = Vector2(arch_size.x * 0.5 - 6, 30)
 	place.add_child(number)
-	var name_label := _label(catalog.saint(id).name_pt if id != &"" else data.ui.text(&"gate_empty"), TEXT_SIZE,
-		PixelStyle.COLOR_BONE if id != &"" else PixelStyle.COLOR_GREY)
-	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_label.position = Vector2(-ARCH_GAP * 0.5, arch_size.y + 2)
-	name_label.size = Vector2(arch_size.x + ARCH_GAP, 22)
-	place.add_child(name_label)
 	return place
 
 
 func _reserve_cell(id: StringName) -> Control:
-	var cell := _cell(Vector2(TILE.x + 20, TILE.y + 22))
+	var cell := _cell(RESERVE_CELL)
 	var blocked: bool = Campaign.saint_refusal(campaign, id) != Campaign.OK
-	var tile := SaintMini.tile(Rect2(Vector2(10, 0), TILE), SaintMini.head(id), func() -> void: tap_saint(id), selected_saint == id)
+	var tile := SaintMini.tile(Rect2(_reserve_tile_pos(), RESERVE_TILE), SaintMini.head(id), func() -> void: tap_saint(id), selected_saint == id)
 	if blocked:
 		tile.get_child(1).modulate = BLOCKED_TINT
 	cell.add_child(tile)
-	var name_label := _label(_short_name(id), TEXT_SIZE, PixelStyle.COLOR_BLOOD if blocked else PixelStyle.COLOR_BONE)
-	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_label.position = Vector2(0, TILE.y)
-	name_label.size = Vector2(cell.custom_minimum_size.x, 20)
-	cell.add_child(name_label)
+	cell.add_child(_centered(_short_name(id), RESERVE_TILE.y, RESERVE_CELL.x - 12, PixelStyle.COLOR_BLOOD if blocked else PixelStyle.COLOR_BONE))
 	return cell
 
 
-## A saint not arrived yet: dark, with the padlock and the reason.
+## A saint not arrived yet: dark, with the padlock; a tap tells the reason.
 func _locked_cell(id: StringName) -> Control:
-	var width: float = LOCKED_CELL_WIDTH
-	var cell := _cell(Vector2(width, TILE.y + 4))
-	cell.add_child(SaintMini.tile(Rect2(Vector2(10, 0), TILE), SaintMini.head(id), Callable(), false, true))
-	cell.add_child(SaintMini.padlock(Vector2(10, 0) + TILE * 0.5))
-	var text := VBoxContainer.new()
-	text.position = Vector2(TILE.x + 22, 4)
-	text.add_theme_constant_override("separation", -2)
-	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.add_child(_label(catalog.saint(id).name_pt, TEXT_SIZE, PixelStyle.COLOR_GREY))
-	text.add_child(_wrapped(lock_reason(id), width - TILE.x - 30, PixelStyle.COLOR_GREY))
-	cell.add_child(text)
+	var cell := _cell(RESERVE_CELL)
+	var rect := Rect2(_reserve_tile_pos(), RESERVE_TILE)
+	cell.add_child(SaintMini.tile(rect, SaintMini.head(id), func() -> void: tap_locked(id), false, true))
+	cell.add_child(SaintMini.padlock(rect.get_center()))
+	cell.add_child(_centered(_short_name(id), RESERVE_TILE.y, RESERVE_CELL.x - 12, PixelStyle.COLOR_GREY))
 	return cell
+
+
+func _reserve_tile_pos() -> Vector2:
+	return Vector2(floorf((RESERVE_CELL.x - RESERVE_TILE.x) * 0.5), 0)
+
+
+## The Gate: a saint not arrived yet, tapped: who and why, at the foot.
+func tap_locked(saint_id: StringName) -> void:
+	_refresh()
+	_status.text = "%s: %s" % [catalog.saint(saint_id).name_pt, lock_reason(saint_id)]
+	_status.add_theme_color_override("font_color", PixelStyle.COLOR_BONE)
+
+
+## The saints still to come, in the order they arrive: by week, then by
+## circle, then the Carmel, then the milestones.
+func coming_saints() -> Array[StringName]:
+	var coming: Array[StringName] = []
+	for id: StringName in catalog.saints:
+		if not campaign.unlocked_saints.has(id):
+			coming.append(id)
+	coming.sort_custom(func(a: StringName, b: StringName) -> bool: return _arrival_rank(a) < _arrival_rank(b))
+	return coming
+
+
+func _arrival_rank(saint_id: StringName) -> float:
+	var parts: PackedStringArray = catalog.saint(saint_id).unlock.split(":")
+	var order: int = ARRIVAL_ORDER.find(parts[0])
+	return (order if order >= 0 else ARRIVAL_ORDER.size()) * 100.0 + (float(parts[1]) if parts.size() > 1 else 0.0)
 
 
 ## Why a saint has not arrived, from its `unlock` (saints.csv).
@@ -531,7 +607,7 @@ func _board_care(column: VBoxContainer, title_key: StringName, taken: Array[Stri
 		var caption: String = ""
 		var sub: String = ""
 		if i >= open:
-			cell.add_child(SaintMini.tile(tile_rect, null, Callable(), false, true))
+			cell.add_child(SaintMini.tile(tile_rect, _place_picture(facility), Callable(), false, true))
 			cell.add_child(SaintMini.padlock(tile_rect.get_center()))
 			caption = data.ui.text(&"place_locked", {"level": _level_opening(places_key, i)})
 		elif id != &"":
@@ -540,12 +616,24 @@ func _board_care(column: VBoxContainer, title_key: StringName, taken: Array[Stri
 			sub = _care_note(id)
 		else:
 			cell.add_child(SaintMini.tile(tile_rect, null, func() -> void: tap_slot(i), selected_slot == i))
+			cell.add_child(SaintMini.picture(_place_picture(facility), _place_rect(tile_rect)))
 			caption = data.ui.text(StringName("%s_free" % facility))
 			if facility == &"infirmary":
 				sub = data.ui.text(&"infirmary_cost", {"cost": catalog.economy.get_int(&"infirmary_bed_cost")})
 		cell.add_child(_centered(caption, BIG_TILE.y + 2, cell.custom_minimum_size.x, PixelStyle.COLOR_BONE))
 		cell.add_child(_centered(sub, BIG_TILE.y + 22, cell.custom_minimum_size.x, PixelStyle.COLOR_GOLD))
 		row.add_child(cell)
+
+
+## The empty place of the building: the bed or the bench (PixelLab, D-504).
+func _place_picture(facility: StringName) -> Texture2D:
+	return PixelStyle.piece("ui_bed" if facility == &"infirmary" else "ui_bench")
+
+
+## The bed or the bench at its own size, in the middle of the tile.
+func _place_rect(tile_rect: Rect2) -> Rect2:
+	var piece_size := Vector2(PLACE_PIECE, PLACE_PIECE)
+	return Rect2((tile_rect.get_center() - piece_size * 0.5).floor(), piece_size)
 
 
 func _care_note(id: StringName) -> String:

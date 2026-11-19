@@ -4,13 +4,18 @@ extends RefCounted
 ## head cut from the approved portrait, in a square, for the stacked roster,
 ## the reserve, the beds and the places of the Garden.
 
-## The square around the head in each 192 × 256 portrait.
+## The square of each 192 × 256 portrait shown small: the head and the
+## shoulders, so the face still reads at 50 pixels (D-504).
 const HEAD_REGIONS: Dictionary = {
-	&"saint_george": Rect2(48, 22, 110, 110),
-	&"saint_benedict": Rect2(70, 30, 110, 110),
-	&"saint_therese": Rect2(62, 8, 112, 112),
-	&"saint_anthony_abbot": Rect2(68, 34, 110, 110),
+	&"saint_george": Rect2(16, 8, 168, 168),
+	&"saint_benedict": Rect2(24, 8, 168, 168),
+	&"saint_therese": Rect2(20, 0, 168, 168),
+	&"saint_anthony_abbot": Rect2(24, 12, 168, 168),
 }
+## The thin iron edge of a tile (D-504: thinner than ui_tile_frame).
+const EDGE: int = 2
+const EDGE_COLOR := Color("4A4650")
+const EDGE_LIGHT := Color("6E6A74")
 
 
 ## The head of the saint, or null when the saint has no portrait yet.
@@ -37,8 +42,8 @@ static func picture(texture: Texture2D, rect: Rect2) -> TextureRect:
 	return pic
 
 
-## A square tile in the iron frame (ui_tile_frame), tappable, with a picture
-## inside. A chosen tile glows amber; a closed one is dark.
+## A square tile with a thin iron edge, tappable, with a picture inside. A
+## chosen tile glows amber; a closed one is dark.
 static func tile(rect: Rect2, texture: Texture2D, on_tap: Callable, chosen: bool = false, dim: bool = false) -> Button:
 	var button := Button.new()
 	button.flat = true
@@ -46,36 +51,34 @@ static func tile(rect: Rect2, texture: Texture2D, on_tap: Callable, chosen: bool
 	button.position = rect.position
 	button.size = rect.size
 	button.custom_minimum_size = rect.size
-	var back := ColorRect.new()
-	back.color = PixelStyle.COLOR_PITCH
-	back.position = Vector2(4, 4)
-	back.size = rect.size - Vector2(8, 8)
-	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	button.add_child(back)
+	var box := Panel.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(PixelStyle.COLOR_PITCH, 0.85)
+	style.set_border_width_all(EDGE)
+	style.border_color = PixelStyle.COLOR_AMBER if chosen else EDGE_COLOR
+	style.anti_aliasing = false
+	box.add_theme_stylebox_override("panel", style)
+	box.size = rect.size
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(box)
 	if texture != null:
-		var pic := picture(texture, Rect2(Vector2(5, 5), rect.size - Vector2(10, 10)))
+		var pic := picture(texture, Rect2(Vector2(EDGE, EDGE), rect.size - Vector2(EDGE, EDGE) * 2))
 		if dim:
 			pic.modulate = Color(0.12, 0.11, 0.14)
 		button.add_child(pic)
-	var frame := TextureRect.new()
-	frame.texture = PixelStyle.piece("ui_tile_frame")
-	frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	frame.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	frame.size = rect.size
-	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if chosen:
-		frame.modulate = Color(1.6, 1.0, 0.45)
-	button.add_child(frame)
+	# A one-pixel light line on the top edge, as lit iron.
+	var lit := ColorRect.new()
+	lit.color = PixelStyle.COLOR_AMBER if chosen else EDGE_LIGHT
+	lit.position = Vector2(EDGE, 0)
+	lit.size = Vector2(rect.size.x - EDGE * 2, 1)
+	lit.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(lit)
 	if on_tap.is_valid():
 		button.pressed.connect(func() -> void: on_tap.call())
 	return button
 
 
-## The padlock of a closed place (drawn by the engine until the PixelLab
-## piece is approved).
+## The iron padlock of a closed place (PixelLab, D-504), centred.
 static func padlock(center: Vector2) -> Control:
-	var lock := Padlock.new()
-	lock.position = center - Padlock.SIZE * 0.5
-	lock.size = Padlock.SIZE
-	lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return lock
+	var texture: Texture2D = PixelStyle.piece("ui_padlock")
+	return picture(texture, Rect2((center - texture.get_size() * 0.5).floor(), texture.get_size()))

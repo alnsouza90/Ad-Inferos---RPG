@@ -166,3 +166,25 @@ func test_every_saint_has_a_short_name_and_every_unlock_a_reason() -> void:
 		var unlock: String = cat.saint(id).unlock
 		if unlock != Campaign.UNLOCK_START:
 			assert_true(data.ui.has_text(StringName("lock_%s" % unlock.split(":")[0])), "motivo %s" % id)
+
+
+func test_the_gate_tells_who_is_coming_when_the_padlock_is_tapped() -> void:
+	var b := _screen(&"gate")
+	await wait_process_frames(1)
+	b.tap_locked(&"saint_anthony_abbot")
+	assert_eq(b.warning_shown(), "%s: %s" % [cat.saint(&"saint_anthony_abbot").name_pt, b.lock_reason(&"saint_anthony_abbot")])
+
+
+func test_the_reserve_has_room_for_every_saint_still_to_come() -> void:
+	var b := _screen(&"gate")
+	var coming: int = cat.saints.size() - b.campaign.unlocked_saints.size()
+	var free: int = b.campaign.unlocked_saints.size() - b.party_ids().size()
+	assert_true(BuildingScreen.RESERVE_COLUMNS * BuildingScreen.RESERVE_ROWS > coming + free, "com sobra")
+
+
+func test_the_saints_to_come_are_in_the_order_they_arrive() -> void:
+	var b := _screen(&"gate")
+	var coming: Array[StringName] = b.coming_saints()
+	assert_lt(coming.find(&"saint_nicholas"), coming.find(&"saint_anthony_abbot"), "semana 3 antes do Círculo 2")
+	assert_lt(coming.find(&"saint_anthony_abbot"), coming.find(&"saint_joan"))
+	assert_eq(coming.back(), &"saint_gertrude", "o marco por último")
