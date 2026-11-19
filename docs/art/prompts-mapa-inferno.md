@@ -152,3 +152,88 @@ dark gothic pixel art game map band, 16-bit style, in the style of Blasphemous t
 - **Conversão:** o agente reduz cada faixa para **960 × 240**, acerta o tamanho do pixel e a paleta do jogo, e confere a emenda com a de cima (a largura do funil e as camadas de rocha precisam casar). Se uma emenda não casar, o agente avisa antes de montar.
 - **Montagem no motor:** as 11 faixas empilhadas, com rolagem; o medalhão de cada círculo; a lanterna e a luz pálida; as faixas abertas acesas e as fechadas escurecidas com cadeado e aviso; o Átrio no alto, para voltar à vila.
 - **Aprovação:** o agente mostra a Alan faixa por faixa, e depois o mapa montado na tela.
+
+---
+
+## 4. Os medalhões · proporção 1:1 (D-507)
+
+**Como funcionam:** um medalhão por faixa, **todos do mesmo tamanho** (o agente reduz para **96 × 96**). O motor põe cada um **por cima da marca redonda** que veio em cada faixa, escondendo-a. A marca tem tamanho e lugar diferentes em cada faixa; o medalhão de 96 cobre a maior delas.
+
+**Todos os prompts seguem o mesmo padrão:**
+- a mesma moldura de ferro com rebites;
+- o mesmo campo escuro no meio;
+- um **emblema** do lugar, em relevo cor de osso.
+
+O nome, o número e o estado ficam com o motor:
+- **aberto:** aceso, com a borda âmbar;
+- **fechado:** escurecido, com o cadeado;
+- **atual:** com a lanterna.
+
+**Origem (para o Martirológio):** todos os emblemas vêm dos lugares de **Dante** (*Inferno*).
+
+
+### Medalhão 0 · Átrio e Porta do Inferno
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a great arched gate carved in rock with a small stair descending to it carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 1 · Antinferno
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a tattered empty banner on a tall pole carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 2 · Limbo · Círculo 1
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a small castle with seven concentric walls carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 3 · Luxúria · Círculo 2
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a spiral whirlwind of wind carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 4 · Gula · Círculo 3
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with three dog heads side by side under slanting rain carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 5 · Avareza e Prodigalidade · Círculo 4
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with two great round stone weights rolling toward each other carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 6 · Ira e Acídia · Círculo 5
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a small boat on a dark marsh before a crenellated tower carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 7 · Heresia · Círculo 6
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with an open stone tomb with its lid raised and a small flame inside carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 8 · Violência · Círculo 7
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a twisted leafless thorn tree carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 9 · Fraude · Círculo 8
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a narrow arched stone bridge over a deep ditch carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
+
+### Medalhão 10 · Traição · Círculo 9
+
+```text
+dark gothic pixel art game icon, 16-bit style, in the style of Blasphemous together with the gothic look of Darkest Dungeon, reverent and solemn, without Blasphemous's grotesque, gory or profane side, a single round medallion seen straight from the front, a thick ring of dark forged iron with small rivets and a thin worn stone inner rim, inside it a dark recessed round field with a shard of cracked ice with two folded wings frozen in it carved in low relief in bone white with a warm amber rim light from the left, the emblem simple and readable at small size, centered, the whole medallion fully visible with empty margin on all four sides, a single consistent pixel size, crisp hard pixel edges, chunky black outlines, heavy black shadows in solid blocks, limited muted desaturated palette of black, bone, ash grey and warm amber, selective dithering, no anti-aliasing, isolated on a plain flat solid light grey background --ar 1:1 --no text, letters, numbers, roman numerals, labels, flat gold, glowing gold, blue, gore, blood, nudity, grotesque, profane imagery, faces, blur, smooth shading, painterly, 3D, photorealistic, watermark
+```
