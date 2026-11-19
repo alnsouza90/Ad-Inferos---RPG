@@ -74,7 +74,7 @@ A ordem do §8 do playtest está boa. Ajustei três pontos:
 | --- | --- | --- | --- |
 | **F1 · Correções e saídas** | B03, B04, V01 (toque duplo); B13 e D8; D9, D10 e V06; B05, B06, B07, B09, B11, B12; D11 e V04 | M (3–4 dias) | Sim |
 | **F2 · HUD e legibilidade** | D1, D2, D4 (desenho), D12; H01–H10; metas do §1.2 em todas as telas; V07, V08, V03, V05; P02, P03, B10 | G (1–2 semanas) | Sim |
-| **F3 · Sensação de combate** | C01–C11, C13; B01, B02 (visibilidade das ações e da espera); B08 (só estampa); áudio mínimo (ADR, sino, toque, Ave Maria) | G (1–2 semanas) | Sim |
+| **F3 · Sensação de combate** | C01–C11, C13, S01; B01, B02 (visibilidade das ações e da espera); B08 (só estampa); áudio mínimo (ADR, sino, toque, Ave Maria) | G (1–2 semanas) | Sim |
 | **F4 · Mundo contínuo** | T66 (refatoração da caminhada e do combate); D3, D5, C12, M02, M04; P01 | G+ (2–3 semanas) | Sim |
 | **F5 · Cenários do Círculo 2** | D6, D7, M03, M05–M09, B14, B15; §7 | G (depende da arte de Alan) | Sim |
 | **F6 · Vila e mapa** | V02, M01; o restante da vila | M | Sim |
@@ -186,6 +186,12 @@ O que já estava no backlog muda de lugar assim:
 | C11 | P | O aviso de vitória existe | Caixa com os ícones dos ganhos | P | — |
 | C12 | N | Ver D3 | | — | D3 |
 | C13 | P | Ver H05 e H07 | | P | D4 |
+| S01 | N | `battle_screen.gd` (seleção atual: contorno simples) | **Seleção e toque com peso** (anotação "melhorar o outliner", "não sinto o peso do toque"):
+- o santo que age com contorno dourado pulsando e uma chama sobre a cabeça;
+- os alvos possíveis com contorno vermelho-tinta;
+- o alvo escolhido com um anel de tinta aos pés, uma linha pontilhada e o dano previsto em número grande;
+- uma vibração curta no toque válido e uma dupla no inválido;
+- o som de pena (§6.3 do playtest). | M | áudio |
 
 ---
 
@@ -248,6 +254,8 @@ O que já estava no backlog muda de lugar assim:
 3. **A F5 depende da sua arte:** são cerca de 15 cenários e os props. Para não travar, as fases F1 a F4 seguem com os cenários atuais.
 4. **Áudio pede um ADR e talvez um autoload novo:** preciso do seu sim.
 
+**Conferência com as anotações originais de Alan.** Item por item, todas as linhas do texto bruto estão na tabela. Faltava um item, a S01 (seleção e peso do toque), que entrou acima. As dúvidas de entendimento entraram nas perguntas 7 a 12.
+
 **Perguntas:**
 1. **D2:** o santo atordoado ou caído conta como "já agiu" para o turno acabar sozinho?
 2. **D7:** Tentação, alma e elite em **posições fixas** por trecho (recomendo, para casar com os cenários planejados) ou continuam sorteadas?
@@ -255,3 +263,9 @@ O que já estava no backlog muda de lugar assim:
 4. **V05:** a melhoria da Casa de Exercícios hoje não custa esmolas. Continua grátis (só pelos níveis) ou passa a custar?
 5. **B03:** a Ave Maria fica com o texto **e** o áudio (recomendo) ou só com o áudio?
 6. **Fases:** aprova a ordem F1 → F6, com a T66 no começo da F4 e a T50 e a T51 depois da F2?
+7. **"Vestígios"** ("relíquias, vestígios e tudo que precisar aparecer não podem estar com o filtro"): são os **restos** que alguns inimigos deixam no chão (`leaves_remains`), ou outra coisa?
+8. **Início de luta (C01):** a opção 1 (sino e mancha de tinta com a espada cruzada com a cruz)?
+9. **Seleção e toque (S01):** aprova a proposta do §6.3, com vibração no celular?
+10. **Mundo contínuo (D3):** quando a luta começa no corredor, os inimigos **entram pela direita** andando até as posições (recomendo) ou aparecem já no lugar, com a tinta?
+11. **Catedral na D8:** no M2 a Catedral está fechada; a regra "designado vai para a reserva" vale para ela quando abrir (M3). Confere?
+12. **Casa de Exercícios (V05):** você escreveu "o que custa melhorar". Hoje a melhoria **não custa esmolas**: cada nível dá uma melhoria grátis. Era isso que não estava claro na tela (então só mostro "melhorias disponíveis: N"), ou quer que passe a custar esmolas (pergunta 4)?
