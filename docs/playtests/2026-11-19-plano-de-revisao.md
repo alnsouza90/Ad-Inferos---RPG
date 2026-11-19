@@ -72,7 +72,7 @@ A ordem do §8 do playtest está boa. Ajustei três pontos:
 
 | Fase | Conteúdo | Tamanho | Build no fim |
 | --- | --- | --- | --- |
-| **F1 · Correções e saídas** | B03, B04, V01 (toque duplo); B13 e D8; D9, D10 e V06; B05, B06, B07, B09, B11, B12; D11 e V04 | M (3–4 dias) | Sim |
+| **F1 · Correções e saídas** | B03, B04, V01 (toque duplo); B13 e D8; D9, D10 e V06; B05, B06, B07, B09, B11, B12; D11 e V04; V05, V10, V11 | M (3–4 dias) | Sim |
 | **F2 · HUD e legibilidade** | D1, D2, D4 (desenho), D12; H01–H10; metas do §1.2 em todas as telas; V07, V08, V03, V05; P02, P03, B10 | G (1–2 semanas) | Sim |
 | **F3 · Sensação de combate** | C01–C11, C13, S01; B01, B02 (visibilidade das ações e da espera); B08 (só estampa); áudio mínimo (ADR, sino, toque, Ave Maria) | G (1–2 semanas) | Sim |
 | **F4 · Mundo contínuo** | T66 (refatoração da caminhada e do combate); D3, D5, C12, M02, M04; P01 | G+ (2–3 semanas) | Sim |
@@ -269,3 +269,41 @@ O que já estava no backlog muda de lugar assim:
 10. **Mundo contínuo (D3):** quando a luta começa no corredor, os inimigos **entram pela direita** andando até as posições (recomendo) ou aparecem já no lugar, com a tinta?
 11. **Catedral na D8:** no M2 a Catedral está fechada; a regra "designado vai para a reserva" vale para ela quando abrir (M3). Confere?
 12. **Casa de Exercícios (V05):** você escreveu "o que custa melhorar". Hoje a melhoria **não custa esmolas**: cada nível dá uma melhoria grátis. Era isso que não estava claro na tela (então só mostro "melhorias disponíveis: N"), ou quer que passe a custar esmolas (pergunta 4)?
+
+---
+
+## 8. Respostas de Alan (19/11/2026, D-520)
+
+1. **Fim de turno:** sim, o santo atordoado ou caído conta como "já agiu".
+2. **D7:** tudo fixo, os nós de evento (Tentação, alma, elite, pré-guardião) e também os cenários de cada trecho; **só as batalhas são sorteadas**.
+3. **Passar a semana:** sempre disponível; o Retiro mantém o bônus próprio.
+4. **Casa de Exercícios:** continua **grátis**, uma melhoria por nível. O que não está claro na tela:
+   - que cada nível dá **1 melhoria para gastar**, escolhendo entre as habilidades;
+   - **quando o santo sobe de nível**.
+   Itens novos: **V10** e **V11**.
+5. **Ave Maria:** áudio **e** texto.
+6. **Fases:** F1 → F6 aprovadas.
+7. **Vestígios:** já decididos no passado (D-262, D-287; `narrative-system.md` §135 e `docs/fable/01-design.md`):
+   - um só sistema de objetos, obstáculos e armadilhas no corredor;
+   - todo Vestígio é um objeto da vida do Peregrino, caído na queda;
+   - recolhido, vira lembrança no Diário do Peregrino;
+   - previsto para o **M3 e o M4**; não existe no M2.
+   Regra para quando entrar: **sem o filtro do círculo**, como itens e relíquias (D12).
+8. **Início de luta:** a opção do sino e da mancha de tinta serve de ponto de partida; o desenho final é definido na F3.
+9. **Seleção e toque (S01):** aprovado, com vibração.
+10. **Luta no corredor:** os inimigos entram pela direita, andando até as posições.
+11. **Portão:**
+    - quem está em outro prédio (Jardim, leito, Catedral quando abrir) **não fica na equipe** e aparece na **reserva com cadeado e o motivo**;
+    - quem **ainda não chegou** aparece só como vaga vazia, sem nome (D11).
+12. **Casa de Exercícios:** respondido no item 4.
+
+**Teresinha andando travada:** é a **B06** da tabela (§4.2), "a animação de andar de Teresinha não funciona", na fase F1. O arquivo de quadros existe; a suspeita é que a caminhada não carrega os quadros dela.
+
+### Itens novos das respostas
+
+| ID | Estado | Onde | Observação | Tam. | Depende |
+| --- | --- | --- | --- | --- | --- |
+| V10 | N | Casa de Exercícios, `SaintRoster`, `SaintCard` | "Melhorias para escolher: N" bem visível, com a explicação: **1 por nível, escolha entre as habilidades** | P | — |
+| V11 | N | Volta da expedição, `LegScreen` (resumo), `SaintRoster` | **Subida de nível clara:** no resumo da volta, "Jorge subiu para o nível 3" com destaque; na vila, um marcador no cartão do santo até ele gastar a melhoria | P | — |
+
+V10 e V11 entram na **F1**, junto com a V05.

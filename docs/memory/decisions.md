@@ -616,3 +616,17 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Não reproduzidos no núcleo:** B01 e B02 (os inimigos e as escoltas agem em todas as rodadas da prova); a causa provável é a apresentação.
   - **Proposta:** seis fases, de F1 a F6.
   - **Para Alan responder:** os conflitos com D-477, D-504, D-379 e D-497, e seis perguntas.
+- **D-520 · 19/11/2026 · Alan** — **Respostas ao plano de revisão** (`plano-de-revisao.md` §8):
+  - **Combate:** o atordoado ou caído conta como "já agiu" para o fim de turno automático.
+  - **Expedição:** os nós de evento e os cenários de cada trecho são **fixos**; só as batalhas são sorteadas.
+  - **Vila:**
+    - "Passar a semana" sempre disponível;
+    - a Casa de Exercícios continua grátis (1 melhoria por nível), mas a tela deixa claro o saldo de melhorias e a subida de nível (V10, V11 na F1);
+    - no Portão, quem está noutro prédio vai para a reserva com cadeado e o motivo, e quem não chegou é só vaga vazia;
+    - a Ave Maria tem áudio e texto.
+  - **Fases:** F1 a F6 aprovadas.
+  - **Vestígios:** são os objetos da vida do Peregrino (D-262, D-287, M3 e M4), sem o filtro do círculo quando entrarem.
+  - **Combate (apresentação):**
+    - o início de luta com sino e mancha de tinta é ponto de partida, a definir na F3;
+    - a seleção e o toque com vibração (S01) estão aprovados;
+    - os inimigos entram pela direita na luta do corredor.
