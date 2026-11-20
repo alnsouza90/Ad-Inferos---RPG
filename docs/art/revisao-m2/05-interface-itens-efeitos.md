@@ -1,10 +1,11 @@
-# Interface, itens e efeitos · prompts para o Meta AI (revisão do M2, F2 e F3)
+# Interface, itens e efeitos · prompts para o Meta AI (revisão do M2, versão 2)
 
 As peças de interface e de efeito que o plano pede. Algumas podem sair melhor no **PixelLab**, porque são pequenas e precisam de um tamanho exato. Nessas eu aviso, digo o custo antes e só gero com o seu sim.
 
 **Para todos os prompts deste arquivo:**
 - **Estilo:** o mesmo da interface atual (ferro forjado, chumbo, vitral escuro); sem texto: os nomes e números o motor escreve.
 - **Fundo:** cinza claro liso, para recortar.
+- **Uma peça por prompt:** nada de cenário em volta. As peças que pedem duas coisas (os botões, os projéteis, o marcador) pedem as duas **separadas, lado a lado**, para eu recortar.
 
 ### 1. Vitral dourado do milagre
 

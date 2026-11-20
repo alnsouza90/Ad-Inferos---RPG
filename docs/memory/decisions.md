@@ -674,3 +674,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Santo Antão:** ainda não tem quadros de corpo (só o retrato), então fica para quando ganhar a figura (T50, T52).
   - **Estado:** os quadros estão no jogo, mas ainda não ligados; isso vem na F4.
   - **Arte no Meta AI:** o resto (cenários, nós, props, primeiro plano, interface) Alan gera e envia.
+- **D-526 · 20/11/2026 · Alan e agente** — **Prompts da revisão do M2, versão 2.** Alan viu que, na versão 1, as camadas repetiam a mesma cena: a tenda saía no fundo, no meio e no chão. A causa era o agente ter posto a descrição inteira do lugar em todas as camadas.
+  - **Uma parte por camada:** cada prompt descreve só a sua parte (fundo: céu e horizonte; segundo plano ou cena: as formas do meio; pista: só o chão; primeiro plano: peças soltas nas bordas) e proíbe nominalmente o que é das outras.
+  - **Nós fixos em 4 camadas:** fundo, **cena** (a coisa principal, só aqui), pista e primeiro plano.
+  - **Props e peças de primeiro plano:** sozinhos, sem cenário em volta.
+  - **Lição:** prompt de camada nunca leva a descrição do lugar inteiro.
