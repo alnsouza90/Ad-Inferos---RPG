@@ -679,3 +679,8 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **Nós fixos em 4 camadas:** fundo, **cena** (a coisa principal, só aqui), pista e primeiro plano.
   - **Props e peças de primeiro plano:** sozinhos, sem cenário em volta.
   - **Lição:** prompt de camada nunca leva a descrição do lugar inteiro.
+- **D-527 · 24/11/2026 · Alan** — **Ad Inferos em HOLD.** Alan vai começar um jogo novo, **"Inferno"**, num repositório novo:
+  - o conceito do Inferno de Dante, com classes comuns (templário, freira…) em vez de santos;
+  - um GDD novo, mais simples e focado em celular;
+  - Godot e PixelLab.
+  As perspectivas de Alan e as lições para levar estão em `docs/playtests/2026-11-24-hold-e-perspectivas.md`. Nenhuma ação no Ad Inferos até ele tirar o HOLD. O PR #104 ficou aberto, sem merge. As 21 imagens dos cenários enviadas por Alan não foram guardadas no repositório: ele as tem.

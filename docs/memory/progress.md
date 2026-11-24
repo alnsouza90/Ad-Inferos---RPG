@@ -5,6 +5,8 @@ Onde estamos agora. Parte da memória do projeto (`docs/memory/README.md`). Atua
 ## Onde estamos
 
 
+- **HOLD (24/11/2026, D-527):** o Ad Inferos está parado por decisão de Alan, que começou um jogo novo ("Inferno", repositório próprio). Não retomar nada abaixo sem o pedido dele. Ver `docs/playtests/2026-11-24-hold-e-perspectivas.md`.
+
 - **AGORA (19/11/2026, para retomar em outra sessão):** plano de revisão do playtest aprovado (`docs/playtests/2026-11-19-plano-de-revisao.md`, respostas no §8, D-520). Revisão criativa aprovada (`docs/playtests/2026-11-19-revisao-criativa.md`, D-521, D-522). Fases: F1 → **F1.5 fatia da diversão** → F2 → F3 → F4 → F5 → F6.
   - **F1 em andamento (D-523), no PR #103.** Já feito:
     - toque duplo da vila corrigido: o 1º toque acende, o 2º entra; a estátua volta a abrir (B03, B04, V01);
