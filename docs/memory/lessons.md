@@ -104,3 +104,5 @@ Fluxo que funciona (`tools/art/process_frames.py` + `animation_clips.csv` + `ani
 - **18/11/2026 · Arte da vila e do mapa (D-486):**
   - **Edifício isolado:** o prompt precisa dizer "um só, inteiro, com margem, nada atrás", e a peça só vai ao Alan depois de eu conferir as bordas e o fundo. Mandei o Portão cortado e com prédios atrás.
   - **Faixa do mapa:** uma faixa sozinha, baixa (4:1), não cabe a vila e a porta, e veio vazia. Não mostrar uma peça que eu mesmo vejo que falhou como se fosse candidata; dizer logo que falhou e o que muda.
+
+- **Prompts de camadas (D-526):** ao pedir um cenário em camadas (fundo, meio, chão, primeiro plano), cada prompt descreve **só** a sua camada e proíbe, com `--no`, os elementos das outras. Pôr a descrição do lugar inteiro em todas faz a coisa principal (a tenda) sair em todas as camadas.

@@ -657,3 +657,30 @@ Formato: **D-número · data · quem** — decisão. *Onde está aplicada.*
   - **"Passar a semana":** na vila, canto de baixo, com dois toques (`Campaign.pass_week` = virar a semana sem expedição).
   - **Casa de Exercícios:** "Melhorias para escolher: N" e a instrução "Cada nível novo dá 1 melhoria, de graça…"; o cartão do santo leva "Melhoria!" em dourado enquanto houver melhoria; na volta, a vila avisa "X subiu para o nível N".
   - **Placa de aviso da vila:** maior, com quebra de linha.
+- **D-524 · 19/11/2026 · agente (a pedido de Alan)** — **Prompts de arte da revisão do M2**, separados por tipo em `docs/art/revisao-m2/` (o índice no `README.md`), todos no estilo aprovado e completos para colar:
+  - **01 · cenários dos três trechos:** fundo por trecho, mais três tipos de corredor com segundo plano e pista. Os temas, criação do jogo sobre o vendaval de Dante:
+    - T1, borda do vendaval com o trono de Minos ao longe;
+    - T2, arcadas em ruína;
+    - T3, pináculos e pontes junto ao olho.
+  - **02 · nós fixos:** entrada, Tentação com a tenda nova, alma, pré-guardião, Júri, Pouso, Vigília nova, arena; três camadas cada.
+  - **03 · props na escala dos santos:** escadas, porta, caverna, ponte, passagem.
+  - **04 · peças soltas de primeiro plano:** inteiras e escuras, por trecho.
+  - **05 · interface e efeitos:** vitral dourado do milagre, moldura fina, botões, estampas (início de luta, milagre de Teresinha com a chuva de rosas como proposta), projéteis, tinta espiritual, caixa de recompensa, relicário maior, marcador de seleção; as animações com os props no PixelLab (cerca de 24 gerações, a confirmar).
+  - **Escala de referência:** santo com 166 px e chão a 338 px numa tela de 960 × 540.
+- **D-525 · 19/11/2026 · Alan e agente** — **Animações dos santos com os props** (M04), geradas no **PixelLab** com o sim de Alan: 7 gerações em `animate_image_pixminimax`, de um orçamento estimado de 24.
+  - **Por santo:** Jorge, Bento e Teresinha ganham **virar de costas** (`saint_<id>_turn.png`, 9 quadros) e **andar de costas** (`saint_<id>_walk_back.png`, 9 quadros).
+  - **Subir a escada e entrar na porta ou na caverna** saem do motor, com o andar de costas: a figura sobe na diagonal pela escada, ou entra encolhendo e escurecendo. Assim não precisaram de quadros próprios.
+  - **Limpeza:** os arcos de golpe que a ferramenta inventou no giro de Jorge e os respingos vermelhos no andar de Teresinha foram tirados. O giro de Jorge junta duas gerações.
+  - **Santo Antão:** ainda não tem quadros de corpo (só o retrato), então fica para quando ganhar a figura (T50, T52).
+  - **Estado:** os quadros estão no jogo, mas ainda não ligados; isso vem na F4.
+  - **Arte no Meta AI:** o resto (cenários, nós, props, primeiro plano, interface) Alan gera e envia.
+- **D-526 · 20/11/2026 · Alan e agente** — **Prompts da revisão do M2, versão 2.** Alan viu que, na versão 1, as camadas repetiam a mesma cena: a tenda saía no fundo, no meio e no chão. A causa era o agente ter posto a descrição inteira do lugar em todas as camadas.
+  - **Uma parte por camada:** cada prompt descreve só a sua parte (fundo: céu e horizonte; segundo plano ou cena: as formas do meio; pista: só o chão; primeiro plano: peças soltas nas bordas) e proíbe nominalmente o que é das outras.
+  - **Nós fixos em 4 camadas:** fundo, **cena** (a coisa principal, só aqui), pista e primeiro plano.
+  - **Props e peças de primeiro plano:** sozinhos, sem cenário em volta.
+  - **Lição:** prompt de camada nunca leva a descrição do lugar inteiro.
+- **D-527 · 24/11/2026 · Alan** — **Ad Inferos em HOLD.** Alan vai começar um jogo novo, **"Inferno"**, num repositório novo:
+  - o conceito do Inferno de Dante, com classes comuns (templário, freira…) em vez de santos;
+  - um GDD novo, mais simples e focado em celular;
+  - Godot e PixelLab.
+  As perspectivas de Alan e as lições para levar estão em `docs/playtests/2026-11-24-hold-e-perspectivas.md`. Nenhuma ação no Ad Inferos até ele tirar o HOLD. O PR #104 ficou aberto, sem merge. As 21 imagens dos cenários enviadas por Alan não foram guardadas no repositório: ele as tem.
